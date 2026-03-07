@@ -989,7 +989,7 @@ dezz.cfg.vars["Specta"] = "SteamID"
 dezz.cfg.vars["Use spam"] = false
 dezz.cfg.vars["Flashlight spam"] = false
 dezz.cfg.vars["Impulse spam"] = false
-dezz.cfg.vars["Camera spam"] = false
+dezz.cfg.vars["camera"] = false
 dezz.cfg.vars["gravity"] = false
 
 dezz.cfg.vars["Fast lockpick"] = false
@@ -4584,8 +4584,7 @@ end
 
 function dezz.tabs.Players()
     local playerlist = player.GetAll()
-    
-    -- Сортируем игроков по имени
+
     table.sort(playerlist, function(a, b)
         return a:Name() < b:Name()
     end)
@@ -4597,7 +4596,6 @@ function dezz.tabs.Players()
         end
     end
 
-    -- Панель поиска
     local searchPanel = vgui.Create("Panel", dezz.scrollpanel)
     searchPanel:SetTall(30)
     searchPanel:Dock(TOP)
@@ -4630,8 +4628,7 @@ function dezz.tabs.Players()
     for i = 1, #playerlist do
         local pEntity = playerlist[i]
         if not IsValid(pEntity) then continue end
-        
-        -- Поиск по имени
+
         local playerName = pEntity:Name():lower()
         if dezz.playerSearchText and dezz.playerSearchText ~= "" and not playerName:find(dezz.playerSearchText, 1, true) then
             continue
@@ -7549,6 +7546,109 @@ local function CalcPitch()
     return x
 end
 
+
+dezz.bruteforce = dezz.bruteforce or {
+    misses = 0,
+    lastMissTime = 0,
+    currentAngle = 0,
+    angles = {0, 90, 180, -90, 45, -45, 135, -135},
+    angleIndex = 1,
+    lastShotTime = 0,
+    shotsSinceLastMiss = 0
+}
+local function BruteForce(cmd)
+    if not dezz.cfg.vars["Anti-BruteForce"] then return end
+
+    local currentTime = CurTime()
+
+    if dezz.lastShot and dezz.lastShot.hit == false then
+        dezz.bruteforce.misses = dezz.bruteforce.misses + 1
+        dezz.bruteforce.lastMissTime = currentTime
+        dezz.bruteforce.shotsSinceLastMiss = 0
+    else
+        dezz.bruteforce.shotsSinceLastMiss = dezz.bruteforce.shotsSinceLastMiss + 1
+    end
+
+    if currentTime - dezz.bruteforce.lastMissTime > 5 then
+        dezz.bruteforce.misses = 0
+        dezz.bruteforce.angleIndex = 1
+        dezz.bruteforce.currentAngle = 0
+    end
+
+    if dezz.bruteforce.misses > 0 then
+        dezz.bruteforce.angleIndex = dezz.bruteforce.angleIndex + 1
+        if dezz.bruteforce.angleIndex > #dezz.bruteforce.angles then
+            dezz.bruteforce.angleIndex = 1
+        end
+        
+        local baseAngle = dezz.bruteforce.angles[dezz.bruteforce.angleIndex]
+        
+        local missOffset = (dezz.bruteforce.misses % 3) * 15
+        if dezz.bruteforce.misses % 2 == 0 then
+            dezz.bruteforce.currentAngle = baseAngle + missOffset
+        else
+            dezz.bruteforce.currentAngle = baseAngle - missOffset
+        end
+    end
+
+    local currentAngles = cmd:GetViewAngles()
+    currentAngles.y = currentAngles.y + dezz.bruteforce.currentAngle
+    cmd:SetViewAngles(currentAngles)
+end
+function dezz.AddBruteforceAngle(angle)
+    table.insert(dezz.bruteforce.angles, angle)
+end
+
+
+dezz.desync = dezz.desync or {
+    active = false,
+    flip = false,
+    lastSend = true,
+    chokeAmount = 6,
+    lastChoke = 0
+}
+hook.Add("CreateMove", "Desync1", function(cmd)
+    if not dezz.cfg.vars["Desync1"] then return end
+
+    if dezz.cfg.binds["Panic Key"] and dezz.cfg.binds["Panic Key"] ~= 0 and dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
+        dezz.cfg.vars["Desync1"] = false
+        dezz.SendPacket = true
+        ded.SetNetChokedPackets(0)
+        return
+    end
+
+    if cmd:KeyDown(IN_ATTACK) or cmd:KeyDown(IN_ATTACK2) then
+        dezz.SendPacket = true
+        ded.SetNetChokedPackets(0)
+        return
+    end
+
+    local tickrate = math.floor(1 / engine.TickInterval())
+    local chokeFreq = math.floor(tickrate / 14)
+    
+    dezz.desync.lastChoke = dezz.desync.lastChoke + 1
+    
+    if dezz.desync.lastChoke >= chokeFreq then
+        dezz.desync.flip = not dezz.desync.flip
+        dezz.SendPacket = dezz.desync.flip
+        dezz.desync.lastChoke = 0
+    end
+
+    local seqshift = 1
+    
+    if dezz.desync.flip then
+        if not dezz.desync.active then
+            ded.SetOutSequenceNr(ded.GetOutSequenceNr() + seqshift)
+            dezz.desync.active = true
+        else
+            ded.SetNetChokedPackets(3)
+        end
+    else
+        ded.SetNetChokedPackets(0)
+        dezz.desync.active = false
+    end
+end)
+
 local function micromovement(cmd)
     if not dezz.cfg.vars["Micromovement"] then return end
     if not IsValid(pLocalPlayer) or not pLocalPlayer:Alive() then return end
@@ -7575,6 +7675,9 @@ end
 
 function dezz.AntiAim(cmd)
     if not IsValid(pLocalPlayer) or not pLocalPlayer:Alive() then return end
+    if dezz.cfg.vars["Anti-BruteForce"] then
+        BruteForce(cmd)
+    end
     
     local freestandsucc, freestandsafe, freestandunsafe 
 
@@ -8541,7 +8644,7 @@ local function DrawGPSTracker()
         Color(0, 100, 255, 255), true)
 end
 
-hook.Add("PostDrawTranslucentRenderables", "DezzGPSTracker", DrawGPSTracker)
+hook.Add("PostDrawTranslucentRenderables", "GPSTracker", DrawGPSTracker)
 
 local function DrawGPSText()
     if not dezz.cfg.vars["GPS"] then return end
@@ -8584,14 +8687,14 @@ local function DrawGPSText()
     end
 end
 
-hook.Add("HUDPaint", "DezzGPSText", DrawGPSText)
+hook.Add("HUDPaint", "GPSText", DrawGPSText)
 
 local gpsToggleCooldown = 0
 
 hook.Add("Think", "GPSRemoveKey", function()
     if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > gpsToggleCooldown then
-        hook.Remove("PostDrawTranslucentRenderables", "DezzGPSTracker")
-        hook.Remove("HUDPaint", "DezzGPSText")
+        hook.Remove("PostDrawTranslucentRenderables", "GPSTracker")
+        hook.Remove("HUDPaint", "GPSText")
         hook.Remove("Think", "GPSRemoveKey")
         gpsToggleCooldown = CurTime() + 0.5
     end
@@ -13582,6 +13685,7 @@ end
 if not dezz.cfg.vars["spectating"] then
     dezz.vieworigin = pLocalPlayer:EyePos()
 end
+
 dezz.viewfov    = 0
 dezz.znear      = 0
 
