@@ -9453,6 +9453,8 @@ function dezz.DrawESP()
         end
     end
 
+
+
     local plys = player.GetAll()
 
     local color_box     = string.ToColor( dezz.cfg.colors["Box esp"] )
@@ -9483,7 +9485,8 @@ function dezz.DrawESP()
 
 local function Drawlineplayers()
     if not dezz.cfg.vars["line"] then return end
-    
+    if not dezz.tpenabled then return end
+
     local myPos = pLocalPlayer:GetPos() + Vector(0, 0, 45)
     
     for _, target in ipairs(player.GetAll()) do
@@ -10057,92 +10060,92 @@ end
 		    end
         end
 
-function dezz.DrawPlayersHitboxes()
-    if not dezz.cfg.vars["Hitbox"] then return end
-    if not pLocalPlayer:Alive() then return end
-    if dezz.hideHitboxes then return end 
-    
-    local hitbox_color = string.ToColor(dezz.cfg.colors["Hitbox"])
-    local eye_pos, eye_ang = EyePos(), EyeAngles()
-    
-    cam.Start3D(eye_pos, eye_ang)
-    
-    for _, ply in ipairs(player.GetAll()) do
-        if not IsValid(ply) or not ply:Alive() then continue end
+    function dezz.DrawPlayersHitboxes()
+        if not dezz.cfg.vars["Hitbox"] then return end
+        if not pLocalPlayer:Alive() then return end
+        if dezz.hideHitboxes then return end 
         
-        if not ply.fakeModel then
-            ply.fakeModel = dezz.CS_Model(ply:GetModel())
-            ply.lastModel = ply:GetModel()
-        end
+        local hitbox_color = string.ToColor(dezz.cfg.colors["Hitbox"])
+        local eye_pos, eye_ang = EyePos(), EyeAngles()
         
-        if ply:GetModel() != ply.lastModel then
-            if IsValid(ply.fakeModel) then
-                ply.fakeModel:Remove()
+        cam.Start3D(eye_pos, eye_ang)
+        
+        for _, ply in ipairs(player.GetAll()) do
+            if not IsValid(ply) or not ply:Alive() then continue end
+            
+            if not ply.fakeModel then
+                ply.fakeModel = dezz.CS_Model(ply:GetModel())
+                ply.lastModel = ply:GetModel()
             end
-            ply.fakeModel = dezz.CS_Model(ply:GetModel())
-            ply.lastModel = ply:GetModel()
-        end
-        
-        if not IsValid(ply.fakeModel) then continue end
-        
-        local tbl = {
-            layers = dezz.fakeAngles and dezz.fakeAngles.layers,
-            angles = ply:EyeAngles(),
-            sequence = ply:GetSequence(),
-            cycle = ply:GetCycle(),
-            origin = ply:GetPos(),
-            movex = ply:GetPoseParameter("move_x"),
-            movey = ply:GetPoseParameter("move_y"),
-        }
-        
-        if dezz.CS_Model_update then
-            dezz.CS_Model_update(ply, ply.fakeModel, tbl)
-        end
-        
-        local groupCount = ply.fakeModel:GetHitBoxGroupCount()
-        if groupCount and groupCount > 0 then
-            for group = 0, groupCount - 1 do
-                local boxCount = ply.fakeModel:GetHitBoxCount(group)
-                if boxCount and boxCount > 0 then
-                    for hitbox = 0, boxCount - 1 do
-                        local bone = ply.fakeModel:GetHitBoxBone(hitbox, group)
-                        if not bone then continue end
-                        
-                        local pos, ang = ply.fakeModel:GetBonePosition(bone)
-                        if not pos then continue end
-                        
-                        local mins, maxs = ply.fakeModel:GetHitBoxBounds(hitbox, group)
-                        if mins and maxs then
-                            render.DrawWireframeBox(
-                                pos,
-                                ang,
-                                mins,
-                                maxs,
-                                hitbox_color,
-                                true
-                            )
+            
+            if ply:GetModel() != ply.lastModel then
+                if IsValid(ply.fakeModel) then
+                    ply.fakeModel:Remove()
+                end
+                ply.fakeModel = dezz.CS_Model(ply:GetModel())
+                ply.lastModel = ply:GetModel()
+            end
+            
+            if not IsValid(ply.fakeModel) then continue end
+            
+            local tbl = {
+                layers = dezz.fakeAngles and dezz.fakeAngles.layers,
+                angles = ply:EyeAngles(),
+                sequence = ply:GetSequence(),
+                cycle = ply:GetCycle(),
+                origin = ply:GetPos(),
+                movex = ply:GetPoseParameter("move_x"),
+                movey = ply:GetPoseParameter("move_y"),
+            }
+            
+            if dezz.CS_Model_update then
+                dezz.CS_Model_update(ply, ply.fakeModel, tbl)
+            end
+            
+            local groupCount = ply.fakeModel:GetHitBoxGroupCount()
+            if groupCount and groupCount > 0 then
+                for group = 0, groupCount - 1 do
+                    local boxCount = ply.fakeModel:GetHitBoxCount(group)
+                    if boxCount and boxCount > 0 then
+                        for hitbox = 0, boxCount - 1 do
+                            local bone = ply.fakeModel:GetHitBoxBone(hitbox, group)
+                            if not bone then continue end
+                            
+                            local pos, ang = ply.fakeModel:GetBonePosition(bone)
+                            if not pos then continue end
+                            
+                            local mins, maxs = ply.fakeModel:GetHitBoxBounds(hitbox, group)
+                            if mins and maxs then
+                                render.DrawWireframeBox(
+                                    pos,
+                                    ang,
+                                    mins,
+                                    maxs,
+                                    hitbox_color,
+                                    true
+                                )
+                            end
                         end
                     end
                 end
             end
         end
+        
+        cam.End3D()
     end
-    
-    cam.End3D()
-end
 
-hook.Add("PostDrawOpaqueRenderables", "DrawAllHitboxes", dezz.DrawPlayersHitboxes)
+    hook.Add("PostDrawOpaqueRenderables", "DrawAllHitboxes", dezz.DrawPlayersHitboxes)
 
-if dezz.cfg.vars["Panic Key"] then
-    hook.Add("Think", "HideHitboxesKey", function()
-        if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
-            if not dezz.hideKeyPressed then
-                dezz.hideHitboxes = not dezz.hideHitboxes
-                dezz.hideKeyPressed = true
+    if dezz.cfg.vars["Panic Key"] then
+        hook.Add("Think", "HideHitboxesKey", function()
+            if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
+                if not dezz.hideKeyPressed then
+                    dezz.hideHitboxes = not dezz.hideHitboxes
+                    dezz.hideKeyPressed = true
+                end
             end
-        end
-    end)
-end
+        end)
+    end
 
         /*if dezz.cfg.vars["Show records"] and dezz.canBacktrack(v) then
             local len = #dezz.btrecords[ v ]
@@ -10238,120 +10241,48 @@ do
     local charge = 0
 
     local gradcolor, chargedcolor, unchargedcolor = Color(200,200,200,128), Color(0,255,128), Color(255,155,0)
-
     local chargestate, ccharge, chargecolor = "NO CHARGE", 200, chargedcolor
 
+    local function DrawRotatedLine(x1, y1, x2, y2, centerX, centerY, angle)
+        local rad = math.rad(angle)
+        local cos, sin = math.cos(rad), math.sin(rad)
+        
+        local dx1, dy1 = x1 - centerX, y1 - centerY
+        local rx1 = centerX + dx1 * cos - dy1 * sin
+        local ry1 = centerY + dx1 * sin + dy1 * cos
+        
+        local dx2, dy2 = x2 - centerX, y2 - centerY
+        local rx2 = centerX + dx2 * cos - dy2 * sin
+        local ry2 = centerY + dx2 * sin + dy2 * cos
+        
+        surface.DrawLine(rx1, ry1, rx2, ry2)
+    end
+
+    if not draw.Circle then
+        function draw.Circle(x, y, radius, segments)
+            local circle = {}
+            for i = 0, segments do
+                local angle = math.rad((i / segments) * -360)
+                table.insert(circle, {x = x + math.sin(angle) * radius, y = y + math.cos(angle) * radius})
+            end
+            surface.DrawPoly(circle)
+        end
+    end
 
     function dezz.DrawSomeShit()
-        /* break
-        if dezz.cfg.vars.Indicators then 
-            surface.SetFont("DTFont")
-            
-            local latency = math.Round((ded.GetLatency(0) + ded.GetLatency(1)) * 1000)
-            local currentlby = math.Round(ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex()))
-            local targetlby = math.Round(ded.GetTargetLowerBodyYaw(pLocalPlayer:EntIndex()))
-            local velocity = math.Round(pLocalPlayer:GetVelocity():Length2D())
-            local choked = ded.GetChokedCommands()
-
-            local accent_color = Color(0, 180, 255, 255)      
-            local success_color = Color(120, 255, 180, 255)   
-            local warning_color = Color(255, 150, 80, 255)    
-            local error_color = Color(255, 80, 150, 255)     
-            local bg_dark = Color(20, 20, 25, 230)           
-
-
-            local function DrawDoubleText(text, x, y, col1, col2, offset)
-                surface.SetTextColor(col1.r, col1.g, col1.b, 220)
-                surface.SetTextPos(x, y)
-                surface.DrawText(text)
-                
-                surface.SetTextColor(col2.r, col2.g, col2.b, 150)
-                surface.SetTextPos(x + offset, y + offset)
-                surface.DrawText(text)
-            end
-
-            local function DrawStaticCircle(x, y, radius, col)
-                surface.SetDrawColor(col)
-                draw.NoTexture()
-                surface.DrawTexturedRectRotated(x, y, radius*2, radius*2, 0)
-            end
-
-            local y_pos = screenHeight/2 - 45
-            local x_pos = 15
-            
-            surface.SetDrawColor(bg_dark)
-            surface.DrawRect(x_pos - 5, y_pos - 5, 200, 90)
-            
-            DrawDoubleText("» Lag Compensation", x_pos, y_pos, 
-                        pLocalPlayer.break_lc and error_color or success_color,
-                        Color(255, 255, 255, 100), 1)
-
-            DrawDoubleText(string.format("» Fakelag Tick: %i", choked), x_pos, y_pos + 15, 
-                        choked > 1 and warning_color or error_color,
-                        Color(255, 255, 255, 80), 1.2)
-
-            DrawDoubleText(string.format("» Speed: %i", velocity), x_pos, y_pos + 30, 
-                        velocity > 100 and accent_color or success_color,
-                        Color(255, 255, 255, 90), 1.1)
-
-            DrawDoubleText(string.format("» Ping: %ims", latency), x_pos, y_pos + 45, 
-                        latency > 50 and warning_color or success_color,
-                        Color(255, 255, 255, 85), 1.3)
-            
-            local lbyText = string.format("» LBY: %i°", currentlby)
-            local textW = surface.GetTextSize(lbyText)
-            local lbyColor1 = currentlby != targetlby and error_color or success_color
-            local lbyColor2 = currentlby != targetlby and Color(255, 120, 120, 180) or Color(180, 255, 180, 180)
-            
-            DrawDoubleText(lbyText, x_pos, y_pos + 60, lbyColor1, lbyColor2, 1.5)
-            
-            local circleX = x_pos + textW + 25
-            local circleY = y_pos + 68
-            local circleRadius = 8
-            
-            DrawStaticCircle(circleX, circleY, circleRadius, Color(40, 40, 45))
-            
-            if currentlby != 0 then
-                surface.SetDrawColor(success_color.r, success_color.g, success_color.b, 200)
-                draw.NoTexture()
-                
-                local startAngle = 0
-                local endAngle = math.rad(-currentlby + 90)
-                local segments = 30
-                
-                for i = 0, segments do
-                    local angle = startAngle + (endAngle - startAngle) * (i/segments)
-                    local nextAngle = startAngle + (endAngle - startAngle) * ((i+1)/segments)
-                    
-                    surface.DrawLine(
-                        circleX + math.cos(angle) * (circleRadius-1), 
-                        circleY + math.sin(angle) * (circleRadius-1),
-                        circleX + math.cos(nextAngle) * (circleRadius-1),
-                        circleY + math.sin(nextAngle) * (circleRadius-1)
-                    )
-                end
-            end
-            
-            if currentlby != targetlby then
-                local targetAngle = math.rad(-targetlby + 90)
-                local targetX = circleX + math.cos(targetAngle) * (circleRadius-2)
-                local targetY = circleY + math.sin(targetAngle) * (circleRadius-2)
-                
-                DrawStaticCircle(targetX, targetY, 3, error_color)
-            end
-        end*/
-
-
+        local screenWidth, screenHeight = ScrW(), ScrH()
+        local pLocalPlayer = LocalPlayer()
+        
         if dezz.cfg.vars["Auto Vape"] then
-            surface.SetTextColor( dezz.tyaga == 0 and blc or lc )
-            surface.SetTextPos( 38,screenHeight-220 ) 
-            surface.DrawText( "Vape: " ) 
+            surface.SetTextColor(dezz.tyaga == 0 and blc or lc)
+            surface.SetTextPos(38, screenHeight-220)
+            surface.DrawText("Vape: ")
             
-            surface.SetDrawColor( 0, 0, 0 )
-            surface.DrawRect( 78, screenHeight-219, 60, 14 )
+            surface.SetDrawColor(0, 0, 0)
+            surface.DrawRect(78, screenHeight-219, 60, 14)
 
-            surface.SetDrawColor( lc )
-            surface.DrawRect( 79, screenHeight-218, dezz.tyaga / dezz.maxvape * 58, 12 )
+            surface.SetDrawColor(lc)
+            surface.DrawRect(79, screenHeight-218, dezz.tyaga / dezz.maxvape * 58, 12)
         end
         
         if dezz.cfg.vars["Tickbase shift"] and dezz.cfg.vars["Tickbase indicator"] then
@@ -10359,12 +10290,12 @@ do
                 ccharge = ded.GetCurrentCharge() * 196 / dezz.cfg.vars["Shift ticks"]
             end
 
-            charge = math.Approach(charge,ccharge,FrameTime()*700)
+            charge = math.Approach(charge, ccharge, FrameTime() * 700)
 
             if ded.GetCurrentCharge() == 0 then
                 chargestate = "NO CHARGE"
                 chargecolor = unchargedcolor
-            elseif ded.GetCurrentCharge() < dezz.cfg.vars["Shift ticks"] and dezz.IsKeyDown( dezz.cfg.binds["Auto recharge"] ) then
+            elseif ded.GetCurrentCharge() < dezz.cfg.vars["Shift ticks"] and dezz.IsKeyDown(dezz.cfg.binds["Auto recharge"]) then
                 chargestate = "CHARGING"
                 chargecolor = unchargedcolor
             else
@@ -10375,492 +10306,376 @@ do
             local tw, th = surface.GetTextSize(chargestate)
 
             surface.SetDrawColor(dezz.Colors[12])
-            surface.DrawRect(indx,indy,200,30)
+            surface.DrawRect(indx, indy, 200, 30)
 
-            surface.SetDrawColor(chargecolor) 
-            surface.DrawRect(indx+2,indy+2,charge,26)
+            surface.SetDrawColor(chargecolor)
+            surface.DrawRect(indx+2, indy+2, charge, 26)
 
-            surface.SetDrawColor( gradcolor )
-            surface.SetMaterial( dezz.Materials["Gradient right"] )
-            surface.DrawTexturedRect( indx+2,indy+2,charge,26 )
+            surface.SetDrawColor(gradcolor)
+            surface.SetMaterial(dezz.Materials["Gradient right"])
+            surface.DrawTexturedRect(indx+2, indy+2, charge, 26)
 
-            surface.SetTextColor( dezz.Colors[245] )
+            surface.SetTextColor(dezz.Colors[245])
+            surface.SetTextPos(indx+2, indy-20)
+            surface.DrawText("CHARGE " .. ded.GetCurrentCharge())
 
-            surface.SetTextPos( indx+2,indy-20 ) 
-            surface.DrawText( "CHARGE "..ded.GetCurrentCharge() ) 
-
-            surface.SetTextPos( indx+196-tw,indy-20 ) 
-            surface.DrawText( chargestate ) 
+            surface.SetTextPos(indx+196-tw, indy-20)
+            surface.DrawText(chargestate)
         end
 
-hook.Add("PostDrawHUD", "PlayerRadar", function()
-    if dezz.cfg.vars["Radar"] then 
-        local RadarSize = 100
-        local RadarRange = 5000
-        
-        local centerX = ScrW() - RadarSize - 20
-        local centerY = RadarSize + 20
-        local time = CurTime() % 3
-        local color = HSVToColor(time * 120, 1, 1)
-        local ply = LocalPlayer()
-        local plyPos = ply:GetPos()
-        local realAngles = dezz.SilentAngle or ply:EyeAngles()
-
-        surface.SetDrawColor(20, 20, 30, 220)
-        surface.DrawRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
-        
-        surface.SetDrawColor(0, 150, 255, 100)
-        surface.DrawOutlinedRect(centerX - RadarSize - 1, centerY - RadarSize - 1, RadarSize * 2 + 2, RadarSize * 2 + 2)
-        
-        surface.SetDrawColor(50, 50, 70, 80)
-        for i = 1, 3 do
-            local pos = (i / 4) * RadarSize * 2
-            surface.DrawLine(centerX - RadarSize + pos, centerY - RadarSize, centerX - RadarSize + pos, centerY + RadarSize)
-            surface.DrawLine(centerX - RadarSize, centerY - RadarSize + pos, centerX + RadarSize, centerY - RadarSize + pos)
-        end
-        
-        surface.SetDrawColor(70, 70, 90, 120)
-        surface.DrawLine(centerX - RadarSize, centerY, centerX + RadarSize, centerY)
-        surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY + RadarSize)
-
-        surface.SetDrawColor(40, 40, 60, 90)
-        draw.NoTexture()
-        for i = 1, 3 do
-            local pulseTime = (CurTime() + i) % 3
-            local pulse = math.abs(math.sin(pulseTime * math.pi))
-            local alpha = 50 + pulse * 40
-            local radius = (i / 4) * RadarSize
+        if dezz.cfg.vars["Radar"] then 
+            local RadarSize = 100
+            local RadarRange = 5000
             
-            surface.SetDrawColor(40, 40, 60, alpha)
-            draw.Circle(centerX, centerY, radius, 32)
-        end
+            local centerX = ScrW() - RadarSize - 20
+            local centerY = RadarSize + 20
+            local time = CurTime() % 3
+            local color = HSVToColor(time * 120, 1, 1)
+            local ply = LocalPlayer()
+            local plyPos = ply:GetPos()
+            local realAngles = dezz.SilentAngle or ply:EyeAngles()
 
-        local mapSize = 5000
-        local traceStart = plyPos + Vector(0, 0, 5000)
-        local traceEnd = plyPos - Vector(0, 0, 5000)
-        local trace = util.TraceLine({
-            start = traceStart,
-            endpos = traceEnd,
-            mask = MASK_SOLID_BRUSHONLY
-        })
-        local groundPos = trace.HitPos
-        local groundNormal = trace.HitNormal
-
-        for dx = -RadarRange, RadarRange, 500 do
-            for dy = -RadarRange, RadarRange, 500 do
-                local worldPos = groundPos + Vector(dx, dy, 0)
-                local relativePos = worldPos - plyPos
-                local distance = relativePos:Length()
-                if distance > RadarRange then continue end
-
-                local traceCheck = util.TraceLine({
-                    start = worldPos + Vector(0, 0, 100),
-                    endpos = worldPos - Vector(0, 0, 200),
-                    mask = MASK_SOLID_BRUSHONLY
-                })
-
-                if traceCheck.Hit then
-                    local angle = realAngles.y - 90
-                    local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
-                    local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
-                    
-                    if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-                    radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
-                        surface.SetDrawColor(30, 100, 30, 40)
-                        surface.DrawRect(radarX - 2, radarY - 2, 4, 4)
-                    end
-                end
+            surface.SetDrawColor(20, 20, 30, 220)
+            surface.DrawRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
+            
+            surface.SetDrawColor(0, 150, 255, 100)
+            surface.DrawOutlinedRect(centerX - RadarSize - 1, centerY - RadarSize - 1, RadarSize * 2 + 2, RadarSize * 2 + 2)
+            
+            surface.SetDrawColor(50, 50, 70, 80)
+            for i = 1, 3 do
+                local pos = (i / 4) * RadarSize * 2
+                surface.DrawLine(centerX - RadarSize + pos, centerY - RadarSize, centerX - RadarSize + pos, centerY + RadarSize)
+                surface.DrawLine(centerX - RadarSize, centerY - RadarSize + pos, centerX + RadarSize, centerY - RadarSize + pos)
             end
-        end
+            
+            surface.SetDrawColor(70, 70, 90, 120)
+            surface.DrawLine(centerX - RadarSize, centerY, centerX + RadarSize, centerY)
+            surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY + RadarSize)
 
-        for x = -RadarRange, RadarRange, 1000 do
-            for y = -RadarRange, RadarRange, 1000 do
-                local worldPos = groundPos + Vector(x, y, 0)
-                local relativePos = worldPos - plyPos
+            surface.SetDrawColor(40, 40, 60, 90)
+            draw.NoTexture()
+            for i = 1, 3 do
+                local pulseTime = (CurTime() + i) % 3
+                local pulse = math.abs(math.sin(pulseTime * math.pi))
+                local alpha = 50 + pulse * 40
+                local radius = (i / 4) * RadarSize
+                
+                surface.SetDrawColor(40, 40, 60, alpha)
+                draw.Circle(centerX, centerY, radius, 32)
+            end
+
+            local traceStart = plyPos + Vector(0, 0, 5000)
+            local traceEnd = plyPos - Vector(0, 0, 5000)
+            local trace = util.TraceLine({start = traceStart, endpos = traceEnd, mask = MASK_SOLID_BRUSHONLY})
+            local groundPos = trace.HitPos
+
+            for _, target in ipairs(player.GetAll()) do
+                if target == ply or not target:Alive() then continue end
+            
+                local relativePos = target:GetPos() - plyPos
                 local distance = relativePos:Length()
+            
                 if distance > RadarRange then continue end
 
                 local angle = realAngles.y - 90
                 local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
                 local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
-                
+            
                 if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-                radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
-                    surface.SetDrawColor(80, 80, 120, 60)
-                    surface.DrawLine(radarX - 3, radarY, radarX + 3, radarY)
-                    surface.DrawLine(radarX, radarY - 3, radarX, radarY + 3)
+                   radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
+                    local playerColor = team.GetColor(target:Team())
+                    
+                    surface.SetDrawColor(0, 0, 0, 200)
+                    draw.Circle(radarX, radarY, 4, 8)
+                    
+                    surface.SetDrawColor(playerColor)
+                    draw.Circle(radarX, radarY, 3, 8)
                 end
             end
-        end
 
-        surface.SetDrawColor(0, 200, 255)
-        surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY - RadarSize + 6)
-
-        surface.SetDrawColor(255, 50, 50)
-        draw.Circle(centerX, centerY, 5, 12)
-       
-        for _, target in ipairs(player.GetAll()) do
-            if target == ply or not target:Alive() then continue end
-        
-            local relativePos = target:GetPos() - plyPos
-            local distance = relativePos:Length()
-        
-            if distance > RadarRange then continue end
-
-            local angle = realAngles.y - 90
-            local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
-            local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
-        
-            if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-            radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
+            surface.SetDrawColor(color.r, color.g, color.b, 150)
+            surface.DrawOutlinedRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
             
-                local playerColor = team.GetColor(target:Team())
-                
-                surface.SetDrawColor(0, 0, 0, 200)
-                draw.Circle(radarX, radarY, 4, 8)
-                
-                surface.SetDrawColor(playerColor)
-                draw.Circle(radarX, radarY, 3, 8)
-            end
+            surface.SetDrawColor(0, 100, 200, 80)
+            surface.DrawOutlinedRect(centerX - RadarSize - 2, centerY - RadarSize - 2, RadarSize * 2 + 4, RadarSize * 2 + 4)
+
+            draw.SimpleText("RADAR", "DefaultSmall", centerX, centerY - RadarSize - 25, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
         end
 
-        surface.SetDrawColor(color.r, color.g, color.b, 150)
-        surface.DrawOutlinedRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
-        
-        surface.SetDrawColor(0, 100, 200, 80)
-        surface.DrawOutlinedRect(centerX - RadarSize - 2, centerY - RadarSize - 2, RadarSize * 2 + 4, RadarSize * 2 + 4)
-
-        draw.SimpleText("RADAR", "DefaultSmall", centerX, centerY - RadarSize - 25, 
-                    Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
-    end
-end)
-
-if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then 
-    hook.Remove("PostDrawHUD", "PlayerRadar")
-end
-
-if not draw.Circle then
-    function draw.Circle(x, y, radius, segments)
-        local circle = {}
-        
-        for i = 0, segments do
-            local angle = math.rad((i / segments) * -360)
-            table.insert(circle, {x = x + math.sin(angle) * radius, y = y + math.cos(angle) * radius})
-        end
-        
-        surface.DrawPoly(circle)
-    end
-end
-
-if dezz.cfg.vars["Crosshair"] then 
-    local cfg = dezz.cfg.vars["Crosshair type"]
-    local hs = Color((CurTime() * 720) % 360, 155, 155)
-    local scrw, scrh = ScrW(), ScrH() 
-    local scrwc, scrhc = scrw / 2, scrh / 2  
-    
-    if cfg == 1 then
-        local scrw, scrh = ScrW(), ScrH()
-        local centerX, centerY = scrw / 2, scrh / 2
-        local time = CurTime() % 1
-        local color = HSVToColor(time * 360, 1, 1)
-
-        local size = 50
-        local offsetX = 30
-        local offsetY = 30
-
-        surface.SetDrawColor(color)
-        surface.DrawLine(centerX, centerY - size / 2, centerX, centerY + size / 2)
-        surface.DrawLine(centerX - size / 2, centerY, centerX + size / 2, centerY)
-
-        surface.DrawLine(centerX - size / 4, centerY - offsetY, centerX + size / 4, centerY - offsetY)
-        surface.DrawLine(centerX - size / 4, centerY + offsetY, centerX + size / 4, centerY + offsetY)
-        surface.DrawLine(centerX - offsetX, centerY - size / 4, centerX - offsetX, centerY + size / 4)
-        surface.DrawLine(centerX + offsetX, centerY - size / 4, centerX + offsetX, centerY + size / 4)
-
-        local dotSize = 4
-        surface.DrawRect(centerX - size/2 - dotSize/2, centerY - size/2 - dotSize/2, dotSize, dotSize)
-        surface.DrawRect(centerX + size/2 - dotSize/2, centerY - size/2 - dotSize/2, dotSize, dotSize)
-        surface.DrawRect(centerX - size/2 - dotSize/2, centerY + size/2 - dotSize/2, dotSize, dotSize)
-        surface.DrawRect(centerX + size/2 - dotSize/2, centerY + size/2 - dotSize/2, dotSize, dotSize)
-
-    elseif cfg == 2 then
-        local csizew = 1
-
-        draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc - csizew/2 - 1, csizew + 2, csizew + 2, hs)
-        draw.RoundedBox(0, scrwc - csizew/2, scrhc - csizew/2, csizew, csizew, hs)
-        draw.RoundedBox(0, scrwc - csizew - 16, scrhc - csizew/2 - 1, csizew + 2 + 10, csizew + 2, hs)
-        draw.RoundedBox(0, scrwc + 3, scrhc - csizew/2 - 1, csizew + 12, csizew + 2, hs)
-        draw.RoundedBox(0, scrwc + 3, scrhc - csizew/2 - 1, csizew + 12, csizew + 2, hs)
-        draw.RoundedBox(0, scrwc + 4, scrhc - csizew/2, csizew + 10, csizew, hs)
-        draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc - csizew/2 - 16, csizew + 2, csizew + 12, hs)
-        draw.RoundedBox(0, scrwc - csizew/2, scrhc - csizew/2 - 15, csizew, csizew + 10, hs)
-        draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc + 3, csizew + 2, csizew + 12, hs)
-        draw.RoundedBox(0, scrwc - csizew/2, scrhc + 4, csizew, csizew + 10, hs)
-                
-    elseif cfg == 3 then
-        local time = CurTime() % 1
-        local color = HSVToColor(time * 360, 1, 1)
-        local size = 40
-        local centerX, centerY = scrwc, scrhc
-
-        local oldR, oldG, oldB, oldA = surface.GetDrawColor()
-        
-        if dezz.cfg.vars["Krutit"] then
-            local angle = CurTime() * 90
-            local rad = math.rad(angle)
-            local cos = math.cos(rad)
-            local sin = math.sin(rad)
-
-            local function drawRotatedLine(x1, y1, x2, y2)
-                local dx1, dy1 = x1 - centerX, y1 - centerY
-                local rx1 = centerX + dx1 * cos - dy1 * sin
-                local ry1 = centerY + dx1 * sin + dy1 * cos
-                
-                local dx2, dy2 = x2 - centerX, y2 - centerY
-                local rx2 = centerX + dx2 * cos - dy2 * sin
-                local ry2 = centerY + dx2 * sin + dy2 * cos
-                
-                surface.DrawLine(rx1, ry1, rx2, ry2)
-            end
-
-            surface.SetDrawColor(color)
+        if dezz.cfg.vars["Crosshair"] then 
+            local cfg = dezz.cfg.vars["Crosshair type"]
+            local scrw, scrh = ScrW(), ScrH()
+            local scrwc, scrhc = scrw / 2, scrh / 2  
             
-            drawRotatedLine(centerX, centerY - size/2, centerX, centerY + size/2)
-            drawRotatedLine(centerX - size/2, centerY, centerX + size/2, centerY)
-            drawRotatedLine(centerX, centerY - 20, centerX + size/2, centerY - 20)
-            drawRotatedLine(centerX, centerY + 20, centerX - size/2, centerY + 20)
-            drawRotatedLine(centerX + 20, centerY, centerX + 20, centerY + size/2)
-            drawRotatedLine(centerX - 20, centerY, centerX - 20, centerY - size/2)
-        else
-            surface.SetDrawColor(color)
-            surface.DrawLine(centerX, centerY - size/2, centerX, centerY + size/2)
-            surface.DrawLine(centerX - size/2, centerY, centerX + size/2, centerY)
-            surface.DrawLine(centerX, centerY - 20, centerX + size/2, centerY - 20)
-            surface.DrawLine(centerX, centerY + 20, centerX - size/2, centerY + 20)
-            surface.DrawLine(centerX + 20, centerY, centerX + 20, centerY + size/2)
-            surface.DrawLine(centerX - 20, centerY, centerX - 20, centerY - size/2)
-        end
-        
-        surface.SetDrawColor(oldR, oldG, oldB, oldA)
+            if cfg == 1 then
+                local centerX, centerY = scrw / 2, scrh / 2
+                local time = CurTime() % 1
+                local color = HSVToColor(time * 360, 1, 1)
 
-    elseif cfg == 4 then
-        local scrw, scrh = ScrW(), ScrH()
-        local centerX, centerY = scrw / 2, scrh / 2
-        local time = CurTime() % 1
-        local color = HSVToColor(time * 360, 1, 1)
+                local size = 50
+                local offsetX = 30
+                local offsetY = 30
 
-        local crossSize = 30
-        local shortLineLength = 10
-        local gap = 15
+                surface.SetDrawColor(color)
+                surface.DrawLine(centerX, centerY - size / 2, centerX, centerY + size / 2)
+                surface.DrawLine(centerX - size / 2, centerY, centerX + size / 2, centerY)
+                surface.DrawLine(centerX - size / 4, centerY - offsetY, centerX + size / 4, centerY - offsetY)
+                surface.DrawLine(centerX - size / 4, centerY + offsetY, centerX + size / 4, centerY + offsetY)
+                surface.DrawLine(centerX - offsetX, centerY - size / 4, centerX - offsetX, centerY + size / 4)
+                surface.DrawLine(centerX + offsetX, centerY - size / 4, centerX + offsetX, centerY + size / 4)
 
-        surface.SetDrawColor(color)
+                local dotSize = 4
+                surface.DrawRect(centerX - size/2 - dotSize/2, centerY - size/2 - dotSize/2, dotSize, dotSize)
+                surface.DrawRect(centerX + size/2 - dotSize/2, centerY - size/2 - dotSize/2, dotSize, dotSize)
+                surface.DrawRect(centerX - size/2 - dotSize/2, centerY + size/2 - dotSize/2, dotSize, dotSize)
+                surface.DrawRect(centerX + size/2 - dotSize/2, centerY + size/2 - dotSize/2, dotSize, dotSize)
 
-        surface.DrawLine(centerX, centerY - crossSize / 2, centerX, centerY + crossSize / 2)
-        surface.DrawLine(centerX - crossSize / 2, centerY, centerX + crossSize / 2, centerY)
-        surface.DrawLine(centerX - shortLineLength / 2, centerY - gap, centerX + shortLineLength / 2, centerY - gap)
-        surface.DrawLine(centerX - shortLineLength / 2, centerY + gap, centerX + shortLineLength / 2, centerY + gap)
-        surface.DrawLine(centerX - gap, centerY - shortLineLength / 2, centerX - gap, centerY + shortLineLength / 2)
-        surface.DrawLine(centerX + gap, centerY - shortLineLength / 2, centerX + gap, centerY + shortLineLength / 2)
+            elseif cfg == 2 then
+                local csizew = 1
+                local hs = Color((CurTime() * 720) % 360, 155, 155)
 
-    elseif cfg == 5 then
-        local scrw, scrh = ScrW(), ScrH()
-        local centerX, centerY = scrw / 2, scrh / 2
-        local time = CurTime() % 1
-        local color = HSVToColor(time * 360, 1, 1)
+                draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc - csizew/2 - 1, csizew + 2, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc - csizew/2, scrhc - csizew/2, csizew, csizew, hs)
+                draw.RoundedBox(0, scrwc - csizew - 16, scrhc - csizew/2 - 1, csizew + 2 + 10, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc + 3, scrhc - csizew/2 - 1, csizew + 12, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc + 3, scrhc - csizew/2 - 1, csizew + 12, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc + 4, scrhc - csizew/2, csizew + 10, csizew, hs)
+                draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc - csizew/2 - 16, csizew + 2, csizew + 12, hs)
+                draw.RoundedBox(0, scrwc - csizew/2, scrhc - csizew/2 - 15, csizew, csizew + 10, hs)
+                draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc + 3, csizew + 2, csizew + 12, hs)
+                draw.RoundedBox(0, scrwc - csizew/2, scrhc + 4, csizew, csizew + 10, hs)
+                        
+            elseif cfg == 3 then
+                local time = CurTime() % 1
+                local color = HSVToColor(time * 360, 1, 1)
+                local size = 40
+                local centerX, centerY = scrwc, scrhc
 
-        local crossSize = 40
-        local lineLength = 15
-        local gap = 10
+                local oldR, oldG, oldB, oldA = surface.GetDrawColor()
+                
+                if dezz.cfg.vars["Krutit"] then
+                    local angle = CurTime() * 90
+                    surface.SetDrawColor(color)
+                    
+                    DrawRotatedLine(centerX, centerY - size/2, centerX, centerY + size/2, centerX, centerY, angle)
+                    DrawRotatedLine(centerX - size/2, centerY, centerX + size/2, centerY, centerX, centerY, angle)
+                    DrawRotatedLine(centerX, centerY - 20, centerX + size/2, centerY - 20, centerX, centerY, angle)
+                    DrawRotatedLine(centerX, centerY + 20, centerX - size/2, centerY + 20, centerX, centerY, angle)
+                    DrawRotatedLine(centerX + 20, centerY, centerX + 20, centerY + size/2, centerX, centerY, angle)
+                    DrawRotatedLine(centerX - 20, centerY, centerX - 20, centerY - size/2, centerX, centerY, angle)
+                else
+                    surface.SetDrawColor(color)
+                    surface.DrawLine(centerX, centerY - size/2, centerX, centerY + size/2)
+                    surface.DrawLine(centerX - size/2, centerY, centerX + size/2, centerY)
+                    surface.DrawLine(centerX, centerY - 20, centerX + size/2, centerY - 20)
+                    surface.DrawLine(centerX, centerY + 20, centerX - size/2, centerY + 20)
+                    surface.DrawLine(centerX + 20, centerY, centerX + 20, centerY + size/2)
+                    surface.DrawLine(centerX - 20, centerY, centerX - 20, centerY - size/2)
+                end
+                
+                surface.SetDrawColor(oldR, oldG, oldB, oldA)
 
-        surface.SetDrawColor(color)
+            elseif cfg == 4 then
+                local centerX, centerY = scrw / 2, scrh / 2
+                local time = CurTime() % 1
+                local color = HSVToColor(time * 360, 1, 1)
 
-        surface.DrawLine(centerX, centerY - crossSize / 2, centerX, centerY + crossSize / 2)
-        surface.DrawLine(centerX - crossSize / 2, centerY, centerX + crossSize / 2, centerY)
-    end
-end
+                local crossSize = 30
+                local shortLineLength = 10
+                local gap = 15
 
-        if dezz.cfg.vars["test"]  then
+                surface.SetDrawColor(color)
+                surface.DrawLine(centerX, centerY - crossSize / 2, centerX, centerY + crossSize / 2)
+                surface.DrawLine(centerX - crossSize / 2, centerY, centerX + crossSize / 2, centerY)
+                surface.DrawLine(centerX - shortLineLength / 2, centerY - gap, centerX + shortLineLength / 2, centerY - gap)
+                surface.DrawLine(centerX - shortLineLength / 2, centerY + gap, centerX + shortLineLength / 2, centerY + gap)
+                surface.DrawLine(centerX - gap, centerY - shortLineLength / 2, centerX - gap, centerY + shortLineLength / 2)
+                surface.DrawLine(centerX + gap, centerY - shortLineLength / 2, centerX + gap, centerY + shortLineLength / 2)
+
+            elseif cfg == 5 then
+                local centerX, centerY = scrw / 2, scrh / 2
+                local time = CurTime() % 1
+                local color = HSVToColor(time * 360, 1, 1)
+
+                local crossSize = 40
+
+                surface.SetDrawColor(color)
+                surface.DrawLine(centerX, centerY - crossSize / 2, centerX, centerY + crossSize / 2)
+                surface.DrawLine(centerX - crossSize / 2, centerY, centerX + crossSize / 2, centerY)
+            end
         end
 
         if dezz.cfg.vars["KeyBind List"] then
             if dezz.cfg.vars["bind mode"] == 1 then
                 dezz.keybindListData = dezz.keybindListData or {
-                x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.x) or 30,
-                y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.y) or 300,
-                w = 200,
-                dragging = false,
-                dragDX = 0,
-                dragDY = 0,
-            }
+                    x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.x) or 30,
+                    y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.y) or 300,
+                    w = 200,
+                    dragging = false,
+                    dragDX = 0,
+                    dragDY = 0,
+                }
 
-            local kbd = dezz.keybindListData
-            local colHeader = string.ToColor(dezz.cfg.colors["KeyBind List"] or "255 0 0 255")
-            local colText = Color(255,255,255, 240)
-            local colShadow = Color(0,0,0, 200)
+                local kbd = dezz.keybindListData
+                local colHeader = string.ToColor(dezz.cfg.colors["KeyBind List"] or "255 0 0 255")
+                local colText = Color(255,255,255, 240)
+                local colShadow = Color(0,0,0, 200)
 
-            local paddingX, paddingY = 15, 12 
-            local lineGap = 6 
-            local title = "KeyBind List"
+                local paddingX, paddingY = 15, 12 
+                local lineGap = 6 
+                local title = "KeyBind List"
 
-            surface.SetFont("HudhintTextLarge") 
-            local titleW, titleH = surface.GetTextSize(title)
+                surface.SetFont("HudhintTextLarge") 
+                local titleW, titleH = surface.GetTextSize(title)
 
-            
-            local allBinds = {}
-            for name, key in pairs(dezz.cfg.binds or {}) do
-                if key and key != 0 then
-                    local lname = tostring(name):lower()
-                    if not string.find(lname, "menu", 1, true) then
-                        local v = dezz.cfg.vars and dezz.cfg.vars[name]
-                        if v == nil or v == true then
-                            local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
-                            allBinds[#allBinds+1] = {
-                                label = tostring(name), 
-                                key = tostring(string.upper(keyName or ""))
-                            }
+                local allBinds = {}
+                for name, key in pairs(dezz.cfg.binds or {}) do
+                    if key and key != 0 then
+                        local lname = tostring(name):lower()
+                        if not string.find(lname, "menu", 1, true) then
+                            local v = dezz.cfg.vars and dezz.cfg.vars[name]
+                            if v == nil or v == true then
+                                local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
+                                allBinds[#allBinds+1] = {
+                                    label = tostring(name), 
+                                    key = tostring(string.upper(keyName or ""))
+                                }
+                            end
                         end
                     end
                 end
-            end
-            local maxW = titleW
-            for i = 1, #allBinds do
-                local w = select(1, surface.GetTextSize(allBinds[i].label .. ": " .. allBinds[i].key))
-                if w > maxW then maxW = w end
-            end
 
-            local listH = (#allBinds > 0) and ((titleH + paddingY*2) + (#allBinds * (titleH + lineGap)) + paddingY) or (titleH + paddingY*3)
-            local listW = maxW + paddingX*2 + 20 
-            local maxAllowedW = math.max(250, ScrW() - 80) 
-            if listW > maxAllowedW then listW = maxAllowedW end
-            kbd.w = listW
-
-            local mx, my = gui.MousePos()
-            local overHeader = mx >= kbd.x and mx <= kbd.x + listW and my >= kbd.y and my <= kbd.y + (titleH + paddingY*2)
-            if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
-                kbd.dragging = true
-                kbd.dragDX = mx - kbd.x
-                kbd.dragDY = my - kbd.y
-            end
-            if kbd.dragging then
-                if input.IsMouseDown(MOUSE_LEFT) then
-                    kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - listW)
-                    kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - listH)
-                else
-                    kbd.dragging = false
-                    dezz.cfg = dezz.cfg or {}
-                    dezz.cfg.ui = dezz.cfg.ui or {}
-                    dezz.cfg.ui.kb_pos = { x = kbd.x, y = kbd.y }
+                local maxW = titleW
+                for i = 1, #allBinds do
+                    local w = select(1, surface.GetTextSize(allBinds[i].label .. ": " .. allBinds[i].key))
+                    if w > maxW then maxW = w end
                 end
-            end
 
-           
-            surface.SetDrawColor(colHeader.r, colHeader.g, colHeader.b, colHeader.a)
-            surface.DrawRect(kbd.x, kbd.y, listW, titleH + paddingY*2)
-            
-           
-            local time = CurTime() % 1
-            local rainbowColor = HSVToColor(time * 360, 1, 1)
-            local titleX = kbd.x + math.floor((listW - titleW) / 2)
-            
-            surface.SetTextColor(colShadow.r, colShadow.g, colShadow.b, colShadow.a)
-            surface.SetTextPos(titleX + 2, kbd.y + paddingY + 2)
-            surface.DrawText(title)
-            
-            surface.SetTextColor(rainbowColor.r, rainbowColor.g, rainbowColor.b, rainbowColor.a)
-            surface.SetTextPos(titleX, kbd.y + paddingY)
-            surface.DrawText(title)
+                local listH = (#allBinds > 0) and ((titleH + paddingY*2) + (#allBinds * (titleH + lineGap)) + paddingY) or (titleH + paddingY*3)
+                local listW = maxW + paddingX*2 + 20 
+                local maxAllowedW = math.max(250, ScrW() - 80) 
+                if listW > maxAllowedW then listW = maxAllowedW end
+                kbd.w = listW
 
-            local cursorY = kbd.y + (titleH + paddingY*2) + paddingY/2
-            for i = 1, #allBinds do
-                local label = allBinds[i].label .. ": " .. allBinds[i].key
-                
-               
-                local bindTime = (CurTime() + i * 0.2) % 1
-                local bindRainbowColor = HSVToColor(bindTime * 360, 1, 1)
-                
+                local mx, my = gui.MousePos()
+                local overHeader = mx >= kbd.x and mx <= kbd.x + listW and my >= kbd.y and my <= kbd.y + (titleH + paddingY*2)
+                if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
+                    kbd.dragging = true
+                    kbd.dragDX = mx - kbd.x
+                    kbd.dragDY = my - kbd.y
+                end
+                if kbd.dragging then
+                    if input.IsMouseDown(MOUSE_LEFT) then
+                        kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - listW)
+                        kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - listH)
+                    else
+                        kbd.dragging = false
+                        dezz.cfg = dezz.cfg or {}
+                        dezz.cfg.ui = dezz.cfg.ui or {}
+                        dezz.cfg.ui.kb_pos = { x = kbd.x, y = kbd.y }
+                    end
+                end
+
+                surface.SetDrawColor(colHeader.r, colHeader.g, colHeader.b, colHeader.a)
+                surface.DrawRect(kbd.x, kbd.y, listW, titleH + paddingY*2)
+
+                local time = CurTime() % 1
+                local rainbowColor = HSVToColor(time * 360, 1, 1)
+                local titleX = kbd.x + math.floor((listW - titleW) / 2)
+
                 surface.SetTextColor(colShadow.r, colShadow.g, colShadow.b, colShadow.a)
-                surface.SetTextPos(kbd.x + paddingX + 1, cursorY + 1)
-                surface.DrawText(label)
-                
-                surface.SetTextColor(bindRainbowColor.r, bindRainbowColor.g, bindRainbowColor.b, bindRainbowColor.a)
-                surface.SetTextPos(kbd.x + paddingX, cursorY)
-                surface.DrawText(label)
-                
-                cursorY = cursorY + titleH + lineGap
-            end
-            surface.SetFont("Default")
-        elseif dezz.cfg.vars["bind mode"] == 2 then
-            dezz.keybindListData2 = dezz.keybindListData2 or {
-                x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.x) or 20,
-                y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.y) or 20,
-                dragging = false,
-                dragDX = 0,
-                dragDY = 0
-            }
+                surface.SetTextPos(titleX + 2, kbd.y + paddingY + 2)
+                surface.DrawText(title)
 
-            local kbd = dezz.keybindListData2
-            local allBinds = {}
-            for name, key in pairs(dezz.cfg.binds or {}) do
-                if key and key != 0 then
-                    local lname = tostring(name):lower()
-                    if not string.find(lname, "menu", 1, true) then
-                        local v = dezz.cfg.vars and dezz.cfg.vars[name]
-                        if v == nil or v == true then
-                            local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
-                            allBinds[#allBinds+1] = {
-                                label = tostring(name), 
-                                key = tostring(string.upper(keyName or ""))
-                            }
+                surface.SetTextColor(rainbowColor.r, rainbowColor.g, rainbowColor.b, rainbowColor.a)
+                surface.SetTextPos(titleX, kbd.y + paddingY)
+                surface.DrawText(title)
+
+                local cursorY = kbd.y + (titleH + paddingY*2) + paddingY/2
+                for i = 1, #allBinds do
+                    local label = allBinds[i].label .. ": " .. allBinds[i].key
+                    local bindTime = (CurTime() + i * 0.2) % 1
+                    local bindRainbowColor = HSVToColor(bindTime * 360, 1, 1)
+
+                    surface.SetTextColor(colShadow.r, colShadow.g, colShadow.b, colShadow.a)
+                    surface.SetTextPos(kbd.x + paddingX + 1, cursorY + 1)
+                    surface.DrawText(label)
+
+                    surface.SetTextColor(bindRainbowColor.r, bindRainbowColor.g, bindRainbowColor.b, bindRainbowColor.a)
+                    surface.SetTextPos(kbd.x + paddingX, cursorY)
+                    surface.DrawText(label)
+
+                    cursorY = cursorY + titleH + lineGap
+                end
+                surface.SetFont("Default")
+            elseif dezz.cfg.vars["bind mode"] == 2 then
+                dezz.keybindListData2 = dezz.keybindListData2 or {
+                    x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.x) or 20,
+                    y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.y) or 20,
+                    dragging = false,
+                    dragDX = 0,
+                    dragDY = 0
+                }
+
+                local kbd = dezz.keybindListData2
+                local allBinds = {}
+                for name, key in pairs(dezz.cfg.binds or {}) do
+                    if key and key != 0 then
+                        local lname = tostring(name):lower()
+                        if not string.find(lname, "menu", 1, true) then
+                            local v = dezz.cfg.vars and dezz.cfg.vars[name]
+                            if v == nil or v == true then
+                                local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
+                                allBinds[#allBinds+1] = {
+                                    label = tostring(name), 
+                                    key = tostring(string.upper(keyName or ""))
+                                }
+                            end
                         end
                     end
                 end
-            end
 
-            surface.SetFont("HudhintTextLarge")
-            local headerH = 25
-            local headerW = 200
-            local padding = 5
-            local bindezzeight = 20
-            local totalHeight = headerH + (#allBinds * bindezzeight) + padding
+                surface.SetFont("HudhintTextLarge")
+                local headerH = 25
+                local headerW = 200
+                local padding = 5
+                local bindHeight = 20
+                local totalHeight = headerH + (#allBinds * bindHeight) + padding
 
-           
-            local mx, my = gui.MousePos()
-            local overHeader = mx >= kbd.x and mx <= kbd.x + headerW and my >= kbd.y and my <= kbd.y + headerH
-            if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
-                kbd.dragging = true
-                kbd.dragDX = mx - kbd.x
-                kbd.dragDY = my - kbd.y
-            end
-            if kbd.dragging then
-                if input.IsMouseDown(MOUSE_LEFT) then
-                    kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - headerW)
-                    kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - totalHeight)
-                else
-                    kbd.dragging = false
-                    dezz.cfg = dezz.cfg or {}
-                    dezz.cfg.ui = dezz.cfg.ui or {}
-                    dezz.cfg.ui.kb2_pos = { x = kbd.x, y = kbd.y }
+                local mx, my = gui.MousePos()
+                local overHeader = mx >= kbd.x and mx <= kbd.x + headerW and my >= kbd.y and my <= kbd.y + headerH
+                if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
+                    kbd.dragging = true
+                    kbd.dragDX = mx - kbd.x
+                    kbd.dragDY = my - kbd.y
                 end
-            end
+                if kbd.dragging then
+                    if input.IsMouseDown(MOUSE_LEFT) then
+                        kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - headerW)
+                        kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - totalHeight)
+                    else
+                        kbd.dragging = false
+                        dezz.cfg = dezz.cfg or {}
+                        dezz.cfg.ui = dezz.cfg.ui or {}
+                        dezz.cfg.ui.kb2_pos = { x = kbd.x, y = kbd.y }
+                    end
+                end
 
-            
-            local time = CurTime() % 1
-            local rgbColor = HSVToColor(time * 360, 1, 1)
-            draw.RoundedBox(0, kbd.x, kbd.y, headerW, 3, rgbColor)
+                local time = CurTime() % 1
+                local rgbColor = HSVToColor(time * 360, 1, 1)
+                draw.RoundedBox(0, kbd.x, kbd.y, headerW, 3, rgbColor)
 
-           
-            draw.RoundedBox(0, kbd.x, kbd.y, headerW, headerH, Color(25, 25, 25, 200))
-            draw.RoundedBox(0, kbd.x, kbd.y + headerH, headerW, 2, Color(25, 25, 25, 160))
-            draw.SimpleText("Keybinds", "HudhintTextLarge", kbd.x + headerW/2, kbd.y + headerH/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.RoundedBox(0, kbd.x, kbd.y, headerW, headerH, Color(25, 25, 25, 200))
+                draw.RoundedBox(0, kbd.x, kbd.y + headerH, headerW, 2, Color(25, 25, 25, 160))
+                draw.SimpleText("Keybinds", "HudhintTextLarge", kbd.x + headerW/2, kbd.y + headerH/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            
-            for i, bind in ipairs(allBinds) do
-                local yPos = kbd.y + headerH + (i * bindezzeight) - bindezzeight + padding
-                local bindTime = (CurTime() + i * 0.2) % 1
-                local bindColor = HSVToColor(bindTime * 360, 1, 1)
-                
-                draw.SimpleText(bind.label .. ": " .. bind.key, "HudhintTextLarge", kbd.x + padding, yPos, bindColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            end
+                for i, bind in ipairs(allBinds) do
+                    local yPos = kbd.y + headerH + (i * bindHeight) - bindHeight + padding
+                    local bindTime = (CurTime() + i * 0.2) % 1
+                    local bindColor = HSVToColor(bindTime * 360, 1, 1)
+                    
+                    draw.SimpleText(bind.label .. ": " .. bind.key, "HudhintTextLarge", kbd.x + padding, yPos, bindColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
             end
         end
 
@@ -10890,105 +10705,105 @@ end
                 return nil
             end
 
-local rules = {
-    ["3.1"] = "NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.2"] = "FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-    ["3.2.1"] = "MassFreeDamage — Запрещено нанесение урона 4 и более игрокам без особой на то РП причины (даже косвенным путем)\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-    ["3.3"] = "FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-    ["3.3.1"] = "RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-    ["3.3.2"] = "MassRDM — Запрещено убийство 4 и более игроков без особой на то РП причины (даже косвенным путем)\n🔔ИСКЛЮЧЕНИЕ:\n• Самооборона.\n• Стрельба по вашим предметам.\n• Воровство ваших предметов.\n• Попытка связывания и воровство вас.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-    ["3.4"] = "NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-    ["3.5"] = "FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• 3.5 не работает во время рейдов (исключительно для атакующей и обороняющейся сторон), если Вы держали оружие до момента, как Вам начали угрожать оружием.\n• Если Амбрелле и Полиции угрожает один вооруженный человек, то он может дать отпор.\n• Если на Амбреллу и Полицию один вооруженный человек наставил оружие, то он не может достать наручники и надеть их на него.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• Однако, если угрожающий отвернулся, но при этом он всё еще вооружен, то он может надеть наручники на него.\n• На рейде запрещено намеренно выходить в область прямого огня перестрелки, а также заходить на территорию рейда, если Вы не являетесь участником атакующей или обороняющейся стороны.\n• Если что-то угрожает Вашей жизни (другой человек с оружием и т.п.), то Вы не имеете права использовать какие-либо средства ухода, которые приведут к Вашей смерти (еда и сигарета, которые отнимают Ваше здоровье).\n• Если на Вас навели оружие, то Вы не можете совершать резких движений даже если Вы в наручниках (не относится к движением мыши, но относится к жестам (act)). В таком случае Вас могут арестовать/убить (даже Госслужащий) и это не будет считаться [FreeKill'ом/FreeArrest'ом].\n🔔ИСКЛЮЧЕНИЕ:\n• Зомби\n• Амбрелла на базе\n• Полиция в Полицейском Участке\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.6"] = "JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-    ["3.7"] = "FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.8"] = "MassFreeArrest— Запрещен арест 3 и более людей без особой на то РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-    ["3.9"] = "CustomJob — С помощью команды \"/job\" Вы можете лишь уточнить смысл своей профессии, но не менять её.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-    ["3.10"] = "SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.11"] = "NickNameAbuse запрещено:\n• Нечитаемый никнейм\n• Копировать чужой никнейм\n• Никнейм с использованием рекламы (Исключение, реклама RusELiteRP)\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-    ["3.12"] = "FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.13"] = "MassFreeCuff — Запрещено заковывать в наручники 3 и более людей без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-    ["3.14"] = "BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.15"] = "BanExit — Запрещено покидать разборки.\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.16"] = "LeaveRolePlay - Запрещено покидать сервер во время РП ситуации\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["3.17"] = "OrganizationAbuse — Запрещено использовать нацисткую символику в группировках, оскорбления, фальсификации статуса игрока, копировать другие организации.\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-    ["3.19"] = "Free Demote - Запрещено увольнение игроков без адекватной на то причины.\nЗапрещено увольнение игрока с профессии без наличия RP обоснования и корректной RP причины (причину «AFK» использовать можно).\nПричиной увольнения игрока может служить нарушение правил профессии/прямых обязанностей.\n| Наказание 3.1",
-    ["nlr"] = "3.4 - NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-    ["rdm"] = "3.3.1 - RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-    ["freekill"] = "3.3 - FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-    ["freedamage"] = "3.2 - FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-    ["nonrp"] = "3.1 - NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["fearrp"] = "3.5 - FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["jobabuse"] = "3.6 - JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-    ["freearrest"] = "3.7 - FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["freecuff"] = "3.12 - FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["spawnabuse"] = "3.10 - SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-    ["bugabuse"] = "3.14 - BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)"
-}
+            local rules = {
+                ["3.1"] = "NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.2"] = "FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["3.2.1"] = "MassFreeDamage — Запрещено нанесение урона 4 и более игрокам без особой на то РП причины (даже косвенным путем)\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.3"] = "FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["3.3.1"] = "RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+                ["3.3.2"] = "MassRDM — Запрещено убийство 4 и более игроков без особой на то РП причины (даже косвенным путем)\n🔔ИСКЛЮЧЕНИЕ:\n• Самооборона.\n• Стрельба по вашим предметам.\n• Воровство ваших предметов.\n• Попытка связывания и воровство вас.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.4"] = "NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["3.5"] = "FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• 3.5 не работает во время рейдов (исключительно для атакующей и обороняющейся сторон), если Вы держали оружие до момента, как Вам начали угрожать оружием.\n• Если Амбрелле и Полиции угрожает один вооруженный человек, то он может дать отпор.\n• Если на Амбреллу и Полицию один вооруженный человек наставил оружие, то он не может достать наручники и надеть их на него.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• Однако, если угрожающий отвернулся, но при этом он всё еще вооружен, то он может надеть наручники на него.\n• На рейде запрещено намеренно выходить в область прямого огня перестрелки, а также заходить на территорию рейда, если Вы не являетесь участником атакующей или обороняющейся стороны.\n• Если что-то угрожает Вашей жизни (другой человек с оружием и т.п.), то Вы не имеете права использовать какие-либо средства ухода, которые приведут к Вашей смерти (еда и сигарета, которые отнимают Ваше здоровье).\n• Если на Вас навели оружие, то Вы не можете совершать резких движений даже если Вы в наручниках (не относится к движением мыши, но относится к жестам (act)). В таком случае Вас могут арестовать/убить (даже Госслужащий) и это не будет считаться [FreeKill'ом/FreeArrest'ом].\n🔔ИСКЛЮЧЕНИЕ:\n• Зомби\n• Амбрелла на базе\n• Полиция в Полицейском Участке\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.6"] = "JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["3.7"] = "FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.8"] = "MassFreeArrest— Запрещен арест 3 и более людей без особой на то РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.9"] = "CustomJob — С помощью команды \"/job\" Вы можете лишь уточнить смысл своей профессии, но не менять её.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["3.10"] = "SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.11"] = "NickNameAbuse запрещено:\n• Нечитаемый никнейм\n• Копировать чужой никнейм\n• Никнейм с использованием рекламы (Исключение, реклама RusELiteRP)\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.12"] = "FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.13"] = "MassFreeCuff — Запрещено заковывать в наручники 3 и более людей без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.14"] = "BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.15"] = "BanExit — Запрещено покидать разборки.\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.16"] = "LeaveRolePlay - Запрещено покидать сервер во время РП ситуации\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.17"] = "OrganizationAbuse — Запрещено использовать нацисткую символику в группировках, оскорбления, фальсификации статуса игрока, копировать другие организации.\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+                ["3.19"] = "Free Demote - Запрещено увольнение игроков без адекватной на то причины.\nЗапрещено увольнение игрока с профессии без наличия RP обоснования и корректной RP причины (причину «AFK» использовать можно).\nПричиной увольнения игрока может служить нарушение правил профессии/прямых обязанностей.\n| Наказание 3.1",
+                ["nlr"] = "3.4 - NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["rdm"] = "3.3.1 - RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+                ["freekill"] = "3.3 - FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["freedamage"] = "3.2 - FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["nonrp"] = "3.1 - NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["fearrp"] = "3.5 - FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["jobabuse"] = "3.6 - JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["freearrest"] = "3.7 - FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["freecuff"] = "3.12 - FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["spawnabuse"] = "3.10 - SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["bugabuse"] = "3.14 - BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)"
+            }
 
-local function SearchRules(keyword)
-    local searchTerm = string.lower(keyword)
-    local foundRules = {}
-    
-    if rules[searchTerm] then
-        foundRules[searchTerm] = rules[searchTerm]
-    end
-    
-    for rule, description in pairs(rules) do
-        if string.find(string.lower(rule), searchTerm, 1, true) or string.find(string.lower(description), searchTerm, 1, true) then
-            foundRules[rule] = description
-        end
-    end
-    
-    return foundRules
-end
+            local function SearchRules(keyword)
+                local searchTerm = string.lower(keyword)
+                local foundRules = {}
+                
+                if rules[searchTerm] then
+                    foundRules[searchTerm] = rules[searchTerm]
+                end
+                
+                for rule, description in pairs(rules) do
+                    if string.find(string.lower(rule), searchTerm, 1, true) or string.find(string.lower(description), searchTerm, 1, true) then
+                        foundRules[rule] = description
+                    end
+                end
+                
+                return foundRules
+            end
 
-local function OpenRulesWindow(searchKeyword)
-    local foundRules = SearchRules(searchKeyword)
-    
-    local rulesFrame = vgui.Create("DFrame")
-    rulesFrame:SetSize(600, 500)
-    rulesFrame:Center()
-    rulesFrame:SetTitle("Поиск правил: " .. searchKeyword)
-    rulesFrame:ShowCloseButton(true)
-    rulesFrame:SetDraggable(true)
-    rulesFrame:MakePopup()
-    
-    rulesFrame.Paint = function(self, w, h)
-        draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
-        draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
-    end
-    
-    local scrollPanel = vgui.Create("DScrollPanel", rulesFrame)
-    scrollPanel:Dock(FILL)
-    scrollPanel:DockMargin(10, 30, 10, 10)
-    
-    if next(foundRules) == nil then
-        local noResultsLabel = vgui.Create("DLabel", scrollPanel)
-        noResultsLabel:Dock(TOP)
-        noResultsLabel:SetText("Правила не найдены для: " .. searchKeyword)
-        noResultsLabel:SetFont("DermaLarge")
-        noResultsLabel:SetTextColor(Color(255, 100, 100))
-        noResultsLabel:SizeToContents()
-    else
-        for rule, description in pairs(foundRules) do
-            local ruleLabel = vgui.Create("DLabel", scrollPanel)
-            ruleLabel:Dock(TOP)
-            ruleLabel:SetText("=== " .. rule .. " ===")
-            ruleLabel:SetFont("DermaLarge")
-            ruleLabel:SetTextColor(Color(255, 255, 100))
-            ruleLabel:SizeToContents()
-            
-            local descLabel = vgui.Create("DLabel", scrollPanel)
-            descLabel:Dock(TOP)
-            descLabel:DockMargin(0, 0, 0, 20)
-            descLabel:SetText(description)
-            descLabel:SetFont("DermaDefault")
-            descLabel:SetTextColor(Color(255, 255, 255))
-            descLabel:SetWrap(true)
-            descLabel:SetAutoStretchVertical(true)
-        end
-    end
-end
+            local function OpenRulesWindow(searchKeyword)
+                local foundRules = SearchRules(searchKeyword)
+                
+                local rulesFrame = vgui.Create("DFrame")
+                rulesFrame:SetSize(600, 500)
+                rulesFrame:Center()
+                rulesFrame:SetTitle("Поиск правил: " .. searchKeyword)
+                rulesFrame:ShowCloseButton(true)
+                rulesFrame:SetDraggable(true)
+                rulesFrame:MakePopup()
+                
+                rulesFrame.Paint = function(self, w, h)
+                    draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
+                    draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
+                end
+                
+                local scrollPanel = vgui.Create("DScrollPanel", rulesFrame)
+                scrollPanel:Dock(FILL)
+                scrollPanel:DockMargin(10, 30, 10, 10)
+                
+                if next(foundRules) == nil then
+                    local noResultsLabel = vgui.Create("DLabel", scrollPanel)
+                    noResultsLabel:Dock(TOP)
+                    noResultsLabel:SetText("Правила не найдены для: " .. searchKeyword)
+                    noResultsLabel:SetFont("DermaLarge")
+                    noResultsLabel:SetTextColor(Color(255, 100, 100))
+                    noResultsLabel:SizeToContents()
+                else
+                    for rule, description in pairs(foundRules) do
+                        local ruleLabel = vgui.Create("DLabel", scrollPanel)
+                        ruleLabel:Dock(TOP)
+                        ruleLabel:SetText("=== " .. rule .. " ===")
+                        ruleLabel:SetFont("DermaLarge")
+                        ruleLabel:SetTextColor(Color(255, 255, 100))
+                        ruleLabel:SizeToContents()
+                        
+                        local descLabel = vgui.Create("DLabel", scrollPanel)
+                        descLabel:Dock(TOP)
+                        descLabel:DockMargin(0, 0, 0, 20)
+                        descLabel:SetText(description)
+                        descLabel:SetFont("DermaDefault")
+                        descLabel:SetTextColor(Color(255, 255, 255))
+                        descLabel:SetWrap(true)
+                        descLabel:SetAutoStretchVertical(true)
+                    end
+                end
+            end
 
             local banMenuFrame = nil
             local isOpeningBanMenu = false
@@ -11065,8 +10880,6 @@ end
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FreeCuff - 3.12", "10", "mi", "3.12")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "MassFreeCuff - 3.13", "12", "h", "3.13")
-                
-
             end
 
             local function OpenBanMenu()
@@ -11462,383 +11275,283 @@ end
                     f8Pressed = false
                 end
             end)
-
-
-
-
-if dezz.cfg.vars["Hitmarker"] and #dezz.hitmarkers > 0 then
-    local hm = string.ToColor(dezz.cfg.colors["Hitmarker"])
-    local currentTime = CurTime()
-    
-    for i = #dezz.hitmarkers, 1, -1 do
-        local hit = dezz.hitmarkers[i]
-
-        if hit.time < currentTime - 0.8 then 
-            table.remove(dezz.hitmarkers, i) 
-            continue 
-        end 
-        
-        local elapsed = currentTime - hit.time
-        local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
-        
-        local spreadProgress = math.min(elapsed / 0.3, 1.0)
-        local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
-
-        local spread = 80 * spreadProgress
-        local length = 13.5 * (1 - spreadProgress * 0.5)
-        local alpha = 255 * alphaProgress
-
-        local function drawHitmarkerLine(x1, y1, x2, y2)
-            surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
-            surface.DrawLine(x1, y1, x2, y2)
-
-            surface.SetDrawColor(0, 0, 0, 100 * alphaProgress)
-            surface.DrawLine(x1 - 1, y1 - 1, x2 - 1, y2 - 1)
         end
 
-        drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
-        drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
-        drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
-        drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
-        end
-    end
-end
-        if dezz.cfg.vars["Fov limit"] and dezz.cfg.vars["Show FOV"] then 
-            local col = string.ToColor( dezz.cfg.colors["Show FOV"] )
+        if dezz.cfg.vars["Hitmarker"] and #dezz.hitmarkers > 0 then
+            local hm = string.ToColor(dezz.cfg.colors["Hitmarker"] or "255 255 255 255")
+            local currentTime = CurTime()
             
+            for i = #dezz.hitmarkers, 1, -1 do
+                local hit = dezz.hitmarkers[i]
+                if hit.time < currentTime - 0.8 then 
+                    table.remove(dezz.hitmarkers, i) 
+                    continue 
+                end 
+                
+                local elapsed = currentTime - hit.time
+                local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
+                
+                local spreadProgress = math.min(elapsed / 0.3, 1.0)
+                local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
+
+                local spread = 80 * spreadProgress
+                local length = 13.5 * (1 - spreadProgress * 0.5)
+                local alpha = 255 * alphaProgress
+
+                local function drawHitmarkerLine(x1, y1, x2, y2)
+                    surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
+                    surface.DrawLine(x1, y1, x2, y2)
+                    surface.SetDrawColor(0, 0, 0, 100 * alphaProgress)
+                    surface.DrawLine(x1 - 1, y1 - 1, x2 - 1, y2 - 1)
+                end
+
+                drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
+                drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
+                drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
+                drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
+            end
+        end
+
+        if dezz.cfg.vars["Fov limit"] and dezz.cfg.vars["Show FOV"] then 
+            local col = string.ToColor(dezz.cfg.colors["Show FOV"] or "255 255 255 255")
             local radius = dezz.GetFovRadius()
         
-            surface.SetDrawColor( 0, 0, 0, 128 )
-            surface.DrawCircle( ( screenWidth * 0.5 ), ( screenHeight * 0.5 ), radius + 1 )
+            surface.SetDrawColor(0, 0, 0, 128)
+            surface.DrawCircle(screenWidth * 0.5, screenHeight * 0.5, radius + 1)
 
-            surface.SetDrawColor( col.r, col.g, col.b )
-            surface.DrawCircle( ( screenWidth * 0.5 ), ( screenHeight * 0.5 ), radius )
+            surface.SetDrawColor(col.r, col.g, col.b)
+            surface.DrawCircle(screenWidth * 0.5, screenHeight * 0.5, radius)
 
-            surface.SetDrawColor( 0, 0, 0, 128 )
-            surface.DrawCircle( ( screenWidth * 0.5 ), ( screenHeight * 0.5 ), radius - 1 )
+            surface.SetDrawColor(0, 0, 0, 128)
+            surface.DrawCircle(screenWidth * 0.5, screenHeight * 0.5, radius - 1)
         end
 
         if dezz.target and dezz.targetVector then
             if dezz.cfg.vars["Aimbot snapline"] then 
                 local pos = dezz.targetVector:ToScreen()
-                surface.SetDrawColor( string.ToColor( dezz.cfg.colors["Aimbot snapline"] ) )
-                surface.DrawLine( pos.x, pos.y, ( screenWidth * 0.5 ), ( screenHeight * 0.5 ) )
+                surface.SetDrawColor(string.ToColor(dezz.cfg.colors["Aimbot snapline"] or "255 255 255 255"))
+                surface.DrawLine(pos.x, pos.y, screenWidth * 0.5, screenHeight * 0.5)
             end
             if dezz.cfg.vars["Aimbot marker"] then 
                 local pos = dezz.targetVector:ToScreen()
+                local col = string.ToColor(dezz.cfg.colors["Aimbot marker"] or "255 255 255 255")
 
-                surface.SetDrawColor( 0, 0, 0 )
-                surface.DrawRect( pos.x - 6, pos.y - 6, 5, 3 )
-                surface.DrawRect( pos.x + 2, pos.y - 6, 5, 3 )
+                surface.SetDrawColor(0, 0, 0)
+                surface.DrawRect(pos.x - 6, pos.y - 6, 5, 3)
+                surface.DrawRect(pos.x + 2, pos.y - 6, 5, 3)
+                surface.DrawRect(pos.x - 6, pos.y + 4, 5, 3)
+                surface.DrawRect(pos.x + 2, pos.y + 4, 5, 3)
+                surface.DrawRect(pos.x - 6, pos.y - 6, 3, 5)
+                surface.DrawRect(pos.x + 4, pos.y - 6, 3, 5)
+                surface.DrawRect(pos.x - 6, pos.y + 2, 3, 5)
+                surface.DrawRect(pos.x + 4, pos.y + 2, 3, 5)
 
-                surface.DrawRect( pos.x - 6, pos.y + 4, 5, 3 )
-                surface.DrawRect( pos.x + 2, pos.y + 4, 5, 3 )
-
-                surface.DrawRect( pos.x - 6, pos.y - 6, 3, 5 )
-                surface.DrawRect( pos.x + 4, pos.y - 6, 3, 5 )
-
-                surface.DrawRect( pos.x - 6, pos.y + 2, 3, 5 )
-                surface.DrawRect( pos.x + 4, pos.y + 2, 3, 5 )
-
-                surface.SetDrawColor( string.ToColor( dezz.cfg.colors["Aimbot marker"] ) )
-                
-                surface.DrawRect( pos.x - 5, pos.y - 5, 3, 1 )
-                surface.DrawRect( pos.x + 3, pos.y - 5, 3, 1 )
-
-                surface.DrawRect( pos.x - 5, pos.y + 5, 3, 1 )
-                surface.DrawRect( pos.x + 3, pos.y + 5, 3, 1 )
-
-                surface.DrawRect( pos.x - 5, pos.y - 5, 1, 3 )
-                surface.DrawRect( pos.x + 5, pos.y - 5, 1, 3 )
-
-                surface.DrawRect( pos.x - 5, pos.y + 3, 1, 3 )
-                surface.DrawRect( pos.x + 5, pos.y + 3, 1, 3 )
-
+                surface.SetDrawColor(col.r, col.g, col.b)
+                surface.DrawRect(pos.x - 5, pos.y - 5, 3, 1)
+                surface.DrawRect(pos.x + 3, pos.y - 5, 3, 1)
+                surface.DrawRect(pos.x - 5, pos.y + 5, 3, 1)
+                surface.DrawRect(pos.x + 3, pos.y + 5, 3, 1)
+                surface.DrawRect(pos.x - 5, pos.y - 5, 1, 3)
+                surface.DrawRect(pos.x + 5, pos.y - 5, 1, 3)
+                surface.DrawRect(pos.x - 5, pos.y + 3, 1, 3)
+                surface.DrawRect(pos.x + 5, pos.y + 3, 1, 3)
             end
         end
 
-    local plys = player.GetAll()
-    if dezz.cfg.vars["SpecL"] then
-        for i = 1, #plys do
-            local ply = plys[i]
-            if not IsValid(ply) then continue end
-            
-            local v = dezz.playerCache and dezz.playerCache[ply]
-            if not v then continue end
-            
-            if v.ObserverTarget == pLocalPlayer then
-                dezz.Unload()
+        if dezz.cfg.vars["kps"] then
+            local GetKeypad = function() return ents.FindByClass("keypad") end
+            local grad = Material("gui/gradient")
+            local white = Color(255, 255, 255)
+            local green = Color(0, 255, 0)
+            local panel_color = Color(0, 0, 0, 0)
+
+            for k, v in pairs(GetKeypad()) do
+                if IsValid(v) and not v.hacked and v:GetStatus() == 1 and v:GetDisplayText() ~= "****" then
+                    v.hacked = true
+                    v.passi = v:GetDisplayText()
+                end
+            end
+
+            for k, v in pairs(GetKeypad()) do
+                if v.hacked then
+                    local pos = v:GetPos():ToScreen()
+                    surface.SetDrawColor(panel_color)
+                    surface.SetMaterial(grad)
+                    surface.DrawTexturedRect(pos.x, pos.y, 70, 20)
+                    draw.SimpleText(v.passi, "TargetID", pos.x + 20, pos.y + 8, green, 1, 1)
+                end
+            end
+
+            local trace_ent = LocalPlayer():GetEyeTrace().Entity
+            if trace_ent:GetClass() == "keypad" then
+                draw.SimpleText(trace_ent.hacked and trace_ent.passi or "not hacked", "TargetID", ScrW()/2, ScrH()/2, white, 1, 1)
             end
         end
-    end
 
-    local grad = Material("gui/gradient")
-    local GetKeypad = function() return ents.FindByClass("keypad") end
-    local white = Color(255, 255, 255)
-    local green = Color(0, 255, 0)
-    local panel_color = Color(0, 0, 0, 0)
+        if dezz.cfg.vars["speclist"] then
+            surface.SetFont("HudhintTextLarge")
+            local spectators = {}
 
-    if dezz.cfg.vars["kps"] then
-    hook.Add("Think", "Keypads2", function()
-        for k, v in pairs(GetKeypad()) do
-            if IsValid(v) and not v.hacked and v:GetStatus() == 1 and v:GetDisplayText() ~= "****" then
-                v.hacked = true
-                v.passi = v:GetDisplayText()
+            for i = 1, #player.GetAll() do
+                local v = dezz.playerCache[player.GetAll()[i]]
+                if not v then continue end
+                if v.ObserverMode == 0 then continue end 
+                if not IsValid(v.entity) then continue end  
+                if not IsValid(v.ObserverTarget) then continue end 
+
+                local spectatorName = v.entity:Name() or "Unknown"
+                local targetName = v.ObserverTarget:Name() or "Unknown"
+                local text = spectatorName .. " spectating " .. targetName
+
+                table.insert(spectators, {
+                    text = text,
+                    textColor = (v.ObserverTarget == pLocalPlayer) and Color(255, 0, 0) or Color(255, 255, 255)
+                })
+            end
+
+            local panelWidth = 350
+            local panelHeight = 40 + (#spectators * 15)
+
+            if not dezz.specPanelPos then 
+                dezz.specPanelPos = {x = ScrW() - panelWidth - 20, y = ScrH() / 2 - panelHeight / 2} 
+            end
+
+            local panelX = dezz.specPanelPos.x
+            local panelY = dezz.specPanelPos.y
+
+            if input.IsMouseDown(MOUSE_LEFT) then
+                local mouseX, mouseY = gui.MouseX(), gui.MouseY()
+
+                if mouseX >= panelX and mouseX <= panelX + panelWidth and
+                   mouseY >= panelY and mouseY <= panelY + 30 then
+                    dezz.specPanelPos.x = math.Clamp(mouseX - panelWidth / 2, 0, ScrW() - panelWidth)
+                    dezz.specPanelPos.y = math.Clamp(mouseY - 15, 0, ScrH() - panelHeight)
+                    panelX, panelY = dezz.specPanelPos.x, dezz.specPanelPos.y
+                end
+            end
+
+            local cornerRadius = 8
+            draw.RoundedBox(cornerRadius, panelX, panelY, panelWidth, panelHeight, Color(37, 35, 35, 196))
+
+            surface.SetDrawColor(255, 0, 0)
+            surface.DrawOutlinedRect(panelX, panelY, panelWidth, panelHeight)
+
+            local time = CurTime() % 1
+            local color = HSVToColor(time * 360, 1, 1)
+            surface.SetTextColor(color)
+            surface.SetFont("HudhintTextLarge")
+            surface.SetTextPos(panelX + 10, panelY + 10)
+            surface.DrawText("                              SPECTATORS")
+
+            local _, fontHeight = surface.GetTextSize("A")
+            local headerLineY = panelY + 10 + fontHeight + 2
+            surface.SetDrawColor(255, 0, 0)
+            draw.RoundedBox(8, panelX + 10, headerLineY, panelWidth - 20, 2, Color(255, 0, 0))
+
+            local textY = panelY + 35
+            for _, spec in ipairs(spectators) do
+                surface.SetTextPos(panelX + 20, textY)
+                surface.SetTextColor(spec.textColor)
+                surface.DrawText(spec.text)
+                textY = textY + 15
             end
         end
-    end)
 
-    hook.Add("HUDPaint", "Keypads2", function()
-        for k, v in pairs(GetKeypad()) do
-            if v.hacked then
-                local pos = v:GetPos():ToScreen()
-                surface.SetDrawColor(panel_color)
-                surface.SetMaterial(grad)
-                surface.DrawTexturedRect(pos.x, pos.y, 70, 20)
-                draw.SimpleText(v.passi, "TargetID", pos.x + 20, pos.y + 8, green, 1, 1)
+        if dezz.cfg.vars["On screen logs"] and table.Count(dezz.onScreenLogs) > 0 then
+            local tick = engine.TickCount()
+            local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5 + 45
+
+            for k, v in pairs(dezz.onScreenLogs) do
+                if dezz.TICKS_TO_TIME(tick - v.tick) > 8 then
+                    dezz.onScreenLogs[k] = nil
+                    continue
+                end
+
+                local data = v
+                local fullText = table.concat(data[1], "")
+                local totalWidth = surface.GetTextSize(fullText)
+                local x = centerX - totalWidth * 0.5
+                local textHeight = 0
+
+                for i = 1, #data[1] do
+                    local text = data[1][i]
+                    local color = data[2][i]
+                    local w, h = surface.GetTextSize(text)
+                    textHeight = h
+
+                    surface.SetTextColor(color)
+                    surface.SetTextPos(x, centerY)
+                    surface.DrawText(text)
+
+                    x = x + w
+                end
+
+                centerY = centerY + textHeight
             end
         end
-        
-        local trace_ent = LocalPlayer():GetEyeTrace().Entity
-        if trace_ent:GetClass() == "keypad" then
-            draw.SimpleText(trace_ent.hacked and trace_ent.passi or "not hacked", "TargetID", ScrW()/2, ScrH()/2, white, 1, 1)
-        end
-    end)
-end
 
-    if not dezz.cfg.vars["kps"] or dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then 
-        hook.Remove("Think", "Keypads2")
-        hook.Remove("HUDPaint", "Keypads2")
-    end
+        if dezz.cfg.vars["indicators"] then
+            local ply = LocalPlayer()
+            if IsValid(ply) and ply:Alive() then
+                local speed = math.Round(ply:GetVelocity():Length2D())
+                local angles = ply:EyeAngles()
+                local yaw = math.Round(angles.y)
 
-surface.SetFont("HudhintTextLarge")
-local plys = player.GetAll()
-if dezz.cfg.vars["speclist"] then
-    surface.SetFont("HudhintTextLarge")
-    
-    local pLocalPlayer = LocalPlayer()
-    local spectators = {}
-    
-    for i = 1, #plys do
-        local v = dezz.playerCache[plys[i]]
-        if not v then continue end
-        if v.ObserverMode == 0 then continue end 
-        if not IsValid(v.entity) then continue end  
-        if not IsValid(v.ObserverTarget) then continue end 
-        
-        local spectatorName = v.entity:Name() or "Unknown" 
-        local targetName = v.ObserverTarget:Name() or "Unknown"
-        local text = spectatorName .. " spectating " .. targetName
-        
-        table.insert(spectators, {
-            text = text,
-            textColor = (v.ObserverTarget == pLocalPlayer) and Color(255, 0, 0) or Color(255, 255, 255)
-        })
-    end
-    
-    local panelWidth = 350
-    local panelHeight = 40 + (#spectators * 15)
+                local w, h = 200, 80
+                local x, y = 20, ScrH()/2 - h/2
 
-    if not dezz.specPanelPos then 
-        dezz.specPanelPos = {x = ScrW() - panelWidth - 20, y = ScrH() / 2 - panelHeight / 2} 
-    end
-    
-    local panelX = dezz.specPanelPos.x
-    local panelY = dezz.specPanelPos.y
+                surface.SetDrawColor(31, 30, 30, 200)
+                surface.DrawRect(x, y, w, h)
 
-    if input.IsMouseDown(MOUSE_LEFT) then
-        local mouseX, mouseY = gui.MouseX(), gui.MouseY()
+                surface.SetDrawColor(100, 60, 60, 255)
+                surface.DrawOutlinedRect(x, y, w, h)
+                surface.DrawOutlinedRect(x+1, y+1, w-2, h-2)
 
-        if mouseX >= panelX and mouseX <= panelX + panelWidth and
-        mouseY >= panelY and mouseY <= panelY + 30 then
+                draw.SimpleText("Indicators", "DermaDefaultBold", x + w/2, y + 8, Color(255, 255, 255), TEXT_ALIGN_CENTER)
 
-            dezz.specPanelPos.x = mouseX - panelWidth / 2
-            dezz.specPanelPos.y = mouseY - 15
+                surface.SetDrawColor(130, 60, 60, 255)
+                surface.DrawLine(x + 5, y + 25, x + w - 5, y + 25)
 
-            dezz.specPanelPos.x = math.Clamp(dezz.specPanelPos.x, 0, ScrW() - panelWidth)
-            dezz.specPanelPos.y = math.Clamp(dezz.specPanelPos.y, 0, ScrH() - panelHeight)
-            
-            panelX = dezz.specPanelPos.x
-            panelY = dezz.specPanelPos.y
-        end
-    end
+                draw.SimpleText("Speed", "DermaDefault", x + 10, y + 35, Color(255, 155, 0))
+                draw.SimpleText(speed .. " Vel", "DermaDefaultBold", x + 10, y + 50, Color(255, 155, 0))
 
-    local cornerRadius = 8
-    draw.RoundedBox(cornerRadius, panelX, panelY, panelWidth, panelHeight, Color(37, 35, 35, 196))
+                draw.SimpleText("Angle", "DermaDefault", x + 70, y + 35, Color(200, 200, 200))
+                draw.SimpleText(yaw .. "°", "DermaDefaultBold", x + 70, y + 50, Color(200, 200, 200))
 
-    surface.SetDrawColor(255, 0, 0)
-    surface.DrawOutlinedRect(panelX, panelY, panelWidth, panelHeight)
-    
-    local time = CurTime() % 1
-    local color = HSVToColor(time * 360, 1, 1)
-    surface.SetTextColor(color)                    
-    surface.SetFont("HudhintTextLarge")
-    surface.SetTextPos(panelX + 10, panelY + 10)
-    surface.DrawText("                              SPECTATORS")
-    
-    local _, fontHeight = surface.GetTextSize("A")
-    
-    local headerLineY = panelY + 10 + fontHeight + 2
-    surface.SetDrawColor(255, 0, 0) 
-    draw.RoundedBox(8, panelX + 10, headerLineY, panelWidth - 20, 2, Color(255, 0, 0))
-    
-    local textY = panelY + 35
-    
-    for _, spec in ipairs(spectators) do
-        surface.SetTextPos(panelX + 20, textY)
-        surface.SetTextColor(spec.textColor)
-        surface.DrawText(spec.text)
-        textY = textY + 15
-    end
-end
+                local compass_x, compass_y = x + 103, y + 52.3
+                local compass_size = 10
 
-    if dezz.cfg.vars["On screen logs"] and table.Count(dezz.onScreenLogs) > 0 then
-        local tick = engine.TickCount()
-        local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5 + 45
-        
-        for k, v in pairs(dezz.onScreenLogs) do
-            if dezz.TICKS_TO_TIME(tick - v.tick) > 8 then
-                dezz.onScreenLogs[k] = nil
-                continue
+                surface.SetDrawColor(50, 50, 50, 255)
+                surface.DrawRect(compass_x, compass_y, compass_size, compass_size)
+
+                local needle_angle = -angles.y
+                local needle_x = compass_x + compass_size/2 + math.cos(math.rad(needle_angle)) * (compass_size/2 - 2)
+                local needle_y = compass_y + compass_size/2 + math.sin(math.rad(needle_angle)) * (compass_size/2 - 2)
+
+                surface.SetDrawColor(255, 0, 0)
+                surface.DrawLine(compass_x + compass_size/2, compass_y + compass_size/2, needle_x, needle_y)
+
+                local speed_bar_width = math.min(speed / 500 * (w - 20), w - 20)
+                surface.SetDrawColor(255, 155, 0, 150)
+                surface.DrawRect(x + 10, y + 65, speed_bar_width, 8)
+
+                surface.SetDrawColor(100, 100, 100, 255)
+                surface.DrawOutlinedRect(x + 10, y + 65, w - 20, 8)
             end
-            
-            local data = v
-            local fullText = table.concat(data[1], "")
-            local totalWidth = surface.GetTextSize(fullText)
-            local x = centerX - totalWidth * 0.5
-            local textHeight = 0
-            
-            for i = 1, #data[1] do
-                local text = data[1][i]
-                local color = data[2][i]
-                local w, h = surface.GetTextSize(text)
-                textHeight = h
-                
-                surface.SetTextColor(color)
-                surface.SetTextPos(x, centerY)
-                surface.DrawText(text)
-                
-                x = x + w
-            end
-            
-            centerY = centerY + textHeight
         end
-    end
 
-hook.Add("HUDPaint", "indicators", function()
-    if not dezz.cfg.vars["indicators"] then return end
-    
-    local ply = LocalPlayer()
-    if not IsValid(ply) or not ply:Alive() then return end
-    
-    local speed = math.Round(ply:GetVelocity():Length2D())
-    local angles = ply:EyeAngles()
-    local yaw = math.Round(angles.y)
-    
-    local w, h = 200, 80
-    local x, y = 20, ScrH()/2 - h/2
-
-    surface.SetDrawColor(31, 30, 30, 200)
-    surface.DrawRect(x, y, w, h)
-
-    surface.SetDrawColor(100, 60, 60, 255)
-    surface.DrawOutlinedRect(x, y, w, h)
-    surface.DrawOutlinedRect(x+1, y+1, w-2, h-2)
-
-    draw.SimpleText("Indicators", "DermaDefaultBold", x + w/2, y + 8, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-
-    surface.SetDrawColor(130, 60, 60, 255)
-    surface.DrawLine(x + 5, y + 25, x + w - 5, y + 25)
-
-    draw.SimpleText("Speed", "DermaDefault", x + 10, y + 35, Color(255, 155, 0))
-    draw.SimpleText(speed .. " Vel", "DermaDefaultBold", x + 10, y + 50, Color(255, 155, 0))
-
-    draw.SimpleText("Angle", "DermaDefault", x + 70, y + 35, Color(200, 200, 200))
-    draw.SimpleText(yaw .. "°", "DermaDefaultBold", x + 70, y + 50, Color(200, 200, 200))
-
-    local compass_x, compass_y = x + 103, y + 52.3
-    local compass_size = 10
-    
-    surface.SetDrawColor(50, 50, 50, 255)
-    surface.DrawRect(compass_x, compass_y, compass_size, compass_size)
-    
-    local needle_angle = -angles.y
-    local needle_x = compass_x + compass_size/2 + math.cos(math.rad(needle_angle)) * (compass_size/2 - 2)
-    local needle_y = compass_y + compass_size/2 + math.sin(math.rad(needle_angle)) * (compass_size/2 - 2)
-    
-    surface.SetDrawColor(255, 0, 0)
-    surface.DrawLine(compass_x + compass_size/2, compass_y + compass_size/2, needle_x, needle_y)
-
-    local speed_bar_width = math.min(speed / 500 * (w - 20), w - 20)
-    surface.SetDrawColor(255, 155, 0, 150)
-    surface.DrawRect(x + 10, y + 65, speed_bar_width, 8)
-
-    surface.SetDrawColor(100, 100, 100, 255)
-    surface.DrawOutlinedRect(x + 10, y + 65, w - 20, 8)
-end)
-
-if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
-    hook.Remove("HUDPaint", "indicators")
-end
-
-        
-        -- хуита а ни ватермарки блен
-        /*if dezz.cfg.vars["WaterMark"] then
-
-            local playerName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
-            local txt = "dezzaster ◆  " .. playerName .. "  ◆  v2 ◆  DEV"
-
-            surface.SetFont("Watermark_Bold")
-            local txtWidth, txtHeight = surface.GetTextSize(txt)
-
-            local paddingX = 30
-            local paddingY = 10
-            local x, y = 15, 15
-
-            local bgColor = Color(10, 10, 15, 240)
-            local accentColor = Color(0, 180, 255)  
-            local textColor = Color(255, 255, 255)  
-            local shadowColor = Color(0, 0, 0, 150)
-
-            draw.RoundedBox(4, x, y, txtWidth + paddingX, txtHeight + paddingY, bgColor)
-
-            surface.SetDrawColor(accentColor)
-            surface.DrawRect(x, y, txtWidth + paddingX, 2)
-
-            surface.SetDrawColor(accentColor.r, accentColor.g, accentColor.b, 40)
-            surface.DrawOutlinedRect(x, y, txtWidth + paddingX, txtHeight + paddingY)
-
-            draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2 + 1, y + paddingY/2 + 1, shadowColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2, y + paddingY/2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-
-            local pulse = math.sin(CurTime() * 3) * 0.2 + 0.8
-            surface.SetDrawColor(accentColor.r * pulse, accentColor.g * pulse, accentColor.b * pulse, 255)
-            surface.DrawRect(x + 5, y + txtHeight + paddingY - 4, 10, 2)
-            surface.DrawRect(x + txtWidth + paddingX - 15, y + txtHeight + paddingY - 4, 10, 2)
-
-            local iconSize = 14
-            if file.Exists("materials/icon16/shield.vmt", "GAME") then
-                surface.SetMaterial(Material("icon16/shield"))
-                surface.SetDrawColor(textColor)
-                surface.DrawTexturedRect(x + 8, y + (txtHeight + paddingY - iconSize)/2, iconSize, iconSize)
-            else
-                draw.SimpleText("✦", "Watermark_Symbols", x + 15, y + (txtHeight + paddingY)/2 + 1, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            end
-        end*/
-
-        -- а эта уже пацанские четкие ватермарки
         if dezz.cfg.vars["WaterMark"] then
             if dezz.cfg.vars["water mode"] == 1 then
                 local pName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
                 local cfgName = dezz.cfgTable[dezz.cfg.vars["Selected config"]] or "Defaults"
-                
+
                 local width1 = 40
                 local height1 = 40
-                
+
                 surface.SetFont("Default")
                 local textWidth = surface.GetTextSize("★ " .. cfgName .. " | ❤ " .. pName)
                 local width2 = textWidth + 20
-                
+
                 local totalWidth = width1 + width2 + 5
                 local x1 = ScrW() / 2 - totalWidth / 2
                 local y1 = ScrH() - height1 - 4
@@ -11848,28 +11561,26 @@ end
 
                 draw.RoundedBox(12, x1, y1, width1, height1, bgColor)
                 draw.RoundedBoxEx(12, x2, y1, width2, height1, bgColor, true, true, true, true)
-                
+
                 draw.SimpleText("DH", "Default", x1 + width1/2, y1 + height1/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                
+
                 local startX = x2 + 10
                 local currentX = startX
-                
+
                 draw.SimpleText("★", "Default", currentX, y1 + height1/2, Color(255, 255, 0), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 currentX = currentX + surface.GetTextSize("★ ")
-                
+
                 draw.SimpleText(cfgName, "Default", currentX, y1 + height1/2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 currentX = currentX + surface.GetTextSize(cfgName)
-                
+
                 draw.SimpleText(" | ", "Default", currentX, y1 + height1/2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 currentX = currentX + surface.GetTextSize(" | ")
-                
+
                 draw.SimpleText("❤", "Default", currentX, y1 + height1/2, Color(255, 0, 0), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 currentX = currentX + surface.GetTextSize("❤ ")
 
                 draw.SimpleText(pName, "Default", currentX, y1 + height1/2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                -- меня заставили вернуть эти кальные ватермарки
-                elseif dezz.cfg.vars["water mode"] == 2 then
-
+            elseif dezz.cfg.vars["water mode"] == 2 then
                 local playerName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
                 local txt = "dezzaster ◆  " .. playerName .. "  ◆  v2 ◆  DEV"
 
@@ -11881,8 +11592,8 @@ end
                 local x, y = 15, 15
 
                 local bgColor = Color(10, 10, 15, 240)
-                local accentColor = Color(0, 180, 255)  
-                local textColor = Color(255, 255, 255)  
+                local accentColor = Color(0, 180, 255)
+                local textColor = Color(255, 255, 255)
                 local shadowColor = Color(0, 0, 0, 150)
 
                 draw.RoundedBox(4, x, y, txtWidth + paddingX, txtHeight + paddingY, bgColor)
@@ -11908,35 +11619,75 @@ end
                     surface.DrawTexturedRect(x + 8, y + (txtHeight + paddingY - iconSize)/2, iconSize, iconSize)
                 else
                     draw.SimpleText("✦", "Watermark_Symbols", x + 15, y + (txtHeight + paddingY)/2 + 1, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                    end
                 end
             end
-
         end
+    end
 
-        if dezz.cfg.vars["RusEliteDetector"] then
-                hook.Add("Think", "dezz_AutoWeaponDistance", function()
-                if not dezz or not dezz.cfg or not dezz.cfg.vars then return end
+    if dezz.cfg.vars["RusEliteDetector"] then
+        hook.Add("Think", "dezz_AutoWeaponDistance", function()
+            if not dezz or not dezz.cfg or not dezz.cfg.vars then return end
 
-                local ply = LocalPlayer()
-                if not IsValid(ply) then return end
+            local ply = LocalPlayer()
+            if not IsValid(ply) then return end
 
-                local wep = ply:GetActiveWeapon()
-                if not IsValid(wep) then return end
+            local wep = ply:GetActiveWeapon()
+            if not IsValid(wep) then return end
 
-                local class = wep:GetClass()
+            local class = wep:GetClass()
 
-                if string.StartWith(class, "knife_" ) then
-                    dezz.cfg.vars["Max distance"] = 70 
-                elseif string.StartWith(class, "swb_") then
-                    dezz.cfg.vars["Max distance"] = 130 
-                elseif string.StartWith(class, "umb_") then
-                    dezz.cfg.vars["Max distance"] = 300
-                else
-                    dezz.cfg.vars["Max distance"] = 10000
-                end
-            end)
-        end 
+            if string.StartWith(class, "knife_") then
+                dezz.cfg.vars["Max distance"] = 70
+            elseif string.StartWith(class, "swb_") then
+                dezz.cfg.vars["Max distance"] = 130
+            elseif string.StartWith(class, "umb_") then
+                dezz.cfg.vars["Max distance"] = 300
+            else
+                dezz.cfg.vars["Max distance"] = 10000
+            end
+        end)
+    end
+
+    if dezz.cfg.vars["SpecL"] then
+        local plys = player.GetAll()
+        for i = 1, #plys do
+            local ply = plys[i]
+            if not IsValid(ply) then continue end
+
+            local v = dezz.playerCache and dezz.playerCache[ply]
+            if not v then continue end
+
+            if v.ObserverTarget == LocalPlayer() then
+                dezz.Unload()
+            end
+        end
+    end
+
+    if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
+        hook.Remove("PostDrawHUD", "PlayerRadar")
+        hook.Remove("HUDPaint", "indicators")
+        hook.Remove("Think", "Keypads2")
+        hook.Remove("HUDPaint", "Keypads2")
+    end
+
+    hook.Add("PostDrawHUD", "PlayerRadar", function()
+        if dezz.cfg.vars["Radar"] then
+            dezz.DrawSomeShit()
+        end
+    end)
+
+    hook.Add("HUDPaint", "indicators", function()
+        if dezz.cfg.vars["indicators"] then
+            dezz.DrawSomeShit()
+        end
+    end)
+
+    if dezz.cfg.vars["kps"] then
+        hook.Add("Think", "Keypads2", function() end)
+        hook.Add("HUDPaint", "Keypads2", function()
+            dezz.DrawSomeShit()
+        end)
+    end
 
 hook.Add("PostDrawTranslucentRenderables", "DrawKnifebotRange", function()
     if dezz.cfg.vars["Knifebot Range"] and dezz.tpenabled then
@@ -14916,7 +14667,7 @@ end)
 
 dezz.hooks           = {}
 
-function dezz.Addezzook( event, func )
+function dezz.AddHook( event, func )
     if func == nil and not dezz[ event ] then print("Failed to find hook: " .. event) return end
     local name = util.Base64Encode( event ) .. CurTime()
     hook.Add( event, name, dezz[ event ] or func )
@@ -14942,52 +14693,55 @@ function dezz.Unload()
     render.SetLightingMode( 0 )
 end
 
-dezz.Addezzook( "CreateMove" )
-dezz.Addezzook( "Think" )
+dezz.AddHook( "CreateMove" )
+dezz.AddHook( "Think" )
 
-dezz.Addezzook( "RenderScene" )
-dezz.Addezzook( "DrawOverlay" )
-dezz.Addezzook( "Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() end )   
+dezz.AddHook( "RenderScene" )
+dezz.AddHook( "DrawOverlay" )
+dezz.AddHook( "Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() end )   
 
-dezz.Addezzook( "CalcView" )
-dezz.Addezzook( "CalcViewModelView" )
+dezz.AddHook( "CalcView" )
+dezz.AddHook( "CalcViewModelView" )
 
-dezz.Addezzook( "PreDrawViewModel" )
-dezz.Addezzook( "PostDrawViewModel" )
+dezz.AddHook( "PreDrawViewModel" )
+dezz.AddHook( "PostDrawViewModel" )
 
-dezz.Addezzook( "PostDrawOpaqueRenderables" )
-dezz.Addezzook( "PostDrawEffects" )
+dezz.AddHook( "PreDrawPlayerHands" )
+dezz.AddHook( "PostDrawPlayerHands" )
 
-dezz.Addezzook( "OnImpact" )
+dezz.AddHook( "PostDrawOpaqueRenderables" )
+dezz.AddHook( "PostDrawEffects" )
 
-dezz.Addezzook( "PreFrameStageNotify" )
-dezz.Addezzook( "PostFrameStageNotify" )
+dezz.AddHook( "OnImpact" )
 
-dezz.Addezzook( "UpdateAnimation" )
-dezz.Addezzook( "ShouldUpdateAnimation" )
+dezz.AddHook( "PreFrameStageNotify" )
+dezz.AddHook( "PostFrameStageNotify" )
 
-dezz.Addezzook( "AdjustMouseSensitivity" )
+dezz.AddHook( "UpdateAnimation" )
+dezz.AddHook( "ShouldUpdateAnimation" )
 
-dezz.Addezzook( "RenderScreenspaceEffects" )
-dezz.Addezzook( "PostDrawTranslucentRenderables" )
+dezz.AddHook( "AdjustMouseSensitivity" )
 
-dezz.Addezzook( "PreRender" )
-dezz.Addezzook( "GetMotionBlurValues" )
+dezz.AddHook( "RenderScreenspaceEffects" )
+dezz.AddHook( "PostDrawTranslucentRenderables" )
 
+dezz.AddHook( "PreRender" )
+dezz.AddHook( "GetMotionBlurValues" )
 
-dezz.Addezzook( "PrePlayerDraw" )
-dezz.Addezzook( "PostPlayerDraw" )
+dezz.AddHook( "DrawPhysgunBeamFunc" )
 
+dezz.AddHook( "PrePlayerDraw" )
+dezz.AddHook( "PostPlayerDraw" )
 
-dezz.Addezzook( "OnEntityCreated" )  
+dezz.AddHook( "OnEntityCreated" )  
 
-dezz.Addezzook( "entity_killed" )  
-dezz.Addezzook( "player_hurt" )  
+dezz.AddHook( "entity_killed" )  
+dezz.AddHook( "player_hurt" )  
 
-dezz.Addezzook( "SetupWorldFog" )
-dezz.Addezzook( "SetupSkyboxFog" )
+dezz.AddHook( "SetupWorldFog" )
+dezz.AddHook( "SetupSkyboxFog" )
 
-dezz.Addezzook( "ShouldDrawLocalPlayer" )
+dezz.AddHook( "ShouldDrawLocalPlayer" )
 
 
 dezz.knownTrackedPlayers = dezz.knownTrackedPlayers or {}
