@@ -77,7 +77,7 @@ UPD: Crosshair
 UPD: Radar
 UPD: Good safety
 UPD: Swastiks krutitsya
-UPD: Spectating (test)
+UPD: Spectating
 UPD: Optimization
 UPD: Edje, safe jump
 UPD: Slow walk
@@ -104,6 +104,12 @@ UPD: Browser
 UPD: LGBT sky and wall
 UPD: Drugs(rastoman)
 UPD: New tpose.
+UPD: Optimization
+UPD: New item panel(Local player in visuals)
+UPD: Delete item panel(Material customization in visuals)
+UPD: Fix spectating
+UPD: Searching for players(in players)
+UPD: Fix hitnumbers
 ]])
     updateText:SetFont("ChatFont")
     updateText:SetColor(Color(220, 220, 220))
@@ -363,7 +369,7 @@ dezz.cfg.vars["Backtrack time"]             = 200
 dezz.cfg.vars["Aimbot smoothing"]           = false
 dezz.cfg.vars["Smoothing"]                  = 0.05
 dezz.cfg.vars["Kill effect"]                = false
-dezz.cfg.vars["Fov limlit"]                  = false
+dezz.cfg.vars["Fov limit"]                  = false
 dezz.cfg.vars["Fov dynamic"]                = false
 dezz.cfg.vars["Aimbot FOV"]                 = 30
 dezz.cfg.vars["Show FOV"]                   = false
@@ -4229,9 +4235,6 @@ end
         --dezz.ui.CheckBox( p, "Show records", "Show records" )
         dezz.ui.CheckBox( p, "Skeleton", "Skeleton" )
         dezz.ui.CheckBox( p, "Sight lines", "Sight lines" )
-        dezz.ui.CheckBox( p, "Player Hat", "Player Hat","Detect Screengrab" )
-        dezz.ui.CheckBox( p, "Player Line", "Player Line", "Visual Line" )
-        dezz.ui.CheckBox( p, "Lines", "line", false, false, true )
         // dezz.ui.CheckBox( p, "OOF Arrows", "OOF Arrows", false, false, false, dezz.spfuncs[34], false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "OOF Style", {"Arrow","UkroSwastika"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         dezz.ui.Slider( p, "Max distance","ESP Distance", 0, 20000,0 )
         dezz.ui.Label( p, "Priority List add", function( p ) dezz.ui.Binder( "Priority add", p ) end )
@@ -4244,7 +4247,7 @@ function dezz.tabs.Visuals()
         dezz.ui.MTButton( p, "Variant 2", dezz.spfuncs[35] )
         dezz.ui.MTButton( p, "Variant 1", dezz.spfuncs[8888])
     end
-dezz.itemPanelB( "Players",1, 515, func )
+dezz.itemPanelB( "Players",1, 450, func )
 
     local p = dezz.itemPanel("Entity",1,135):GetItemPanel()
 
@@ -4269,34 +4272,11 @@ dezz.itemPanelB( "Players",1, 515, func )
     dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[17], false )
     dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[19], false )
 
-    local p = dezz.itemPanel("Material customisation",2,150):GetItemPanel()
+    local p = dezz.itemPanel("Local Player",2,100):GetItemPanel()
 
-    dezz.ui.Slider( p, "Min illumination", "Fresnel minimum illum", 0, 1, 1, function( v )
-        local v1, v2, v3, v4 = dezz.chamMats.vis[3], dezz.chamMats.vis[4], dezz.chamMats.invis[3], dezz.chamMats.invis[3]
-
-        v1:SetVector( "$selfIllumFresnelMinMaxExp", Vector( v, dezz.cfg.vars["Fresnel maximum illum"], dezz.cfg.vars["Fresnel exponent"] ) )
-        v2:SetVector( "$selfIllumFresnelMinMaxExp", Vector( v, dezz.cfg.vars["Fresnel maximum illum"], dezz.cfg.vars["Fresnel exponent"] ) )
-        v3:SetVector( "$selfIllumFresnelMinMaxExp", Vector( v, dezz.cfg.vars["Fresnel maximum illum"], dezz.cfg.vars["Fresnel exponent"] ) )
-        v4:SetVector( "$selfIllumFresnelMinMaxExp", Vector( v, dezz.cfg.vars["Fresnel maximum illum"], dezz.cfg.vars["Fresnel exponent"] ) )
-    end )
-    
-    dezz.ui.Slider( p, "Max illumination", "Fresnel maximum illum", 0, 1, 1, function( v )
-        local v1, v2, v3, v4 = dezz.chamMats.vis[3], dezz.chamMats.vis[4], dezz.chamMats.invis[3], dezz.chamMats.invis[3]
-
-        v1:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], v, dezz.cfg.vars["Fresnel exponent"] ) )
-        v2:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], v, dezz.cfg.vars["Fresnel exponent"] ) )
-        v3:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], v, dezz.cfg.vars["Fresnel exponent"] ) )
-        v4:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], v, dezz.cfg.vars["Fresnel exponent"] ) )
-    end )
- 
-    dezz.ui.Slider( p, "Fresnel exponent", "Fresnel exponent", 0, 1, 1, function( v )
-        local v1, v2, v3, v4 = dezz.chamMats.vis[3], dezz.chamMats.vis[4], dezz.chamMats.invis[3], dezz.chamMats.invis[3]
-
-        v1:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], dezz.cfg.vars["Fresnel maximum illum"], v ) )
-        v2:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], dezz.cfg.vars["Fresnel maximum illum"], v ) )
-        v3:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], dezz.cfg.vars["Fresnel maximum illum"], v ) )
-        v4:SetVector( "$selfIllumFresnelMinMaxExp", Vector( dezz.cfg.vars["Fresnel minimum illum"], dezz.cfg.vars["Fresnel maximum illum"], v ) )
-    end )
+    dezz.ui.CheckBox( p, "Player Hat", "Player Hat","Detect Screengrab" )
+    dezz.ui.CheckBox( p, "Player Line", "Player Line", "Visual Line" )
+    dezz.ui.CheckBox( p, "Lines", "line", false, false, true )
 
     local p = dezz.itemPanel("Outlines",2,115):GetItemPanel()
 
@@ -4617,8 +4597,7 @@ end
 
 function dezz.tabs.Players()
     local playerlist = player.GetAll()
-    
-    -- Сортируем игроков по имени
+
     table.sort(playerlist, function(a, b)
         return a:Name() < b:Name()
     end)
@@ -4630,7 +4609,6 @@ function dezz.tabs.Players()
         end
     end
 
-    -- Панель поиска
     local searchPanel = vgui.Create("Panel", dezz.scrollpanel)
     searchPanel:SetTall(30)
     searchPanel:Dock(TOP)
@@ -4663,8 +4641,7 @@ function dezz.tabs.Players()
     for i = 1, #playerlist do
         local pEntity = playerlist[i]
         if not IsValid(pEntity) then continue end
-        
-        -- Поиск по имени
+
         local playerName = pEntity:Name():lower()
         if dezz.playerSearchText and dezz.playerSearchText ~= "" and not playerName:find(dezz.playerSearchText, 1, true) then
             continue
@@ -8919,39 +8896,6 @@ do
             dezz.cfg.vars["Custom sky name"] = "sky_day01_06"
         end
 
-        if dezz.cfg.vars["spectating"] then
-            if not dezz.SpectateHookAdded then
-                hook.Add("CalcView", "SpectateCamera", function(ply, pos, angles, fov)
-                    local followTarget = player.GetBySteamID(dezz.cfg.vars["Specta"] or "")
-                    
-                    if IsValid(followTarget) then
-                        local eyePos = followTarget:EyePos()
-                        local eyeAngles = followTarget:EyeAngles()
-                        
-                        return {
-                            origin = eyePos,
-                            angles = eyeAngles,
-                            fov = fov,
-                            drawviewer = false
-                        }
-                    end
-                end)
-                dezz.SpectateHookAdded = true
-            end
-        else
-            if dezz.SpectateHookAdded then
-                hook.Remove("CalcView", "SpectateCamera")
-                dezz.SpectateHookAdded = false
-            end
-        end
-
-        if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
-            if dezz.SpectateHookAdded then
-                hook.Remove("CalcView", "SpectateCamera")
-                dezz.SpectateHookAdded = false
-            end
-        end
-
         local newname = dezz.cfg.vars["Custom sky name"] or ""
         local newcolor = dezz.cfg.vars["Sky color"] or false
         local newcolor2 = dezz.cfg.vars["Wall color"] or false
@@ -9415,6 +9359,8 @@ function dezz.DrawESP()
         if not dezz.cfg.vars["line"] or not dezz.tpenabled then return end
         
         local myPos = pLocalPlayer:GetPos() + Vector(0, 0, 45)
+
+        cam.IgnoreZ(true)
         
         for _, target in ipairs(player.GetAll()) do
             if target == pLocalPlayer or not target:Alive() then continue end
@@ -9434,14 +9380,16 @@ function dezz.DrawESP()
                 render.DrawLine(startPos, endPos, lineColor, true)
             end
         end
+
+        cam.IgnoreZ(false)
     end
 
-    hook.Add("PostDrawTranslucentRenderables", "line", Drawlineplayers)
+    hook.Add("PostDrawOpaqueRenderables", "line", Drawlineplayers)
 
     local oofToggleCooldown = 0
     hook.Add("Think", "linekey", function()
         if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > oofToggleCooldown then
-            hook.Remove("PostDrawTranslucentRenderables", "line")
+            hook.Remove("PostDrawOpaqueRenderables", "line")
             hook.Remove("Think", "linekey")
             oofToggleCooldown = CurTime() + 0.5
         end
@@ -9450,11 +9398,11 @@ function dezz.DrawESP()
     if dezz.cfg.vars["Box esp"] then
         local boxColor = dezz.cfg.vars["Box team color"] and teamcolor or color_box or color_box_g
         local blackColor = dezz.Colors[0]
+        local style = dezz.cfg.vars["Box style"]
         
-        if dezz.cfg.vars["Box style"] == 1 then
+        if style == 1 then
             surface.SetDrawColor(blackColor)
             surface.DrawOutlinedRect(MinX-1, MinY-1, XLen+2, YLen+2)
-            
             surface.SetDrawColor(boxColor)
             surface.DrawOutlinedRect(MinX, MinY, XLen, YLen)
 
@@ -9465,107 +9413,96 @@ function dezz.DrawESP()
                 surface.DrawTexturedRect(MinX+1, MaxY-2, XLen-2, 1)
             end
 
-        elseif dezz.cfg.vars["Box style"] == 2 then
+        elseif style == 2 then
             local wlen, hlen = math.floor(XLen / 3), math.floor(YLen / 3)
             local wlen2, hlen2 = wlen - 2, hlen - 2
+            local MaxX_m_wlen = MaxX - wlen + 2
+            local MaxY_m_hlen = MaxY - hlen
 
-            -- Черная обводка
             surface.SetDrawColor(blackColor)
-            -- Левый верх
             surface.DrawRect(MinX-1, MinY-1, wlen, 3)
             surface.DrawRect(MinX-1, MinY-1, 3, hlen)
-            -- Правый верх
-            surface.DrawRect(MaxX-wlen+2, MinY-1, wlen, 3)
+            surface.DrawRect(MaxX_m_wlen, MinY-1, wlen, 3)
             surface.DrawRect(MaxX-1, MinY-1, 3, hlen)
-            -- Левый низ
             surface.DrawRect(MinX-1, MaxY-2, wlen, 3)
-            surface.DrawRect(MinX-1, MaxY-hlen, 3, hlen)
-            -- Правый низ
-            surface.DrawRect(MaxX-wlen+2, MaxY-2, wlen, 3)
-            surface.DrawRect(MaxX-1, MaxY-hlen, 3, hlen)
+            surface.DrawRect(MinX-1, MaxY_m_hlen, 3, hlen)
+            surface.DrawRect(MaxX_m_wlen, MaxY-2, wlen, 3)
+            surface.DrawRect(MaxX-1, MaxY_m_hlen, 3, hlen)
 
-            -- Цветные уголки
             surface.SetDrawColor(boxColor)
-            -- Левый верх
             surface.DrawRect(MinX, MinY, wlen2, 1)
             surface.DrawRect(MinX, MinY, 1, hlen2)
-            -- Правый верх
             surface.DrawRect(MaxX-wlen2+1, MinY, wlen2, 1)
             surface.DrawRect(MaxX, MinY, 1, hlen2)
-            -- Левый низ
             surface.DrawRect(MinX, MaxY-1, wlen2, 1)
             surface.DrawRect(MinX, MaxY-hlen2-1, 1, hlen2)
-            -- Правый низ
             surface.DrawRect(MaxX-wlen2+1, MaxY-1, wlen2, 1)
             surface.DrawRect(MaxX, MaxY-hlen2-1, 1, hlen2)
 
-        elseif dezz.cfg.vars["Box style"] == 3 then
+        elseif style == 3 then
             local wlen, hlen = math.floor(XLen / 3), math.floor(YLen / 3)
             local xc = math.floor(XLen / 2)
+            local MinY_hlen = MinY - 1 + hlen
+            local MinY_2hlen = MinY - 2 + hlen*2
+            local MaxY_plus = MaxY + 1
 
-            -- Черные линии
             surface.SetDrawColor(blackColor)
-            -- Левая сторона
-            surface.DrawRect(MinX-1, MinY-1+hlen, 3, hlen)
-            surface.DrawLine(MinX-1, MinY-1+hlen, MinX+xc, MinY-1)
-            surface.DrawLine(MinX+1, MinY-1+hlen, MinX+xc, MinY+1)
-            surface.DrawLine(MinX-1, MinY-2+hlen*2, MinX+xc, MinY+1+YLen)
-            surface.DrawLine(MinX+1, MinY-2+hlen*2, MinX+xc, MinY-1+YLen)
+            surface.DrawRect(MinX-1, MinY_hlen, 3, hlen)
+            surface.DrawLine(MinX-1, MinY_hlen, MinX+xc, MinY-1)
+            surface.DrawLine(MinX+1, MinY_hlen, MinX+xc, MinY+1)
+            surface.DrawLine(MinX-1, MinY_2hlen, MinX+xc, MaxY_plus)
+            surface.DrawLine(MinX+1, MinY_2hlen, MinX+xc, MinY-1+YLen)
 
-            -- Правая сторона
-            surface.DrawRect(MaxX-1, MinY-1+hlen, 3, hlen)
-            surface.DrawLine(MaxX-1, MinY-1+hlen, MinX+xc, MinY+1)
-            surface.DrawLine(MaxX+1, MinY-1+hlen, MinX+xc, MinY-1)
-            surface.DrawLine(MaxX-1, MinY-2+hlen*2, MinX+xc, MinY-1+YLen)
-            surface.DrawLine(MaxX+1, MinY-2+hlen*2, MinX+xc, MinY+1+YLen)
+            surface.DrawRect(MaxX-1, MinY_hlen, 3, hlen)
+            surface.DrawLine(MaxX-1, MinY_hlen, MinX+xc, MinY+1)
+            surface.DrawLine(MaxX+1, MinY_hlen, MinX+xc, MinY-1)
+            surface.DrawLine(MaxX-1, MinY_2hlen, MinX+xc, MinY-1+YLen)
+            surface.DrawLine(MaxX+1, MinY_2hlen, MinX+xc, MaxY_plus)
 
-            -- Цветные линии
             surface.SetDrawColor(boxColor)
-            -- Левая сторона
             surface.DrawRect(MinX, MinY+hlen-1, 1, hlen)
-            surface.DrawLine(MinX, MinY-1+hlen, MinX+xc, MinY)
-            surface.DrawLine(MinX, MinY-2+hlen*2, MinX+xc, MinY+YLen)
-            -- Правая сторона
+            surface.DrawLine(MinX, MinY_hlen, MinX+xc, MinY)
+            surface.DrawLine(MinX, MinY_2hlen, MinX+xc, MinY+YLen)
             surface.DrawRect(MaxX, MinY+hlen-1, 1, hlen)
-            surface.DrawLine(MaxX, MinY-1+hlen, MinX+xc, MinY)
-            surface.DrawLine(MaxX, MinY-2+hlen*2, MinX+xc, MinY+YLen)
+            surface.DrawLine(MaxX, MinY_hlen, MinX+xc, MinY)
+            surface.DrawLine(MaxX, MinY_2hlen, MinX+xc, MinY+YLen)
 
-        elseif dezz.cfg.vars["Box style"] == 4 then
+        elseif style == 4 then
             local wlen, hlen = math.floor(XLen / 3) + 3, math.floor(YLen / 3) + 3
             local x, y, xw, xh = MinX - 3, MinY - 3, MaxX + 3, MaxY + 3
             local polys = {}
 
             for i = 1, 3 do
-                polys = {
-                    { x = x + wlen, y = y },
-                    { x = xw - wlen, y = y },
-                    { x = xw, y = y + hlen },
-                    { x = xw, y = xh - hlen },
-                    { x = xw - wlen, y = xh },
-                    { x = x + wlen, y = xh },
-                    { x = x, y = xh - hlen },
-                    { x = x, y = y + hlen },
-                }
+                polys[1] = { x = x + wlen, y = y }
+                polys[2] = { x = xw - wlen, y = y }
+                polys[3] = { x = xw, y = y + hlen }
+                polys[4] = { x = xw, y = xh - hlen }
+                polys[5] = { x = xw - wlen, y = xh }
+                polys[6] = { x = x + wlen, y = xh }
+                polys[7] = { x = x, y = xh - hlen }
+                polys[8] = { x = x, y = y + hlen }
 
                 surface.SetDrawColor(i == 2 and boxColor or blackColor) 
                 dezz.DrawOutlinedPoly(polys)
 
-                wlen, hlen = wlen - i, hlen - i
-                y, x = y + i, x + i
-                xw, xh = xw - i, xh - i
+                wlen = wlen - i
+                hlen = hlen - i
+                y = y + i
+                x = x + i
+                xw = xw - i
+                xh = xh - i
             end
 
-        elseif dezz.cfg.vars["Box style"] == 5 then -- 3D Wireframe
+        elseif style == 5 then
             cam.Start3D(EyePos(), EyeAngles())
             render.DrawWireframeBox(v.entity:GetPos(), v.entity:GetAngles(), 
                                 v.entity:OBBMins(), v.entity:OBBMaxs(), 
                                 boxColor, true)
             cam.End3D()
 
-        elseif dezz.cfg.vars["Box style"] == 6 then
+        elseif style == 6 then
             surface.SetDrawColor(boxColor.r, boxColor.g, boxColor.b, 30)
             surface.DrawRect(MinX, MinY, XLen, YLen)
-            
             surface.SetDrawColor(boxColor)
             surface.DrawOutlinedRect(MinX, MinY, XLen, YLen)
         end
@@ -11343,6 +11280,39 @@ do
             end
         end
 
+        if dezz.cfg.vars["Hitnumbers"] and #dezz.hitnums > 0 then 
+            local n, c = string.ToColor(dezz.cfg.colors["Hitnumbers"]), string.ToColor(dezz.cfg.colors["Hitnumbers krit"])
+            
+            surface.SetFont("veranda_scr")
+
+            for i = #dezz.hitnums, 1, -1 do
+                local v = dezz.hitnums[i]
+                local curTime = CurTime()
+
+                if v.time < curTime - 1 then 
+                    table.remove(dezz.hitnums, i) 
+                    continue 
+                end 
+
+                surface.SetTextColor(v.crit and c or n)
+
+                local angle = v.angle or math.random() * 2 * math.pi
+                local distance = (curTime - v.time) * 150
+                
+                local offsetX = math.cos(angle) * distance
+                local offsetY = math.sin(angle) * distance
+
+                local centerX = screenWidth * 0.5
+                local centerY = screenHeight * 0.5
+
+                surface.SetTextPos(
+                    centerX + offsetX,
+                    centerY + offsetY
+                )
+                surface.DrawText(v.dmg)
+            end
+        end
+
         if dezz.cfg.vars["Fov limit"] and dezz.cfg.vars["Show FOV"] then 
             local col = string.ToColor( dezz.cfg.colors["Show FOV"] )
             
@@ -12609,7 +12579,16 @@ end
 
         if dezz.cfg.vars["Hitnumbers"] then
             local hp = hurted:Health() - health
-            dezz.hitnums[ #dezz.hitnums + 1 ] = { time = CurTime(), add = 0, xdir = math.random(-1,1), ydir = math.random(-1,1), dmg = hp, crit = health <= 0 }
+            dezz.hitnums[#dezz.hitnums + 1] = {
+                time = CurTime(),
+                add = 0,
+                xdir = math.random(-1, 1),
+                ydir = math.random(-1, 1),
+                dmg = hp,
+                crit = health <= 0,
+                angle = math.random() * 2 * math.pi,
+                startTime = CurTime()
+            }
         end
 
         if dezz.cfg.vars["Hitsound"] then
@@ -13554,11 +13533,25 @@ function dezz.ShouldDrawLocalPlayer(ply)
     return dezz.tpenabled 
 end
 
-dezz.cameraHullMax = Vector( 3, 3, 3 )
-dezz.cameraHullMin = Vector( -3, -3, -3 )
-function dezz.CalcView( ply, origin, angles, fov, znear, zfar )
+dezz.cameraHullMax = Vector(3, 3, 3)
+dezz.cameraHullMin = Vector(-3, -3, -3)
+
+function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
     if dezz.UnSafeFrame then 
         return { origin = origin, angles = angles, fov = fov } 
+    end
+
+    if dezz.cfg.vars["spectating"] then
+        local followTarget = player.GetBySteamID(dezz.cfg.vars["Specta"] or "")
+        
+        if IsValid(followTarget) and followTarget:Alive() then
+            return {
+                origin = followTarget:EyePos(),
+                angles = followTarget:EyeAngles(),
+                fov = fov,
+                drawviewer = false
+            }
+        end
     end
 
     local view = {}
@@ -13580,100 +13573,83 @@ function dezz.CalcView( ply, origin, angles, fov, znear, zfar )
     dezz.tptoggled = tppressed
     dezz.fctoggled = fcpressed
 
-
     if dezz.cfg.vars["Fake duck"] and dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
         origin.z = pLocalPlayer:GetPos().z + 64
     end
 
     local fangs = dezz.cfg.vars["Silent aim"] and dezz.SilentAngle or angles
 
-    //angles = fangs
-    //if not dezz.cfg.vars[ "Norecoil" ] then
-    //    angles:Add( ply:GetViewPunchAngles() )
-    //end
-
     if dezz.fcenabled then
-        local speed = dezz.cfg.vars["Free camera speed"]
+        local speed = dezz.cfg.vars["Free camera speed"] or 10
         
         if input.IsKeyDown(KEY_W) then
             dezz.fcvector = dezz.fcvector + dezz.SilentAngle:Forward() * speed
         end
-
         if input.IsKeyDown(KEY_S) then
             dezz.fcvector = dezz.fcvector - dezz.SilentAngle:Forward() * speed
         end
-
         if input.IsKeyDown(KEY_A) then
             dezz.fcvector = dezz.fcvector - dezz.SilentAngle:Right() * speed
         end
-
         if input.IsKeyDown(KEY_D) then
             dezz.fcvector = dezz.fcvector + dezz.SilentAngle:Right() * speed
         end
-
         if input.IsKeyDown(KEY_SPACE) then
             dezz.fcvector.z = dezz.fcvector.z + speed
         end
-
         if input.IsKeyDown(KEY_LSHIFT) then
             dezz.fcvector.z = dezz.fcvector.z - speed
         end
 
         view.origin = dezz.fcvector
         view.angles = fangs
-        view.fov = dezz.cfg.vars["Fov override"]
-        view.drawviewer = !dezz.cfg.vars["Ghetto free cam"]
+        view.fov = dezz.cfg.vars["Fov override"] or fov
+        view.drawviewer = not dezz.cfg.vars["Ghetto free cam"]
     else
         dezz.fcvector = origin
-        view.origin = dezz.tpenabled and origin - ( (fangs):Forward() * dezz.cfg.vars["Third person distance"] ) or origin
+        view.origin = dezz.tpenabled and origin - (fangs:Forward() * dezz.cfg.vars["Third person distance"]) or origin
 
         if dezz.tpenabled and dezz.cfg.vars["Third person collision"] then
-            local tr = {}
+            local tr = {
+                start = origin,
+                endpos = origin - (fangs:Forward() * dezz.cfg.vars["Third person distance"]),
+                mins = dezz.cameraHullMin,
+                maxs = dezz.cameraHullMax,
+                filter = ply,
+                mask = MASK_BLOCKLOS
+            }
 
-            tr.start = origin
-            tr.endpos = origin - ( (fangs):Forward() * dezz.cfg.vars["Third person distance"] )
-            tr.mins = dezz.cameraHullMin
-            tr.maxs = dezz.cameraHullMax
-            tr.filter = ply
-            tr.mask = MASK_BLOCKLOS
-
-            local res = TraceHull( tr )
-
+            local res = TraceHull(tr)
             view.origin = res.HitPos
         end
 
         view.angles = fangs
-        view.fov = dezz.cfg.vars["Fov override"]
-        view.drawviewer = hook.Call( "ShouldDrawLocalPlayer", nil, ply )
+        view.fov = dezz.cfg.vars["Fov override"] or fov
+        view.drawviewer = hook.Call("ShouldDrawLocalPlayer", nil, ply)
     end
 
-    dezz.vieworigin = ( dezz.cfg.vars["Ghetto free cam"] and dezz.fcenabled ) and dezz.fcvector or origin
-    dezz.viewfov    = view.fov
-    dezz.znear      = znear
+    dezz.vieworigin = (dezz.cfg.vars["Ghetto free cam"] and dezz.fcenabled) and dezz.fcvector or origin
+    dezz.viewfov = view.fov
+    dezz.znear = znear
 
-    if ( not dezz.cfg.vars["Override view"] ) then
-        if ( math.floor( fov ) != GetConVar( "fov_desired" ):GetFloat() ) then
+    if not dezz.cfg.vars["Override view"] then
+        if math.floor(fov) ~= GetConVar("fov_desired"):GetFloat() then
             view.fov = fov 
         end
 
         local pVehicle = pLocalPlayer:GetVehicle()
-
-        if ( IsValid( pVehicle ) ) then
-            view = hook.Run( "CalcVehicleView", pVehicle, ply, view )
+        if IsValid(pVehicle) then
+            view = hook.Run("CalcVehicleView", pVehicle, ply, view) or view
         end
 
         local pWeapon = pLocalPlayer:GetActiveWeapon()
-        
-        if ( IsValid( pWeapon ) ) then
-            local pWeaponCalcView = pWeapon.CalcView 
-
-            if ( pWeaponCalcView ) then
-                local origin, angles, fov = pWeaponCalcView( pWeapon, ply, Vector( view.origin ), Angle( view.angles ), view.fov ) 
-			    view.origin, view.angles, view.fov = origin or view.origin, angles or view.angles, fov or view.fov
-            end
+        if IsValid(pWeapon) and pWeapon.CalcView then
+            local weaponOrigin, weaponAngles, weaponFov = pWeapon:CalcView(ply, Vector(view.origin), Angle(view.angles), view.fov)
+            view.origin, view.angles, view.fov = weaponOrigin or view.origin, weaponAngles or view.angles, weaponFov or view.fov
         end
     end
-	return view
+
+    return view
 end
 
 function dezz.GetFovRadius()
