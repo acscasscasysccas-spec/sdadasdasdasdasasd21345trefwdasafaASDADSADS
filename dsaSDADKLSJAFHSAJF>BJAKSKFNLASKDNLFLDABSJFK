@@ -105,10 +105,10 @@ UPD: LGBT sky and wall
 UPD: Drugs(rastoman)
 UPD: New tpose.
 UPD: Optimization
-UPD: New item panel(Local player in visuals)
-UPD: Delete item panel(Material customization in visuals)
+UPD: New item panel("Local player" in visuals)
+UPD: Delete item panel("Material customization" in visuals)
 UPD: Fix spectating
-UPD: Searching for players(in players)
+UPD: Searching players...
 UPD: Fix hitnumbers
 ]])
     updateText:SetFont("ChatFont")
