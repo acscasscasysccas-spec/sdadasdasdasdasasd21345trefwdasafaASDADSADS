@@ -110,6 +110,8 @@ UPD: Delete item panel("Material customization" in visuals)
 UPD: Fix spectating
 UPD: Search players...
 UPD: Fix hitnumbers
+UPD: Addaptive knife bot range(3 . in knifebot range)
+UPD: Distance(visuals)
 ]])
     updateText:SetFont("ChatFont")
     updateText:SetColor(Color(220, 220, 220))
@@ -737,6 +739,9 @@ dezz.cfg.vars["Name pos"] = 1
 
 dezz.cfg.vars["Mark"] = false
 dezz.cfg.vars["Mark pos"] = 1
+
+dezz.cfg.vars["Distance"] = false
+dezz.cfg.vars["Distance pos"] = 1
 
 dezz.cfg.vars["Usergroup icon"] = false
 dezz.cfg.vars["Usergroup icon pos"] = 1
@@ -3667,6 +3672,7 @@ dezz.espposes = {"Up","Down","Right","Left"}
 dezz.espelements = {
     "Name pos",
     "Mark pos",
+    "Distance pos",
     "Usergroup icon pos",
     "Usergroup TXT pos",
     "Health pos",
@@ -3767,7 +3773,7 @@ function dezz.tabs.Aimbot()
     dezz.ui.CheckBox( p, "FOV Circle", "Show FOV", false, false, true )
     dezz.ui.CheckBox( p, "Snapline", "Aimbot snapline", false, false, true )
     dezz.ui.CheckBox( p, "Marker", "Aimbot marker", false, false, true )
-    dezz.ui.CheckBox( p, "Knifebot Range", "Knifebot Range" )
+    dezz.ui.CheckBox( p, "Knifebot Range", "Knifebot Range", false, false, false, dezz.spfuncs[5252] )
 
     local p = dezz.itemPanel( "Accuracy", 2, 100 ):GetItemPanel()
 
@@ -3779,6 +3785,7 @@ function dezz.tabs.Aimbot()
 
     dezz.ui.CheckBox( p, "Crossbow prediction", "Crossbow prediction" )
     dezz.ui.CheckBox( p, "Pulseriffle", "pulser" )
+    //dezz.ui.CheckBox( p, "Prop aimbot", "Prop aimbot")
     dezz.ui.Slider( p, "Simulation limit", "Simulation limit", 1, 10, 2 )
     --dezz.ui.CheckBox( p, "Predict fist", "Predict fist" )
 
@@ -3985,6 +3992,12 @@ dezz.spfuncs[5] = function()
 
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Dynamic fov", "Fov dynamic" )
     dezz.ui.Slider( dezz.ui.SettingsPan, "Aimbot FOV", "Aimbot FOV", 0, 180, 0 )
+end
+
+dezz.spfuncs[5252] = function()
+    dezz.ui.SettingsPan:SetSize( 250, 85 )
+
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Addaptive range", "Adapran" )
 end
 
 dezz.spfuncs[90] = function()
@@ -4220,6 +4233,7 @@ end
         dezz.ui.CheckBox( p, "Box", "Box esp", false, false, true, dezz.spfuncs[11] )
         dezz.ui.CheckBox( p, "Name", "Name", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Name pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         dezz.ui.CheckBox( p, "Mark", "Mark", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Mark pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
+        dezz.ui.CheckBox( p, "Distance player", "Distance", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Distance pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         dezz.ui.CheckBox( p, "Usergroup icon", "Usergroup icon", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Usergroup icon pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         dezz.ui.CheckBox( p, "Usergroup TXT", "Usergroup TXT", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Usergroup TXT pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         dezz.ui.CheckBox( p, "Health", "Health", false, false, true, dezz.spfuncs[12], false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Health pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(3,0,0,0) dezz.ui.ColorPicker( "Health bar gradient", p ) end )
@@ -4247,7 +4261,7 @@ function dezz.tabs.Visuals()
         dezz.ui.MTButton( p, "Variant 2", dezz.spfuncs[35] )
         dezz.ui.MTButton( p, "Variant 1", dezz.spfuncs[8888])
     end
-dezz.itemPanelB( "Players",1, 450, func )
+dezz.itemPanelB( "Players",1, 470, func )
 
     local p = dezz.itemPanel("Entity",1,135):GetItemPanel()
 
@@ -4540,7 +4554,7 @@ function dezz.tabs.Misc()
     dezz.itemPanelB( "Net / Cvar",3, 320, func)
 
 
-    local p = dezz.itemPanel("Other",3,345):GetItemPanel()
+    local p = dezz.itemPanel("Other",3,350):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Follow Player", "Ghost follower" )
     dezz.ui.CheckBox( p, "GPS Tracker", "GPS" )
@@ -6518,8 +6532,8 @@ function dezz.PropAim( cmd )
         local propVel       = dezz.grabbingEnt:GetVelocity()
         local propSpeed     = propVel:Length()
 
-        local distance      = plyPos:DistToSqr​( propPos )
-        local plydist       = plyPos:DistToSqr​( eyePos )
+        local distance      = plyPos:Distance( propPos )
+        local plydist       = plyPos:Distance( eyePos )
 
         if plydist >= 4096 then continue end
 
@@ -6539,7 +6553,7 @@ function dezz.PropAim( cmd )
         local data          = ded.GetSimulationData()
         local aimPos        = data.m_vecAbsOrigin + plyCenter
 
-        distance            = aimPos:DistToSqr​( propPos )
+        distance            = aimPos:Distance( propPos )
         travelTime          = distance / propSpeed
 
         ded.FinishSimulation()
@@ -6556,8 +6570,67 @@ function dezz.PropAim( cmd )
 
         cmd:SetMouseWheel( scrollDelta ) 
         cmd:SetViewAngles( aimAng )
+
+        local scrollDelta = 0
+
+        if distance == 0 then
+            scrollDelta = 0
+        elseif propSpeed > plySpeed then
+            scrollDelta = - ( distance / propSpeed )
+        else
+            scrollDelta = distance / plySpeed
+        end
+
+        local predticks = dezz.TIME_TO_TICKS( ded.GetLatency(0) + ded.GetLatency(1) ) + 1
+
+        ded.StartSimulation( ply:EntIndex() )
+
+        for i = 1, predticks do
+            ded.SimulateTick()
+        end
+
+        local data = ded.GetSimulationData()
+
+        pos = data.m_vecAbsOrigin + ply:OBBCenter()
+
+        ded.FinishSimulation()
+
+        local dist = pos:DistToSqr( pLocalPlayer:EyePos() )
+
+        local clr = dist < 16777216 and Color( 0, 255, 0 ) or Color( 255, 0, 0 )
+
+        debugoverlay.Line( pos, dezz.grabbingEnt:GetPos(), 0.1, clr, true )
+        debugoverlay.Box( pos - ply:OBBCenter(), ply:OBBMins(), ply:OBBMaxs(), 0.1, Color( 255, 15, 15, 32 ) )
+
+        if dist >= 16777216 then continue end
+
+        local aimAng = ( pos - pLocalPlayer:EyePos() ):Angle()
+        local ppd = dezz.grabbingEnt:GetPos():DistToSqr( pos )
+
+        local cd = dezz.cfg.vars["PA thrower dist"]
+        if ppd < ( cd * cd ) and dezz.cfg.vars["PA thrower"] then
+            cmd:RemoveKey( IN_ATTACK )
+        end
+
+        local bmd = math.sqrt( dist - ppd )
+
+        if ( dist - ppd ) < 0 then bmd = 0 end 
+
+        local scrollDelta = math.ceil( bmd > 0 and -ppd or ppd )
+
+        if scrollDelta > 5000 then
+            scrollDelta = 5000
+        elseif scrollDelta < -5000 then
+            scrollDelta = -5000
+        end
+
+        print( "SDelta", scrollDelta, "BMD", bmd, "PPD", ppd )
+
+        cmd:SetMouseWheel( scrollDelta )
+        cmd:SetViewAngles( aimAng )
     end
 end
+
 
 function dezz.Aim(cmd)
     dezz.AntiAim(cmd)
@@ -9211,7 +9284,7 @@ local cheaters = {}
 
 cheaters.list = {}
 cheaters.list_temp = {}
-cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/dsadsadadsadasdadsdas/refs/heads/main/asdadsdasdsadsadshjadskhadshdezzasdkdas.json"
+cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/dsadsadadsadasdadsdas/refs/heads/main/asdadsdasdsadsadshjadskhadshdhasdkdas.json"
 
 function cheaters.fetch_on_success(body, length, headers, code)
     local tbl = util.JSONToTable(body)
@@ -9694,6 +9767,18 @@ function dezz.DrawESP()
                 surface.SetTextPos(textX, textY)
                 surface.DrawText(name)
                 
+                ttbl[pos] = ttbl[pos] + 0.8
+            end
+
+            if dezz.cfg.vars["Distance"] then 
+                local distance = math.Round(vp:Distance(pLocalPlayer:GetPos()))
+                local name = distance .. " units"
+                local pos = dezz.cfg.vars["Distance pos"]
+                local tw, th = surface.GetTextSize(name)
+
+                surface.SetTextPos(poses[pos] - dezz.getTextX(v, tw, pos), dezz.getTextY(MaxY, MinY, th, pos, ttbl[pos]))
+                surface.DrawText(name)
+
                 ttbl[pos] = ttbl[pos] + 0.8
             end
         
@@ -11383,43 +11468,162 @@ do
         end
 
         local grad = Material("gui/gradient")
-        local GetKeypad = function() return ents.FindByClass("keypad") end
         local white = Color(255, 255, 255)
         local green = Color(0, 255, 0)
         local panel_color = Color(0, 0, 0, 0)
 
-        if dezz.cfg.vars["kps"] then
-        hook.Add("Think", "Keypads2", function()
-            for k, v in pairs(GetKeypad()) do
-                if IsValid(v) and not v.hacked and v:GetStatus() == 1 and v:GetDisplayText() ~= "****" then
-                    v.hacked = true
-                    v.passi = v:GetDisplayText()
-                end
-            end
-        end)
+        local elements = {
+            { x = 0.075, y = 0.04, w = 0.85, h = 0.25 },
+            { x = 0.075, y = 0.04 + 0.25 + 0.03, w = 0.85 / 2 - 0.04 / 2 + 0.05, h = 0.125, text = "ABORT" },
+            { x = 0.5 + 0.04 / 2 + 0.05, y = 0.04 + 0.25 + 0.03, w = 0.85 / 2 - 0.04 / 2 - 0.05, h = 0.125, text = "OK" }
+        }
 
-        hook.Add("HUDPaint", "Keypads2", function()
-            for k, v in pairs(GetKeypad()) do
-                if v.hacked then
-                    local pos = v:GetPos():ToScreen()
-                    surface.SetDrawColor(panel_color)
-                    surface.SetMaterial(grad)
-                    surface.DrawTexturedRect(pos.x, pos.y, 70, 20)
-                    draw.SimpleText(v.passi, "TargetID", pos.x + 20, pos.y + 8, green, 1, 1)
-                end
-            end
-            
-                local trace_ent = LocalPlayer():GetEyeTrace().Entity
-                if trace_ent:GetClass() == "keypad" then
-                    draw.SimpleText(trace_ent.hacked and trace_ent.passi or "not hacked", "TargetID", ScrW()/2, ScrH()/2, white, 1, 1)
-                end
-            end)
+        for i = 1, 9 do
+            local column = (i - 1) % 3
+            local row = math.floor((i - 1) / 3)
+            table.insert(elements, {
+                x = 0.075 + (0.3 * column),
+                y = 0.175 + 0.25 + 0.05 + ((0.5 / 3) * row),
+                w = 0.25,
+                h = 0.13,
+                text = tostring(i)
+            })
         end
 
-            if not dezz.cfg.vars["kps"] or dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then 
-                hook.Remove("Think", "Keypads2")
-                hook.Remove("HUDPaint", "Keypads2")
+        local function GetKeypads()
+            return ents.FindByClass("keypad")
+        end
+
+        local function CalculateKeypadCursorPos(ply, ent)
+            if not IsValid(ply) then return 0, 0 end
+            local tr = util.TraceLine({ start = ply:EyePos(), endpos = ply:EyePos() + ply:GetAimVector() * 65, filter = ply })
+            if not tr.Entity or tr.Entity ~= ent then return 0, 0 end
+            local scale = ent.Scale
+            if not scale then return 0, 0 end
+            local pos, ang = ent:CalculateRenderPos(), ent:CalculateRenderAng()
+            if not pos or not ang then return 0, 0 end
+            local normal = ent:GetForward()
+            local intersection = util.IntersectRayWithPlane(ply:EyePos(), ply:GetAimVector(), pos, normal)
+            if not intersection then return 0, 0 end
+            local diff = pos - intersection
+            local x = diff:Dot(-ang:Forward()) / scale
+            local y = diff:Dot(-ang:Right()) / scale
+            return x, y
+        end
+
+        local function KPGetHoveredElement(ply, ent)
+            local scale = ent.Scale
+            local w, h = ent.Width2D, ent.Height2D
+            local x, y = CalculateKeypadCursorPos(ply, ent)
+            for _, element in ipairs(elements) do
+                local element_x = w * element.x
+                local element_y = h * element.y
+                local element_w = w * element.w
+                local element_h = h * element.h
+                if element_x < x and element_x + element_w > x and element_y < y and element_y + element_h > y then
+                    return element
+                end
             end
+        end
+
+        local function RemoveKeypadHooks()
+            hook.Remove("Think", "KeypadLogic")
+            hook.Remove("Think", "KeypadDetector")
+            hook.Remove("HUDPaint", "KeypadDisplay")
+        end
+
+        if dezz.cfg.vars["kps"] then
+            RemoveKeypadHooks()
+            
+            hook.Add("Think", "KeypadLogic", function()
+                local me = LocalPlayer()
+                if not IsValid(me) then return end
+                
+                for _, v in ipairs(player.GetAll()) do
+                    local kp = v:GetEyeTrace().Entity
+                    if IsValid(kp) and IsValid(v) and string.find(kp:GetClass(), "Keypad") and v:EyePos():Distance(kp:GetPos()) <= 120 then
+                        kp.tempCode = kp.tempCode or ""
+                        kp.tempText = kp.tempText or ""
+                        kp.tempStatus = kp.tempStatus or 0
+                        
+                        if kp:GetText() ~= kp.tempText or kp:GetStatus() ~= kp.tempStatus then
+                            kp.tempText = kp:GetText()
+                            kp.tempStatus = kp:GetStatus()
+                            
+                            if kp.tempText and not kp:GetSecure() then
+                                kp.tempCode = kp.tempText
+                                timer.Simple(0, function()
+                                    if IsValid(kp) and kp:GetStatus() == 1 and kp.tempCode and kp.tempCode ~= "" then
+                                        kp.code = kp.tempCode
+                                    end
+                                end)
+                            else
+                                local i = KPGetHoveredElement(v, kp)
+                                if i then i = i.text end
+                                
+                                if kp.tempText then
+                                    timer.Simple(0, function()
+                                        if IsValid(kp) and kp:GetStatus() == 1 and kp.tempCode and kp.tempCode ~= "" then
+                                            kp.code = kp.tempCode
+                                        end
+                                    end)
+                                end
+                                
+                                if kp.tempText == "" or kp:GetStatus() == 2 then
+                                    kp.tempCode = ""
+                                end
+                                
+                                timer.Simple(0, function()
+                                    if IsValid(kp) and tonumber(i) and kp:GetText():len() ~= 0 then
+                                        kp.tempCode = kp.tempCode .. i
+                                    end
+                                end)
+                            end
+                        end
+                    end
+                end
+            end)
+
+            hook.Add("Think", "KeypadDetector", function()
+                for _, v in ipairs(GetKeypads()) do
+                    if IsValid(v) then
+                        if not isbool(v.hacked) then
+                            v.hacked = false
+                        end
+                        if not v.hacked and v:GetStatus() == 1 and v:GetText() ~= "****" then
+                            v.hacked = true
+                            v.passi = v:GetText()
+                        end
+                    end
+                end
+            end)
+
+            hook.Add("HUDPaint", "KeypadDisplay", function()
+                local me = LocalPlayer()
+                if not IsValid(me) then return end
+                
+                local trace_ent = me:GetEyeTrace().Entity
+                
+                for _, v in ipairs(GetKeypads()) do
+                    if v.hacked then
+                        local pos = v:GetPos():ToScreen()
+                        if pos.visible then
+                            if v == trace_ent then
+                                draw.SimpleText(v.passi, "TargetID", pos.x + 20, pos.y + 8, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                            else
+                                draw.SimpleText(v.passi, "TargetID", pos.x + 5, pos.y + 6, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            RemoveKeypadHooks()
+        end
+
+        if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
+            RemoveKeypadHooks()
+        end
 
         surface.SetFont("HudhintTextLarge")
         local plys = player.GetAll()
@@ -11749,24 +11953,25 @@ do
         end 
 
         hook.Add("PostDrawTranslucentRenderables", "DrawKnifebotRange", function()
-            if dezz.cfg.vars["Knifebot Range"] and dezz.tpenabled then
-                local ply = LocalPlayer()
-                if not IsValid(ply) or not ply:Alive() then return end
+            if not dezz.tpenabled then return end
+            
+            local ply = LocalPlayer()
+            if not IsValid(ply) or not ply:Alive() then return end
 
-                local pelvisBone = ply:LookupBone("ValveBiped.Bip01_Pelvis")
-                local centerPos = ply:GetPos() + Vector(0, 0, 15)
-                
-                if pelvisBone then
-                    centerPos = ply:GetBonePosition(pelvisBone) or centerPos
-                end
+            local pelvisBone = ply:LookupBone("ValveBiped.Bip01_Pelvis")
+            local centerPos = ply:GetPos() + Vector(0, 0, 15)
+            
+            if pelvisBone then
+                centerPos = ply:GetBonePosition(pelvisBone) or centerPos
+            end
 
-                local radius = 48
-                local segments = 64
-                local time = CurTime() % 1
-                local lineColor = HSVToColor(time * 360, 1, 1)
-                local alpha = 200
+            local radius = 48
+            local segments = 64
+            local time = CurTime() % 1
+            local color = HSVToColor(time * 360, 1, 1)
 
-                cam.Start3D()
+            cam.Start3D()
+                if dezz.cfg.vars["Adapran"] then
                     for i = 1, segments do
                         local theta1 = ((i - 1) / segments) * 2 * math.pi
                         local theta2 = (i / segments) * 2 * math.pi
@@ -11801,36 +12006,31 @@ do
                             pos2 = trace2.HitPos - (trace2.HitNormal * 2)
                         end
 
-                        render.DrawLine(pos1, pos2, lineColor, false)
+                        render.DrawLine(pos1, pos2, color, false)
                     end
+                elseif dezz.cfg.vars["Knifebot Range"] then
+                    local simpleSegments = 32
+                    for i = 1, simpleSegments do
+                        local theta1 = ((i - 1) / simpleSegments) * 2 * math.pi
+                        local theta2 = (i / simpleSegments) * 2 * math.pi
 
-                    local nearestWall = radius
-                    for i = 1, 16 do
-                        local angle = (i / 16) * 2 * math.pi
-                        local dir = Vector(math.cos(angle), math.sin(angle), 0)
-                        local trace = util.TraceLine({
-                            start = centerPos,
-                            endpos = centerPos + dir * radius,
-                            filter = ply,
-                            mask = MASK_SOLID
-                        })
+                        local x1 = math.cos(theta1) * radius
+                        local y1 = math.sin(theta1) * radius
+                        local x2 = math.cos(theta2) * radius
+                        local y2 = math.sin(theta2) * radius
 
-                        if trace.Hit then
-                            local dist = centerPos:Distance(trace.HitPos)
-                            if dist < nearestWall then
-                                nearestWall = dist
-                            end
-                        end
+                        local pos1 = centerPos + Vector(x1, y1, 0)
+                        local pos2 = centerPos + Vector(x2, y2, 0)
+
+                        render.DrawLine(pos1, pos2, color, false)
                     end
-
-                cam.End3D()
-
-                if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
-                    hook.Remove("PostDrawTranslucentRenderables", "DrawKnifebotRange")
                 end
+            cam.End3D()
+
+            if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
+                hook.Remove("PostDrawTranslucentRenderables", "DrawKnifebotRange")
             end
         end)
-
 
 /*
 hook.Add( "PostDrawTranslucentRenderables", "test", function()
