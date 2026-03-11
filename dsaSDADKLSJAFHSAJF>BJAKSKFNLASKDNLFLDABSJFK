@@ -11385,33 +11385,33 @@ do
             for i = #dezz.hitmarkers, 1, -1 do
                 local hit = dezz.hitmarkers[i]
 
-                if hit.time < currentTime - 0.8 then 
-                    table.remove(dezz.hitmarkers, i) 
-                    continue 
-                end 
-                
-                local elapsed = currentTime - hit.time
-                local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
-                
-                local spreadProgress = math.min(elapsed / 0.3, 1.0)
-                local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
+                    if hit.time < currentTime - 0.8 then 
+                        table.remove(dezz.hitmarkers, i) 
+                        continue 
+                    end 
+                    
+                    local elapsed = currentTime - hit.time
+                    local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
+                    
+                    local spreadProgress = math.min(elapsed / 0.3, 1.0)
+                    local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
 
-                local spread = 80 * spreadProgress
-                local length = 13.5 * (1 - spreadProgress * 0.5)
-                local alpha = 255 * alphaProgress
+                    local spread = 80 * spreadProgress
+                    local length = 13.5 * (1 - spreadProgress * 0.5)
+                    local alpha = 255 * alphaProgress
 
-                local function drawHitmarkerLine(x1, y1, x2, y2)
-                    surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
-                    surface.DrawLine(x1, y1, x2, y2)
+                    local function drawHitmarkerLine(x1, y1, x2, y2)
+                        surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
+                        surface.DrawLine(x1, y1, x2, y2)
 
-                    surface.SetDrawColor(0, 0, 0, 100 * alphaProgress)
-                    surface.DrawLine(x1 - 1, y1 - 1, x2 - 1, y2 - 1)
-                end
+                        surface.SetDrawColor(0, 0, 0, 100 * alphaProgress)
+                        surface.DrawLine(x1 - 1, y1 - 1, x2 - 1, y2 - 1)
+                    end
 
-                drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
-                drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
-                drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
-                drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
+                    drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
+                    drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
+                    drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
+                    drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
                 end
             end
         end
@@ -12830,24 +12830,24 @@ dezz.hitnums = {}
 
 gameevent.Listen( "player_hurt" )
 
-function dezz.player_hurt(data)
-    local health = data.health
-	local priority = SERVER and data.Priority or 5
-	local hurted = Player( data.userid )
-	local attackerid = data.attacker
+        function dezz.player_hurt(data)
+            local health = data.health
+            local priority = SERVER and data.Priority or 5
+            local hurted = Player( data.userid )
+            local attackerid = data.attacker
 
-	if attackerid == pLocalPlayer:UserID() then
-        
-if dezz.cfg.vars["On screen logs"] then
-    local hlcolor = string.ToColor(dezz.cfg.colors["On screen logs"])
-    local currentTick = engine.TickCount()
-    
-    dezz.onScreenLogs[currentTick] = {
-        tick = currentTick,
-        {"Hit ", hurted:Name(), " for ", hurted:Health() - health, " damage"},
-        {dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite}
-    }
-end
+            if attackerid == pLocalPlayer:UserID() then
+                
+        if dezz.cfg.vars["On screen logs"] then
+            local hlcolor = string.ToColor(dezz.cfg.colors["On screen logs"])
+            local currentTick = engine.TickCount()
+            
+            dezz.onScreenLogs[currentTick] = {
+                tick = currentTick,
+                {"Hit ", hurted:Name(), " for ", hurted:Health() - health, " damage"},
+                {dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite}
+            }
+        end
 
         if dezz.cfg.vars["Hitmarker"] then
             dezz.hitmarkers[ #dezz.hitmarkers + 1 ] = { time = CurTime(), add = 0 }
@@ -12871,65 +12871,65 @@ end
             surface.PlaySound( dezz.cfg.vars["Hitsound str"] )
         end
 
-hook.Add("EntityTakeDamage", "dezz_resolver_hit", function(hurted, dmginfo)
-    if dezz.cfg.vars["Resolver"] and hurted:IsPlayer() and hurted != pLocalPlayer then
-        dezz._resolver_success = dezz._resolver_success or {}
-        
-        if IsValid(hurted) then
-            local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
-            local base = hurted._last_offset or 0
-            local shots = hurted.aimshots or 0
-            local rand = math.random(-22, 22)
+    hook.Add("EntityTakeDamage", "dezz_resolver_hit", function(hurted, dmginfo)
+        if dezz.cfg.vars["Resolver"] and hurted:IsPlayer() and hurted != pLocalPlayer then
+            dezz._resolver_success = dezz._resolver_success or {}
+            
+            if IsValid(hurted) then
+                local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
+                local base = hurted._last_offset or 0
+                local shots = hurted.aimshots or 0
+                local rand = math.random(-22, 22)
 
-            if dezz.cfg.vars["Adaptive resolver"] and mode != "HVH" then
-                local vel = (hurted.GetVelocity and hurted:GetVelocity():Length2D()) or 0
-                local crouch = (hurted.Crouching and hurted:Crouching()) or false
-                if not (hurted.IsOnGround and hurted:IsOnGround()) then
-                    dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 90 or -90)
-                elseif vel > 120 and not crouch then
-                    dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
-                elseif crouch and vel < 10 then
-                    dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 15 or -15)
-                else
-                    dezz._resolver_success[hurted] = base + ((shots % 4 == 0) and 180 or 0)
-                end
-            elseif mode == "HVH" then
-                local tick = engine.TickCount()
-                local success_pattern = (tick % 5) + 1
-                local success_offsets = { -60, -30, 0, 30, 60, -120, 120 }
-                dezz._resolver_success[hurted] = base + success_offsets[success_pattern]
-            else
-                if mode == "Absolute" then
-                    dezz._resolver_success[hurted] = (shots % 2 == 0) and 0 or 180
-                elseif mode == "Rage" then
-                    dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
-                elseif mode == "Delta" then
-                    if hurted.GetVelocity then
-                        local vel = hurted:GetVelocity()
-                        local moveYaw = vel:Angle().yaw
-                        dezz._resolver_success[hurted] = moveYaw + rand
+                if dezz.cfg.vars["Adaptive resolver"] and mode != "HVH" then
+                    local vel = (hurted.GetVelocity and hurted:GetVelocity():Length2D()) or 0
+                    local crouch = (hurted.Crouching and hurted:Crouching()) or false
+                    if not (hurted.IsOnGround and hurted:IsOnGround()) then
+                        dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 90 or -90)
+                    elseif vel > 120 and not crouch then
+                        dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
+                    elseif crouch and vel < 10 then
+                        dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 15 or -15)
                     else
-                        dezz._resolver_success[hurted] = base + rand
+                        dezz._resolver_success[hurted] = base + ((shots % 4 == 0) and 180 or 0)
                     end
-                elseif mode == "Legit" then
+                elseif mode == "HVH" then
+                    local tick = engine.TickCount()
+                    local success_pattern = (tick % 5) + 1
+                    local success_offsets = { -60, -30, 0, 30, 60, -120, 120 }
+                    dezz._resolver_success[hurted] = base + success_offsets[success_pattern]
+                else
+                    if mode == "Absolute" then
+                        dezz._resolver_success[hurted] = (shots % 2 == 0) and 0 or 180
+                    elseif mode == "Rage" then
+                        dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
+                    elseif mode == "Delta" then
                         if hurted.GetVelocity then
-                        local vel = hurted:GetVelocity()
-                        local moveYaw = vel:Angle().yaw
-                        dezz._resolver_success[hurted] = moveYaw + rand
+                            local vel = hurted:GetVelocity()
+                            local moveYaw = vel:Angle().yaw
+                            dezz._resolver_success[hurted] = moveYaw + rand
+                        else
+                            dezz._resolver_success[hurted] = base + rand
+                        end
+                    elseif mode == "Legit" then
+                            if hurted.GetVelocity then
+                            local vel = hurted:GetVelocity()
+                            local moveYaw = vel:Angle().yaw
+                            dezz._resolver_success[hurted] = moveYaw + rand
+                        else
+                            dezz._resolver_success[hurted] = base + rand
+                        end
+                    elseif mode == "Experimental" then
+                        dezz._resolver_success[hurted] = base + math.sin(CurTime() * 4 + shots) * 60
                     else
-                        dezz._resolver_success[hurted] = base + rand
+                        dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 58 or -58) + math.random(-30, 30)
                     end
-                elseif mode == "Experimental" then
-                    dezz._resolver_success[hurted] = base + math.sin(CurTime() * 4 + shots) * 60
-                else
-                    dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 58 or -58) + math.random(-30, 30)
                 end
-            end
-            hurted.aimshots = 0
+                hurted.aimshots = 0
+                    end
                 end
-            end
-        end)
-    end
+            end)
+        end
 end
 
 
