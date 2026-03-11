@@ -112,6 +112,7 @@ UPD: Search players...
 UPD: Fix hitnumbers
 UPD: Addaptive knife bot range(3 . in knifebot range)
 UPD: Distance(visuals)
+
 ]])
     updateText:SetFont("ChatFont")
     updateText:SetColor(Color(220, 220, 220))
