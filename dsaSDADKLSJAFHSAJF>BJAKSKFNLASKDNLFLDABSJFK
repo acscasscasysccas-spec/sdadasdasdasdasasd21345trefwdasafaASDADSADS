@@ -110,6 +110,8 @@ UPD: Delete item panel("Material customization" in visuals)
 UPD: Fix spectating
 UPD: Search players...
 UPD: Fix hitnumbers
+UPD: Addaptive knife bot range(3 . in knifebot range)
+UPD: Distance(visuals)
 ]])
     updateText:SetFont("ChatFont")
     updateText:SetColor(Color(220, 220, 220))
@@ -209,6 +211,7 @@ local TraceLine                         = util.TraceLine
 dezzCreateFont("Watermark_Bold", {
     font = "Verdana",
     size = 13,
+    weight = 1000,
     antialias = true,   
     shadow = true
 })
@@ -1281,7 +1284,7 @@ function dezz.DeleteConfig()
     local str = dezz.cfgTable[selectedConfigId]
 
     if str then
-        file.Delete("dezzaster/" .. str .. ".txt")
+        file.Delete("dezz/" .. str .. ".txt")
 
         table.remove(dezz.cfgTable, selectedConfigId)
 
@@ -4297,7 +4300,7 @@ dezz.itemPanelB( "Players",1, 470, func )
 
     local p = dezz.itemPanel( "Indicators", 2, 420 ):GetItemPanel()
     dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[90])
-    dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Swastika","csgo3","csgo4","Fire"})
+    dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
     dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
     dezz.ui.CheckBox( p, "Hitnumbers", "Hitnumbers", false, false, true, false, false, function(p) dezz.ui.ColorPicker( "Hitnumbers krit", p ) end )
     //dezz.ui.CheckBox( p, "Hit particles", "Hit particles", false, false, true, dezz.spfuncs[31] )
@@ -4574,7 +4577,7 @@ function dezz.tabs.Misc()
         surface.DrawRect(0, 0, w, h)
     end
     btnReload.DoClick = function()
-        chat.AddText(Color(155, 45, 48), " https://discord.gg/As6BYKUs6N \n https://discord.gg/As6BYKUs6N \n https://discord.gg/As6BYKUs6N")
+        chat.AddText(Color(155, 45, 48), "https://discord.gg/CjFj6Dxy \n https://discord.gg/CjFj6Dxy \n https://discord.gg/CjFj6Dxy")
     end
 end
 
@@ -8268,82 +8271,82 @@ function dezz.CreateMove(cmd)
 
     if dezz.cfg.vars["Sprint"] then cmd:AddKey(IN_SPEED) end
 
-        // Edge Jump
-        if dezz.cfg.vars["edge"] then
-            local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
-            local velocity = pLocalPlayer:GetVelocity()
-            local speed = velocity:Length2D()
+// Edge Jump
+if dezz.cfg.vars["edge"] then
+    local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
+    local velocity = pLocalPlayer:GetVelocity()
+    local speed = velocity:Length2D()
 
-            if on_ground and speed > 50 then
-                local trace = util.TraceLine({
-                    start = pLocalPlayer:GetPos(),
-                    endpos = pLocalPlayer:GetPos() + Vector(0, 0, -50),
-                    filter = pLocalPlayer,
-                    mask = MASK_SOLID_BRUSHONLY
-                })
+    if on_ground and speed > 50 then
+        local trace = util.TraceLine({
+            start = pLocalPlayer:GetPos(),
+            endpos = pLocalPlayer:GetPos() + Vector(0, 0, -50),
+            filter = pLocalPlayer,
+            mask = MASK_SOLID_BRUSHONLY
+        })
 
-                if not trace.Hit then
-                    cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_JUMP))
-                end
-            end
-        end
-
-    dezz.hoppin = false
-
-    if pLocalPlayer:GetMoveType() != MOVETYPE_NOCLIP and pLocalPlayer:GetMoveType() != MOVETYPE_LADDER and pLocalPlayer:GetMoveType() != MOVETYPE_OBSERVER and dezz.cfg.vars["Bhop"] then
-        if cmd:KeyDown(IN_JUMP) then
-            local bIsOnGround = pLocalPlayer:IsFlagSet(FL_ONGROUND)
-            
-            if not bIsOnGround or bWasOnGround then
-                cmd:RemoveKey(IN_JUMP)
-                bWasOnGround = false
-                
-                if not bWasOnGround then
-                    dezz.AutoStrafe(cmd)
-                end
-            else
-                if dezz.cfg.vars["Safe Hop"] then
-                    local pos = pLocalPlayer:GetPos()
-                    
-                    local offsets = {
-                        Vector(15, 0, 0),
-                        Vector(-15, 0, 0), 
-                        Vector(0, 0, 15),
-                        Vector(0, 0, -15)
-                    }
-                    
-                    local all_hit = true
-                    
-                    for i, offsets in ipairs(offsets) do
-                        local trace = util.TraceLine({
-                            start = pos + offsets,
-                            endpos = pos + offsets + Vector(0, 0, -25),
-                            filter = pLocalPlayer
-                        })
-
-                        if not trace.Hit then
-                            all_hit = false
-                            break
-                        end
-                    end
-                    
-                    if all_hit then
-                        bIsOnGround = true
-                    else
-                        cmd:RemoveKey(IN_JUMP)
-                        dezz.Stop(cmd)
-                        bIsOnGround = false
-                    end
-                else
-                    bIsOnGround = true
-                end
-            end
-            
-            dezz.hoppin = true
-        else
-            dezz.hoppin = false
+        if not trace.Hit then
+            cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_JUMP))
         end
     end
+end
+
+dezz.hoppin = false
+
+if pLocalPlayer:GetMoveType() != MOVETYPE_NOCLIP and pLocalPlayer:GetMoveType() != MOVETYPE_LADDER and pLocalPlayer:GetMoveType() != MOVETYPE_OBSERVER and dezz.cfg.vars["Bhop"] then
+    if cmd:KeyDown(IN_JUMP) then
+        local bIsOnGround = pLocalPlayer:IsFlagSet(FL_ONGROUND)
+        
+        if not bIsOnGround or bWasOnGround then
+            cmd:RemoveKey(IN_JUMP)
+            bWasOnGround = false
+            
+            if not bWasOnGround then
+                dezz.AutoStrafe(cmd)
+            end
+        else
+            if dezz.cfg.vars["Safe Hop"] then
+                local pos = pLocalPlayer:GetPos()
+                
+                local offsets = {
+                    Vector(15, 0, 0),
+                    Vector(-15, 0, 0), 
+                    Vector(0, 0, 15),
+                    Vector(0, 0, -15)
+                }
+                
+                local all_hit = true
+                
+                for i, offsets in ipairs(offsets) do
+                    local trace = util.TraceLine({
+                        start = pos + offsets,
+                        endpos = pos + offsets + Vector(0, 0, -25),
+                        filter = pLocalPlayer
+                    })
+
+                    if not trace.Hit then
+                        all_hit = false
+                        break
+                    end
+                end
+                
+                if all_hit then
+                    bIsOnGround = true
+                else
+                    cmd:RemoveKey(IN_JUMP)
+                    dezz.Stop(cmd)
+                    bIsOnGround = false
+                end
+            else
+                bIsOnGround = true
+            end
+        end
+        
+        dezz.hoppin = true
+    else
+        dezz.hoppin = false
+    end
+end
 
 	if dezz.cfg.vars["Fast stop"] then
         dezz.Stop(cmd)
@@ -8506,176 +8509,176 @@ function dezz.CreateMove(cmd)
     end
 
 
-    if dezz and dezz.cfg and dezz.cfg.vars and dezz.cfg.vars["Ghost follower"] then
-        local tar = player.GetBySteamID(dezz.cfg.vars["GFID"] or "")
+if dezz and dezz.cfg and dezz.cfg.vars and dezz.cfg.vars["Ghost follower"] then
+    local tar = player.GetBySteamID(dezz.cfg.vars["GFID"] or "")
 
-        if IsValid(tar) and IsValid(pLocalPlayer) and cmd then
-            local eyePos = pLocalPlayer:EyePos()
-            local tarPos = tar:GetPos()
-            local myPos = pLocalPlayer:GetPos()
+    if IsValid(tar) and IsValid(pLocalPlayer) and cmd then
+        local eyePos = pLocalPlayer:EyePos()
+        local tarPos = tar:GetPos()
+        local myPos = pLocalPlayer:GetPos()
+        
+        if eyePos and tarPos then
+            local tang = (tarPos - eyePos):Angle()
+
+            local oldButtons = cmd:GetButtons()
             
-            if eyePos and tarPos then
-                local tang = (tarPos - eyePos):Angle()
+            cmd:ClearMovement()
+            cmd:ClearButtons()
 
-                local oldButtons = cmd:GetButtons()
+            local importantButtons = {IN_JUMP, IN_ATTACK, IN_DUCK}
+            for _, btn in ipairs(importantButtons) do
+                if bit.band(oldButtons, btn) != 0 then
+                    cmd:AddKey(btn)
+                end
+            end
+
+            local forwardDist = 70
+            local directions = {
+                {vec = tang:Forward(), dist = forwardDist, weight = 1.0},
+                {vec = tang:Forward() + tang:Right() * 0.3, dist = forwardDist, weight = 0.7},
+                {vec = tang:Forward() + tang:Right() * -0.3, dist = forwardDist, weight = 0.7},
+                {vec = tang:Forward() + Vector(0, 0, 0.4), dist = forwardDist, weight = 0.5},
+            }
+            
+            local bestDirection = tang:Forward()
+            local maxWeight = 0
+            
+            for _, dir in ipairs(directions) do
+                local trace = util.TraceLine({
+                    start = myPos + Vector(0, 0, 20),
+                    endpos = myPos + dir.vec * dir.dist,
+                    filter = pLocalPlayer
+                })
                 
-                cmd:ClearMovement()
-                cmd:ClearButtons()
-
-                local importantButtons = {IN_JUMP, IN_ATTACK, IN_DUCK}
-                for _, btn in ipairs(importantButtons) do
-                    if bit.band(oldButtons, btn) != 0 then
-                        cmd:AddKey(btn)
-                    end
+                if not trace.Hit and dir.weight > maxWeight then
+                    maxWeight = dir.weight
+                    bestDirection = dir.vec
                 end
+            end
 
-                local forwardDist = 70
-                local directions = {
-                    {vec = tang:Forward(), dist = forwardDist, weight = 1.0},
-                    {vec = tang:Forward() + tang:Right() * 0.3, dist = forwardDist, weight = 0.7},
-                    {vec = tang:Forward() + tang:Right() * -0.3, dist = forwardDist, weight = 0.7},
-                    {vec = tang:Forward() + Vector(0, 0, 0.4), dist = forwardDist, weight = 0.5},
-                }
-                
-                local bestDirection = tang:Forward()
-                local maxWeight = 0
-                
-                for _, dir in ipairs(directions) do
-                    local trace = util.TraceLine({
-                        start = myPos + Vector(0, 0, 20),
-                        endpos = myPos + dir.vec * dir.dist,
-                        filter = pLocalPlayer
-                    })
-                    
-                    if not trace.Hit and dir.weight > maxWeight then
-                        maxWeight = dir.weight
-                        bestDirection = dir.vec
-                    end
-                end
+            local moveAng = bestDirection:Angle()
+            cmd:SetForwardMove(10000)
+            cmd:SetSideMove(0)
 
-                local moveAng = bestDirection:Angle()
-                cmd:SetForwardMove(10000)
-                cmd:SetSideMove(0)
+            if math.abs(moveAng.y - tang.y) > 30 then
+                local diff = math.AngleDifference(moveAng.y, tang.y)
+                cmd:SetSideMove(diff > 0 and 10000 or -10000)
+                cmd:SetForwardMove(8000)
+            end
 
-                if math.abs(moveAng.y - tang.y) > 30 then
-                    local diff = math.AngleDifference(moveAng.y, tang.y)
-                    cmd:SetSideMove(diff > 0 and 10000 or -10000)
-                    cmd:SetForwardMove(8000)
-                end
+            cmd:AddKey(IN_SPEED)
 
-                cmd:AddKey(IN_SPEED)
-
-                if isangle(tang) then
-                    cmd:SetViewAngles(tang)
-                end
-                
-                if dezz.MovementFix then
-                    dezz.MovementFix(cmd, tang.y)
-                end
+            if isangle(tang) then
+                cmd:SetViewAngles(tang)
+            end
+            
+            if dezz.MovementFix then
+                dezz.MovementFix(cmd, tang.y)
             end
         end
     end
+end
 
-    // GPS Tracker
-    local function DrawGPSTracker()
-        if not dezz.cfg.vars["GPS"] then return end
+// GPS Tracker
+local function DrawGPSTracker()
+    if not dezz.cfg.vars["GPS"] then return end
+    
+    local target_steamid = dezz.cfg.vars["GFID"] or ""
+    if target_steamid == "" then return end
+    
+    local tar = player.GetBySteamID(target_steamid)
+    if not IsValid(tar) or not IsValid(pLocalPlayer) then return end
+
+    local myPos = pLocalPlayer:GetPos() + Vector(0, 0, 10)
+    local tarPos = tar:GetPos() + Vector(0, 0, 10)
+    local distance = myPos:Distance(tarPos)
+
+    local segments = math.Clamp(math.floor(distance / 50), 4, 20)
+    for i = 1, segments do
+        local t = (i-1) / segments
+        local startPos = LerpVector(t, myPos, tarPos)
+        local endPos = LerpVector((i) / segments, myPos, tarPos)
+        local hue = Lerp(t, 120, 0)
         
-        local target_steamid = dezz.cfg.vars["GFID"] or ""
-        if target_steamid == "" then return end
-        
-        local tar = player.GetBySteamID(target_steamid)
-        if not IsValid(tar) or not IsValid(pLocalPlayer) then return end
-
-        local myPos = pLocalPlayer:GetPos() + Vector(0, 0, 10)
-        local tarPos = tar:GetPos() + Vector(0, 0, 10)
-        local distance = myPos:Distance(tarPos)
-
-        local segments = math.Clamp(math.floor(distance / 50), 4, 20)
-        for i = 1, segments do
-            local t = (i-1) / segments
-            local startPos = LerpVector(t, myPos, tarPos)
-            local endPos = LerpVector((i) / segments, myPos, tarPos)
-            local hue = Lerp(t, 120, 0)
-            
-            render.DrawLine(startPos, endPos, HSVToColor(hue, 1, 1), true)
-        end
-
-        local pulse = math.sin(CurTime() * 3) * 0.3 + 0.7
-        local size = Lerp(pulse, 10, 20)
-
-        render.DrawWireframeBox(tarPos, Angle(0, CurTime() * 50, 0), 
-            Vector(-size, -size, 0), Vector(size, size, size * 2), 
-            Color(255, 0, 0, 255), true)
-
-        render.DrawWireframeBox(tarPos, Angle(0, -CurTime() * 70, 0), 
-            Vector(-size*0.6, -size*0.6, size*0.3), Vector(size*0.6, size*0.6, size), 
-            Color(255, 255, 0, 200), true)
-
-        render.DrawLine(tar:GetPos(), tarPos - Vector(0, 0, 10), Color(255, 100, 100, 150), true)
-
-        local myPulse = math.sin(CurTime() * 4) * 0.2 + 0.8
-        local mySize = Lerp(myPulse, 5, 8)
-        
-        render.DrawWireframeBox(pLocalPlayer:GetPos(), Angle(0, CurTime() * 30, 0), 
-            Vector(-mySize, -mySize, 0), Vector(mySize, mySize, 15), 
-            Color(0, 100, 255, 255), true)
+        render.DrawLine(startPos, endPos, HSVToColor(hue, 1, 1), true)
     end
 
-    hook.Add("PostDrawTranslucentRenderables", "DezzGPSTracker", DrawGPSTracker)
+    local pulse = math.sin(CurTime() * 3) * 0.3 + 0.7
+    local size = Lerp(pulse, 10, 20)
 
-    local function DrawGPSText()
-        if not dezz.cfg.vars["GPS"] then return end
-        
-        local target_steamid = dezz.cfg.vars["GFID"] or ""
-        
-        if target_steamid == "" then 
-            local alpha = math.sin(CurTime() * 3) * 55 + 200
-            draw.SimpleText("GPS: No target set (set GFID)", "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
-            return 
-        end
-        
-        local tar = player.GetBySteamID(target_steamid)
+    render.DrawWireframeBox(tarPos, Angle(0, CurTime() * 50, 0), 
+        Vector(-size, -size, 0), Vector(size, size, size * 2), 
+        Color(255, 0, 0, 255), true)
 
-        if IsValid(tar) and IsValid(pLocalPlayer) then
-            local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
-            local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
+    render.DrawWireframeBox(tarPos, Angle(0, -CurTime() * 70, 0), 
+        Vector(-size*0.6, -size*0.6, size*0.3), Vector(size*0.6, size*0.6, size), 
+        Color(255, 255, 0, 200), true)
 
-            local bgColor = Color(0, 0, 0, 150)
-            surface.SetDrawColor(bgColor)
-            surface.DrawRect(5, 5, 300, 80)
+    render.DrawLine(tar:GetPos(), tarPos - Vector(0, 0, 10), Color(255, 100, 100, 150), true)
 
-            draw.SimpleText("GPS TRACKER", "DermaDefaultBold", 10, 8, Color(0, 255, 100, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("Target: " .. tar:Name(), "DermaDefault", 10, 25, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("Distance: " .. distance .. " units", "DermaDefault", 10, 40, Color(200, 200, 255, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("Health: " .. tar:Health(), "DermaDefault", 10, 55, Color(255, 200, 100, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("SteamID: " .. target_steamid, "DermaDefault", 10, 70, Color(150, 150, 150, 255), TEXT_ALIGN_LEFT)
+    local myPulse = math.sin(CurTime() * 4) * 0.2 + 0.8
+    local mySize = Lerp(myPulse, 5, 8)
+    
+    render.DrawWireframeBox(pLocalPlayer:GetPos(), Angle(0, CurTime() * 30, 0), 
+        Vector(-mySize, -mySize, 0), Vector(mySize, mySize, 15), 
+        Color(0, 100, 255, 255), true)
+end
 
-            if screenPos.visible then
-                local pulse = math.sin(CurTime() * 5) * 0.3 + 0.7
-                local markerAlpha = Lerp(pulse, 150, 255)
-                
-                draw.SimpleText("⬇", "DermaDefaultBold", screenPos.x, screenPos.y - 40, Color(255, 0, 0, markerAlpha), TEXT_ALIGN_CENTER)
-                draw.SimpleText(tar:Name(), "DermaDefault", screenPos.x, screenPos.y - 20, Color(255, 255, 255, 220), TEXT_ALIGN_CENTER)
-            end
-            
-        else
-            local alpha = math.sin(CurTime() * 4) * 55 + 200
-            draw.SimpleText("GPS Target not found: " .. target_steamid, "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
-        end
+hook.Add("PostDrawTranslucentRenderables", "DezzGPSTracker", DrawGPSTracker)
+
+local function DrawGPSText()
+    if not dezz.cfg.vars["GPS"] then return end
+    
+    local target_steamid = dezz.cfg.vars["GFID"] or ""
+    
+    if target_steamid == "" then 
+        local alpha = math.sin(CurTime() * 3) * 55 + 200
+        draw.SimpleText("GPS: No target set (set GFID)", "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+        return 
     end
+    
+    local tar = player.GetBySteamID(target_steamid)
 
-    hook.Add("HUDPaint", "DezzGPSText", DrawGPSText)
+    if IsValid(tar) and IsValid(pLocalPlayer) then
+        local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
+        local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
 
-    local gpsToggleCooldown = 0
+        local bgColor = Color(0, 0, 0, 150)
+        surface.SetDrawColor(bgColor)
+        surface.DrawRect(5, 5, 300, 80)
 
-    hook.Add("Think", "GPSRemoveKey", function()
-        if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > gpsToggleCooldown then
-            hook.Remove("PostDrawTranslucentRenderables", "DezzGPSTracker")
-            hook.Remove("HUDPaint", "DezzGPSText")
-            hook.Remove("Think", "GPSRemoveKey")
-            gpsToggleCooldown = CurTime() + 0.5
+        draw.SimpleText("GPS TRACKER", "DermaDefaultBold", 10, 8, Color(0, 255, 100, 255), TEXT_ALIGN_LEFT)
+        draw.SimpleText("Target: " .. tar:Name(), "DermaDefault", 10, 25, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+        draw.SimpleText("Distance: " .. distance .. " units", "DermaDefault", 10, 40, Color(200, 200, 255, 255), TEXT_ALIGN_LEFT)
+        draw.SimpleText("Health: " .. tar:Health(), "DermaDefault", 10, 55, Color(255, 200, 100, 255), TEXT_ALIGN_LEFT)
+        draw.SimpleText("SteamID: " .. target_steamid, "DermaDefault", 10, 70, Color(150, 150, 150, 255), TEXT_ALIGN_LEFT)
+
+        if screenPos.visible then
+            local pulse = math.sin(CurTime() * 5) * 0.3 + 0.7
+            local markerAlpha = Lerp(pulse, 150, 255)
+            
+            draw.SimpleText("⬇", "DermaDefaultBold", screenPos.x, screenPos.y - 40, Color(255, 0, 0, markerAlpha), TEXT_ALIGN_CENTER)
+            draw.SimpleText(tar:Name(), "DermaDefault", screenPos.x, screenPos.y - 20, Color(255, 255, 255, 220), TEXT_ALIGN_CENTER)
         end
-    end)
+        
+    else
+        local alpha = math.sin(CurTime() * 4) * 55 + 200
+        draw.SimpleText("GPS Target not found: " .. target_steamid, "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+    end
+end
+
+hook.Add("HUDPaint", "DezzGPSText", DrawGPSText)
+
+local gpsToggleCooldown = 0
+
+hook.Add("Think", "GPSRemoveKey", function()
+    if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > gpsToggleCooldown then
+        hook.Remove("PostDrawTranslucentRenderables", "DezzGPSTracker")
+        hook.Remove("HUDPaint", "DezzGPSText")
+        hook.Remove("Think", "GPSRemoveKey")
+        gpsToggleCooldown = CurTime() + 0.5
+    end
+end)
 
     if dezz.cfg.vars["Air duck"] then
         local mode = dezz.cfg.vars["FastD"]
@@ -10534,24 +10537,6 @@ do
 
                 surface.DrawLine(centerX, centerY - crossSize / 2, centerX, centerY + crossSize / 2)
                 surface.DrawLine(centerX - crossSize / 2, centerY, centerX + crossSize / 2, centerY)
-
-            elseif cfg == 6 then
-                -- Прицел "Огонь"
-                local time = CurTime()
-                local size = 30
-                local centerX, centerY = scrwc, scrhc
-                
-                for i = 1, 8 do
-                    local angle = (i / 8) * math.pi * 2 + (time * 2)
-                    local x1 = centerX + math.cos(angle) * size
-                    local y1 = centerY + math.sin(angle) * size
-                    local x2 = centerX + math.cos(angle) * (size + 15)
-                    local y2 = centerY + math.sin(angle) * (size + 15)
-                    
-                    local color = HSVToColor((time * 100 + i * 45) % 360, 1, 1)
-                    surface.SetDrawColor(color)
-                    surface.DrawLine(x1, y1, x2, y2)
-                end
             end
         end
 
@@ -10741,9 +10726,6 @@ do
         end
 
         if dezz.cfg.vars["Admin tool"] then
-            local f7Pressed = false
-            local f8Pressed = false
-
             local function GetPlayerLookingAt()
                 local ply = LocalPlayer()
                 if not IsValid(ply) then return nil end
@@ -10760,7 +10742,7 @@ do
             local function GetPlayerBySteamID(steamid)
                 if not steamid or steamid == "" then return nil end
                 
-                for _, ply in ipairs(player.GetAll()) do
+                for _, ply in pairs(player.GetAll()) do
                     if ply:SteamID() == steamid then
                         return ply
                     end
@@ -10769,105 +10751,105 @@ do
                 return nil
             end
 
-            local rules = {
-                ["3.1"] = "NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.2"] = "FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-                ["3.2.1"] = "MassFreeDamage — Запрещено нанесение урона 4 и более игрокам без особой на то РП причины (даже косвенным путем)\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-                ["3.3"] = "FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-                ["3.3.1"] = "RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-                ["3.3.2"] = "MassRDM — Запрещено убийство 4 и более игроков без особой на то РП причины (даже косвенным путем)\n🔔ИСКЛЮЧЕНИЕ:\n• Самооборона.\n• Стрельба по вашим предметам.\n• Воровство ваших предметов.\n• Попытка связывания и воровство вас.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-                ["3.4"] = "NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-                ["3.5"] = "FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• 3.5 не работает во время рейдов (исключительно для атакующей и обороняющейся сторон), если Вы держали оружие до момента, как Вам начали угрожать оружием.\n• Если Амбрелле и Полиции угрожает один вооруженный человек, то он может дать отпор.\n• Если на Амбреллу и Полицию один вооруженный человек наставил оружие, то он не может достать наручники и надеть их на него.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• Однако, если угрожающий отвернулся, но при этом он всё еще вооружен, то он может надеть наручники на него.\n• На рейде запрещено намеренно выходить в область прямого огня перестрелки, а также заходить на территорию рейда, если Вы не являетесь участником атакующей или обороняющейся стороны.\n• Если что-то угрожает Вашей жизни (другой человек с оружием и т.п.), то Вы не имеете права использовать какие-либо средства ухода, которые приведут к Вашей смерти (еда и сигарета, которые отнимают Ваше здоровье).\n• Если на Вас навели оружие, то Вы не можете совершать резких движений даже если Вы в наручниках (не относится к движением мыши, но относится к жестам (act)). В таком случае Вас могут арестовать/убить (даже Госслужащий) и это не будет считаться [FreeKill'ом/FreeArrest'ом].\n🔔ИСКЛЮЧЕНИЕ:\n• Зомби\n• Амбрелла на базе\n• Полиция в Полицейском Участке\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.6"] = "JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-                ["3.7"] = "FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.8"] = "MassFreeArrest— Запрещен арест 3 и более людей без особой на то РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-                ["3.9"] = "CustomJob — С помощью команды \"/job\" Вы можете лишь уточнить смысл своей профессии, но не менять её.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-                ["3.10"] = "SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.11"] = "NickNameAbuse запрещено:\n• Нечитаемый никнейм\n• Копировать чужой никнейм\n• Никнейм с использованием рекламы (Исключение, реклама RusELiteRP)\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-                ["3.12"] = "FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.13"] = "MassFreeCuff — Запрещено заковывать в наручники 3 и более людей без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-                ["3.14"] = "BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.15"] = "BanExit — Запрещено покидать разборки.\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.16"] = "LeaveRolePlay - Запрещено покидать сервер во время РП ситуации\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["3.17"] = "OrganizationAbuse — Запрещено использовать нацисткую символику в группировках, оскорбления, фальсификации статуса игрока, копировать другие организации.\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-                ["3.19"] = "Free Demote - Запрещено увольнение игроков без адекватной на то причины.\nЗапрещено увольнение игрока с профессии без наличия RP обоснования и корректной RP причины (причину «AFK» использовать можно).\nПричиной увольнения игрока может служить нарушение правил профессии/прямых обязанностей.\n| Наказание 3.1",
-                ["nlr"] = "3.4 - NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-                ["rdm"] = "3.3.1 - RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-                ["freekill"] = "3.3 - FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-                ["freedamage"] = "3.2 - FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-                ["nonrp"] = "3.1 - NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["fearrp"] = "3.5 - FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["jobabuse"] = "3.6 - JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-                ["freearrest"] = "3.7 - FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["freecuff"] = "3.12 - FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["spawnabuse"] = "3.10 - SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-                ["bugabuse"] = "3.14 - BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)"
-            }
+        local rules = {
+            ["3.1"] = "NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.2"] = "FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+            ["3.2.1"] = "MassFreeDamage — Запрещено нанесение урона 4 и более игрокам без особой на то РП причины (даже косвенным путем)\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+            ["3.3"] = "FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+            ["3.3.1"] = "RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+            ["3.3.2"] = "MassRDM — Запрещено убийство 4 и более игроков без особой на то РП причины (даже косвенным путем)\n🔔ИСКЛЮЧЕНИЕ:\n• Самооборона.\n• Стрельба по вашим предметам.\n• Воровство ваших предметов.\n• Попытка связывания и воровство вас.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+            ["3.4"] = "NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+            ["3.5"] = "FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• 3.5 не работает во время рейдов (исключительно для атакующей и обороняющейся сторон), если Вы держали оружие до момента, как Вам начали угрожать оружием.\n• Если Амбрелле и Полиции угрожает один вооруженный человек, то он может дать отпор.\n• Если на Амбреллу и Полицию один вооруженный человек наставил оружие, то он не может достать наручники и надеть их на него.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• Однако, если угрожающий отвернулся, но при этом он всё еще вооружен, то он может надеть наручники на него.\n• На рейде запрещено намеренно выходить в область прямого огня перестрелки, а также заходить на территорию рейда, если Вы не являетесь участником атакующей или обороняющейся стороны.\n• Если что-то угрожает Вашей жизни (другой человек с оружием и т.п.), то Вы не имеете права использовать какие-либо средства ухода, которые приведут к Вашей смерти (еда и сигарета, которые отнимают Ваше здоровье).\n• Если на Вас навели оружие, то Вы не можете совершать резких движений даже если Вы в наручниках (не относится к движением мыши, но относится к жестам (act)). В таком случае Вас могут арестовать/убить (даже Госслужащий) и это не будет считаться [FreeKill'ом/FreeArrest'ом].\n🔔ИСКЛЮЧЕНИЕ:\n• Зомби\n• Амбрелла на базе\n• Полиция в Полицейском Участке\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.6"] = "JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+            ["3.7"] = "FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.8"] = "MassFreeArrest— Запрещен арест 3 и более людей без особой на то РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+            ["3.9"] = "CustomJob — С помощью команды \"/job\" Вы можете лишь уточнить смысл своей профессии, но не менять её.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+            ["3.10"] = "SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.11"] = "NickNameAbuse запрещено:\n• Нечитаемый никнейм\n• Копировать чужой никнейм\n• Никнейм с использованием рекламы (Исключение, реклама RusELiteRP)\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+            ["3.12"] = "FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.13"] = "MassFreeCuff — Запрещено заковывать в наручники 3 и более людей без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+            ["3.14"] = "BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.15"] = "BanExit — Запрещено покидать разборки.\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.16"] = "LeaveRolePlay - Запрещено покидать сервер во время РП ситуации\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["3.17"] = "OrganizationAbuse — Запрещено использовать нацисткую символику в группировках, оскорбления, фальсификации статуса игрока, копировать другие организации.\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+            ["3.19"] = "Free Demote - Запрещено увольнение игроков без адекватной на то причины.\nЗапрещено увольнение игрока с профессии без наличия RP обоснования и корректной RP причины (причину «AFK» использовать можно).\nПричиной увольнения игрока может служить нарушение правил профессии/прямых обязанностей.\n| Наказание 3.1",
+            ["nlr"] = "3.4 - NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+            ["rdm"] = "3.3.1 - RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+            ["freekill"] = "3.3 - FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+            ["freedamage"] = "3.2 - FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+            ["nonrp"] = "3.1 - NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["fearrp"] = "3.5 - FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["jobabuse"] = "3.6 - JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+            ["freearrest"] = "3.7 - FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["freecuff"] = "3.12 - FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["spawnabuse"] = "3.10 - SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+            ["bugabuse"] = "3.14 - BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)"
+        }
 
-            local function SearchRules(keyword)
-                local searchTerm = string.lower(keyword)
-                local foundRules = {}
-                
-                if rules[searchTerm] then
-                    foundRules[searchTerm] = rules[searchTerm]
-                end
-                
-                for rule, description in pairs(rules) do
-                    if string.find(string.lower(rule), searchTerm, 1, true) or string.find(string.lower(description), searchTerm, 1, true) then
-                        foundRules[rule] = description
-                    end
-                end
-                
-                return foundRules
+        local function SearchRules(keyword)
+            local searchTerm = string.lower(keyword)
+            local foundRules = {}
+            
+            if rules[searchTerm] then
+                foundRules[searchTerm] = rules[searchTerm]
             end
-
-            local function OpenRulesWindow(searchKeyword)
-                local foundRules = SearchRules(searchKeyword)
-                
-                local rulesFrame = vgui.Create("DFrame")
-                rulesFrame:SetSize(600, 500)
-                rulesFrame:Center()
-                rulesFrame:SetTitle("Поиск правил: " .. searchKeyword)
-                rulesFrame:ShowCloseButton(true)
-                rulesFrame:SetDraggable(true)
-                rulesFrame:MakePopup()
-                
-                rulesFrame.Paint = function(self, w, h)
-                    draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
-                    draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
-                end
-                
-                local scrollPanel = vgui.Create("DScrollPanel", rulesFrame)
-                scrollPanel:Dock(FILL)
-                scrollPanel:DockMargin(10, 30, 10, 10)
-                
-                if next(foundRules) == nil then
-                    local noResultsLabel = vgui.Create("DLabel", scrollPanel)
-                    noResultsLabel:Dock(TOP)
-                    noResultsLabel:SetText("Правила не найдены для: " .. searchKeyword)
-                    noResultsLabel:SetFont("DermaLarge")
-                    noResultsLabel:SetTextColor(Color(255, 100, 100))
-                    noResultsLabel:SizeToContents()
-                else
-                    for rule, description in pairs(foundRules) do
-                        local ruleLabel = vgui.Create("DLabel", scrollPanel)
-                        ruleLabel:Dock(TOP)
-                        ruleLabel:SetText("=== " .. rule .. " ===")
-                        ruleLabel:SetFont("DermaLarge")
-                        ruleLabel:SetTextColor(Color(255, 255, 100))
-                        ruleLabel:SizeToContents()
-                        
-                        local descLabel = vgui.Create("DLabel", scrollPanel)
-                        descLabel:Dock(TOP)
-                        descLabel:DockMargin(0, 0, 0, 20)
-                        descLabel:SetText(description)
-                        descLabel:SetFont("DermaDefault")
-                        descLabel:SetTextColor(Color(255, 255, 255))
-                        descLabel:SetWrap(true)
-                        descLabel:SetAutoStretchVertical(true)
-                    end
+            
+            for rule, description in pairs(rules) do
+                if string.find(string.lower(rule), searchTerm, 1, true) or string.find(string.lower(description), searchTerm, 1, true) then
+                    foundRules[rule] = description
                 end
             end
+            
+            return foundRules
+        end
+
+        local function OpenRulesWindow(searchKeyword)
+            local foundRules = SearchRules(searchKeyword)
+            
+            local rulesFrame = vgui.Create("DFrame")
+            rulesFrame:SetSize(600, 500)
+            rulesFrame:Center()
+            rulesFrame:SetTitle("Поиск правил: " .. searchKeyword)
+            rulesFrame:ShowCloseButton(true)
+            rulesFrame:SetDraggable(true)
+            rulesFrame:MakePopup()
+            
+            rulesFrame.Paint = function(self, w, h)
+                draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
+                draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
+            end
+            
+            local scrollPanel = vgui.Create("DScrollPanel", rulesFrame)
+            scrollPanel:Dock(FILL)
+            scrollPanel:DockMargin(10, 30, 10, 10)
+            
+            if next(foundRules) == nil then
+                local noResultsLabel = vgui.Create("DLabel", scrollPanel)
+                noResultsLabel:Dock(TOP)
+                noResultsLabel:SetText("Правила не найдены для: " .. searchKeyword)
+                noResultsLabel:SetFont("DermaLarge")
+                noResultsLabel:SetTextColor(Color(255, 100, 100))
+                noResultsLabel:SizeToContents()
+            else
+                for rule, description in pairs(foundRules) do
+                    local ruleLabel = vgui.Create("DLabel", scrollPanel)
+                    ruleLabel:Dock(TOP)
+                    ruleLabel:SetText("=== " .. rule .. " ===")
+                    ruleLabel:SetFont("DermaLarge")
+                    ruleLabel:SetTextColor(Color(255, 255, 100))
+                    ruleLabel:SizeToContents()
+                    
+                    local descLabel = vgui.Create("DLabel", scrollPanel)
+                    descLabel:Dock(TOP)
+                    descLabel:DockMargin(0, 0, 0, 20)
+                    descLabel:SetText(description)
+                    descLabel:SetFont("DermaDefault")
+                    descLabel:SetTextColor(Color(255, 255, 255))
+                    descLabel:SetWrap(true)
+                    descLabel:SetAutoStretchVertical(true)
+                end
+            end
+        end
 
             local banMenuFrame = nil
             local isOpeningBanMenu = false
@@ -10944,6 +10926,8 @@ do
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FreeCuff - 3.12", "10", "mi", "3.12")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "MassFreeCuff - 3.13", "12", "h", "3.13")
+                
+
             end
 
             local function OpenBanMenu()
@@ -11097,7 +11081,7 @@ do
                 
                 steamidEntry.OnEnter = function(self)
                     local steamid = self:GetValue()
-                    if steamid and steamid ~= "" then
+                    if steamid and steamid != "" then
                         local foundPlayer = GetPlayerBySteamID(steamid)
                         UpdatePlayerInfo(foundPlayer, steamidEntry)
                     end
@@ -11187,7 +11171,7 @@ do
                 end
                 searchButton.DoClick = function()
                     local searchText = searchEntry:GetValue()
-                    if searchText and searchText ~= "" then
+                    if searchText and searchText != "" then
                         OpenRulesWindow(searchText)
                     end
                 end
@@ -11320,51 +11304,64 @@ do
                 end
             end
 
-                hook.Add("Think", "BanMenuKey", function()
-                    if input.IsKeyDown(KEY_F7) then
-                        if not f7Pressed then
-                            f7Pressed = true
-                            local t = GetPlayerLookingAt()
-                            if t and IsValid(t) and t:IsPlayer() then
-                                OpenBanMenu()
-                            end
-                        end
-                    else
-                        f7Pressed = false
+            local f7Pressed = false
+            local f8Pressed = false
+            hook.Add("Think", "BanMenuKey", function()
+                if input.IsKeyDown(KEY_F7) and not f7Pressed then
+                    f7Pressed = true
+                    local t = GetPlayerLookingAt()
+                    if t and IsValid(t) and t:IsPlayer() then
+                        OpenBanMenu()
                     end
-                    
-                    if input.IsKeyDown(KEY_F8) then
-                        if not f8Pressed then
-                            f8Pressed = true
-                            OpenBanMenu()
-                        end
-                    else
-                        f8Pressed = false
-                    end
-                end)
+                elseif not input.IsKeyDown(KEY_F7) then
+                    f7Pressed = false
+                end
+                if input.IsKeyDown(KEY_F8) and not f8Pressed then
+                    f8Pressed = true
+                    OpenBanMenu()
+                elseif not input.IsKeyDown(KEY_F8) then
+                    f8Pressed = false
+                end
+            end)
 
 
 
-
-        local CT = CurTime()
-        local FT = FrameTime() * 128
 
         if dezz.cfg.vars["Hitmarker"] and #dezz.hitmarkers > 0 then
-            local hm = string.ToColor( dezz.cfg.colors["Hitmarker"] ) 
-    
-            surface.SetDrawColor( hm )
+            local hm = string.ToColor(dezz.cfg.colors["Hitmarker"])
+            local currentTime = CurTime()
+            
+            for i = #dezz.hitmarkers, 1, -1 do
+                local hit = dezz.hitmarkers[i]
 
-            for i = #dezz.hitmarkers, 1, -1  do
-                local v = dezz.hitmarkers[ i ]
-    
-                if v.time < CT - 1 then table.remove( dezz.hitmarkers, i ) continue end 
-    
-                v.add = math.Approach( v.add, v.add - (CT - 1) * 5, FT )
+                if hit.time < currentTime - 0.8 then 
+                    table.remove(dezz.hitmarkers, i) 
+                    continue 
+                end 
+                
+                local elapsed = currentTime - hit.time
+                local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
+                
+                local spreadProgress = math.min(elapsed / 0.3, 1.0)
+                local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
 
-                surface.DrawLine( ( screenWidth * 0.5 ) - v.add, ( screenHeight * 0.5 ) - v.add, ( screenWidth * 0.5 ) - 10 - v.add, ( screenHeight * 0.5 ) - 10 - v.add )
-                surface.DrawLine( ( screenWidth * 0.5 ) + v.add, ( screenHeight * 0.5 ) - v.add, ( screenWidth * 0.5 ) + 10 + v.add, ( screenHeight * 0.5 ) - 10 - v.add )
-                surface.DrawLine( ( screenWidth * 0.5 ) - v.add, ( screenHeight * 0.5 ) + v.add, ( screenWidth * 0.5 ) - 10 - v.add, ( screenHeight * 0.5 ) + 10 + v.add )
-                surface.DrawLine( ( screenWidth * 0.5 ) + v.add, ( screenHeight * 0.5 ) + v.add, ( screenWidth * 0.5 ) + 10 + v.add, ( screenHeight * 0.5 ) + 10 + v.add )
+                local spread = 80 * spreadProgress
+                local length = 13.5 * (1 - spreadProgress * 0.5)
+                local alpha = 255 * alphaProgress
+
+                local function drawHitmarkerLine(x1, y1, x2, y2)
+                    surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
+                    surface.DrawLine(x1, y1, x2, y2)
+
+                    surface.SetDrawColor(0, 0, 0, 100 * alphaProgress)
+                    surface.DrawLine(x1 - 1, y1 - 1, x2 - 1, y2 - 1)
+                end
+
+                drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
+                drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
+                drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
+                drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
+                end
             end
         end
 
@@ -11628,12 +11625,13 @@ do
             RemoveKeypadHooks()
         end
 
+        surface.SetFont("HudhintTextLarge")
+        local plys = player.GetAll()
         if dezz.cfg.vars["speclist"] then
             surface.SetFont("HudhintTextLarge")
             
             local pLocalPlayer = LocalPlayer()
             local spectators = {}
-            local plys = player.GetAll()
             
             for i = 1, #plys do
                 local v = dezz.playerCache[plys[i]]
@@ -11679,7 +11677,7 @@ do
                 end
             end
 
-            local cornerRadius = 0
+            local cornerRadius = 8
             draw.RoundedBox(cornerRadius, panelX, panelY, panelWidth, panelHeight, Color(37, 35, 35, 196))
 
             surface.SetDrawColor(255, 0, 0)
@@ -11687,18 +11685,16 @@ do
             
             local time = CurTime() % 1
             local color = HSVToColor(time * 360, 1, 1)
-            surface.SetTextColor(color)
+            surface.SetTextColor(color)                    
             surface.SetFont("HudhintTextLarge")
-            
-            local textWidth = surface.GetTextSize("SPECTATORS")
-            surface.SetTextPos(panelX + (panelWidth - textWidth) / 2, panelY + 10)
-            surface.DrawText("SPECTATORS")
+            surface.SetTextPos(panelX + 10, panelY + 10)
+            surface.DrawText("                              SPECTATORS")
             
             local _, fontHeight = surface.GetTextSize("A")
             
             local headerLineY = panelY + 10 + fontHeight + 2
             surface.SetDrawColor(255, 0, 0) 
-            surface.DrawRect(panelX + 10, headerLineY, panelWidth - 20, 2)
+            draw.RoundedBox(8, panelX + 10, headerLineY, panelWidth - 20, 2, Color(255, 0, 0))
             
             local textY = panelY + 35
             
@@ -12035,7 +12031,6 @@ do
                 hook.Remove("PostDrawTranslucentRenderables", "DrawKnifebotRange")
             end
         end)
-    end
 
 /*
 hook.Add( "PostDrawTranslucentRenderables", "test", function()
@@ -12754,6 +12749,9 @@ function dezz.drawCSModels_backtrack()
     end
 end
 
+dezz.hitmarkers = {}
+dezz.hitnums = {}
+
 gameevent.Listen( "player_hurt" )
 
 function dezz.player_hurt(data)
@@ -12764,19 +12762,16 @@ function dezz.player_hurt(data)
 
 	if attackerid == pLocalPlayer:UserID() then
         
-    if dezz.cfg.vars["On screen logs"] then
-        local hlcolor = string.ToColor(dezz.cfg.colors["On screen logs"])
-        local currentTick = engine.TickCount()
-        
-        dezz.onScreenLogs[currentTick] = {
-            tick = currentTick,
-            {"Hit ", hurted:Name(), " for ", hurted:Health() - health, " damage"},
-            {dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite}
-        }
-    end
-
-        dezz.hitmarkers = {}
-        dezz.hitnums = {}
+if dezz.cfg.vars["On screen logs"] then
+    local hlcolor = string.ToColor(dezz.cfg.colors["On screen logs"])
+    local currentTick = engine.TickCount()
+    
+    dezz.onScreenLogs[currentTick] = {
+        tick = currentTick,
+        {"Hit ", hurted:Name(), " for ", hurted:Health() - health, " damage"},
+        {dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite, hlcolor, dezz.HitLogsWhite}
+    }
+end
 
         if dezz.cfg.vars["Hitmarker"] then
             dezz.hitmarkers[ #dezz.hitmarkers + 1 ] = { time = CurTime(), add = 0 }
@@ -12800,65 +12795,65 @@ function dezz.player_hurt(data)
             surface.PlaySound( dezz.cfg.vars["Hitsound str"] )
         end
 
-    hook.Add("EntityTakeDamage", "dezz_resolver_hit", function(hurted, dmginfo)
-        if dezz.cfg.vars["Resolver"] and hurted:IsPlayer() and hurted != pLocalPlayer then
-            dezz._resolver_success = dezz._resolver_success or {}
-            
-            if IsValid(hurted) then
-                local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
-                local base = hurted._last_offset or 0
-                local shots = hurted.aimshots or 0
-                local rand = math.random(-22, 22)
+hook.Add("EntityTakeDamage", "dezz_resolver_hit", function(hurted, dmginfo)
+    if dezz.cfg.vars["Resolver"] and hurted:IsPlayer() and hurted != pLocalPlayer then
+        dezz._resolver_success = dezz._resolver_success or {}
+        
+        if IsValid(hurted) then
+            local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
+            local base = hurted._last_offset or 0
+            local shots = hurted.aimshots or 0
+            local rand = math.random(-22, 22)
 
-                if dezz.cfg.vars["Adaptive resolver"] and mode != "HVH" then
-                    local vel = (hurted.GetVelocity and hurted:GetVelocity():Length2D()) or 0
-                    local crouch = (hurted.Crouching and hurted:Crouching()) or false
-                    if not (hurted.IsOnGround and hurted:IsOnGround()) then
-                        dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 90 or -90)
-                    elseif vel > 120 and not crouch then
-                        dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
-                    elseif crouch and vel < 10 then
-                        dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 15 or -15)
-                    else
-                        dezz._resolver_success[hurted] = base + ((shots % 4 == 0) and 180 or 0)
-                    end
-                elseif mode == "HVH" then
-                    local tick = engine.TickCount()
-                    local success_pattern = (tick % 5) + 1
-                    local success_offsets = { -60, -30, 0, 30, 60, -120, 120 }
-                    dezz._resolver_success[hurted] = base + success_offsets[success_pattern]
+            if dezz.cfg.vars["Adaptive resolver"] and mode != "HVH" then
+                local vel = (hurted.GetVelocity and hurted:GetVelocity():Length2D()) or 0
+                local crouch = (hurted.Crouching and hurted:Crouching()) or false
+                if not (hurted.IsOnGround and hurted:IsOnGround()) then
+                    dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 90 or -90)
+                elseif vel > 120 and not crouch then
+                    dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
+                elseif crouch and vel < 10 then
+                    dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 15 or -15)
                 else
-                    if mode == "Absolute" then
-                        dezz._resolver_success[hurted] = (shots % 2 == 0) and 0 or 180
-                    elseif mode == "Rage" then
-                        dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
-                    elseif mode == "Delta" then
-                        if hurted.GetVelocity then
-                            local vel = hurted:GetVelocity()
-                            local moveYaw = vel:Angle().yaw
-                            dezz._resolver_success[hurted] = moveYaw + rand
-                        else
-                            dezz._resolver_success[hurted] = base + rand
-                        end
-                    elseif mode == "Legit" then
-                            if hurted.GetVelocity then
-                            local vel = hurted:GetVelocity()
-                            local moveYaw = vel:Angle().yaw
-                            dezz._resolver_success[hurted] = moveYaw + rand
-                        else
-                            dezz._resolver_success[hurted] = base + rand
-                        end
-                    elseif mode == "Experimental" then
-                        dezz._resolver_success[hurted] = base + math.sin(CurTime() * 4 + shots) * 60
+                    dezz._resolver_success[hurted] = base + ((shots % 4 == 0) and 180 or 0)
+                end
+            elseif mode == "HVH" then
+                local tick = engine.TickCount()
+                local success_pattern = (tick % 5) + 1
+                local success_offsets = { -60, -30, 0, 30, 60, -120, 120 }
+                dezz._resolver_success[hurted] = base + success_offsets[success_pattern]
+            else
+                if mode == "Absolute" then
+                    dezz._resolver_success[hurted] = (shots % 2 == 0) and 0 or 180
+                elseif mode == "Rage" then
+                    dezz._resolver_success[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
+                elseif mode == "Delta" then
+                    if hurted.GetVelocity then
+                        local vel = hurted:GetVelocity()
+                        local moveYaw = vel:Angle().yaw
+                        dezz._resolver_success[hurted] = moveYaw + rand
                     else
-                        dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 58 or -58) + math.random(-30, 30)
+                        dezz._resolver_success[hurted] = base + rand
                     end
-                end
-                hurted.aimshots = 0
+                elseif mode == "Legit" then
+                        if hurted.GetVelocity then
+                        local vel = hurted:GetVelocity()
+                        local moveYaw = vel:Angle().yaw
+                        dezz._resolver_success[hurted] = moveYaw + rand
+                    else
+                        dezz._resolver_success[hurted] = base + rand
                     end
+                elseif mode == "Experimental" then
+                    dezz._resolver_success[hurted] = base + math.sin(CurTime() * 4 + shots) * 60
+                else
+                    dezz._resolver_success[hurted] = base + ((shots % 2 == 0) and 58 or -58) + math.random(-30, 30)
                 end
-            end)
-        end
+            end
+            hurted.aimshots = 0
+                end
+            end
+        end)
+    end
 end
 
 
@@ -14923,12 +14918,11 @@ net.Receive("rp.police.SetLocalHandcuff", function()
     
     RunConsoleCommand("retry")
 end)
-
-hook.Add("PrePlayerDraw", "nicespastil", function(chel)
+hook.Add("PrePlayerDraw","nicespastil",function(chel) 
     if dezz.cfg.vars["leg_breaker"] then 
-        if chel != LocalPlayer() then return end
-        chel:SetAnimTime(CurTime() + 1)
-    end
+    if chel != LocalPlayer() then return end
+    chel:SetAnimTime(CurTime()+1,00001)
+end
 end)
 
 /*
