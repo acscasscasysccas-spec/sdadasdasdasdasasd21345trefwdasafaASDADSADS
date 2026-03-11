@@ -114,6 +114,7 @@ UPD: Addaptive knife bot range(3 . in knifebot range)
 UPD: Distance(visuals)
 UPD: Keystrokers(visuals)
 UPD: Mousestrokers(visuals)
+UPD: Ping warning(visuals)
 ]])
     updateText:SetFont("ChatFont")
     updateText:SetColor(Color(220, 220, 220))
@@ -4301,20 +4302,19 @@ dezz.itemPanelB( "Players",1, 470, func )
     dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[17], false )
     dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[19], false )
 
-    local p = dezz.itemPanel("Local Player",2,120):GetItemPanel()
+    local p = dezz.itemPanel("Local Player",2,100):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Player Hat", "Player Hat","Detect Screengrab" )
     dezz.ui.CheckBox( p, "Player Line", "Player Line", "Visual Line" )
-    dezz.ui.CheckBox( p, "Keystrokes", "ks", false, false, false, dezz.spfuncs[11152], false, function(p) dezz.ui.ColorPicker( "ksck", p ) dezz.ui.ColorPicker( "kscb", p ) end )
     dezz.ui.CheckBox( p, "Lines", "line", false, false, true )
 
-    local p = dezz.itemPanel("Outlines",2,115):GetItemPanel()
+    local p = dezz.itemPanel("Outlines",2,120):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Player outline", "Player outline", false, false, true )
     dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
     dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
 
-    local p = dezz.itemPanel( "Indicators", 2, 420 ):GetItemPanel()
+    local p = dezz.itemPanel( "Indicators", 2, 460 ):GetItemPanel()
     dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[90])
     dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
     dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
@@ -4324,6 +4324,8 @@ dezz.itemPanelB( "Players",1, 470, func )
     dezz.ui.CheckBox( p, "WaterMark", "WaterMark")
     dezz.ui.CheckBox( p, "Spectator list", "speclist" )
     dezz.ui.CheckBox( p, "Tickbase", "Tickbase indicator" )
+    dezz.ui.CheckBox( p, "Ping warning", "pw" )
+    dezz.ui.CheckBox( p, "Keystrokes", "ks", false, false, false, dezz.spfuncs[11152], false, function(p) dezz.ui.ColorPicker( "ksck", p ) dezz.ui.ColorPicker( "kscb", p ) end )
     dezz.ui.CheckBox( p, "Radar", "Radar" )
     dezz.ui.CheckBox( p, "Kill effect", "Kill effect" )
     dezz.ui.CheckBox( p, "KeyBind List", "KeyBind List", false,false,true )
@@ -7847,6 +7849,39 @@ do
         if dezz.cfg.vars["Allah walk"] and pLocalPlayer:IsFlagSet( FL_ONGROUND ) and dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
             dezz.fakeLagfactor = 21
         end
+
+        bSendPacket = true
+        bRunning = false
+        local desyncActive = true
+
+        hook.Add("Think", "DesyncPanicCheck", function()
+            if dezz.IsKeyDown and dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
+                desyncActive = false
+                hook.Remove("CreateMove", "Desynculator")
+                hook.Remove("Think", "DesyncPanicCheck")
+            end
+        end)
+
+        hook.Add("CreateMove", "Desynculator", function(cmd)
+            if not dezz.cfg.vars["Desync1"] or not desyncActive then return end
+            
+            ded.SetBSendPacket(bSendPacket)
+            local tickrate = math.floor(1 / engine.TickInterval())
+            local seqshift = tickrate - 3
+
+            if bSendPacket then
+                if seqshift > 0 then
+                    if not bRunning then
+                        ded.SetOutSequenceNr(ded.GetOutSequenceNr() + seqshift)
+                        bRunning = true
+                    else
+                        ded.SetNetChokedPackets(127)
+                    end
+                else
+                    bRunning = false
+                end
+            end
+        end)
 
         //if dezz.cfg.vars["Fakelag comp"] == 2 and ded.GetCurrentCharge() > 0 then 
         //    local nfactor = dezz.fakeLagfactor - ded.GetMaxShiftTicks() - 1
@@ -11722,6 +11757,31 @@ do
             end
         end
 
+        if dezz.cfg.vars["pw"] then
+            local ping = pLocalPlayer:Ping()
+            local y = ScrH() / 2.1
+            local color, text
+            
+            if ping < 60 then
+                color = Color(0, 255, 0)
+                text = "Zaebis ping"
+            elseif ping < 100 then
+                color = Color(255, 255, 0)
+                text = "Terpimiy ping"
+            elseif ping < 150 then
+                color = Color(255, 125, 0)
+                text = "Huevenkiy ping"
+            else
+                color = Color(255, 0, 0)
+                text = "Zalupa a ne ping"
+            end
+            
+            surface.SetFont( "veranda" )
+            surface.SetTextPos(800, y)
+            surface.SetTextColor(color)
+            surface.DrawText(text)
+        end
+
         if dezz.cfg.vars["On screen logs"] and table.Count(dezz.onScreenLogs) > 0 then
             local tick = engine.TickCount()
             local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5 + 45
@@ -15164,6 +15224,7 @@ local function DrawKS()
 
     local spaceColor = input.IsKeyDown(KEY_SPACE) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
     draw.RoundedBox(4, x + 8, mouseY, size - 16, 20, spaceColor)
+    draw.SimpleText("SPACE", "DermaDefaultBold", x + size/2, mouseY + 10, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
     local lmbColor = input.IsMouseDown(MOUSE_LEFT) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
     local rmbColor = input.IsMouseDown(MOUSE_RIGHT) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
