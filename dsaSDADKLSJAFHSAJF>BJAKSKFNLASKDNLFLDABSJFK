@@ -8858,11 +8858,46 @@ end
     end
 end
 
+if not file.Exists("dezzaster/music", "DATA") then
+    file.CreateDir("dezzaster/music")
+end
+
+local rastamanSound = nil
+local musicLoaded = false
+
+http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=1FkXdeyNFyiHvydEGqXirxEvQsJnEBUQv&export=download", function(body)
+    if body and #body > 0 then
+        file.Write("dezzaster/music/rast.mp3", body)
+        musicLoaded = true
+    end
+end)
+
 hook.Add("RenderScreenspaceEffects", "Rastaman_Screenspace", function()
-    if not dezz.cfg or not dezz.cfg.vars or not dezz.cfg.vars["rastoman"] then return end
-    
+    if not dezz.cfg.vars["rastoman"] then 
+        if rastamanSound then
+            rastamanSound:Stop()
+            rastamanSound = nil
+        end
+        return 
+    end
+
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
+    
+    if not ply:GetNWBool("rastoman_active") then
+        ply:SetNWBool("rastoman_active", true)
+        ply:SetNWFloat("rastoman_start", CurTime())
+    end
+
+    if not rastamanSound and musicLoaded then
+        sound.PlayFile("data/dezzaster/music/rast.mp3", "noblock", function(snd)
+            if IsValid(snd) then
+                rastamanSound = snd
+                snd:EnableLooping(true)
+                snd:Play()
+            end
+        end)
+    end
     
     local start = ply:GetNWFloat("rastoman_start", CurTime())
     local intensity = math.min((CurTime() - start) / 5, 1)
@@ -8881,11 +8916,11 @@ hook.Add("RenderScreenspaceEffects", "Rastaman_Screenspace", function()
     })
 
     DrawMotionBlur(0.2 * intensity, 0.99, 0.01)
-    util.ScreenShake(Vector(), 1 * intensity, 60, 0.1, 0)
+    util.ScreenShake(ply:GetPos(), 1 * intensity, 60, 0.1, 0)
 end)
 
 hook.Add("SetupWorldFog", "Rastaman_WorldFog", function()
-    if not dezz.cfg or not dezz.cfg.vars or not dezz.cfg.vars["rastoman"] then return end
+    if not dezz.cfg.vars["rastoman"] then return end
     
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
@@ -8905,22 +8940,40 @@ end)
 local rastamanBaseRoll = nil
 
 hook.Add("Think", "Rastaman_SetEyeAngles", function()
-    if not dezz.cfg or not dezz.cfg.vars or not dezz.cfg.vars["rastoman"] then return end
+    if not dezz.cfg.vars["rastoman"] then return end
     
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
 
-    if not ply:GetNWBool("rastoman_active") then
-        ply:SetNWBool("rastoman_active", true)
-        ply:SetNWFloat("rastoman_start", CurTime())
+    local start = ply:GetNWFloat("rastoman_start", CurTime())
+    local intensity = math.min((CurTime() - start) / 5, 1)
+    if intensity <= 0 then return end
+
+    if not rastamanBaseRoll then
+        rastamanBaseRoll = ply:EyeAngles().r
     end
+
+    local ang = ply:EyeAngles()
+    ang.r = rastamanBaseRoll + math.sin(CurTime() * 2) * 8 * intensity
+    ang.y = ang.y + math.sin(CurTime() * 3) * 2 * intensity
+    ang.p = ang.p + math.sin(CurTime() * 4) * 1.5 * intensity
+    ply:SetEyeAngles(ang)
 end)
 
 local rastamanBaseFOV = 0
 local rastamanActive = false
 
 hook.Add("Think", "Rastaman_FOVBreathing", function()
-    if not dezz.cfg or not dezz.cfg.vars or not dezz.cfg.vars["rastoman"] then return end
+    if not dezz.cfg.vars["rastoman"] then 
+        if rastamanActive then
+            rastamanActive = false
+            local ply = LocalPlayer()
+            if IsValid(ply) then
+                ply:SetFOV(0, 1)
+            end
+        end
+        return 
+    end
     
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
@@ -8930,7 +8983,8 @@ hook.Add("Think", "Rastaman_FOVBreathing", function()
         rastamanBaseFOV = ply:GetFOV()
     end
     
-    local intensity = math.min((CurTime() - ply:GetNWFloat("rastoman_start", CurTime())) / 5, 1)
+    local start = ply:GetNWFloat("rastoman_start", CurTime())
+    local intensity = math.min((CurTime() - start) / 5, 1)
     local pulse = math.sin(CurTime() * 2) * 5 * intensity
     ply:SetFOV(rastamanBaseFOV + pulse, 0)
 end)
@@ -8939,25 +8993,34 @@ hook.Add("Think", "Rastaman_Cleanup", function()
     local ply = LocalPlayer()
     if not IsValid(ply) then return end
     
-    if dezz.cfg and dezz.cfg.vars and not dezz.cfg.vars["rastoman"] then
-        if ply:GetNWBool("rastoman_active") then
-            ply:SetNWBool("rastoman_active", false)
-            rastamanBaseRoll = nil
-            rastamanActive = false
-            ply:SetNWFloat("rastoman_start", 0)
+    if not dezz.cfg.vars["rastoman"] and ply:GetNWBool("rastoman_active") then
+        ply:SetNWBool("rastoman_active", false)
+        rastamanBaseRoll = nil
+        rastamanActive = false
+        ply:SetNWFloat("rastoman_start", 0)
+        
+        if rastamanSound then
+            rastamanSound:Stop()
+            rastamanSound = nil
         end
     end
 end)
 
 hook.Add("Think", "removerast", function()
-if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then 
-    hook.Remove("Think", "Rastaman_Cleanup")
-    hook.Remove("Think", "Rastaman_FOVBreathing")
-    hook.Remove("Think", "Rastaman_SetEyeAngles")
-    hook.Remove("SetupWorldFog", "Rastaman_WorldFog")
-    hook.Remove("RenderScreenspaceEffects", "Rastaman_Screenspace")
+    if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then 
+        if rastamanSound then
+            rastamanSound:Stop()
+            rastamanSound = nil
+        end
+        hook.Remove("Think", "Rastaman_Cleanup")
+        hook.Remove("Think", "Rastaman_FOVBreathing")
+        hook.Remove("Think", "Rastaman_SetEyeAngles")
+        hook.Remove("SetupWorldFog", "Rastaman_WorldFog")
+        hook.Remove("RenderScreenspaceEffects", "Rastaman_Screenspace")
+        hook.Remove("Think", "removerast")
     end
 end)
+
 /* 
     Render Scene / Anti screengrab 
 */
