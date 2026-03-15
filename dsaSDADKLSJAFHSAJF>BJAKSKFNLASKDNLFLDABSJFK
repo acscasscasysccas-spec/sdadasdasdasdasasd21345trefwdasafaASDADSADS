@@ -1575,14 +1575,14 @@ local PANEL = {}
         self.TopPanel = TopPanel
 
         self.backgroundImages = {
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618984254636136/image.png?ex=69a761bf&is=69a6103f&hm=aa75083ff27f2c15c56534c802d10e22f42468851291d72168055cdf45e5ab9b&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618984695169055/image.png?ex=69a761bf&is=69a6103f&hm=c817f09e91155e2d54459e13f3e1accee7f804f368f5066b0a1ad9c04626317d&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618985186033674/image.png?ex=69a761bf&is=69a6103f&hm=844036e320879b1827d9f5b28cf22b6534f699f605fa2ef3a2410f98875141b5&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618985542291486/image.png?ex=69a761bf&is=69a6103f&hm=a022a778daa8cb1134a7b2d58746b093c37f35eb17536ac0d2b1bff179b8100b&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618986213511209/image.png?ex=69a761bf&is=69a6103f&hm=5a7c12a25fbc44f64336b91c3c87a07dc914f7738cca7236c0be116160b20ffb&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618986687332452/image.png?ex=69a761bf&is=69a6103f&hm=0a93ab39622d06ed4b19aea936cc0ee5e3d30c5a0b9df01bf3892275639b98f1&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1423618987115286578/image.png?ex=69a761c0&is=69a61040&hm=70570ca9d2ef99893167452ca9f66791ce394cd28a52314ecf7d962ea8f2b85a&",
-            "https://cdn.discordapp.com/attachments/1333506116461662269/1428081147522322543/rusya_suriye.png?ex=69a7cb76&is=69a679f6&hm=98766c995e576a77036290cfa2b24fb5bd8ee1f0f6780be604af499d34008e9a"
+            "https://drive.usercontent.google.com/u/0/uc?id=1bQQF0zznlv_hffr-SuVSxfgbqaYH-3cN&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=1yqPpZJGtcuTGAdc_dTyre0GhRJPlvsnr&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=1jZJwOgkwUzxkvaLoRsYh5En8WNQyNbO5&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=1MluXVJprkhRlW0FeoU5Yo_Ah3zIvdQk_&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=1NGnjqaAxUD-A3NDY3r_Za8c7hIkIxApU&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=1asH9by8-DzCoPtpINKUuDD8_b0SM1fod&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=17j1Lrp0xVFpvF413qEW2ZuTb6308Ge2K&export=download",
+            "https://drive.usercontent.google.com/u/0/uc?id=1xatAuEwX06rsq8xRLmlfb7wzdqM-9Qvb&export=download"
         }
         
         self.currentBackground = 1
