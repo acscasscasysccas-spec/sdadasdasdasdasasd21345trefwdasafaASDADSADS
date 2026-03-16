@@ -5,204 +5,6 @@ local dezzCreateFont = surface.CreateFont
 
 local c=Color(160,0,0)MsgC(c,"▓█████▄  ▓█████▒███████▒▒███████▒ ▄▄▄       ██████ ▄▄▄█████▓ ▓█████ ██▀███\n",c,"▒██▀ ██▌ ▓█   ▀▒ ▒ ▒ ▄▀░▒ ▒ ▒ ▄▀░▒████▄   ▒██    ▒ ▓  ██▒ ▓▒ ▓█   ▀▓██ ▒ ██▒\n",c,"░██   █▌ ▒███  ░ ▒ ▄▀▒░ ░ ▒ ▄▀▒░ ▒██  ▀█▄ ░ ▓██▄   ▒ ▓██░ ▒░ ▒███  ▓██ ░▄█ ▒\n",c,"░▓█▄   ▌ ▒▓█  ▄  ▄▀▒   ░  ▄▀▒   ░░██▄▄▄▄██  ▒   ██▒░ ▓██▓ ░  ▒▓█  ▄▒██▀▀█▄  \n",c,"░▒████▓ ▒░▒████▒███████▒▒███████▒▒▓█   ▓██▒██████▒▒  ▒██▒ ░ ▒░▒████░██▓ ▒██▒\n",c,"▒▒▓  ▒ ░░░ ▒░ ░▒▒ ▓░▒░▒░▒▒ ▓░▒░▒░▒▒   ▓▒█▒ ▒▓▒ ▒ ░  ▒ ░░   ░░░ ▒░ ░ ▒▓ ░▒▓░\n",c," ░ ▒  ▒ ░ ░ ░   ░▒ ▒ ░ ▒ ░▒ ▒ ░ ▒░ ░   ▒▒ ░ ░▒  ░ ░    ░    ░ ░ ░    ░▒ ░ ▒ \n",c," ░ ░  ░     ░  ░ ░ ░ ░ ░░ ░ ░ ░ ░  ░   ▒  ░  ░  ░    ░          ░    ░░   ░ \n",c,"    ░    ░   ░    ░ ░      ░ ░          ░        ░           ░   ░     ░     ")
 
-local menuOpen = false
-
-local function ShouldShowMenu()
-    if file.Exists("dezzaster/no!/gay.txt", "DATA") then
-        return false
-    end
-    return true
-end
-
-local function CreateCustomMenu()
-    if menuOpen then return end 
-    if not ShouldShowMenu() then return end
-    
-    menuOpen = true
-
-    local frame = vgui.Create("DFrame")
-    frame:SetSize(500, 500)
-    frame:Center()
-    frame:SetTitle("") 
-    frame:ShowCloseButton(false)
-    frame:SetDraggable(true)
-    frame:MakePopup()
-
-    frame.OnClose = function()
-        menuOpen = false
-    end
-
-    frame.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, 0, w, h + 1, Color(200, 50, 50, 30))
-        draw.RoundedBox(8, 2, 2, w - 4, h - 4, Color(61, 8, 8, 30))
-        draw.RoundedBox(8, 0, 0, w, 60, Color(61, 8, 8, 255))
-        draw.RoundedBox(8, 2, 2, w - 4, 56, Color(51, 5, 1, 255))
-    end
-
-    local titleLabel = vgui.Create("DLabel", frame)
-    titleLabel:SetPos(0,10)
-    titleLabel:SetSize(frame:GetWide(),50)
-    titleLabel:SetText("D E Z Z A S T E R")
-    titleLabel:SetFont("CloseCaption_Bold")
-    titleLabel:SetColor(Color(220, 120, 120))
-    titleLabel:SetContentAlignment(5)
-
-    local updateHeader = vgui.Create("DLabel", frame)
-    updateHeader:SetPos(20,70)
-    updateHeader:SetSize(frame:GetWide() - 40, 25)
-    updateHeader:SetText("ОБНОВЛЕНИЕ!")
-    updateHeader:SetFont("CloseCaption_Bold")
-    updateHeader:SetColor(Color(255, 255, 255))
-    updateHeader:SetContentAlignment(5)
-
-    local scrollPanel = vgui.Create("DScrollPanel", frame)
-    scrollPanel:SetPos(20, 100)
-    scrollPanel:SetSize(frame:GetWide() - 40, 300)
-
-    local updateText = vgui.Create("DLabel", scrollPanel)
-    updateText:SetPos(0, 0)
-    updateText:SetSize(scrollPanel:GetWide() - 20, 0)
-    updateText:SetWrap(true)
-    updateText:SetAutoStretchVertical(true)
-    updateText:SetText([[
-UPD: Repair errors
-UPD: New Killsay mods
-UPD: New Spammer mods
-UPD: Admin tool
-UPD: New Interface
-UPD: Fullbright
-UPD: Usergroup (2 variants)
-UPD: Target/Friend list key
-UPD: Crosshair
-UPD: Radar
-UPD: Good safety
-UPD: Swastiks krutitsya
-UPD: Spectating
-UPD: Optimization
-UPD: Edje, safe jump
-UPD: Slow walk
-UPD: Keypad stealer
-UPD: GPS tracker
-UPD: Ban pistol
-UPD: Panic key
-UPD: Fun backgrounds
-UPD: Gravity spam
-UPD: New visual
-UPD: Custom script
-UPD: Duck spam
-UPD: Discord button
-UPD: 2 variants option visuals
-UPD: Forward track
-UPD: Fake lag fix
-UPD: New indicators
-UPD: Search entities 
-UPD: Taunt speed
-UPD: Desynculator and antibruteforce
-UPD: Option width and height
-UPD: New optimization
-UPD: Browser
-UPD: LGBT sky and wall
-UPD: Drugs(rastoman)
-UPD: New tpose.
-UPD: Optimization
-UPD: New item panel("Local player" in visuals)
-UPD: Delete item panel("Material customization" in visuals)
-UPD: Fix spectating
-UPD: Search players...
-UPD: Fix hitnumbers
-UPD: Addaptive knife bot range(3 . in knifebot range)
-UPD: Distance(visuals)
-UPD: Keystrokers(visuals)
-UPD: Mousestrokers(visuals)
-UPD: Ping warning(visuals)
-]])
-    updateText:SetFont("ChatFont")
-    updateText:SetColor(Color(220, 220, 220))
-
-    local dontShowChecked = false
-
-    local dontShowPanel = vgui.Create("DPanel", frame)
-    dontShowPanel:SetPos(20, 410)
-    dontShowPanel:SetSize(frame:GetWide() - 40, 30)
-    dontShowPanel.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 180))
-    end
-
-    local checkBox = vgui.Create("DCheckBox", dontShowPanel)
-    checkBox:SetPos(5, 5)
-    checkBox:SetSize(20, 20)
-    checkBox:SetValue(false)
-    
-    checkBox.OnChange = function(self, val)
-        dontShowChecked = val
-    end
-
-    local dontShowPanel = vgui.Create("DPanel", frame)
-    dontShowPanel:SetPos(20, 410)
-    dontShowPanel:SetSize(frame:GetWide() - 40, 30)
-    dontShowPanel.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(80, 30, 30, 200))
-    end
-
-    local checkBox = vgui.Create("DCheckBox", dontShowPanel)
-    checkBox:SetPos(5, 5)
-    checkBox:SetSize(20, 20)
-    checkBox:SetValue(false)
-
-    checkBox.OnChange = function(self, val)
-        dontShowChecked = val
-    end
-
-    local dontShowLabel = vgui.Create("DLabel", dontShowPanel)
-    dontShowLabel:SetPos(30, 5)
-    dontShowLabel:SetSize(dontShowPanel:GetWide() - 35, 20)
-    dontShowLabel:SetText("Больше никогда не показывать?")
-    dontShowLabel:SetFont("ChatFont")
-    dontShowLabel:SetTextColor(Color(255, 200, 200))
-    dontShowLabel.Paint = function(self, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0))
-    end
-
-    local closeBtn = vgui.Create("DButton", frame)
-    closeBtn:SetSize(30,30)
-    closeBtn:SetPos(frame:GetWide() - closeBtn:GetWide() - 10, 10)
-    closeBtn:SetText("✕")
-    
-    closeBtn.Paint = function(self,w,h)
-        draw.RoundedBox(4,0,0,w,h +1 ,Color(200,50 ,50))
-        draw.SimpleText(self:GetText(), "DermaDefault", w/2,h/2,COLOR_WHITE,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
-        return true
-    end
-    
-    function closeBtn:DoClick()
-        if dontShowChecked then
-            file.CreateDir("dezzaster/no!")
-            file.Write("dezzaster/no!/gay.txt", "dont_show")
-            print("==============================================")
-            print("Чтобы включить меню, удали файл по этому пути:")
-            print("garrysmod/data/dezzaster/no!/gay.txt")
-            print("==============================================")
-        end
-        
-        if IsValid(frame) then
-            frame:Remove()
-        end
-        menuOpen = false
-    end
-
-end
-
-if not ShouldShowMenu() then
-    print("==============================================")
-    print("Чтобы включить меню, удали файл по этому пути:")
-    print("garrysmod/data/dezzaster/no!/gay.txt")
-    print("==============================================")
-end
-
-if not menuOpen and ShouldShowMenu() then 
-    CreateCustomMenu() 
-end
-
 local dezz                          = {}
 
 
@@ -928,6 +730,7 @@ dezz.cfg.vars["Night"] = false
 dezz.cfg.vars["LGBTW"] = false
 dezz.cfg.vars["LGBTS"] = false
 dezz.cfg.vars["rastoman"] = false
+dezz.cfg.vars["musicr"] = false
 
 dezz.cfg.vars["Fullbright"] = false 
 dezz.cfg.vars["Fullbright mode"] = 1
@@ -4079,6 +3882,7 @@ dezz.spfuncs[40141] = function()
     dezz.ui.SettingsPan:SetSize(200,50)
 
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Drugs", "rastoman")
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Music for drugs", "musicr")
 end
 
 dezz.spfuncs[15] = function()
@@ -8873,7 +8677,7 @@ http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=1FkXdeyNFyiHvydEGqXir
 end)
 
 hook.Add("RenderScreenspaceEffects", "Rastaman_Screenspace", function()
-    if not dezz.cfg.vars["rastoman"] then 
+    if not dezz.cfg.vars["rastoman"] and not dezz.cfg.vars["musicr"] then 
         if rastamanSound then
             rastamanSound:Stop()
             rastamanSound = nil
@@ -8889,7 +8693,7 @@ hook.Add("RenderScreenspaceEffects", "Rastaman_Screenspace", function()
         ply:SetNWFloat("rastoman_start", CurTime())
     end
 
-    if not rastamanSound and musicLoaded then
+    if not rastamanSound and musicLoaded and dezz.cfg.vars["musicr"] then
         sound.PlayFile("data/dezzaster/music/rast.mp3", "noblock", function(snd)
             if IsValid(snd) then
                 rastamanSound = snd
