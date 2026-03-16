@@ -128,7 +128,7 @@ dezz.cfg.vars["Wait for simulation"]    = false
 dezz.cfg.vars["Disable interpolation"]      = false
 dezz.cfg.vars["Disable Sequence interpolation"] = false
 
-dezz.cfg.vars["Target selection"]           = 2 
+dezz.cfg.vars["Target selection"]           = 2
 dezz.cfg.vars["Ignores-Friends"]            = false
 dezz.cfg.vars["Target-Priority-Only"]       = false
 dezz.cfg.vars["Ignores-Steam friends"]      = false
@@ -214,7 +214,7 @@ dezz.cfg.vars["Trigger bot"]                = false
 dezz.cfg.binds["Trigger bot"]               = 0
 
 dezz.cfg.vars["Prop aimbot"]                = false
-dezz.cfg.vars["PA thrower"]                 = false
+dezz.cfg.vars["PA thrower"]                 = true
 dezz.cfg.vars["PA thrower dist"]            = 128
 dezz.cfg.vars["Prop max simtime"]           = 4
 dezz.cfg.vars["Sync mode"]                  = 1
@@ -3598,7 +3598,8 @@ function dezz.tabs.Aimbot()
 
     dezz.ui.CheckBox( p, "Crossbow prediction", "Crossbow prediction" )
     dezz.ui.CheckBox( p, "Pulseriffle", "pulser" )
-    //dezz.ui.CheckBox( p, "Prop aimbot", "Prop aimbot")
+    /*dezz.ui.CheckBox( p, "Prop aimbot", "Prop aimbot")
+    dezz.ui.CheckBox( p, "PA thrower", "PA thrower")*/
     dezz.ui.Slider( p, "Simulation limit", "Simulation limit", 1, 10, 2 )
     --dezz.ui.CheckBox( p, "Predict fist", "Predict fist" )
 
@@ -3621,7 +3622,7 @@ function dezz.tabs.Aimbot()
 
     local p = dezz.itemPanel( "Target selection", 3, 260 ):GetItemPanel()
 
-    dezz.ui.ComboBox( p, "Target selection", "Target selection", { "Distance", "FOV" } )
+    dezz.ui.ComboBox( p, "Target selection", "Target selection", { "Distance", "FOV", "More chance" } )
     dezz.ui.MultiCombo( p, "Ignores", { "Friends", "Steam friends", "Teammates", "Driver", "Head unhitable", "God time", "Nocliping", "Nodraw", "Frozen", "Bots", "Admins" } )
     dezz.ui.CheckBox( p, "Wallz", "Wallz" ) 
     dezz.ui.Slider( p, "Max targets", "Max targets", 0, 10, 0 )
@@ -5397,27 +5398,27 @@ dezz.SpreadComps["mg"]     = dezz.CustomSpread.mg
 
 
 function dezz.NoSpread(cmd, ang)
-    if not dezz.activeWeapon or dezz.swbShit[ dezz.activeWeaponClass ] then return ang end
-    local base = string.Split( dezz.activeWeaponClass, "_" )[ 1 ]
+    if not dezz.activeWeapon or dezz.swbShit[dezz.activeWeaponClass] then return ang end
+    local base = string.Split(dezz.activeWeaponClass, "_")[1]
 
-    if dezz.SpreadComps[ base ] then
-        ang = dezz.SpreadComps[ base ]( cmd, ang )
-    elseif dezz.cones[ dezz.activeWeaponClass ] then
-        local spread = dezz.cones[ dezz.activeWeaponClass ]
-        return dezz.Spread( cmd, ang, spread ) 
+    if dezz.SpreadComps[base] then
+        ang = dezz.SpreadComps[base](cmd, ang)
+    elseif dezz.cones[dezz.activeWeaponClass] then
+        local spread = dezz.cones[dezz.activeWeaponClass]
+        ang = dezz.Spread(cmd, ang, spread)
     end
 
     return ang
 end
 
-function dezz.NoRecoil( ang )  
-	if dezz.activeWeaponClass == "weapon_pistol" or string.StartsWith( dezz.activeWeaponClass,"m9k_" ) or string.StartsWith( dezz.activeWeaponClass,"bb_" ) or string.StartsWith( dezz.activeWeaponClass,"unclen8_" ) then
-		return ang
-	else
-	    ang = ang - pLocalPlayer:GetViewPunchAngles()
+function dezz.NoRecoil(ang)
+    if dezz.activeWeaponClass == "weapon_pistol" or string.StartWith(dezz.activeWeaponClass, "m9k_") or string.StartWith(dezz.activeWeaponClass, "bb_") or string.StartWith(dezz.activeWeaponClass, "unclen8_") or string.StartWith(dezz.activeWeaponClass, "weapon_") then
+        return ang
+    else
+        ang = ang - pLocalPlayer:GetViewPunchAngles()
     end
 
-	return ang
+    return ang
 end
 
 /*
@@ -5737,7 +5738,7 @@ do
         local firstticks = dezz.FindFirstHittableTicks( ply, cmd )
         local tickcount = #records
 
-        if !tickcount or !firstticks then return 1 end
+        if not tickcount or not firstticks then return 1 end
 
         lastdist = math.huge
     
@@ -5754,126 +5755,211 @@ do
     end
 end
 
-function dezz.SelectTarget( cmd )
-    local plys = dezz.GetSortedPlayers( dezz.cfg.vars["Target selection"] )
-    dezz.target     = false
+local function CalculateHitChance(ply, pos)
+    local localPos = pLocalPlayer:GetShootPos()
+    local targetVel = ply:GetVelocity()
+    local distance = localPos:Distance(pos)
+    local speed = targetVel:Length()
+    local angToTarget = (pos - localPos):Angle()
+    local viewAng = pLocalPlayer:EyeAngles()
+    local angDiffYaw = math.abs(math.NormalizeAngle(angToTarget.y - viewAng.y))
+    local angDiffPitch = math.abs(math.NormalizeAngle(angToTarget.p - viewAng.p))
+    local angDiff = angDiffYaw + angDiffPitch
 
+    local chance = 100
+    chance = chance - math.min(speed / 10, 40)
+    if distance > 1000 then
+        chance = chance - math.min((distance - 1000) / 50, 30)
+    end
+    chance = chance - math.min(angDiff * 2, 50)
+    chance = math.Clamp(chance, 0, 100)
 
-    if !plys then return end 
+    return chance
+end
 
-    local maxplys       = dezz.cfg.vars["Max targets"]
-    local curplys       = #plys
+function dezz.SelectTarget(cmd)
+    local mode = dezz.cfg.vars["Target selection"]
+    local plys = dezz.GetSortedPlayers(mode)
+    dezz.target = false
 
-    if maxplys != 0 and curplys > maxplys then
+    if not plys then return end
+
+    local maxplys = dezz.cfg.vars["Max targets"]
+    local curplys = #plys
+
+    if maxplys ~= 0 and curplys > maxplys then
         curplys = maxplys
     end
 
     local vEyePos = pLocalPlayer:EyePos()
 
-    local aimAng
-    for i = 1, curplys do
-		local ply = plys[i][1]
+    if mode == 3 then
+        local bestChance = -1
+        local bestPly, bestBone, bestAimAng, bestBacktrack, bestBttick
 
-        -- distance check 
-        local iMaxDistance = dezz.cfg.vars[ "Max distance" ]
-        local iDistance = vEyePos:DistToSqr( ply:EyePos() )
+        for i = 1, curplys do
+            local ply = plys[i][1]
 
-        if ( iMaxDistance != 0 and iDistance > ( iMaxDistance * iMaxDistance ) ) then
-            continue 
-        end
-        
+            local iMaxDistance = dezz.cfg.vars["Max distance"]
+            local iDistance = vEyePos:DistToSqr(ply:EyePos())
 
-
-
-
-
-
-        if not dezz.cfg.vars["Always backtrack"] then
-            local bones = dezz.GetBones( ply )
-
-            for o = 1, #bones do
-                local bone = bones[o]
-                aimAng = ( bone - pLocalPlayer:EyePos() ):Angle()
-
-                if dezz.VisibleCheck( ply, bone, nil, aimAng:Forward() ) then 
-                    dezz.target = ply
-                    return ply, bone, aimAng, false, 0
-                end
+            if iMaxDistance ~= 0 and iDistance > (iMaxDistance * iMaxDistance) then
+                continue
             end
 
-        elseif dezz.cfg.vars["Extrapolation"] and dezz.predicted[ ply ] then
-            if not dezz.predicted[ ply ].pos then return end
+            if not dezz.cfg.vars["Always backtrack"] then
+                local bones = dezz.GetBones(ply)
+                for o = 1, #bones do
+                    local bone = bones[o]
+                    local aimAng = (bone - vEyePos):Angle()
 
-            aimAng = ( dezz.predicted[ ply ].pos - pLocalPlayer:EyePos() ):Angle()
+                    if dezz.VisibleCheck(ply, bone, nil, aimAng:Forward()) then
+                        local chance = CalculateHitChance(ply, bone)
 
-            dezz.traceStruct.start = pLocalPlayer:EyePos()
-            dezz.traceStruct.endpos = dezz.predicted[ ply ].pos
-            dezz.traceStruct.filter = pLocalPlayer
-            dezz.traceStruct.mask = MASK_SHOT
-
-            local tr = TraceLine( dezz.traceStruct )
-
-            if !tr.Hit or tr.Entity == ply then
-                dezz.target = ply
-                return ply, dezz.predicted[ ply ].pos, aimAng, false, 0
-            end
-        end
-
-        if dezz.cfg.vars["Backtrack"] then
-            local ticks = dezz.FindBacktrack( cmd, ply )
-
-            if dezz.btrecords[ ply ] and not ply.break_lc then 
-                local ts = 0 
-                
-                if dezz.cfg.vars["Backtrack mode"] == 3 then
-                    for p = 1, #ticks do
-                        if not dezz.btrecords[ ply ][ p ] then continue end
-
-                        aimAng = ( dezz.btrecords[ ply ][ p ].aimpos - pLocalPlayer:EyePos() ):Angle()
-
-                        dezz.traceStruct.start = pLocalPlayer:EyePos()
-                        dezz.traceStruct.endpos = dezz.btrecords[ ply ][ p ].aimpos
-                        dezz.traceStruct.filter = pLocalPlayer
-                        dezz.traceStruct.mask = MASK_SHOT
-
-                        local tr = TraceLine( dezz.traceStruct )
-
-                        if !tr.Hit or tr.Entity == ply then
-                            dezz.target = ply
-                            dezz.backtracktick = p
-
-                            return ply, dezz.btrecords[ ply ][ p ].aimpos, aimAng, true, p
+                        if chance > bestChance then
+                            bestChance = chance
+                            bestPly = ply
+                            bestBone = bone
+                            bestAimAng = aimAng
+                            bestBacktrack = false
+                            bestBttick = 0
                         end
                     end
                 end
+            elseif dezz.cfg.vars["Backtrack"] and dezz.btrecords[ply] and not ply.breaklc then
+                local ticks = dezz.FindBacktrack(cmd, ply)
+                for p = 1, #ticks do
+                    if not dezz.btrecords[ply][p] then continue end
 
-                if dezz.cfg.vars["Backtrack mode"] == 3 then return end
-                if dezz.cfg.vars["Backtrack mode"] == 1 then
-                    ts = dezz.FindFirstHittableTicks( ply, cmd )
-                elseif dezz.cfg.vars["Backtrack mode"] == 2 then
-                    ts = dezz.FindClosestHittableTicks( ply, cmd )
-                end
+                    local aimPos = dezz.btrecords[ply][p].aimpos
+                    local aimAng = (aimPos - vEyePos):Angle()
 
-                if not dezz.btrecords[ ply ][ ts ] then return end
+                    dezz.traceStruct.start = vEyePos
+                    dezz.traceStruct.endpos = aimPos
+                    dezz.traceStruct.filter = pLocalPlayer
+                    dezz.traceStruct.mask = MASKSHOT
 
-                aimAng = ( dezz.btrecords[ ply ][ ts ].aimpos - pLocalPlayer:EyePos() ):Angle()
+                    local tr = TraceLine(dezz.traceStruct)
 
-                dezz.traceStruct.start = pLocalPlayer:EyePos()
-                dezz.traceStruct.endpos = dezz.btrecords[ ply ][ ts ].aimpos
-                dezz.traceStruct.filter = pLocalPlayer
-                dezz.traceStruct.mask = MASK_SHOT
+                    if not tr.Hit or tr.Entity == ply then
+                        local chance = CalculateHitChance(ply, aimPos)
 
-                local tr = TraceLine( dezz.traceStruct )
-
-                if !tr.Hit or tr.Entity == ply then
-                    dezz.target = ply
-                    dezz.backtracktick = ts
-
-                    return ply, dezz.btrecords[ ply ][ ts ].aimpos, aimAng, true, ts
+                        if chance > bestChance then
+                            bestChance = chance
+                            bestPly = ply
+                            bestBone = aimPos
+                            bestAimAng = aimAng
+                            bestBacktrack = true
+                            bestBttick = p
+                        end
+                    end
                 end
             end
         end
-	end
+
+        if bestPly then
+            dezz.target = bestPly
+            dezz.backtracktick = bestBttick
+            return bestPly, bestBone, bestAimAng, bestBacktrack, bestBttick
+        end
+    else
+        for i = 1, curplys do
+            local ply = plys[i][1]
+
+            local iMaxDistance = dezz.cfg.vars["Max distance"]
+            local iDistance = vEyePos:DistToSqr(ply:EyePos())
+
+            if iMaxDistance ~= 0 and iDistance > (iMaxDistance * iMaxDistance) then
+                continue
+            end
+
+            if not dezz.cfg.vars["Always backtrack"] then
+                local bones = dezz.GetBones(ply)
+
+                for o = 1, #bones do
+                    local bone = bones[o]
+                    local aimAng = (bone - vEyePos):Angle()
+
+                    if dezz.VisibleCheck(ply, bone, nil, aimAng:Forward()) then
+                        dezz.target = ply
+                        return ply, bone, aimAng, false, 0
+                    end
+                end
+
+            elseif dezz.cfg.vars["Extrapolation"] and dezz.predicted[ply] then
+                if not dezz.predicted[ply].pos then return end
+
+                local aimAng = (dezz.predicted[ply].pos - vEyePos):Angle()
+
+                dezz.traceStruct.start = vEyePos
+                dezz.traceStruct.endpos = dezz.predicted[ply].pos
+                dezz.traceStruct.filter = pLocalPlayer
+                dezz.traceStruct.mask = MASKSHOT
+
+                local tr = TraceLine(dezz.traceStruct)
+
+                if not tr.Hit or tr.Entity == ply then
+                    dezz.target = ply
+                    return ply, dezz.predicted[ply].pos, aimAng, false, 0
+                end
+            end
+
+            if dezz.cfg.vars["Backtrack"] then
+                local ticks = dezz.FindBacktrack(cmd, ply)
+
+                if dezz.btrecords[ply] and not ply.breaklc then
+                    local ts = 0
+
+                    if dezz.cfg.vars["Backtrack mode"] == 3 then
+                        for p = 1, #ticks do
+                            if not dezz.btrecords[ply][p] then continue end
+
+                            local aimPos = dezz.btrecords[ply][p].aimpos
+                            local aimAng = (aimPos - vEyePos):Angle()
+
+                            dezz.traceStruct.start = vEyePos
+                            dezz.traceStruct.endpos = aimPos
+                            dezz.traceStruct.filter = pLocalPlayer
+                            dezz.traceStruct.mask = MASKSHOT
+
+                            local tr = TraceLine(dezz.traceStruct)
+
+                            if not tr.Hit or tr.Entity == ply then
+                                dezz.target = ply
+                                dezz.backtracktick = p
+                                return ply, aimPos, aimAng, true, p
+                            end
+                        end
+                        return
+                    end
+
+                    if dezz.cfg.vars["Backtrack mode"] == 1 then
+                        ts = dezz.FindFirstHittableTicks(ply, cmd)
+                    elseif dezz.cfg.vars["Backtrack mode"] == 2 then
+                        ts = dezz.FindClosestHittableTicks(ply, cmd)
+                    end
+
+                    if not dezz.btrecords[ply][ts] then return end
+
+                    local pos = dezz.btrecords[ply][ts].aimpos
+                    local ang = (pos - vEyePos):Angle()
+
+                    dezz.traceStruct.start = vEyePos
+                    dezz.traceStruct.endpos = pos
+                    dezz.traceStruct.filter = pLocalPlayer
+                    dezz.traceStruct.mask = MASKSHOT
+
+                    local tr = TraceLine(dezz.traceStruct)
+
+                    if not tr.Hit or tr.Entity == ply then
+                        dezz.target = ply
+                        dezz.backtracktick = ts
+                        return ply, pos, ang, true, ts
+                    end
+                end
+            end
+        end
+    end
 end
 
 function dezz.IsMovementKeysDown( cmd )
@@ -5962,11 +6048,11 @@ dezz.knifes[1] = {
 
     leftdmg = 25,
     leftdmgb = 90,
-    leftdist = 64*64,
+    leftdist = 64 * 64,
 
     rightdmg = 65,
     rightdmgb = 180,
-    rightdist = 48*48,
+    rightdist = 48 * 48,
 }
 
 dezz.knifes[2] = {
@@ -5976,11 +6062,11 @@ dezz.knifes[2] = {
 
     leftdmg = 10,
     leftdmgb = 10,
-    leftdist = 50*50,
+    leftdist = 50 * 50,
 
     rightdmg = 40,
     rightdmgb = 40,
-    rightdist = 50*50,
+    rightdist = 50 * 50,
 }
 
 dezz.knifes[3] = {
@@ -5990,11 +6076,11 @@ dezz.knifes[3] = {
 
     leftdmg = 10,
     leftdmgb = 10,
-    leftdist = 75*75,
+    leftdist = 75 * 75,
 
     rightdmg = 10,
     rightdmgb = 10,
-    rightdist = 75*75,
+    rightdist = 75 * 75,
 }
 
 dezz.knifes[4] = {
@@ -6004,11 +6090,11 @@ dezz.knifes[4] = {
 
     leftdmg = 25,
     leftdmgb = 90,
-    leftdist = 64*64,
+    leftdist = 64 * 64,
 
     rightdmg = 65,
     rightdmgb = 180,
-    rightdist = 48*48,
+    rightdist = 48 * 48,
 }
 
 dezz.knifes[5] = {
@@ -6018,12 +6104,13 @@ dezz.knifes[5] = {
 
     leftdmg = 1000,
     leftdmgb = 1000,
-    leftdist = 300*300,
+    leftdist = 300 * 300,
 
     rightdmg = 1000,
     rightdmgb = 1000,
-    rightdist = 300*300,
+    rightdist = 300 * 300,
 }
+
 dezz.knifes[6] = {
     str = "m9k_knife",
 
@@ -6031,14 +6118,13 @@ dezz.knifes[6] = {
 
     leftdmg = 10,
     leftdmgb = 10,
-    leftdist = 55*55,
+    leftdist = 55 * 55,
 
     rightdmg = 10,
     rightdmgb = 10,
-    rightdist = 50*50,
+    rightdist = 50 * 50,
 }
 
---other
 dezz.knifes[7] = {
     str = "tacrp_m_",
 
@@ -6046,11 +6132,11 @@ dezz.knifes[7] = {
 
     leftdmg = 10,
     leftdmgb = 10,
-    leftdist = 135*135,
+    leftdist = 135 * 135,
 
     rightdmg = 10,
     rightdmgb = 10,
-    rightdist = 89*89,
+    rightdist = 89 * 89,
 }
 
 dezz.knifes[8] = {
@@ -6060,11 +6146,11 @@ dezz.knifes[8] = {
 
     leftdmg = 10,
     leftdmgb = 10,
-    leftdist = 67*67,
+    leftdist = 67 * 67,
 
     rightdmg = 10,
     rightdmgb = 10,
-    rightdist = 50*50,
+    rightdist = 50 * 50,
 }
 
 dezz.knifes[9] = {
@@ -6074,65 +6160,76 @@ dezz.knifes[9] = {
 
     leftdmg = 10,
     leftdmgb = 10,
-    leftdist = 67*67,
+    leftdist = 67 * 67,
 
     rightdmg = 10,
     rightdmgb = 10,
-    rightdist = 0*0,
+    rightdist = 0,
 }
 
-function dezz:EntityFaceBack( ent )
-    local angle = pLocalPlayer:GetAngles().y - ent:GetAngles().y
+function dezz:EntityFaceBack(ent)
+    local ply = LocalPlayer()
+    if not IsValid(ent) or not IsValid(ply) then return false end
 
-    if angle < -180 then angle = 360 + angle end
+    local ang_player = ply:EyeAngles()
+    local ang_ent = ent:GetAngles()
 
-    if angle <= 90 and angle >= -90 then return true end
+    local delta = math.AngleDifference(ang_player.yaw, ang_ent.yaw)
 
-    return false
+    return math.abs(delta) <= 90
 end
 
-function dezz.CanStab( ent, pos, health )
-    local mypos = pLocalPlayer:GetShootPos()
+function dezz.CanStab(ent, pos, health)
+    if not IsValid(ent) then return false, false end
+    local ply = LocalPlayer()
+    if not IsValid(ply) then return false, false end
+
+    local mypos = ply:GetShootPos()
+    local wc = ply:GetActiveWeapon()
+    if not IsValid(wc) then return false, false end
+
+    local wcclass = wc:GetClass()
     local tbl = dezz.knifes[1]
-    local wc = pLocalPlayer:GetActiveWeapon():GetClass()
-    local canuse = false 
+    local canuse = false
 
     for i = 1, #dezz.knifes do
-        if string.StartsWith(wc,dezz.knifes[i].str) then
-            canuse = true 
+        if string.StartWith(wcclass, dezz.knifes[i].str) then
+            canuse = true
             tbl = dezz.knifes[i]
             break
         end
-    end 
+    end
 
     if not canuse then return false, false end
 
-    if dezz.canBacktrack( ent ) and dezz.btrecords[ent][dezz.backtracktick] then
-        pos = dezz.btrecords[ ent ][ dezz.backtracktick ].aimpos
+    if dezz.canBacktrack and dezz.btrecords and dezz.backtracktick then
+        if dezz.canBacktrack(ent) and dezz.btrecords[ent] and dezz.btrecords[ent][dezz.backtracktick] then
+            pos = dezz.btrecords[ent][dezz.backtracktick].aimpos or pos
+        end
     end
 
-    local backstab = tbl.canbackstab and dezz:EntityFaceBack( ent ) or false
-    local dist = mypos:DistToSqr( pos )
+    local backstab = tbl.canbackstab and dezz:EntityFaceBack(ent)
+    local dist = mypos:DistToSqr(pos)
     local mode = dezz.cfg.vars["Knifebot mode"]
-    
-    if mode == 1 then // Damage mode - tries to inflict biggest possible damage
+
+    if mode == 1 then
         if backstab and dist < tbl.rightdist then
             return true, true
-        elseif dist < tbl.leftdist and ( ( backstab and health - tbl.leftdmgb <= 0 ) or ( health - tbl.leftdmg <= 0 ) ) then
+        elseif dist < tbl.leftdist and ((backstab and health - tbl.leftdmgb <= 0) or (health - tbl.leftdmg <= 0)) then
             return true, false
-        elseif dist < tbl.rightdist or  ( dist < tbl.rightdist and health - tbl.leftdmg > 0 )  then 
+        elseif dist < tbl.rightdist or (dist < tbl.rightdist and health - tbl.leftdmg > 0) then
             return true, true
         end
-    elseif mode == 2 then // Fast - tries to hit fast as possible
+    elseif mode == 2 then
         if dist < tbl.rightdist then
             return true, true
         elseif dist < tbl.leftdist then
             return true, false
         end
-    elseif mode == 3 then // Fatal - deals only fatal damage
-        if dist < tbl.leftdist and ( ( backstab and health - tbl.leftdmgb <= 0 ) or ( health - tbl.leftdmg <= 0 ) ) then
+    elseif mode == 3 then
+        if dist < tbl.leftdist and ((backstab and health - tbl.leftdmgb <= 0) or (health - tbl.leftdmg <= 0)) then
             return true, false
-        elseif dist < tbl.rightdist and ( ( backstab and health - tbl.rightdmgb <= 0 ) or ( health - tbl.rightdmg <= 0 ) ) then
+        elseif dist < tbl.rightdist and ((backstab and health - tbl.rightdmgb <= 0) or (health - tbl.rightdmg <= 0)) then
             return true, true
         end
     end
@@ -6326,119 +6423,79 @@ end
 
 // Propkill aimbot
 
-dezz.grabbingEnt = false 
-
+/*dezz.grabbingEnt = false 
 
 dezz.predictedPoint = {}
-function dezz.PropAim( cmd )
-    if not dezz.grabbingEnt or not IsValid( dezz.grabbingEnt ) or not cmd:KeyDown( IN_ATTACK ) then return end
+function dezz.PropAim(cmd)
+    if not dezz.grabbingEnt or not IsValid(dezz.grabbingEnt) or not cmd:KeyDown(IN_ATTACK) then return end
 
-    local plys = dezz.GetSortedPlayers( dezz.cfg.vars["Target selection"] )
+    local pLocalPlayer = LocalPlayer()
+    local plys = dezz.GetSortedPlayers(dezz.cfg.vars["Target selection"])
+    if not plys then return end
+
     dezz.target = false
     dezz.targetVector = false
 
-    if !plys then return end
-
     for i = 1, #plys do
-        local ply           = plys[i][1]
+        local ply = plys[i][1]
 
-        local eyePos        = pLocalPlayer:EyePos() 
+        if not IsValid(ply) or ply == pLocalPlayer then continue end
 
-        local plyPos        = ply:GetPos()
-        local plyVel        = ply:GetVelocity()
-        local plyCenter     = ply:OBBCenter()
-        local plySpeed      = plyVel:Length()
-        //local plyPred       = plyPos + plyVel * flTickInterval
+        local eyePos = pLocalPlayer:EyePos()
+        local plyPos = ply:GetPos()
+        local plyVel = ply:GetVelocity()
+        local plyCenter = ply:OBBCenter()
+        local plySpeed = plyVel:Length()
 
-        local propPos       = dezz.grabbingEnt:GetPos()
-        local propVel       = dezz.grabbingEnt:GetVelocity()
-        local propSpeed     = propVel:Length()
+        local propPos = dezz.grabbingEnt:GetPos()
+        local propVel = dezz.grabbingEnt:GetVelocity()
+        local propSpeed = propVel:Length()
+        if propSpeed <= 0 then continue end
 
-        local distance      = plyPos:Distance( propPos )
-        local plydist       = plyPos:Distance( eyePos )
-
+        local distance = plyPos:Distance(propPos)
+        local plydist = plyPos:Distance(eyePos)
         if plydist >= 4096 then continue end
 
-        local travelTime    = distance / propSpeed
-        //local predTime      = ( ded.GetLatency( 0 ) + ded.GetLatency( 1 ) ) + travelTime
+        local travelTime = distance / propSpeed
+        if travelTime > dezz.cfg.vars["Simulation limit"] then continue end
 
-        if travelTime > dezz.cfg.vars["Simulation limit"] then continue end // predTime
-
-        // Prediction
-
-        ded.StartSimulation( ply:EntIndex() )
-
-        for i = 1, dezz.TIME_TO_TICKS( travelTime ) do // predTime
+        ded.StartSimulation(ply:EntIndex())
+        for j = 1, dezz.TIME_TO_TICKS(travelTime) do
             ded.SimulateTick()
         end
-
-        local data          = ded.GetSimulationData()
-        local aimPos        = data.m_vecAbsOrigin + plyCenter
-
-        distance            = aimPos:Distance( propPos )
-        travelTime          = distance / propSpeed
-
-        ded.FinishSimulation()
-
-        // Mouse wheel shit
-
-        local deltaDistance = plydist - distance
-        local scrollDelta = -deltaDistance
-
-        // Aim
-
-        local aimAng        = ( aimPos - pLocalPlayer:EyePos() ):Angle()
-        aimAng:Normalize()
-
-        cmd:SetMouseWheel( scrollDelta ) 
-        cmd:SetViewAngles( aimAng )
-
-        local scrollDelta = 0
-
-        if distance == 0 then
-            scrollDelta = 0
-        elseif propSpeed > plySpeed then
-            scrollDelta = - ( distance / propSpeed )
-        else
-            scrollDelta = distance / plySpeed
-        end
-
-        local predticks = dezz.TIME_TO_TICKS( ded.GetLatency(0) + ded.GetLatency(1) ) + 1
-
-        ded.StartSimulation( ply:EntIndex() )
-
-        for i = 1, predticks do
-            ded.SimulateTick()
-        end
-
         local data = ded.GetSimulationData()
-
-        pos = data.m_vecAbsOrigin + ply:OBBCenter()
-
         ded.FinishSimulation()
 
-        local dist = pos:DistToSqr( pLocalPlayer:EyePos() )
+        local aimPos = data.m_vecAbsOrigin + plyCenter
+        distance = aimPos:Distance(propPos)
+        travelTime = distance / propSpeed
 
-        local clr = dist < 16777216 and Color( 0, 255, 0 ) or Color( 255, 0, 0 )
+        ded.StartSimulation(ply:EntIndex())
+        local predticks = dezz.TIME_TO_TICKS(ded.GetLatency(0) + ded.GetLatency(1)) + 1
+        for j = 1, predticks do
+            ded.SimulateTick()
+        end
+        local predData = ded.GetSimulationData()
+        ded.FinishSimulation()
 
-        debugoverlay.Line( pos, dezz.grabbingEnt:GetPos(), 0.1, clr, true )
-        debugoverlay.Box( pos - ply:OBBCenter(), ply:OBBMins(), ply:OBBMaxs(), 0.1, Color( 255, 15, 15, 32 ) )
+        local predPos = predData.m_vecAbsOrigin + plyCenter
+        local distSqr = predPos:DistToSqr(eyePos)
+        if distSqr > 16777216 then continue end
 
-        if dist >= 16777216 then continue end
+        local targetAng = (predPos - eyePos):Angle()
+        targetAng:Normalize()
 
-        local aimAng = ( pos - pLocalPlayer:EyePos() ):Angle()
-        local ppd = dezz.grabbingEnt:GetPos():DistToSqr( pos )
+        cmd:SetViewAngles(targetAng)
 
+        local ppd = propPos:DistToSqr(predPos)
         local cd = dezz.cfg.vars["PA thrower dist"]
-        if ppd < ( cd * cd ) and dezz.cfg.vars["PA thrower"] then
-            cmd:RemoveKey( IN_ATTACK )
+        if ppd < (cd * cd) and dezz.cfg.vars["PA thrower"] then
+            cmd:RemoveKey(IN_ATTACK)
         end
 
-        local bmd = math.sqrt( dist - ppd )
-
-        if ( dist - ppd ) < 0 then bmd = 0 end 
-
-        local scrollDelta = math.ceil( bmd > 0 and -ppd or ppd )
+        local diff = distSqr - ppd
+        local bmd = diff > 0 and math.sqrt(diff) or 0
+        local scrollDelta = math.ceil(bmd > 0 and -ppd or ppd)
 
         if scrollDelta > 5000 then
             scrollDelta = 5000
@@ -6446,12 +6503,10 @@ function dezz.PropAim( cmd )
             scrollDelta = -5000
         end
 
-        print( "SDelta", scrollDelta, "BMD", bmd, "PPD", ppd )
-
-        cmd:SetMouseWheel( scrollDelta )
-        cmd:SetViewAngles( aimAng )
+        cmd:SetMouseWheel(scrollDelta)
+        return
     end
-end
+end*/
 
 
 function dezz.Aim(cmd)
@@ -6459,8 +6514,8 @@ function dezz.Aim(cmd)
 
     if dezz.SendPacket then
         dezz.fakeAngles.angle = cmd:GetViewAngles()
-        dezz.fakeAngles.movex = pLocalPlayer:GetPoseParameter("move_x")
-        dezz.fakeAngles.movey = pLocalPlayer:GetPoseParameter("move_y")
+        dezz.fakeAngles.movex = pLocalPlayer:GetPoseParameter("movex")
+        dezz.fakeAngles.movey = pLocalPlayer:GetPoseParameter("movey")
 
         local layers = {}
 
@@ -6483,26 +6538,26 @@ function dezz.Aim(cmd)
 
     if dezz.cfg.vars["Fake lag Fix"] then
         local players = player.GetAll()
-        
+
         for i = 1, #players do
             local v = players[i]
-            
+
             if v == LocalPlayer() then continue end
-            
+
             local latency = ded.GetLatency(0) + ded.GetLatency(1)
             local fixFactor = dezz.cfg.vars["Fix Factor"] or 1
             local predTime = latency * fixFactor
-            
+
             local ticks = dezz.TIME_TO_TICKS(predTime) or 0
-            
+
             if ticks <= 0 then continue end
-            
+
             ded.StartSimulation(v:EntIndex())
-            
+
             for tick = 1, ticks do
                 ded.SimulateTick()
             end
-            
+
             local data = ded.GetSimulationData()
             if data and data.m_vecAbsOrigin then
                 v:SetRenderOrigin(data.m_vecAbsOrigin)
@@ -6510,14 +6565,14 @@ function dezz.Aim(cmd)
                 v:InvalidateBoneCache()
                 v:SetupBones()
             end
-            
+
             ded.FinishSimulation()
         end
     end
 
     local ply, bone, aimang, backtracking, bttick = dezz.SelectTarget(cmd)
 
-    dezz.targetVector = bone 
+    dezz.targetVector = bone
 
     if not aimang then return end
 
@@ -6553,21 +6608,21 @@ function dezz.Aim(cmd)
         local fov = dezz.cfg.vars["Aimbot FOV"]
         local view = dezz.cfg.vars["Silent aim"] and dezz.SilentAngle or cmd:GetViewAngles()
         local angDiff = aimang - view
-        
+
         angDiff:Normalize()
-        
+
         local fovDiff = math.sqrt(angDiff.x * angDiff.x + angDiff.y * angDiff.y)
-        
+
         if fovDiff > fov then
             dezz.targetVector = false
-            return 
+            return
         end
     end
 
     if not dezz.CanShoot(cmd) then return end
 
     if dezz.cfg.vars["Wait for simulation"] and ply:GetVelocity():Length() ~= 0 and not ply.simtime_updated then
-        return 
+        return
     end
 
     if not dezz.cfg.vars["Aimbot smoothing"] and dezz.SkipCommand then return end
@@ -6580,7 +6635,7 @@ function dezz.Aim(cmd)
     if dezz.cfg.vars["Knifebot"] and canstab then
         altfire = rightstab
     elseif dezz.cfg.vars["Knifebot"] and not canstab then
-        return 
+        return
     end
 
     local finalAngle = Angle(aimang)
@@ -6603,22 +6658,21 @@ function dezz.Aim(cmd)
             local localPlayer = LocalPlayer()
             local localPos = localPlayer:GetShootPos()
             local targetPos = dezz.targetVector
-            
+
             local targetVel = ply:GetVelocity()
-            local targetSpeed = targetVel:Length()
-            
+
             local distance = localPos:Distance(targetPos)
             local bulletSpeed = 8000
             local travelTime = distance / bulletSpeed
-            
+
             local predictedPos = targetPos + (targetVel * travelTime)
-            
+
             local ping = ded.GetLatency(0) + ded.GetLatency(1)
             predictedPos = predictedPos + (targetVel * ping)
-            
+
             local predictedAng = (predictedPos - localPos):Angle()
             predictedAng:Normalize()
-            
+
             finalAngle = predictedAng
         end
     end
@@ -6640,21 +6694,21 @@ function dezz.Aim(cmd)
     if dezz.cfg.vars["Projectile aimbot"] then
         local distance = pLocalPlayer:EyePos():Distance(ply:GetPos())
         local predTime = math.ceil(distance / 60)
-        
+
         ded.StartSimulation(ply:EntIndex())
-        
+
         for tick = 1, predTime do
             ded.SimulateTick()
         end
-        
+
         local data = ded.GetSimulationData()
-        local vec = data.m_vecAbsOrigin
-        
+        local vec = data.m_vecAbsOrigin or data.mvecAbsOrigin
+
         ded.FinishSimulation()
-        
+
         local gravityOffset = predTime * 0.111
         vec.z = vec.z + gravityOffset
-        
+
         finalAngle = (vec - pLocalPlayer:EyePos()):Angle()
         finalAngle:Normalize()
     end
@@ -6671,10 +6725,10 @@ function dezz.Aim(cmd)
     if backtracking then
         targetTime = dezz.btrecords[ply][bttick].simulationtime
         timeOffset = dezz.flServerTime - targetTime
-        
+
         serverArriveTick = dezz.flServerTime + ded.GetLatency(0) + ded.GetLatency(1)
         diff = serverArriveTick - dezz.btrecords[ply][bttick].simulationtime
-        
+
         if diff < 0.2 then
             ded.NetSetConVar("cl_interpolate", "0")
             ded.NetSetConVar("cl_interp", "0")
@@ -6689,27 +6743,27 @@ function dezz.Aim(cmd)
     elseif dezz.cfg.vars["Adjust tickcount"] and ply.simtime_updated then
         local flSimulationTime = ded.GetSimulationTime(ply:EntIndex())
         local iTickCount = dezz.TIME_TO_TICKS(flSimulationTime)
-        
+
         ded.NetSetConVar("cl_interpolate", "0")
         ded.NetSetConVar("cl_interp", "0")
-        
+
         ded.SetCommandTick(cmd, iTickCount)
     end
-    
+
     if dezz.cfg.vars["Auto fire"] then
-        if string.StartsWith(dezz.activeWeaponClass, "m9k_") then
+        if string.StartWith(dezz.activeWeaponClass, "m9k_") then
             cmd:RemoveKey(IN_SPEED)
         end
-        
+
         dezz.SendPacket = true
         pLocalPlayer.simtime_updated = true
-        
-        if dezz.cfg.vars["Resolver"] then 
+
+        if dezz.cfg.vars["Resolver"] then
             ply.aimshots = (ply.aimshots or 0) + 1
         end
-        
+
         local isAutomatic = true
-        
+
         if dezz.activeWeapon.Primary then
             isAutomatic = dezz.activeWeapon.Primary.Automatic
         else
@@ -6717,7 +6771,7 @@ function dezz.Aim(cmd)
                 isAutomatic = false
             end
         end
-        
+
         if altfire or (dezz.cfg.vars["Alt Rapid fire"] and cmd:CommandNumber() % 2 == 0) then
             cmd:AddKey(IN_ATTACK2)
         else
@@ -6725,20 +6779,20 @@ function dezz.Aim(cmd)
                 cmd:AddKey(IN_ATTACK)
             end
         end
-        
+
         dezz.SkipCommand = true
     end
-    
+
     return true
 end
 
 function dezz.autoReload(cmd)
     if not dezz.cfg.vars["Auto reload"] then return end
-    
+
     local wep = pLocalPlayer:GetActiveWeapon()
-    
+
     if not IsValid(wep) then return end
-    
+
     if wep.Primary then
         if wep:Clip1() == 0 and wep:GetMaxClip1() > 0 and pLocalPlayer:GetAmmoCount(wep:GetPrimaryAmmoType()) > 0 then
             cmd:AddKey(IN_RELOAD)
@@ -10328,16 +10382,15 @@ do
             end
         end
 
-        if dezz.cfg.vars["Crosshair"] then 
+        if dezz.cfg.vars["Crosshair"] then
             local cfg = dezz.cfg.vars["Crosshair type"]
-            local hs = Color((CurTime() * 720) % 360, 155, 155)
-            local scrw, scrh = ScrW(), ScrH() 
-            local scrwc, scrhc = scrw / 2, scrh / 2  
-            
+            local time = CurTime() % 1
+            local hs = HSVToColor((CurTime() * 720) % 360, 155, 155)
+            local scrw, scrh = ScrW(), ScrH()
+            local scrwc, scrhc = scrw / 2, scrh / 2
+
             if cfg == 1 then
-                local scrw, scrh = ScrW(), ScrH()
-                local centerX, centerY = scrw / 2, scrh / 2
-                local time = CurTime() % 1
+                local centerX, centerY = scrwc, scrhc
                 local color = HSVToColor(time * 360, 1, 1)
 
                 local size = 50
@@ -10354,75 +10407,72 @@ do
                 surface.DrawLine(centerX + offsetX, centerY - size / 4, centerX + offsetX, centerY + size / 4)
 
                 local dotSize = 4
-                surface.DrawRect(centerX - size/2 - dotSize/2, centerY - size/2 - dotSize/2, dotSize, dotSize)
-                surface.DrawRect(centerX + size/2 - dotSize/2, centerY - size/2 - dotSize/2, dotSize, dotSize)
-                surface.DrawRect(centerX - size/2 - dotSize/2, centerY + size/2 - dotSize/2, dotSize, dotSize)
-                surface.DrawRect(centerX + size/2 - dotSize/2, centerY + size/2 - dotSize/2, dotSize, dotSize)
+                surface.DrawRect(centerX - size / 2 - dotSize / 2, centerY - size / 2 - dotSize / 2, dotSize, dotSize)
+                surface.DrawRect(centerX + size / 2 - dotSize / 2, centerY - size / 2 - dotSize / 2, dotSize, dotSize)
+                surface.DrawRect(centerX - size / 2 - dotSize / 2, centerY + size / 2 - dotSize / 2, dotSize, dotSize)
+                surface.DrawRect(centerX + size / 2 - dotSize / 2, centerY + size / 2 - dotSize / 2, dotSize, dotSize)
 
             elseif cfg == 2 then
                 local csizew = 1
 
-                draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc - csizew/2 - 1, csizew + 2, csizew + 2, hs)
-                draw.RoundedBox(0, scrwc - csizew/2, scrhc - csizew/2, csizew, csizew, hs)
-                draw.RoundedBox(0, scrwc - csizew - 16, scrhc - csizew/2 - 1, csizew + 2 + 10, csizew + 2, hs)
-                draw.RoundedBox(0, scrwc + 3, scrhc - csizew/2 - 1, csizew + 12, csizew + 2, hs)
-                draw.RoundedBox(0, scrwc + 3, scrhc - csizew/2 - 1, csizew + 12, csizew + 2, hs)
-                draw.RoundedBox(0, scrwc + 4, scrhc - csizew/2, csizew + 10, csizew, hs)
-                draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc - csizew/2 - 16, csizew + 2, csizew + 12, hs)
-                draw.RoundedBox(0, scrwc - csizew/2, scrhc - csizew/2 - 15, csizew, csizew + 10, hs)
-                draw.RoundedBox(0, scrwc - csizew/2 - 1, scrhc + 3, csizew + 2, csizew + 12, hs)
-                draw.RoundedBox(0, scrwc - csizew/2, scrhc + 4, csizew, csizew + 10, hs)
-                        
+                draw.RoundedBox(0, scrwc - csizew / 2 - 1, scrhc - csizew / 2 - 1, csizew + 2, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc - csizew / 2, scrhc - csizew / 2, csizew, csizew, hs)
+                draw.RoundedBox(0, scrwc - csizew - 16, scrhc - csizew / 2 - 1, csizew + 12, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc + 3, scrhc - csizew / 2 - 1, csizew + 12, csizew + 2, hs)
+                draw.RoundedBox(0, scrwc + 4, scrhc - csizew / 2, csizew + 10, csizew, hs)
+                draw.RoundedBox(0, scrwc - csizew / 2 - 1, scrhc - csizew / 2 - 16, csizew + 2, csizew + 12, hs)
+                draw.RoundedBox(0, scrwc - csizew / 2, scrhc - csizew / 2 - 15, csizew, csizew + 10, hs)
+                draw.RoundedBox(0, scrwc - csizew / 2 - 1, scrhc + 3, csizew + 2, csizew + 12, hs)
+                draw.RoundedBox(0, scrwc - csizew / 2, scrhc + 4, csizew, csizew + 10, hs)
+
             elseif cfg == 3 then
-                local time = CurTime() % 1
-                local color = HSVToColor(time * 360, 1, 1)
-                local size = 40
                 local centerX, centerY = scrwc, scrhc
+                local color = HSVToColor(time * 360, 1, 1)
 
                 local oldR, oldG, oldB, oldA = surface.GetDrawColor()
-                
+
+                local function drawRotatedLine(x1, y1, x2, y2, cx, cy, angleRad)
+                    local cos = math.cos(angleRad)
+                    local sin = math.sin(angleRad)
+
+                    local dx1, dy1 = x1 - cx, y1 - cy
+                    local rx1 = cx + dx1 * cos - dy1 * sin
+                    local ry1 = cy + dx1 * sin + dy1 * cos
+
+                    local dx2, dy2 = x2 - cx, y2 - cy
+                    local rx2 = cx + dx2 * cos - dy2 * sin
+                    local ry2 = cy + dx2 * sin + dy2 * cos
+
+                    surface.DrawLine(rx1, ry1, rx2, ry2)
+                end
+
+                local size = 40
                 if dezz.cfg.vars["Krutit"] then
                     local angle = CurTime() * 90
                     local rad = math.rad(angle)
-                    local cos = math.cos(rad)
-                    local sin = math.sin(rad)
-
-                    local function drawRotatedLine(x1, y1, x2, y2)
-                        local dx1, dy1 = x1 - centerX, y1 - centerY
-                        local rx1 = centerX + dx1 * cos - dy1 * sin
-                        local ry1 = centerY + dx1 * sin + dy1 * cos
-                        
-                        local dx2, dy2 = x2 - centerX, y2 - centerY
-                        local rx2 = centerX + dx2 * cos - dy2 * sin
-                        local ry2 = centerY + dx2 * sin + dy2 * cos
-                        
-                        surface.DrawLine(rx1, ry1, rx2, ry2)
-                    end
 
                     surface.SetDrawColor(color)
-                    
-                    drawRotatedLine(centerX, centerY - size/2, centerX, centerY + size/2)
-                    drawRotatedLine(centerX - size/2, centerY, centerX + size/2, centerY)
-                    drawRotatedLine(centerX, centerY - 20, centerX + size/2, centerY - 20)
-                    drawRotatedLine(centerX, centerY + 20, centerX - size/2, centerY + 20)
-                    drawRotatedLine(centerX + 20, centerY, centerX + 20, centerY + size/2)
-                    drawRotatedLine(centerX - 20, centerY, centerX - 20, centerY - size/2)
+
+                    drawRotatedLine(centerX, centerY - size / 2, centerX, centerY + size / 2, centerX, centerY, rad)
+                    drawRotatedLine(centerX - size / 2, centerY, centerX + size / 2, centerY, centerX, centerY, rad)
+                    drawRotatedLine(centerX, centerY - 20, centerX + size / 2, centerY - 20, centerX, centerY, rad)
+                    drawRotatedLine(centerX, centerY + 20, centerX - size / 2, centerY + 20, centerX, centerY, rad)
+                    drawRotatedLine(centerX + 20, centerY, centerX + 20, centerY + size / 2, centerX, centerY, rad)
+                    drawRotatedLine(centerX - 20, centerY, centerX - 20, centerY - size / 2, centerX, centerY, rad)
                 else
                     surface.SetDrawColor(color)
-                    surface.DrawLine(centerX, centerY - size/2, centerX, centerY + size/2)
-                    surface.DrawLine(centerX - size/2, centerY, centerX + size/2, centerY)
-                    surface.DrawLine(centerX, centerY - 20, centerX + size/2, centerY - 20)
-                    surface.DrawLine(centerX, centerY + 20, centerX - size/2, centerY + 20)
-                    surface.DrawLine(centerX + 20, centerY, centerX + 20, centerY + size/2)
-                    surface.DrawLine(centerX - 20, centerY, centerX - 20, centerY - size/2)
+                    surface.DrawLine(centerX, centerY - size / 2, centerX, centerY + size / 2)
+                    surface.DrawLine(centerX - size / 2, centerY, centerX + size / 2, centerY)
+                    surface.DrawLine(centerX, centerY - 20, centerX + size / 2, centerY - 20)
+                    surface.DrawLine(centerX, centerY + 20, centerX - size / 2, centerY + 20)
+                    surface.DrawLine(centerX + 20, centerY, centerX + 20, centerY + size / 2)
+                    surface.DrawLine(centerX - 20, centerY, centerX - 20, centerY - size / 2)
                 end
-                
+
                 surface.SetDrawColor(oldR, oldG, oldB, oldA)
 
             elseif cfg == 4 then
-                local scrw, scrh = ScrW(), ScrH()
-                local centerX, centerY = scrw / 2, scrh / 2
-                local time = CurTime() % 1
+                local centerX, centerY = scrwc, scrhc
                 local color = HSVToColor(time * 360, 1, 1)
 
                 local crossSize = 30
@@ -10439,14 +10489,10 @@ do
                 surface.DrawLine(centerX + gap, centerY - shortLineLength / 2, centerX + gap, centerY + shortLineLength / 2)
 
             elseif cfg == 5 then
-                local scrw, scrh = ScrW(), ScrH()
-                local centerX, centerY = scrw / 2, scrh / 2
-                local time = CurTime() % 1
+                local centerX, centerY = scrwc, scrhc
                 local color = HSVToColor(time * 360, 1, 1)
 
                 local crossSize = 40
-                local lineLength = 15
-                local gap = 10
 
                 surface.SetDrawColor(color)
 
@@ -10461,182 +10507,174 @@ do
         if dezz.cfg.vars["KeyBind List"] then
             if dezz.cfg.vars["bind mode"] == 1 then
                 dezz.keybindListData = dezz.keybindListData or {
-                x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.x) or 30,
-                y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.y) or 300,
-                w = 200,
-                dragging = false,
-                dragDX = 0,
-                dragDY = 0,
-            }
+                    x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.x) or 30,
+                    y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.y) or 300,
+                    w = 200,
+                    dragging = false,
+                    dragDX = 0,
+                    dragDY = 0,
+                }
 
-            local kbd = dezz.keybindListData
-            local colHeader = string.ToColor(dezz.cfg.colors["KeyBind List"] or "255 0 0 255")
-            local colText = Color(255,255,255, 240)
-            local colShadow = Color(0,0,0, 200)
+                local kbd = dezz.keybindListData
+                local colHeader = string.ToColor(dezz.cfg.colors["KeyBind List"] or "255 0 0 255")
+                local colText = Color(255, 255, 255, 240)
+                local colShadow = Color(0, 0, 0, 200)
 
-            local paddingX, paddingY = 15, 12 
-            local lineGap = 6 
-            local title = "KeyBind List"
+                local paddingX, paddingY = 15, 12
+                local lineGap = 6
+                local title = "KeyBind List"
 
-            surface.SetFont("HudhintTextLarge") 
-            local titleW, titleH = surface.GetTextSize(title)
+                surface.SetFont("HudHintTextLarge")
+                local titleW, titleH = surface.GetTextSize(title)
 
-            
-            local allBinds = {}
-            for name, key in pairs(dezz.cfg.binds or {}) do
-                if key and key != 0 then
-                    local lname = tostring(name):lower()
-                    if not string.find(lname, "menu", 1, true) then
-                        local v = dezz.cfg.vars and dezz.cfg.vars[name]
-                        if v == nil or v == true then
-                            local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
-                            allBinds[#allBinds+1] = {
-                                label = tostring(name), 
-                                key = tostring(string.upper(keyName or ""))
-                            }
+                local allBinds = {}
+                for name, key in pairs(dezz.cfg.binds or {}) do
+                    if key and key ~= 0 then
+                        local lname = tostring(name):lower()
+                        if not string.find(lname, "menu", 1, true) then
+                            local v = dezz.cfg.vars and dezz.cfg.vars[name]
+                            if v == nil or v == true then
+                                local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
+                                allBinds[#allBinds + 1] = {
+                                    label = tostring(name),
+                                    key = tostring(string.upper(keyName or ""))
+                                }
+                            end
                         end
                     end
                 end
-            end
-            local maxW = titleW
-            for i = 1, #allBinds do
-                local w = select(1, surface.GetTextSize(allBinds[i].label .. ": " .. allBinds[i].key))
-                if w > maxW then maxW = w end
-            end
-
-            local listH = (#allBinds > 0) and ((titleH + paddingY*2) + (#allBinds * (titleH + lineGap)) + paddingY) or (titleH + paddingY*3)
-            local listW = maxW + paddingX*2 + 20 
-            local maxAllowedW = math.max(250, ScrW() - 80) 
-            if listW > maxAllowedW then listW = maxAllowedW end
-            kbd.w = listW
-
-            local mx, my = gui.MousePos()
-            local overHeader = mx >= kbd.x and mx <= kbd.x + listW and my >= kbd.y and my <= kbd.y + (titleH + paddingY*2)
-            if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
-                kbd.dragging = true
-                kbd.dragDX = mx - kbd.x
-                kbd.dragDY = my - kbd.y
-            end
-            if kbd.dragging then
-                if input.IsMouseDown(MOUSE_LEFT) then
-                    kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - listW)
-                    kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - listH)
-                else
-                    kbd.dragging = false
-                    dezz.cfg = dezz.cfg or {}
-                    dezz.cfg.ui = dezz.cfg.ui or {}
-                    dezz.cfg.ui.kb_pos = { x = kbd.x, y = kbd.y }
+                local maxW = titleW
+                for i = 1, #allBinds do
+                    local w = select(1, surface.GetTextSize(allBinds[i].label .. ": " .. allBinds[i].key))
+                    if w > maxW then maxW = w end
                 end
-            end
 
-           
-            surface.SetDrawColor(colHeader.r, colHeader.g, colHeader.b, colHeader.a)
-            surface.DrawRect(kbd.x, kbd.y, listW, titleH + paddingY*2)
-            
-           
-            local time = CurTime() % 1
-            local rainbowColor = HSVToColor(time * 360, 1, 1)
-            local titleX = kbd.x + math.floor((listW - titleW) / 2)
-            
-            surface.SetTextColor(colShadow.r, colShadow.g, colShadow.b, colShadow.a)
-            surface.SetTextPos(titleX + 2, kbd.y + paddingY + 2)
-            surface.DrawText(title)
-            
-            surface.SetTextColor(rainbowColor.r, rainbowColor.g, rainbowColor.b, rainbowColor.a)
-            surface.SetTextPos(titleX, kbd.y + paddingY)
-            surface.DrawText(title)
+                local listH = (#allBinds > 0) and ((titleH + paddingY * 2) + (#allBinds * (titleH + lineGap)) + paddingY) or (titleH + paddingY * 3)
+                local listW = maxW + paddingX * 2 + 20
+                local maxAllowedW = math.max(250, ScrW() - 80)
+                if listW > maxAllowedW then listW = maxAllowedW end
+                kbd.w = listW
 
-            local cursorY = kbd.y + (titleH + paddingY*2) + paddingY/2
-            for i = 1, #allBinds do
-                local label = allBinds[i].label .. ": " .. allBinds[i].key
-                
-               
-                local bindTime = (CurTime() + i * 0.2) % 1
-                local bindRainbowColor = HSVToColor(bindTime * 360, 1, 1)
-                
+                local mx, my = gui.MousePos()
+                local overHeader = mx >= kbd.x and mx <= kbd.x + listW and my >= kbd.y and my <= kbd.y + (titleH + paddingY * 2)
+                if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
+                    kbd.dragging = true
+                    kbd.dragDX = mx - kbd.x
+                    kbd.dragDY = my - kbd.y
+                end
+                if kbd.dragging then
+                    if input.IsMouseDown(MOUSE_LEFT) then
+                        kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - listW)
+                        kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - listH)
+                    else
+                        kbd.dragging = false
+                        dezz.cfg = dezz.cfg or {}
+                        dezz.cfg.ui = dezz.cfg.ui or {}
+                        dezz.cfg.ui.kb_pos = {x = kbd.x, y = kbd.y}
+                    end
+                end
+
+                surface.SetDrawColor(colHeader.r, colHeader.g, colHeader.b, colHeader.a)
+                surface.DrawRect(kbd.x, kbd.y, listW, titleH + paddingY * 2)
+
+                local time = CurTime() % 1
+                local rainbowColor = HSVToColor(time * 360, 1, 1)
+                local titleX = kbd.x + math.floor((listW - titleW) / 2)
+
                 surface.SetTextColor(colShadow.r, colShadow.g, colShadow.b, colShadow.a)
-                surface.SetTextPos(kbd.x + paddingX + 1, cursorY + 1)
-                surface.DrawText(label)
-                
-                surface.SetTextColor(bindRainbowColor.r, bindRainbowColor.g, bindRainbowColor.b, bindRainbowColor.a)
-                surface.SetTextPos(kbd.x + paddingX, cursorY)
-                surface.DrawText(label)
-                
-                cursorY = cursorY + titleH + lineGap
-            end
-            surface.SetFont("Default")
-        elseif dezz.cfg.vars["bind mode"] == 2 then
-            dezz.keybindListData2 = dezz.keybindListData2 or {
-                x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.x) or 20,
-                y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.y) or 20,
-                dragging = false,
-                dragDX = 0,
-                dragDY = 0
-            }
+                surface.SetTextPos(titleX + 2, kbd.y + paddingY + 2)
+                surface.DrawText(title)
 
-            local kbd = dezz.keybindListData2
-            local allBinds = {}
-            for name, key in pairs(dezz.cfg.binds or {}) do
-                if key and key != 0 then
-                    local lname = tostring(name):lower()
-                    if not string.find(lname, "menu", 1, true) then
-                        local v = dezz.cfg.vars and dezz.cfg.vars[name]
-                        if v == nil or v == true then
-                            local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
-                            allBinds[#allBinds+1] = {
-                                label = tostring(name), 
-                                key = tostring(string.upper(keyName or ""))
-                            }
+                surface.SetTextColor(rainbowColor.r, rainbowColor.g, rainbowColor.b, rainbowColor.a)
+                surface.SetTextPos(titleX, kbd.y + paddingY)
+                surface.DrawText(title)
+
+                local cursorY = kbd.y + (titleH + paddingY * 2) + paddingY / 2
+                for i = 1, #allBinds do
+                    local label = allBinds[i].label .. ": " .. allBinds[i].key
+
+                    local bindTime = (CurTime() + i * 0.2) % 1
+                    local bindRainbowColor = HSVToColor(bindTime * 360, 1, 1)
+
+                    surface.SetTextColor(colShadow.r, colShadow.g, colShadow.b, colShadow.a)
+                    surface.SetTextPos(kbd.x + paddingX + 1, cursorY + 1)
+                    surface.DrawText(label)
+
+                    surface.SetTextColor(bindRainbowColor.r, bindRainbowColor.g, bindRainbowColor.b, bindRainbowColor.a)
+                    surface.SetTextPos(kbd.x + paddingX, cursorY)
+                    surface.DrawText(label)
+
+                    cursorY = cursorY + titleH + lineGap
+                end
+                surface.SetFont("Default")
+            elseif dezz.cfg.vars["bind mode"] == 2 then
+                dezz.keybindListData2 = dezz.keybindListData2 or {
+                    x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.x) or 20,
+                    y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.y) or 20,
+                    dragging = false,
+                    dragDX = 0,
+                    dragDY = 0
+                }
+
+                local kbd = dezz.keybindListData2
+                local allBinds = {}
+                for name, key in pairs(dezz.cfg.binds or {}) do
+                    if key and key ~= 0 then
+                        local lname = tostring(name):lower()
+                        if not string.find(lname, "menu", 1, true) then
+                            local v = dezz.cfg.vars and dezz.cfg.vars[name]
+                            if v == nil or v == true then
+                                local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
+                                allBinds[#allBinds + 1] = {
+                                    label = tostring(name),
+                                    key = tostring(string.upper(keyName or ""))
+                                }
+                            end
                         end
                     end
                 end
-            end
 
-            surface.SetFont("HudhintTextLarge")
-            local headerH = 25
-            local headerW = 200
-            local padding = 5
-            local bindezzeight = 20
-            local totalHeight = headerH + (#allBinds * bindezzeight) + padding
+                surface.SetFont("HudHintTextLarge")
+                local headerH = 25
+                local headerW = 200
+                local padding = 5
+                local bindezzeight = 20
+                local totalHeight = headerH + (#allBinds * bindezzeight) + padding
 
-           
-            local mx, my = gui.MousePos()
-            local overHeader = mx >= kbd.x and mx <= kbd.x + headerW and my >= kbd.y and my <= kbd.y + headerH
-            if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
-                kbd.dragging = true
-                kbd.dragDX = mx - kbd.x
-                kbd.dragDY = my - kbd.y
-            end
-            if kbd.dragging then
-                if input.IsMouseDown(MOUSE_LEFT) then
-                    kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - headerW)
-                    kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - totalHeight)
-                else
-                    kbd.dragging = false
-                    dezz.cfg = dezz.cfg or {}
-                    dezz.cfg.ui = dezz.cfg.ui or {}
-                    dezz.cfg.ui.kb2_pos = { x = kbd.x, y = kbd.y }
+                local mx, my = gui.MousePos()
+                local overHeader = mx >= kbd.x and mx <= kbd.x + headerW and my >= kbd.y and my <= kbd.y + headerH
+                if overHeader and input.IsMouseDown(MOUSE_LEFT) and not kbd.dragging then
+                    kbd.dragging = true
+                    kbd.dragDX = mx - kbd.x
+                    kbd.dragDY = my - kbd.y
                 end
-            end
+                if kbd.dragging then
+                    if input.IsMouseDown(MOUSE_LEFT) then
+                        kbd.x = math.Clamp(mx - kbd.dragDX, 0, ScrW() - headerW)
+                        kbd.y = math.Clamp(my - kbd.dragDY, 0, ScrH() - totalHeight)
+                    else
+                        kbd.dragging = false
+                        dezz.cfg = dezz.cfg or {}
+                        dezz.cfg.ui = dezz.cfg.ui or {}
+                        dezz.cfg.ui.kb2_pos = {x = kbd.x, y = kbd.y}
+                    end
+                end
 
-            
-            local time = CurTime() % 1
-            local rgbColor = HSVToColor(time * 360, 1, 1)
-            draw.RoundedBox(0, kbd.x, kbd.y, headerW, 3, rgbColor)
+                local time = CurTime() % 1
+                local rgbColor = HSVToColor(time * 360, 1, 1)
+                draw.RoundedBox(0, kbd.x, kbd.y, headerW, 3, rgbColor)
 
-           
-            draw.RoundedBox(0, kbd.x, kbd.y, headerW, headerH, Color(25, 25, 25, 200))
-            draw.RoundedBox(0, kbd.x, kbd.y + headerH, headerW, 2, Color(25, 25, 25, 160))
-            draw.SimpleText("Keybinds", "HudhintTextLarge", kbd.x + headerW/2, kbd.y + headerH/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.RoundedBox(0, kbd.x, kbd.y, headerW, headerH, Color(25, 25, 25, 200))
+                draw.RoundedBox(0, kbd.x, kbd.y + headerH, headerW, 2, Color(25, 25, 25, 160))
+                draw.SimpleText("Keybinds", "HudHintTextLarge", kbd.x + headerW / 2, kbd.y + headerH / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            
-            for i, bind in ipairs(allBinds) do
-                local yPos = kbd.y + headerH + (i * bindezzeight) - bindezzeight + padding
-                local bindTime = (CurTime() + i * 0.2) % 1
-                local bindColor = HSVToColor(bindTime * 360, 1, 1)
-                
-                draw.SimpleText(bind.label .. ": " .. bind.key, "HudhintTextLarge", kbd.x + padding, yPos, bindColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            end
+                for i, bind in ipairs(allBinds) do
+                    local yPos = kbd.y + headerH + (i * bindezzeight) - bindezzeight + padding
+                    local bindTime = (CurTime() + i * 0.2) % 1
+                    local bindColor = HSVToColor(bindTime * 360, 1, 1)
+
+                    draw.SimpleText(bind.label .. ": " .. bind.key, "HudHintTextLarge", kbd.x + padding, yPos, bindColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
             end
         end
 
@@ -10644,127 +10682,127 @@ do
             local function GetPlayerLookingAt()
                 local ply = LocalPlayer()
                 if not IsValid(ply) then return nil end
-                
+
                 local tr = ply:GetEyeTrace()
                 if not tr.Hit then return nil end
-                
+
                 local ent = tr.Entity
                 if not IsValid(ent) or not ent:IsPlayer() then return nil end
-                
+
                 return ent
             end
 
             local function GetPlayerBySteamID(steamid)
                 if not steamid or steamid == "" then return nil end
-                
+
                 for _, ply in pairs(player.GetAll()) do
                     if ply:SteamID() == steamid then
                         return ply
                     end
                 end
-                
+
                 return nil
             end
 
-        local rules = {
-            ["3.1"] = "NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.2"] = "FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-            ["3.2.1"] = "MassFreeDamage — Запрещено нанесение урона 4 и более игрокам без особой на то РП причины (даже косвенным путем)\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-            ["3.3"] = "FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-            ["3.3.1"] = "RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-            ["3.3.2"] = "MassRDM — Запрещено убийство 4 и более игроков без особой на то РП причины (даже косвенным путем)\n🔔ИСКЛЮЧЕНИЕ:\n• Самооборона.\n• Стрельба по вашим предметам.\n• Воровство ваших предметов.\n• Попытка связывания и воровство вас.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-            ["3.4"] = "NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-            ["3.5"] = "FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• 3.5 не работает во время рейдов (исключительно для атакующей и обороняющейся сторон), если Вы держали оружие до момента, как Вам начали угрожать оружием.\n• Если Амбрелле и Полиции угрожает один вооруженный человек, то он может дать отпор.\n• Если на Амбреллу и Полицию один вооруженный человек наставил оружие, то он не может достать наручники и надеть их на него.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• Однако, если угрожающий отвернулся, но при этом он всё еще вооружен, то он может надеть наручники на него.\n• На рейде запрещено намеренно выходить в область прямого огня перестрелки, а также заходить на территорию рейда, если Вы не являетесь участником атакующей или обороняющейся стороны.\n• Если что-то угрожает Вашей жизни (другой человек с оружием и т.п.), то Вы не имеете права использовать какие-либо средства ухода, которые приведут к Вашей смерти (еда и сигарета, которые отнимают Ваше здоровье).\n• Если на Вас навели оружие, то Вы не можете совершать резких движений даже если Вы в наручниках (не относится к движением мыши, но относится к жестам (act)). В таком случае Вас могут арестовать/убить (даже Госслужащий) и это не будет считаться [FreeKill'ом/FreeArrest'ом].\n🔔ИСКЛЮЧЕНИЕ:\n• Зомби\n• Амбрелла на базе\n• Полиция в Полицейском Участке\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.6"] = "JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-            ["3.7"] = "FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.8"] = "MassFreeArrest— Запрещен арест 3 и более людей без особой на то РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-            ["3.9"] = "CustomJob — С помощью команды \"/job\" Вы можете лишь уточнить смысл своей профессии, но не менять её.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-            ["3.10"] = "SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.11"] = "NickNameAbuse запрещено:\n• Нечитаемый никнейм\n• Копировать чужой никнейм\n• Никнейм с использованием рекламы (Исключение, реклама RusELiteRP)\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-            ["3.12"] = "FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.13"] = "MassFreeCuff — Запрещено заковывать в наручники 3 и более людей без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
-            ["3.14"] = "BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.15"] = "BanExit — Запрещено покидать разборки.\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.16"] = "LeaveRolePlay - Запрещено покидать сервер во время РП ситуации\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["3.17"] = "OrganizationAbuse — Запрещено использовать нацисткую символику в группировках, оскорбления, фальсификации статуса игрока, копировать другие организации.\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-            ["3.19"] = "Free Demote - Запрещено увольнение игроков без адекватной на то причины.\nЗапрещено увольнение игрока с профессии без наличия RP обоснования и корректной RP причины (причину «AFK» использовать можно).\nПричиной увольнения игрока может служить нарушение правил профессии/прямых обязанностей.\n| Наказание 3.1",
-            ["nlr"] = "3.4 - NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-            ["rdm"] = "3.3.1 - RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
-            ["freekill"] = "3.3 - FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
-            ["freedamage"] = "3.2 - FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-            ["nonrp"] = "3.1 - NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["fearrp"] = "3.5 - FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["jobabuse"] = "3.6 - JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
-            ["freearrest"] = "3.7 - FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["freecuff"] = "3.12 - FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["spawnabuse"] = "3.10 - SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
-            ["bugabuse"] = "3.14 - BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)"
-        }
+            local rules = {
+                ["3.1"] = "NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.2"] = "FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["3.2.1"] = "MassFreeDamage — Запрещено нанесение урона 4 и более игрокам без особой на то РП причины (даже косвенным путем)\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.3"] = "FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["3.3.1"] = "RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+                ["3.3.2"] = "MassRDM — Запрещено убийство 4 и более игроков без особой на то РП причины (даже косвенным путем)\n🔔ИСКЛЮЧЕНИЕ:\n• Самооборона.\n• Стрельба по вашим предметам.\n• Воровство ваших предметов.\n• Попытка связывания и воровство вас.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.4"] = "NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["3.5"] = "FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• 3.5 не работает во время рейдов (исключительно для атакующей и обороняющейся сторон), если Вы держали оружие до момента, как Вам начали угрожать оружием.\n• Если Амбрелле и Полиции угрожает один вооруженный человек, то он может дать отпор.\n• Если на Амбреллу и Полицию один вооруженный человек наставил оружие, то он не может достать наручники и надеть их на него.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n• Однако, если угрожающий отвернулся, но при этом он всё еще вооружен, то он может надеть наручники на него.\n• На рейде запрещено намеренно выходить в область прямого огня перестрелки, а также заходить на территорию рейда, если Вы не являетесь участником атакующей или обороняющейся стороны.\n• Если что-то угрожает Вашей жизни (другой человек с оружием и т.п.), то Вы не имеете права использовать какие-либо средства ухода, которые приведут к Вашей смерти (еда и сигарета, которые отнимают Ваше здоровье).\n• Если на Вас навели оружие, то Вы не можете совершать резких движений даже если Вы в наручниках (не относится к движением мыши, но относится к жестам (act)). В таком случае Вас могут арестовать/убить (даже Госслужащий) и это не будет считаться [FreeKill'ом/FreeArrest'ом].\n🔔ИСКЛЮЧЕНИЕ:\n• Зомби\n• Амбрелла на базе\n• Полиция в Полицейском Участке\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.6"] = "JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["3.7"] = "FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.8"] = "MassFreeArrest— Запрещен арест 3 и более людей без особой на то РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.9"] = "CustomJob — С помощью команды \"/job\" Вы можете лишь уточнить смысл своей профессии, но не менять её.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["3.10"] = "SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.11"] = "NickNameAbuse запрещено:\n• Нечитаемый никнейм\n• Копировать чужой никнейм\n• Никнейм с использованием рекламы (Исключение, реклама RusELiteRP)\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.12"] = "FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.13"] = "MassFreeCuff — Запрещено заковывать в наручники 3 и более людей без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 12 часов блокировки. (ban)",
+                ["3.14"] = "BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.15"] = "BanExit — Запрещено покидать разборки.\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.16"] = "LeaveRolePlay - Запрещено покидать сервер во время РП ситуации\n⚡ Наказать может только: Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["3.17"] = "OrganizationAbuse — Запрещено использовать нацисткую символику в группировках, оскорбления, фальсификации статуса игрока, копировать другие организации.\n⚡ Наказать может только: НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+                ["3.19"] = "Free Demote - Запрещено увольнение игроков без адекватной на то причины.\nЗапрещено увольнение игрока с профессии без наличия RP обоснования и корректной RP причины (причину «AFK» использовать можно).\nПричиной увольнения игрока может служить нарушение правил профессии/прямых обязанностей.\n| Наказание 3.1",
+                ["nlr"] = "3.4 - NLR — Правило новой жизни.\nПосле смерти Вы должны забыть своего убийцу и все обстоятельства смерти. Абсолютно всё, кроме дома, друзей и Ваших обязанностей.\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["rdm"] = "3.3.1 - RDM — Запрещено убийство 2-3 игроков без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 30 минут блокировки. (ban)",
+                ["freekill"] = "3.3 - FreeKill — Запрещено убийство 1 игрока без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 15 минут блокировки. (ban)",
+                ["freedamage"] = "3.2 - FreeDamage — Запрещено нанесение урона игроку без особой на то РП причины (даже косвенным путем).\n⚡ ПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["nonrp"] = "3.1 - NonRP — Соблюдайте правила выбранной профессии.\n• Запрещено взаимодействие с забаненными за стеной в РП профессии.\n• Запрещено захватывать под свою базу территорию более 3-х зданий, а также более 4-х квартир в одном здании\n• Запрещена месть за арест/попытку ареста/ограбление.\n• Запрещено пополнение здоровья и брони во время перестрелки/погони. Вы должны убедиться, что по Вам не наносится урон, и уже после восстановить здоровье или броню.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["fearrp"] = "3.5 - FearRP — Вы должны бояться за свою жизнь, а также всего того, что ей угрожает.\n• Если на Вас навели оружие, то запрещено доставать свое оружие, пока вы в прямой видимости наведшего оружие.\n🔔ИСКЛЮЧЕНИЕ: Ножи, монтировка.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["jobabuse"] = "3.6 - JobAbuse — Запрещена смена профессий в течение короткого промежутка времени для получения из этого личной выгоды или выгоды для банды, а также для ухода от РП ситуации.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 5 минут блокировки. (ban)",
+                ["freearrest"] = "3.7 - FreeArrest — Запрещен арест 1-2 человек без особой на то РП причины. Продление ареста с РП причиной допустимо.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["freecuff"] = "3.12 - FreeCuff — Запрещено заковывать в наручники 1-2 игроков без РП причины.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["spawnabuse"] = "3.10 - SpawnAbuse запрещено:\n• использование спавна в целях ухода от РП ситуации (ареста, убийства и т.д.)\n• использовать оружие/камеру.\n• заходить на спавн за профессию: Мэр и Управляющий Амбреллы.\n⚡ ПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)",
+                ["bugabuse"] = "3.14 - BugAbuse — Запрещено использовать баги в любом их виде.\n⚡ Наказать может только Хелпер/НаборАдмин/СабКуратор, Куратор и Root.\nПРИ НАРУШЕНИИ: 10 минут блокировки. (ban)"
+            }
 
-        local function SearchRules(keyword)
-            local searchTerm = string.lower(keyword)
-            local foundRules = {}
-            
-            if rules[searchTerm] then
-                foundRules[searchTerm] = rules[searchTerm]
+            local function SearchRules(keyword)
+                local searchTerm = string.lower(keyword)
+                local foundRules = {}
+
+                if rules[searchTerm] then
+                    foundRules[searchTerm] = rules[searchTerm]
+                end
+
+                for rule, description in pairs(rules) do
+                    if string.find(string.lower(rule), searchTerm, 1, true) or string.find(string.lower(description), searchTerm, 1, true) then
+                        foundRules[rule] = description
+                    end
+                end
+
+                return foundRules
             end
-            
-            for rule, description in pairs(rules) do
-                if string.find(string.lower(rule), searchTerm, 1, true) or string.find(string.lower(description), searchTerm, 1, true) then
-                    foundRules[rule] = description
+
+            local function OpenRulesWindow(searchKeyword)
+                local foundRules = SearchRules(searchKeyword)
+
+                local rulesFrame = vgui.Create("DFrame")
+                rulesFrame:SetSize(600, 500)
+                rulesFrame:Center()
+                rulesFrame:SetTitle("Поиск правил: " .. searchKeyword)
+                rulesFrame:ShowCloseButton(true)
+                rulesFrame:SetDraggable(true)
+                rulesFrame:MakePopup()
+
+                rulesFrame.Paint = function(self, w, h)
+                    draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
+                    draw.RoundedBox(8, 2, 2, w - 4, h - 4, Color(35, 35, 45, 250))
+                end
+
+                local scrollPanel = vgui.Create("DScrollPanel", rulesFrame)
+                scrollPanel:Dock(FILL)
+                scrollPanel:DockMargin(10, 30, 10, 10)
+
+                if next(foundRules) == nil then
+                    local noResultsLabel = vgui.Create("DLabel", scrollPanel)
+                    noResultsLabel:Dock(TOP)
+                    noResultsLabel:SetText("Правила не найдены для: " .. searchKeyword)
+                    noResultsLabel:SetFont("DermaLarge")
+                    noResultsLabel:SetTextColor(Color(255, 100, 100))
+                    noResultsLabel:SizeToContents()
+                else
+                    for rule, description in pairs(foundRules) do
+                        local ruleLabel = vgui.Create("DLabel", scrollPanel)
+                        ruleLabel:Dock(TOP)
+                        ruleLabel:SetText("=== " .. rule .. " ===")
+                        ruleLabel:SetFont("DermaLarge")
+                        ruleLabel:SetTextColor(Color(255, 255, 100))
+                        ruleLabel:SizeToContents()
+
+                        local descLabel = vgui.Create("DLabel", scrollPanel)
+                        descLabel:Dock(TOP)
+                        descLabel:DockMargin(0, 0, 0, 20)
+                        descLabel:SetText(description)
+                        descLabel:SetFont("DermaDefault")
+                        descLabel:SetTextColor(Color(255, 255, 255))
+                        descLabel:SetWrap(true)
+                        descLabel:SetAutoStretchVertical(true)
+                    end
                 end
             end
-            
-            return foundRules
-        end
-
-        local function OpenRulesWindow(searchKeyword)
-            local foundRules = SearchRules(searchKeyword)
-            
-            local rulesFrame = vgui.Create("DFrame")
-            rulesFrame:SetSize(600, 500)
-            rulesFrame:Center()
-            rulesFrame:SetTitle("Поиск правил: " .. searchKeyword)
-            rulesFrame:ShowCloseButton(true)
-            rulesFrame:SetDraggable(true)
-            rulesFrame:MakePopup()
-            
-            rulesFrame.Paint = function(self, w, h)
-                draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
-                draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
-            end
-            
-            local scrollPanel = vgui.Create("DScrollPanel", rulesFrame)
-            scrollPanel:Dock(FILL)
-            scrollPanel:DockMargin(10, 30, 10, 10)
-            
-            if next(foundRules) == nil then
-                local noResultsLabel = vgui.Create("DLabel", scrollPanel)
-                noResultsLabel:Dock(TOP)
-                noResultsLabel:SetText("Правила не найдены для: " .. searchKeyword)
-                noResultsLabel:SetFont("DermaLarge")
-                noResultsLabel:SetTextColor(Color(255, 100, 100))
-                noResultsLabel:SizeToContents()
-            else
-                for rule, description in pairs(foundRules) do
-                    local ruleLabel = vgui.Create("DLabel", scrollPanel)
-                    ruleLabel:Dock(TOP)
-                    ruleLabel:SetText("=== " .. rule .. " ===")
-                    ruleLabel:SetFont("DermaLarge")
-                    ruleLabel:SetTextColor(Color(255, 255, 100))
-                    ruleLabel:SizeToContents()
-                    
-                    local descLabel = vgui.Create("DLabel", scrollPanel)
-                    descLabel:Dock(TOP)
-                    descLabel:DockMargin(0, 0, 0, 20)
-                    descLabel:SetText(description)
-                    descLabel:SetFont("DermaDefault")
-                    descLabel:SetTextColor(Color(255, 255, 255))
-                    descLabel:SetWrap(true)
-                    descLabel:SetAutoStretchVertical(true)
-                end
-            end
-        end
 
             local banMenuFrame = nil
             local isOpeningBanMenu = false
@@ -10777,16 +10815,16 @@ do
                 templatesFrame:ShowCloseButton(true)
                 templatesFrame:SetDraggable(true)
                 templatesFrame:MakePopup()
-                
+
                 templatesFrame.Paint = function(self, w, h)
                     draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
-                    draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
+                    draw.RoundedBox(8, 2, 2, w - 4, h - 4, Color(35, 35, 45, 250))
                 end
-                
+
                 local scrollPanel = vgui.Create("DScrollPanel", templatesFrame)
                 scrollPanel:SetPos(10, 30)
                 scrollPanel:SetSize(680, 560)
-                
+
                 local function CreateTemplateButton(parent, x, y, text, time, unit, reason)
                     local btn = vgui.Create("DButton", parent)
                     btn:SetPos(x, y)
@@ -10808,16 +10846,16 @@ do
                     end
                     return btn
                 end
-                
+
                 local yPos = 10
                 local xPos = 10
-                
+
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FreeKill - 3.3", "15", "mi", "3.3")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "RDM - 3.3.1", "30", "mi", "3.3.1")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "MassRDM - 3.3.2", "12", "h", "3.3.2")
-                
+
                 yPos = yPos + 45
                 xPos = 10
                 CreateTemplateButton(scrollPanel, xPos, yPos, "NonRP - 3.1", "10", "mi", "3.1")
@@ -10825,7 +10863,7 @@ do
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FreeDamage - 3.2", "5", "mi", "3.2")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "MassFreeDamage - 3.2.1", "12", "h", "3.2.1")
-                
+
                 yPos = yPos + 45
                 xPos = 10
                 CreateTemplateButton(scrollPanel, xPos, yPos, "NLR - 3.4", "15", "mi", "3.4")
@@ -10833,7 +10871,7 @@ do
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FearRP - 3.5", "10", "mi", "3.5")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FreeArrest - 3.7", "10", "mi", "3.7")
-                
+
                 yPos = yPos + 45
                 xPos = 10
                 CreateTemplateButton(scrollPanel, xPos, yPos, "MassFreeArrest - 3.8", "12", "h", "3.8")
@@ -10841,8 +10879,6 @@ do
                 CreateTemplateButton(scrollPanel, xPos, yPos, "FreeCuff - 3.12", "10", "mi", "3.12")
                 xPos = xPos + 230
                 CreateTemplateButton(scrollPanel, xPos, yPos, "MassFreeCuff - 3.13", "12", "h", "3.13")
-                
-
             end
 
             local function OpenBanMenu()
@@ -10867,32 +10903,32 @@ do
                     banMenuFrame = nil
                 end
                 isOpeningBanMenu = false
-                
+
                 frame.Paint = function(self, w, h)
                     draw.RoundedBox(8, 0, 0, w, h, Color(25, 25, 35, 250))
-                    draw.RoundedBox(8, 2, 2, w-4, h-4, Color(35, 35, 45, 250))
-                    
+                    draw.RoundedBox(8, 2, 2, w - 4, h - 4, Color(35, 35, 45, 250))
+
                     draw.RoundedBox(8, 0, 0, w, 60, Color(45, 45, 55, 250))
-                    draw.RoundedBox(8, 2, 2, w-4, 56, Color(55, 55, 65, 250))
-                    
+                    draw.RoundedBox(8, 2, 2, w - 4, 56, Color(55, 55, 65, 250))
+
                     surface.SetDrawColor(70, 70, 80)
                     surface.DrawLine(0, 60, w, 60)
                 end
-                
+
                 local titleLabel = vgui.Create("DLabel", frame)
                 titleLabel:SetPos(20, 15)
                 titleLabel:SetSize(460, 30)
                 titleLabel:SetText("Ban Pistol - F7")
                 titleLabel:SetFont("DermaLarge")
                 titleLabel:SetTextColor(Color(255, 255, 255))
-                
+
                 local coderLabel = vgui.Create("DLabel", frame)
                 coderLabel:SetPos(20, 35)
                 coderLabel:SetSize(460, 20)
                 coderLabel:SetText("Coder - Nato")
                 coderLabel:SetFont("DermaDefault")
                 coderLabel:SetTextColor(Color(150, 150, 170))
-                
+
                 local closeBtn = vgui.Create("DButton", frame)
                 closeBtn:SetPos(460, 15)
                 closeBtn:SetSize(25, 25)
@@ -10908,14 +10944,14 @@ do
                 closeBtn.DoClick = function()
                     frame:Close()
                 end
-                
+
                 local targetLabel = vgui.Create("DLabel", frame)
                 targetLabel:SetPos(20, 80)
                 targetLabel:SetSize(460, 20)
                 targetLabel:SetText("Цель бана:")
                 targetLabel:SetFont("DermaDefault")
                 targetLabel:SetTextColor(Color(255, 255, 255))
-                
+
                 local targetCombo = vgui.Create("DComboBox", frame)
                 targetCombo:SetPos(20, 110)
                 targetCombo:SetSize(200, 30)
@@ -10924,9 +10960,9 @@ do
                 targetCombo:SetValue("Игрок на которого смотрю")
                 targetCombo.Paint = function(self, w, h)
                     draw.RoundedBox(6, 0, 0, w, h, Color(45, 45, 55))
-                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(55, 55, 65))
+                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, Color(55, 55, 65))
                 end
-                
+
                 local steamidEntry = vgui.Create("DTextEntry", frame)
                 steamidEntry:SetPos(240, 110)
                 steamidEntry:SetSize(240, 30)
@@ -10935,10 +10971,10 @@ do
                 steamidEntry:SetEnabled(false)
                 steamidEntry.Paint = function(self, w, h)
                     draw.RoundedBox(6, 0, 0, w, h, Color(45, 45, 55))
-                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(55, 55, 65))
+                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, Color(55, 55, 65))
                     self:DrawTextEntryText(Color(255, 255, 255), Color(70, 70, 80), Color(255, 255, 255))
                 end
-                
+
                 local avatar = vgui.Create("AvatarImage", frame)
                 avatar:SetPos(20, 160)
                 avatar:SetSize(80, 80)
@@ -10947,7 +10983,7 @@ do
                 else
                     avatar:SetSteamID("BOT")
                 end
-                
+
                 local nickLabel = vgui.Create("DLabel", frame)
                 nickLabel:SetPos(120, 160)
                 nickLabel:SetSize(360, 25)
@@ -10958,7 +10994,7 @@ do
                 end
                 nickLabel:SetFont("DermaLarge")
                 nickLabel:SetTextColor(Color(255, 255, 255))
-                
+
                 local steamidLabel = vgui.Create("DLabel", frame)
                 steamidLabel:SetPos(120, 190)
                 steamidLabel:SetSize(360, 20)
@@ -10969,19 +11005,20 @@ do
                 end
                 steamidLabel:SetFont("DermaDefault")
                 steamidLabel:SetTextColor(Color(150, 150, 170))
-                
-                local function UpdatePlayerInfo(target, steamidEntry)
-                    if target and IsValid(target) then
-                        avatar:SetPlayer(target, 80)
-                        nickLabel:SetText("Ник: " .. target:Nick())
-                        steamidLabel:SetText("SteamID: " .. target:SteamID())
+
+                local function UpdatePlayerInfo(tgt, steamidEnt)
+                    if tgt and IsValid(tgt) then
+                        avatar:SetPlayer(tgt, 80)
+                        nickLabel:SetText("Ник: " .. tgt:Nick())
+                        steamidLabel:SetText("SteamID: " .. tgt:SteamID())
                     else
                         avatar:SetSteamID("BOT")
                         nickLabel:SetText("Ник: Не найден")
-                        steamidLabel:SetText("SteamID: " .. (steamidEntry:GetValue() or ""))
+                        local v = steamidEnt and steamidEnt:GetValue() or ""
+                        steamidLabel:SetText("SteamID: " .. v)
                     end
                 end
-                
+
                 targetCombo.OnSelect = function(self, index, value, data)
                     if data == "manual" then
                         steamidEntry:SetEnabled(true)
@@ -10993,32 +11030,32 @@ do
                         UpdatePlayerInfo(target, steamidEntry)
                     end
                 end
-                
+
                 steamidEntry.OnEnter = function(self)
                     local steamid = self:GetValue()
-                    if steamid and steamid != "" then
+                    if steamid and steamid ~= "" then
                         local foundPlayer = GetPlayerBySteamID(steamid)
                         UpdatePlayerInfo(foundPlayer, steamidEntry)
                     end
                 end
-                
+
                 local timeLabel = vgui.Create("DLabel", frame)
                 timeLabel:SetPos(20, 260)
                 timeLabel:SetSize(460, 20)
                 timeLabel:SetText("Время бана:")
                 timeLabel:SetFont("DermaDefault")
                 timeLabel:SetTextColor(Color(255, 255, 255))
-                
+
                 local timeEntry = vgui.Create("DTextEntry", frame)
                 timeEntry:SetPos(20, 290)
                 timeEntry:SetSize(200, 30)
                 timeEntry:SetText("0")
                 timeEntry.Paint = function(self, w, h)
                     draw.RoundedBox(6, 0, 0, w, h, Color(45, 45, 55))
-                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(55, 55, 65))
+                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, Color(55, 55, 65))
                     self:DrawTextEntryText(Color(255, 255, 255), Color(70, 70, 80), Color(255, 255, 255))
                 end
-                
+
                 local timeCombo = vgui.Create("DComboBox", frame)
                 timeCombo:SetPos(240, 290)
                 timeCombo:SetSize(240, 30)
@@ -11027,26 +11064,26 @@ do
                 timeCombo:SetValue("mi")
                 timeCombo.Paint = function(self, w, h)
                     draw.RoundedBox(6, 0, 0, w, h, Color(45, 45, 55))
-                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(55, 55, 65))
+                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, Color(55, 55, 65))
                 end
-                
+
                 local reasonLabel = vgui.Create("DLabel", frame)
                 reasonLabel:SetPos(20, 340)
                 reasonLabel:SetSize(460, 20)
                 reasonLabel:SetText("Причина бана:")
                 reasonLabel:SetFont("DermaDefault")
                 reasonLabel:SetTextColor(Color(255, 255, 255))
-                
+
                 local reasonEntry = vgui.Create("DTextEntry", frame)
                 reasonEntry:SetPos(20, 370)
                 reasonEntry:SetSize(460, 30)
                 reasonEntry:SetText("")
                 reasonEntry.Paint = function(self, w, h)
                     draw.RoundedBox(6, 0, 0, w, h, Color(45, 45, 55))
-                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(55, 55, 65))
+                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, Color(55, 55, 65))
                     self:DrawTextEntryText(Color(255, 255, 255), Color(70, 70, 80), Color(255, 255, 255))
                 end
-                
+
                 local templatesLabel = vgui.Create("DLabel", frame)
                 templatesLabel:SetPos(20, 420)
                 templatesLabel:SetSize(460, 20)
@@ -11060,7 +11097,7 @@ do
                 searchLabel:SetText("Поиск правил:")
                 searchLabel:SetFont("DermaDefault")
                 searchLabel:SetTextColor(Color(255, 255, 255))
-                
+
                 local searchEntry = vgui.Create("DTextEntry", frame)
                 searchEntry:SetPos(20, 470)
                 searchEntry:SetSize(200, 25)
@@ -11068,10 +11105,10 @@ do
                 searchEntry:SetPlaceholderText("Введите правило (например: nlr)")
                 searchEntry.Paint = function(self, w, h)
                     draw.RoundedBox(6, 0, 0, w, h, Color(45, 45, 55))
-                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(55, 55, 65))
+                    draw.RoundedBox(6, 2, 2, w - 4, h - 4, Color(55, 55, 65))
                     self:DrawTextEntryText(Color(255, 255, 255), Color(70, 70, 80), Color(255, 255, 255))
                 end
-                
+
                 local searchButton = vgui.Create("DButton", frame)
                 searchButton:SetPos(230, 470)
                 searchButton:SetSize(80, 25)
@@ -11086,11 +11123,11 @@ do
                 end
                 searchButton.DoClick = function()
                     local searchText = searchEntry:GetValue()
-                    if searchText and searchText != "" then
+                    if searchText and searchText ~= "" then
                         OpenRulesWindow(searchText)
                     end
                 end
-                
+
                 local templatesButton = vgui.Create("DButton", frame)
                 templatesButton:SetPos(20, 510)
                 templatesButton:SetSize(460, 40)
@@ -11107,7 +11144,7 @@ do
                 templatesButton.DoClick = function()
                     OpenTemplatesMenu(timeEntry, timeCombo, reasonEntry)
                 end
-                
+
                 local simpleBanButton = vgui.Create("DButton", frame)
                 simpleBanButton:SetPos(20, 570)
                 simpleBanButton:SetSize(220, 40)
@@ -11124,7 +11161,7 @@ do
                 simpleBanButton.DoClick = function()
                     local timeValue = timeEntry:GetValue()
                     local timeUnit = timeCombo:GetValue()
-                    
+
                     local finalSteamID = ""
                     if targetCombo:GetValue() == "Игрок на которого смотрю" then
                         if target and IsValid(target) then
@@ -11140,19 +11177,19 @@ do
                             return
                         end
                     end
-                    
+
                     if not finalSteamID or finalSteamID == "" then
                         chat.AddText(Color(255, 0, 0), "Ошибка: неверный SteamID!")
                         return
                     end
-                    
+
                     local command = "!ban " .. finalSteamID .. " " .. timeValue .. timeUnit
                     chat.AddText(Color(255, 255, 0), command)
                     RunConsoleCommand("say", command)
-                    
+
                     frame:Close()
                 end
-                
+
                 local banButton = vgui.Create("DButton", frame)
                 banButton:SetPos(260, 570)
                 banButton:SetSize(220, 40)
@@ -11171,7 +11208,7 @@ do
                     local timeUnit = timeCombo:GetValue()
                     local reason = reasonEntry:GetValue()
                     if reason == "" then reason = "Не указана" end
-                    
+
                     local finalSteamID = ""
                     if targetCombo:GetValue() == "Игрок на которого смотрю" then
                         if target and IsValid(target) then
@@ -11187,34 +11224,34 @@ do
                             return
                         end
                     end
-                    
+
                     if not finalSteamID or finalSteamID == "" then
                         chat.AddText(Color(255, 0, 0), "Ошибка: неверный SteamID!")
                         return
                     end
-                    
+
                     local tpCommand = "!tp " .. finalSteamID
                     chat.AddText(Color(0, 255, 255), tpCommand)
                     RunConsoleCommand("say", tpCommand)
-                    
+
                     timer.Simple(1, function()
                         local violationCommand = "Нарушение: " .. reason
                         chat.AddText(Color(255, 0, 0), violationCommand)
                         RunConsoleCommand("say", violationCommand)
                     end)
-                    
+
                     timer.Simple(2, function()
                         local command = "!ban " .. finalSteamID .. " " .. timeValue .. timeUnit .. " " .. reason
                         chat.AddText(Color(255, 255, 0), command)
                         RunConsoleCommand("say", command)
                     end)
-                    
+
                     timer.Simple(3, function()
                         local pmCommand = "/pm " .. finalSteamID .. " Не согласен - пиши тикет"
                         chat.AddText(Color(0, 255, 255), pmCommand)
                         RunConsoleCommand("say", pmCommand)
                     end)
-                    
+
                     frame:Close()
                 end
             end
@@ -11238,45 +11275,45 @@ do
                     f8Pressed = false
                 end
             end)
-
-
-
-
+        end
+        
         if dezz.cfg.vars["Hitmarker"] and #dezz.hitmarkers > 0 then
             local hm = string.ToColor(dezz.cfg.colors["Hitmarker"])
             local currentTime = CurTime()
-            
+
             for i = #dezz.hitmarkers, 1, -1 do
                 local hit = dezz.hitmarkers[i]
 
-                    if hit.time < currentTime - 0.8 then 
-                        table.remove(dezz.hitmarkers, i) 
-                        continue 
-                    end 
-                    
-                    local elapsed = currentTime - hit.time
-                    local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
-                    
-                    local spreadProgress = math.min(elapsed / 0.3, 1.0)
-                    local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
-
-                    local spread = 80 * spreadProgress
-                    local length = 13.5 * (1 - spreadProgress * 0.5)
-                    local alpha = 255 * alphaProgress
-
-                    local function drawHitmarkerLine(x1, y1, x2, y2)
-                        surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
-                        surface.DrawLine(x1, y1, x2, y2)
-
-                        surface.SetDrawColor(0, 0, 0, 100 * alphaProgress)
-                        surface.DrawLine(x1 - 1, y1 - 1, x2 - 1, y2 - 1)
-                    end
-
-                    drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
-                    drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
-                    drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
-                    drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
+                if hit.time < currentTime - 0.8 then
+                    table.remove(dezz.hitmarkers, i)
+                    continue
                 end
+
+                local elapsed = currentTime - hit.time
+                local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
+
+                local spreadProgress = math.min(elapsed / 0.3, 1.0)
+                local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
+
+                local spread = 60 * spreadProgress
+                local lineWidth = 3 * (1 - spreadProgress * 0.7)
+                local length = 20 * (1 - spreadProgress * 0.5)
+                local alpha = 255 * alphaProgress
+
+                local function drawHitmarkerLine(x1, y1, x2, y2)
+                    surface.SetDrawColor(0, 0, 0, 150 * alphaProgress)
+                    for offset = math.floor(-lineWidth/2), math.floor(lineWidth/2) do
+                        surface.DrawLine(x1 + offset, y1, x2 + offset, y2)
+                        surface.DrawLine(x1, y1 + offset, x2, y2 + offset)
+                    end
+                    surface.SetDrawColor(hm.r, hm.g, hm.b, alpha)
+                    surface.DrawLine(x1, y1, x2, y2)
+                end
+
+                drawHitmarkerLine(centerX - spread, centerY - spread, centerX - spread - length, centerY - spread - length)
+                drawHitmarkerLine(centerX + spread, centerY - spread, centerX + spread + length, centerY - spread - length)
+                drawHitmarkerLine(centerX - spread, centerY + spread, centerX - spread - length, centerY + spread + length)
+                drawHitmarkerLine(centerX + spread, centerY + spread, centerX + spread + length, centerY + spread + length)
             end
         end
 
@@ -11622,10 +11659,22 @@ do
         end
 
         if dezz.cfg.vars["pw"] then
+            dezz.pingTextPos = dezz.pingTextPos or {
+                x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.ping_text_x) or 800,
+                y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.ping_text_y) or (ScrH() / 2.1),
+                dragging = false,
+                dragOffsetX = 0,
+                dragOffsetY = 0
+            }
+
+            local pos = dezz.pingTextPos
+            local mx, my = gui.MousePos()
+            local font = "veranda"
+
+            surface.SetFont(font)
             local ping = pLocalPlayer:Ping()
-            local y = ScrH() / 2.1
+
             local color, text
-            
             if ping < 60 then
                 color = Color(0, 255, 0)
                 text = "Zaebis ping"
@@ -11639,9 +11688,29 @@ do
                 color = Color(255, 0, 0)
                 text = "Zalupa a ne ping"
             end
-            
-            surface.SetFont( "veranda" )
-            surface.SetTextPos(800, y)
+
+            local textW, textH = surface.GetTextSize(text)
+
+            if input.IsMouseDown(MOUSE_LEFT) and not pos.dragging then
+                if mx >= pos.x and mx <= pos.x + textW and my >= pos.y and my <= pos.y + textH then
+                    pos.dragging = true
+                    pos.dragOffsetX = mx - pos.x
+                    pos.dragOffsetY = my - pos.y
+                end
+            elseif not input.IsMouseDown(MOUSE_LEFT) and pos.dragging then
+                pos.dragging = false
+                dezz.cfg = dezz.cfg or {}
+                dezz.cfg.ui = dezz.cfg.ui or {}
+                dezz.cfg.ui.ping_text_x = pos.x
+                dezz.cfg.ui.ping_text_y = pos.y
+            end
+
+            if pos.dragging then
+                pos.x = math.Clamp(mx - pos.dragOffsetX, 0, ScrW() - textW)
+                pos.y = math.Clamp(my - pos.dragOffsetY, 0, ScrH() - textH)
+            end
+
+            surface.SetTextPos(pos.x, pos.y)
             surface.SetTextColor(color)
             surface.DrawText(text)
         end
