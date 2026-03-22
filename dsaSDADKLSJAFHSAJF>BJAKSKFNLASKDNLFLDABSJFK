@@ -5412,7 +5412,11 @@ function dezz.NoSpread(cmd, ang)
 end
 
 function dezz.NoRecoil(ang)
-    if dezz.activeWeaponClass == "weapon_pistol" or string.StartWith(dezz.activeWeaponClass, "m9k_") or string.StartWith(dezz.activeWeaponClass, "bb_") or string.StartWith(dezz.activeWeaponClass, "unclen8_") or string.StartWith(dezz.activeWeaponClass, "weapon_") then
+    if type(dezz.activeWeaponClass) ~= "string" then
+        return ang
+    end
+
+    if dezz.activeWeaponClass == "weaponpistol" or string.StartWith(dezz.activeWeaponClass, "m9k") or string.StartWith(dezz.activeWeaponClass, "bb") or string.StartWith(dezz.activeWeaponClass, "unclen8") or string.StartWith(dezz.activeWeaponClass, "weapon_") then
         return ang
     else
         ang = ang - pLocalPlayer:GetViewPunchAngles()
@@ -5479,52 +5483,49 @@ function dezz.MultipointGroupCheck( group )
 end
 
 function dezz.GetBones(ply)
+    if not IsValid(ply) then return end
     local scale = dezz.cfg.vars["Multipoint scale"]
-    local pos = ply:LocalToWorld(ply:OBBCenter())
     local set = ply:GetHitboxSet()
+    local pos = ply:LocalToWorld(ply:OBBCenter())
 
     if dezz.cfg.vars["Hitscan"] then
         local bonecount = ply:GetBoneCount()
-        pos = {}
+        local bones = {}
 
-        for i = 0, bonecount - 1 do 
+        for i = 0, bonecount - 1 do
             local group = ply:GetHitBoxHitGroup(i, set)
-
             if group == nil then continue end
 
-            if group == 1 and not dezz.cfg.vars["Hitscan groups-Head"] then continue end
-            if group == 2 and not dezz.cfg.vars["Hitscan groups-Chest"] then continue end
-            if group == 3 and not dezz.cfg.vars["Hitscan groups-Stomach"] then continue end
-            if (group == 4 or group == 5) and not dezz.cfg.vars["Hitscan groups-Arms"] then continue end
-            if (group == 6 or group == 7) and not dezz.cfg.vars["Hitscan groups-Legs"] then continue end
-            if group == 0 and not dezz.cfg.vars["Hitscan groups-Generic"] then continue end
+            if (group == 1 and not dezz.cfg.vars["Hitscan groups-Head"]) or
+               (group == 2 and not dezz.cfg.vars["Hitscan groups-Chest"]) or
+               (group == 3 and not dezz.cfg.vars["Hitscan groups-Stomach"]) or
+               ((group == 4 or group == 5) and not dezz.cfg.vars["Hitscan groups-Arms"]) or
+               ((group == 6 or group == 7) and not dezz.cfg.vars["Hitscan groups-Legs"]) or
+               (group == 0 and not dezz.cfg.vars["Hitscan groups-Generic"]) then
+                continue
+            end
 
-            pos[#pos + 1] = {bone = i, hitgroup = group}
+            bones[#bones + 1] = {bone = i, hitgroup = group}
         end
 
-        if not pos or not istable(pos) then return end
+        if not bones or not istable(bones) then return end
 
         local valid = {}
 
-        for k, v in ipairs(pos) do
+        for _, v in ipairs(bones) do
             local bone = v.bone
             local hitboxbone = ply:GetHitBoxBone(bone, set)
-
-            if hitboxbone == nil then 
-                continue 
-            end 
+            if not hitboxbone then continue end
 
             local mins, maxs = ply:GetHitBoxBounds(bone, set)
-
-            if not mins or not maxs then 
-                continue
-            end 
+            if not mins or not maxs then continue end
 
             local bonepos, ang = ply:GetBonePosition(hitboxbone)
-            
+            if not bonepos or not ang then continue end
+
             if dezz.cfg.vars["Multipoint"] and dezz.MultipointGroupCheck(v.hitgroup) then
                 local points = {
-                    ((mins + maxs) * 0.5),
+                    (mins + maxs) * 0.5,
                     Vector(mins.x, mins.y, mins.z),
                     Vector(mins.x, maxs.y, mins.z),
                     Vector(maxs.x, maxs.y, mins.z),
@@ -5539,39 +5540,46 @@ function dezz.GetBones(ply)
                     points[j]:Rotate(ang)
                     points[j] = points[j] + bonepos
 
-                    if j == 1 then continue end 
+                    if j ~= 1 then
+                        points[j] = ((points[j] - points[1]) * scale) + points[1]
+                    end
 
-                    points[j] = ((points[j] - points[1]) * scale) + points[1]
                     valid[#valid + 1] = points[j]
                 end
-            end 
+            else
+                local center = ((mins + maxs) * 0.5)
+                if not center then continue end
 
-            mins:Rotate(ang)
-            maxs:Rotate(ang)
+                center:Rotate(ang)
+                center = center + bonepos
 
-            valid[#valid + 1] = bonepos + ((mins + maxs) * 0.5)
+                valid[#valid + 1] = center
+            end
         end
 
         return valid
     else
-        local bone = dezz.ParseBones(ply, dezz.cfg.vars["Hitbox selection"]) 
+        local bone = dezz.ParseBones(ply, dezz.cfg.vars["Hitbox selection"])
         local hitboxbone = ply:GetHitBoxBone(bone, set)
+        local pos = ply:LocalToWorld(ply:OBBCenter())
 
-        if hitboxbone == nil then 
-            return {pos}  
-        end 
+        if not hitboxbone then
+            return {pos}
+        end
 
         local mins, maxs = ply:GetHitBoxBounds(bone, set)
+        if not mins or not maxs then
+            return {pos}
+        end
 
-        if not mins or not maxs then 
-            return {pos} 
-        end 
-
-        local bonepos, ang = ply:GetBonePosition(hitboxbone)  
+        local bonepos, ang = ply:GetBonePosition(hitboxbone)
+        if not bonepos or not ang then
+            return {pos}
+        end
 
         if dezz.cfg.vars["Multipoint"] then
             local points = {
-                ((mins + maxs) * 0.5),
+                (mins + maxs) * 0.5,
                 Vector(mins.x, mins.y, mins.z),
                 Vector(mins.x, maxs.y, mins.z),
                 Vector(maxs.x, maxs.y, mins.z),
@@ -5586,20 +5594,20 @@ function dezz.GetBones(ply)
                 points[i]:Rotate(ang)
                 points[i] = points[i] + bonepos
 
-                if i == 1 then continue end 
-
-                points[i] = ((points[i] - points[1]) * scale) + points[1]
+                if i ~= 1 then
+                    points[i] = ((points[i] - points[1]) * scale) + points[1]
+                end
             end
 
             return points
-        else 
+        else
             mins:Rotate(ang)
             maxs:Rotate(ang)
             pos = bonepos + ((mins + maxs) * 0.5)
+            if not pos then return {ply:LocalToWorld(ply:OBBCenter())} end
+            return {pos}
         end
     end
-
-    return {pos}
 end
 
 function dezz.GetSortedPlayers( mode, selfpred, plypred, vischeck )
@@ -9417,8 +9425,8 @@ function dezz.DrawESP()
                 
                 local targetPos = target:GetPos() + Vector(0, 0, 45)
 
-                render.DrawLine(myPos + Vector(1, 1, 0), targetPos + Vector(1, 1, 0), outlineColor, true)
-                render.DrawLine(myPos + Vector(-1, -1, 0), targetPos + Vector(-1, -1, 0), outlineColor, true)
+                render.DrawLine(myPos + Vector(0.1, 0.1, 0), targetPos + Vector(0.1, 0.1, 0), outlineColor, true)
+                render.DrawLine(myPos + Vector(-0.1, -0.1, 0), targetPos + Vector(-0.1, -0.1, 0), outlineColor, true)
 
                 render.DrawLine(myPos, targetPos, lineColor, true)
             end
