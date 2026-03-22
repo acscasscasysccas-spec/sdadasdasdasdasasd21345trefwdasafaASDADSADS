@@ -97,11 +97,8 @@ dezz.cfg = { vars = {}, binds = {}, colors = {} }
 
 dezz.cfg.vars["Enable aimbot"]              = false
 dezz.cfg.binds["Aim on key"]                = 0
-dezz.cfg.vars["Keypad Cracker"]             = false
 dezz.cfg.vars["Silent aim"]                 = true
 dezz.cfg.vars["pSilent"]                    = false
-dezz.cfg.vars["Auto reload"]                = false
-dezz.cfg.vars["Auto fire"]                  = false
 dezz.cfg.vars["Auto reload"]                = false
 dezz.cfg.vars["Auto fire"]                  = false
 dezz.cfg.vars["Rapid fire"]                 = false
@@ -110,7 +107,6 @@ dezz.cfg.vars["water mode"]                 = 1
 dezz.cfg.vars["Alt Rapid fire"]             = false
 dezz.cfg.vars["Bullet time"]                = false
 dezz.cfg.vars["Time"]                       = 0
-dezz.cfg.vars["leg_breaker"]                = false
 dezz.cfg.vars["Nospread"]                   = false
 dezz.cfg.vars["Force seed"]                 = false
 dezz.cfg.vars["Wait for seed"]              = false
@@ -973,7 +969,6 @@ end
 
 function dezz.LoadConfig()
     local str = dezz.cfgTable[dezz.cfg.vars["Selected config"]]
-    //print(dezz.cfg.vars["Selected config"])
 
     if not str or not file.Exists("dezzaster/" .. str .. ".txt", "DATA") then
         print("Error: Config file not found.")
@@ -990,33 +985,33 @@ function dezz.LoadConfig()
     local ConfigName = dezz.cfg.vars["Config name"]
     local SelectedConfig = dezz.cfg.vars["Selected config"]
 
-dezz.cfg.friends = {}
-dezz.cfg.ents = {}
-dezz.cfg.binds = {}
-dezz.cfg.priorityList = {}
-dezz.cfg.admins = {}
+    dezz.cfg = dezz.cfg or {}
 
-if type(totbl) != "table" then return end
+    dezz.cfg.friends = dezz.cfg.friends or {}
+    dezz.cfg.ents = dezz.cfg.ents or {}
+    dezz.cfg.binds = dezz.cfg.binds or {}
+    dezz.cfg.priorityList = dezz.cfg.priorityList or {}
+    dezz.cfg.admins = dezz.cfg.admins or {}
 
-dezz.cfg = dezz.cfg or {}
+    if type(totbl) ~= "table" then return end
 
-for category, data in pairs(totbl) do
-    if type(data) == "table" then
-        local subTableName = string.lower(category)
-        if category == "vars" or category == "colors" or category == "binds" or 
-           category == "friends" or category == "ents" or category == "priorityList" or 
-           category == "Admins" then
-            dezz.cfg[subTableName] = dezz.cfg[subTableName] or {}
-            for key, value in pairs(data) do
-                dezz.cfg[subTableName][key] = value
-            end
-        else
-            for key, value in pairs(data) do
-                dezz.cfg[key] = value
+    for category, data in pairs(totbl) do
+        if type(data) == "table" then
+            local subTableName = string.lower(category)
+            if category == "vars" or category == "colors" or category == "binds" or 
+               category == "friends" or category == "ents" or category == "priorityList" or 
+               category == "Admins" then
+                dezz.cfg[subTableName] = dezz.cfg[subTableName] or {}
+                for key, value in pairs(data) do
+                    dezz.cfg[subTableName][key] = value
+                end
+            else
+                for key, value in pairs(data) do
+                    dezz.cfg[key] = value
+                end
             end
         end
     end
-end
 
     dezz.cfg.vars["Config name"] = ConfigName
     dezz.cfg.vars["Selected config"] = SelectedConfig
@@ -1029,55 +1024,6 @@ end
     ded.SetMaxShift(dezz.cfg.vars["Charge ticks"])
     ded.SetMinShift(dezz.cfg.vars["Shift ticks"])
     ded.EnableTickbaseShifting(dezz.cfg.vars["Tickbase shift"])
-end
-
-function FixAnimations(ply)
-    if type(ply) != "Entity" and type(ply) != "Player" then
-        return
-    end
-    
-    if ply == true or ply == false then
-        return
-    end
-    
-    if not ply or not isentity(ply) then
-        return
-    end
-    
-    if not ply:IsValid() then
-        return
-    end
-    
-    if not ply:IsPlayer() then
-        return
-    end
-    
-    local wep = ply:GetActiveWeapon()
-    if wep and wep:IsValid() then
-        wep:SendWeaponAnim(ACT_VM_IDLE)
-    end
-    
-    ply:AnimRestartMainSequence()
-    ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, true)
-    
-    ply:SetupBones()
-    ply:InvalidateBoneCache()
-    
-    timer.Simple(0.1, function()
-        if not ply or not ply:IsValid() then 
-            return 
-        end
-        
-        ply:SetCycle(0)
-        ply:SetSequence(0)
-        
-        for i = 0, 13 do
-            if ply:IsValidLayer(i) then
-                ply:SetLayerCycle(i, 0)
-                ply:SetLayerWeight(i, 1)
-            end
-        end
-    end)
 end
 
 function dezz.CreateConfig()
@@ -1200,91 +1146,11 @@ end
 dezz.ui = {}
 dezz.validsnd = false 
 
-local model_render = {overriden = false, old_blend = 0, old_color_r = 0, old_color_g = 0, old_color_b = 0}
-
-function model_render:override(key, entity)
-    if not dezz.cfg.vars[key .. " Override model render"] then
-        return 
+function dezz.CalcMainActivity(ply, velocity)
+    if dezz.cfg.vars["Invalidate activity"] then
+        return -1, -1
     end
-
-    self.old_blend = render.GetBlend()
-    self.old_color_r, self.old_color_g, self.old_color_b = render.GetColorModulation()
-
-    entity:SetLOD(dezz.cfg.vars[key .. " Override model LOD"])
-
-    render.SuppressEngineLighting(dezz.cfg.vars[key .. " Supress engine lighting"])
-
-    if dezz.cfg.vars[key .. " Reset model lighting"] then
-        local static_color = dezz.cfg.vars[key .. " Static lighting"]
-        render.ResetModelLighting(static_color.r / 255, static_color.g / 255, static_color.b / 255)
-    end
-
-    if dezz.cfg.vars[key .. " Override model lighting"] then
-        local shine_colors = dezz.cfg.vars[key .. " Shine"]
-        for i = 1, 6 do
-            local shine_color = shine_colors[i]
-            render.SetModelLighting(i-1, shine_color.r / 255, shine_color.g / 255, shine_color.b / 255)
-        end
-    end
-
-    render.SetBlend(dezz.cfg.vars[key .. " Override model blend"])
-
-    local color_mod = dezz.cfg.vars[key .. " Override color modulation"]
-    render.SetColorModulation(color_mod.r / 255, color_mod.g / 255, color_mod.b / 255)
-
-    if dezz.cfg.vars[key .. " Ignore Z"] then
-        render.DepthRange(0, 0)
-    end
-   
-    local material_override = dezz.cfg.vars[key .. " Override material"]
-    if material_override then
-        render.MaterialOverride(materials[key])
-    end
-
-    self.overriden = true 
 end
-
-function model_render:restore()
-    if not self.overriden then 
-        return 
-    end
-
-    render.SuppressEngineLighting(false)
-    render.SetBlend(self.old_blend)
-    render.SetColorModulation(self.old_color_r, self.old_color_g, self.old_color_b)
-    render.DepthRange(0, 1)
-    render.MaterialOverride(nil)
-
-    self.overriden = false 
-end
-
-function dezz.PrePlayerDraw(entity, flags)
-    model_render:override(entity == pLocalPlayer and "Local player" or "Player", entity)
-
-    if dezz.cfg.vars["Invalidate activity"] and entity ~= pLocalPlayer then
-        entity:SetSequence(-1)
-        entity:SetCycle(0)
-        entity:SetPlaybackRate(0)
-    end
-    
-    entity:InvalidateBoneCache()
-    entity:SetupBones()
-    entity.ChatGestureWeight = 0
-end
-
-function dezz.PostPlayerDraw(entity, flags)
-    model_render:restore()
-end
-
-hook.Add("PrePlayerDraw", "2", dezz.PrePlayerDraw)
-hook.Add("PostPlayerDraw", "1", dezz.PostPlayerDraw)
-
-hook.Add("Think", "t", function()
-    if dezz.IsKeyDown( dezz.cfg.binds["Panic Key"] ) then
-        hook.Remove("PrePlayerDraw", "2")
-        hook.Remove("PostPlayerDraw", "1")
-    end
-end)
 
 /*
 sound.PlayURL ( "https://cdn.discordapp.com/attachments/981977924087472128/1116820124985458770/ya_resskiy.mp3", "noblock", function( s ) 
@@ -1304,6 +1170,8 @@ dezz.hint = false
 dezz.hintText = ""
 dezz.hintX = 0
 dezz.hintY = 0
+
+---------------------------
 
 do
     StoredCursorPos = {}
@@ -3547,6 +3415,8 @@ dezz.scrollpanel = vgui.Create("UScroll",dezz.frame)
 
 dezz.tabs = {}
 
+---------------------------
+
 // Aimbot
 
 dezz.spfuncs[30] = function()
@@ -3741,7 +3611,7 @@ function dezz.tabs.Rage()
     dezz.ui.CheckBox( p, "Animation freezer", "Animation freezer", false, true )
     dezz.ui.CheckBox( p, "Gayporno", "Gay" )
 
-    local p = dezz.itemPanel( "Player adjustments", 3, 310 ):GetItemPanel()
+    local p = dezz.itemPanel( "Player adjustments", 3, 290 ):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Interpolation", "Disable interpolation", false, false, false, false, function( bval ) ded.SetInterpolation( bval ) end )
     dezz.ui.CheckBox( p, "Sequence interpolation", "Disable Sequence interpolation", false, false, false, false, function( bval ) ded.SetSequenceInterpolation( bval ) end )
@@ -3749,7 +3619,6 @@ function dezz.tabs.Rage()
     dezz.ui.CheckBox( p, "Fix bones", "Bone fix", false, false, false, false, function( bval ) ded.EnableBoneFix( bval ) end )
     dezz.ui.CheckBox( p, "Fix animations", "Update Client Anim fix", false, false, false, false, function( bval ) ded.EnableAnimFix( bval ) end )
     dezz.ui.CheckBox( p, "Extrapolation", "Extrapolation" )
-    dezz.ui.CheckBox( p, "Legs Break", "leg_breaker" )
     dezz.ui.CheckBox( p, "Fake lag Fix", "Fake lag Fix" )
     dezz.ui.CheckBox( p, "Forward Track" , "Forward" )
     dezz.ui.Slider( p, "Forwardtrack time", "Forwardtrack time",0,200,0 )
@@ -4350,7 +4219,6 @@ function dezz.tabs.Misc()
     dezz.ui.CheckBox( p, "Camera spam", "camera", "No work" )
     dezz.ui.CheckBox( p, "Gravity gun spam", "gravity", "Spam gravity gun, for use take gravity gun" )
     dezz.ui.CheckBox( p, "Vape spam", "Vape spam" )
-    dezz.ui.CheckBox( p, "Keypad Cracker", "Keypad Cracker" )
     dezz.ui.CheckBox( p, "Retry on handcuff", "Retry on handcuff" )
 
 
@@ -5738,24 +5606,28 @@ function dezz.FindFirstHittableTicks( ply, cmd )
 end
 
 do
-    local lastdist, lasttick = 1337, 1
+    local lastdist, lasttick = math.huge, 1
 
-    function dezz.FindClosestHittableTicks( ply, cmd )
+    function dezz.FindClosestHittableTicks(ply, cmd)
         local mypos = pLocalPlayer:EyePos()
-        local records = dezz.btrecords[ ply ]
-        local firstticks = dezz.FindFirstHittableTicks( ply, cmd )
-        local tickcount = #records
+        local records = dezz.btrecords[ply]
+        local firstticks = dezz.FindFirstHittableTicks(ply, cmd)
+        local tickcount = records and #records or 0
 
-        if not tickcount or not firstticks then return 1 end
+        if tickcount == 0 or not firstticks then return 1 end
 
         lastdist = math.huge
-    
+        lasttick = 1
+
         for i = 1, tickcount - firstticks do
             local mt = i + firstticks
 
-            if ( records[ mt ].aimpos ):DistToSqr( mypos ) < lastdist then
-                lastdist = ( records[ mt ].aimpos ):DistToSqr( mypos )
-                lasttick = mt
+            if records[mt] and records[mt].aimpos then
+                local dist = records[mt].aimpos:DistToSqr(mypos)
+                if dist < lastdist then
+                    lastdist = dist
+                    lasttick = mt
+                end
             end
         end
 
@@ -8080,48 +7952,7 @@ function dezz.CreateMove(cmd)
         else
             dezz.tyaga = 0
         end
-    end 
-
-    if dezz.cfg.vars["Keypad Cracker"] then
-        local function SafeNetStart(name)
-            if not util or not util.NetworkIDToString then return false end
-            for i = 1, 2048 do
-                if util.NetworkIDToString(i) == name then
-                    net.Start(name)
-                    return true
-                end
-            end
-            return false
-        end
-
-        local activeKeypad = nil
-        local currentPIN = {[0] = "1", [1] = "1", [2] = "1", [3] = "1"}
-        local lastCrackTime = 0
-
-        net.Receive("KeypadCracker_OtvetkaEpt", function()
-            if not IsValid(activeKeypad) then return end
-
-            local result = net.ReadTable()
-            if not result then return end
-
-            for k, v in pairs(result) do
-                if v[1] == true then continue end
-                if v[2] == ">" then
-                    currentPIN[k] = tostring((tonumber(currentPIN[k]) + 1) % 10)
-                elseif v[2] == "<" then
-                    currentPIN[k] = tostring((tonumber(currentPIN[k]) - 1) % 10)
-                end
-            end
-
-            if SafeNetStart("KeypadCracker_HackerEpt") then
-                net.WriteTable(currentPIN)
-                net.SendToServer()
-
-                chat.AddText(Color(0, 255, 0), "[dezz Cracker] Попытка: ",
-                    Color(255, 255, 255), currentPIN[0] .. currentPIN[1] .. currentPIN[2] .. currentPIN[3])
-            end
-        end)    
-    end 
+    end
 
     if dezz.vapecd then 
         dezz.vapecd = false 
@@ -8188,82 +8019,82 @@ function dezz.CreateMove(cmd)
 
     if dezz.cfg.vars["Sprint"] then cmd:AddKey(IN_SPEED) end
 
-// Edge Jump
-if dezz.cfg.vars["edge"] then
-    local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
-    local velocity = pLocalPlayer:GetVelocity()
-    local speed = velocity:Length2D()
+    // Edge Jump
+    if dezz.cfg.vars["edge"] then
+        local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
+        local velocity = pLocalPlayer:GetVelocity()
+        local speed = velocity:Length2D()
 
-    if on_ground and speed > 50 then
-        local trace = util.TraceLine({
-            start = pLocalPlayer:GetPos(),
-            endpos = pLocalPlayer:GetPos() + Vector(0, 0, -50),
-            filter = pLocalPlayer,
-            mask = MASK_SOLID_BRUSHONLY
-        })
+        if on_ground and speed > 50 then
+            local trace = util.TraceLine({
+                start = pLocalPlayer:GetPos(),
+                endpos = pLocalPlayer:GetPos() + Vector(0, 0, -50),
+                filter = pLocalPlayer,
+                mask = MASK_SOLID_BRUSHONLY
+            })
 
-        if not trace.Hit then
-            cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_JUMP))
+            if not trace.Hit then
+                cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_JUMP))
+            end
         end
     end
-end
 
-dezz.hoppin = false
+    dezz.hoppin = false
 
-if pLocalPlayer:GetMoveType() != MOVETYPE_NOCLIP and pLocalPlayer:GetMoveType() != MOVETYPE_LADDER and pLocalPlayer:GetMoveType() != MOVETYPE_OBSERVER and dezz.cfg.vars["Bhop"] then
-    if cmd:KeyDown(IN_JUMP) then
-        local bIsOnGround = pLocalPlayer:IsFlagSet(FL_ONGROUND)
-        
-        if not bIsOnGround or bWasOnGround then
-            cmd:RemoveKey(IN_JUMP)
-            bWasOnGround = false
+    if pLocalPlayer:GetMoveType() != MOVETYPE_NOCLIP and pLocalPlayer:GetMoveType() != MOVETYPE_LADDER and pLocalPlayer:GetMoveType() != MOVETYPE_OBSERVER and dezz.cfg.vars["Bhop"] then
+        if cmd:KeyDown(IN_JUMP) then
+            local bIsOnGround = pLocalPlayer:IsFlagSet(FL_ONGROUND)
             
-            if not bWasOnGround then
-                dezz.AutoStrafe(cmd)
-            end
-        else
-            if dezz.cfg.vars["Safe Hop"] then
-                local pos = pLocalPlayer:GetPos()
+            if not bIsOnGround or bWasOnGround then
+                cmd:RemoveKey(IN_JUMP)
+                bWasOnGround = false
                 
-                local offsets = {
-                    Vector(15, 0, 0),
-                    Vector(-15, 0, 0), 
-                    Vector(0, 0, 15),
-                    Vector(0, 0, -15)
-                }
-                
-                local all_hit = true
-                
-                for i, offsets in ipairs(offsets) do
-                    local trace = util.TraceLine({
-                        start = pos + offsets,
-                        endpos = pos + offsets + Vector(0, 0, -25),
-                        filter = pLocalPlayer
-                    })
-
-                    if not trace.Hit then
-                        all_hit = false
-                        break
-                    end
-                end
-                
-                if all_hit then
-                    bIsOnGround = true
-                else
-                    cmd:RemoveKey(IN_JUMP)
-                    dezz.Stop(cmd)
-                    bIsOnGround = false
+                if not bWasOnGround then
+                    dezz.AutoStrafe(cmd)
                 end
             else
-                bIsOnGround = true
+                if dezz.cfg.vars["Safe Hop"] then
+                    local pos = pLocalPlayer:GetPos()
+                    
+                    local offsets = {
+                        Vector(15, 0, 0),
+                        Vector(-15, 0, 0), 
+                        Vector(0, 0, 15),
+                        Vector(0, 0, -15)
+                    }
+                    
+                    local all_hit = true
+                    
+                    for i, offsets in ipairs(offsets) do
+                        local trace = util.TraceLine({
+                            start = pos + offsets,
+                            endpos = pos + offsets + Vector(0, 0, -25),
+                            filter = pLocalPlayer
+                        })
+
+                        if not trace.Hit then
+                            all_hit = false
+                            break
+                        end
+                    end
+                    
+                    if all_hit then
+                        bIsOnGround = true
+                    else
+                        cmd:RemoveKey(IN_JUMP)
+                        dezz.Stop(cmd)
+                        bIsOnGround = false
+                    end
+                else
+                    bIsOnGround = true
+                end
             end
+            
+            dezz.hoppin = true
+        else
+            dezz.hoppin = false
         end
-        
-        dezz.hoppin = true
-    else
-        dezz.hoppin = false
     end
-end
 
 	if dezz.cfg.vars["Fast stop"] then
         dezz.Stop(cmd)
@@ -8426,176 +8257,176 @@ end
     end
 
 
-if dezz and dezz.cfg and dezz.cfg.vars and dezz.cfg.vars["Ghost follower"] then
-    local tar = player.GetBySteamID(dezz.cfg.vars["GFID"] or "")
+    if dezz and dezz.cfg and dezz.cfg.vars and dezz.cfg.vars["Ghost follower"] then
+        local tar = player.GetBySteamID(dezz.cfg.vars["GFID"] or "")
 
-    if IsValid(tar) and IsValid(pLocalPlayer) and cmd then
-        local eyePos = pLocalPlayer:EyePos()
-        local tarPos = tar:GetPos()
-        local myPos = pLocalPlayer:GetPos()
-        
-        if eyePos and tarPos then
-            local tang = (tarPos - eyePos):Angle()
-
-            local oldButtons = cmd:GetButtons()
+        if IsValid(tar) and IsValid(pLocalPlayer) and cmd then
+            local eyePos = pLocalPlayer:EyePos()
+            local tarPos = tar:GetPos()
+            local myPos = pLocalPlayer:GetPos()
             
-            cmd:ClearMovement()
-            cmd:ClearButtons()
+            if eyePos and tarPos then
+                local tang = (tarPos - eyePos):Angle()
 
-            local importantButtons = {IN_JUMP, IN_ATTACK, IN_DUCK}
-            for _, btn in ipairs(importantButtons) do
-                if bit.band(oldButtons, btn) != 0 then
-                    cmd:AddKey(btn)
-                end
-            end
-
-            local forwardDist = 70
-            local directions = {
-                {vec = tang:Forward(), dist = forwardDist, weight = 1.0},
-                {vec = tang:Forward() + tang:Right() * 0.3, dist = forwardDist, weight = 0.7},
-                {vec = tang:Forward() + tang:Right() * -0.3, dist = forwardDist, weight = 0.7},
-                {vec = tang:Forward() + Vector(0, 0, 0.4), dist = forwardDist, weight = 0.5},
-            }
-            
-            local bestDirection = tang:Forward()
-            local maxWeight = 0
-            
-            for _, dir in ipairs(directions) do
-                local trace = util.TraceLine({
-                    start = myPos + Vector(0, 0, 20),
-                    endpos = myPos + dir.vec * dir.dist,
-                    filter = pLocalPlayer
-                })
+                local oldButtons = cmd:GetButtons()
                 
-                if not trace.Hit and dir.weight > maxWeight then
-                    maxWeight = dir.weight
-                    bestDirection = dir.vec
+                cmd:ClearMovement()
+                cmd:ClearButtons()
+
+                local importantButtons = {IN_JUMP, IN_ATTACK, IN_DUCK}
+                for _, btn in ipairs(importantButtons) do
+                    if bit.band(oldButtons, btn) != 0 then
+                        cmd:AddKey(btn)
+                    end
+                end
+
+                local forwardDist = 70
+                local directions = {
+                    {vec = tang:Forward(), dist = forwardDist, weight = 1.0},
+                    {vec = tang:Forward() + tang:Right() * 0.3, dist = forwardDist, weight = 0.7},
+                    {vec = tang:Forward() + tang:Right() * -0.3, dist = forwardDist, weight = 0.7},
+                    {vec = tang:Forward() + Vector(0, 0, 0.4), dist = forwardDist, weight = 0.5},
+                }
+                
+                local bestDirection = tang:Forward()
+                local maxWeight = 0
+                
+                for _, dir in ipairs(directions) do
+                    local trace = util.TraceLine({
+                        start = myPos + Vector(0, 0, 20),
+                        endpos = myPos + dir.vec * dir.dist,
+                        filter = pLocalPlayer
+                    })
+                    
+                    if not trace.Hit and dir.weight > maxWeight then
+                        maxWeight = dir.weight
+                        bestDirection = dir.vec
+                    end
+                end
+
+                local moveAng = bestDirection:Angle()
+                cmd:SetForwardMove(10000)
+                cmd:SetSideMove(0)
+
+                if math.abs(moveAng.y - tang.y) > 30 then
+                    local diff = math.AngleDifference(moveAng.y, tang.y)
+                    cmd:SetSideMove(diff > 0 and 10000 or -10000)
+                    cmd:SetForwardMove(8000)
+                end
+
+                cmd:AddKey(IN_SPEED)
+
+                if isangle(tang) then
+                    cmd:SetViewAngles(tang)
+                end
+                
+                if dezz.MovementFix then
+                    dezz.MovementFix(cmd, tang.y)
                 end
             end
-
-            local moveAng = bestDirection:Angle()
-            cmd:SetForwardMove(10000)
-            cmd:SetSideMove(0)
-
-            if math.abs(moveAng.y - tang.y) > 30 then
-                local diff = math.AngleDifference(moveAng.y, tang.y)
-                cmd:SetSideMove(diff > 0 and 10000 or -10000)
-                cmd:SetForwardMove(8000)
-            end
-
-            cmd:AddKey(IN_SPEED)
-
-            if isangle(tang) then
-                cmd:SetViewAngles(tang)
-            end
-            
-            if dezz.MovementFix then
-                dezz.MovementFix(cmd, tang.y)
-            end
         end
     end
-end
 
-// GPS Tracker
-local function DrawGPSTracker()
-    if not dezz.cfg.vars["GPS"] then return end
-    
-    local target_steamid = dezz.cfg.vars["GFID"] or ""
-    if target_steamid == "" then return end
-    
-    local tar = player.GetBySteamID(target_steamid)
-    if not IsValid(tar) or not IsValid(pLocalPlayer) then return end
-
-    local myPos = pLocalPlayer:GetPos() + Vector(0, 0, 10)
-    local tarPos = tar:GetPos() + Vector(0, 0, 10)
-    local distance = myPos:Distance(tarPos)
-
-    local segments = math.Clamp(math.floor(distance / 50), 4, 20)
-    for i = 1, segments do
-        local t = (i-1) / segments
-        local startPos = LerpVector(t, myPos, tarPos)
-        local endPos = LerpVector((i) / segments, myPos, tarPos)
-        local hue = Lerp(t, 120, 0)
+    // GPS Tracker
+    local function DrawGPSTracker()
+        if not dezz.cfg.vars["GPS"] then return end
         
-        render.DrawLine(startPos, endPos, HSVToColor(hue, 1, 1), true)
-    end
+        local target_steamid = dezz.cfg.vars["GFID"] or ""
+        if target_steamid == "" then return end
+        
+        local tar = player.GetBySteamID(target_steamid)
+        if not IsValid(tar) or not IsValid(pLocalPlayer) then return end
 
-    local pulse = math.sin(CurTime() * 3) * 0.3 + 0.7
-    local size = Lerp(pulse, 10, 20)
+        local myPos = pLocalPlayer:GetPos() + Vector(0, 0, 10)
+        local tarPos = tar:GetPos() + Vector(0, 0, 10)
+        local distance = myPos:Distance(tarPos)
 
-    render.DrawWireframeBox(tarPos, Angle(0, CurTime() * 50, 0), 
-        Vector(-size, -size, 0), Vector(size, size, size * 2), 
-        Color(255, 0, 0, 255), true)
-
-    render.DrawWireframeBox(tarPos, Angle(0, -CurTime() * 70, 0), 
-        Vector(-size*0.6, -size*0.6, size*0.3), Vector(size*0.6, size*0.6, size), 
-        Color(255, 255, 0, 200), true)
-
-    render.DrawLine(tar:GetPos(), tarPos - Vector(0, 0, 10), Color(255, 100, 100, 150), true)
-
-    local myPulse = math.sin(CurTime() * 4) * 0.2 + 0.8
-    local mySize = Lerp(myPulse, 5, 8)
-    
-    render.DrawWireframeBox(pLocalPlayer:GetPos(), Angle(0, CurTime() * 30, 0), 
-        Vector(-mySize, -mySize, 0), Vector(mySize, mySize, 15), 
-        Color(0, 100, 255, 255), true)
-end
-
-hook.Add("PostDrawTranslucentRenderables", "DezzGPSTracker", DrawGPSTracker)
-
-local function DrawGPSText()
-    if not dezz.cfg.vars["GPS"] then return end
-    
-    local target_steamid = dezz.cfg.vars["GFID"] or ""
-    
-    if target_steamid == "" then 
-        local alpha = math.sin(CurTime() * 3) * 55 + 200
-        draw.SimpleText("GPS: No target set (set GFID)", "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
-        return 
-    end
-    
-    local tar = player.GetBySteamID(target_steamid)
-
-    if IsValid(tar) and IsValid(pLocalPlayer) then
-        local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
-        local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
-
-        local bgColor = Color(0, 0, 0, 150)
-        surface.SetDrawColor(bgColor)
-        surface.DrawRect(5, 5, 300, 80)
-
-        draw.SimpleText("GPS TRACKER", "DermaDefaultBold", 10, 8, Color(0, 255, 100, 255), TEXT_ALIGN_LEFT)
-        draw.SimpleText("Target: " .. tar:Name(), "DermaDefault", 10, 25, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-        draw.SimpleText("Distance: " .. distance .. " units", "DermaDefault", 10, 40, Color(200, 200, 255, 255), TEXT_ALIGN_LEFT)
-        draw.SimpleText("Health: " .. tar:Health(), "DermaDefault", 10, 55, Color(255, 200, 100, 255), TEXT_ALIGN_LEFT)
-        draw.SimpleText("SteamID: " .. target_steamid, "DermaDefault", 10, 70, Color(150, 150, 150, 255), TEXT_ALIGN_LEFT)
-
-        if screenPos.visible then
-            local pulse = math.sin(CurTime() * 5) * 0.3 + 0.7
-            local markerAlpha = Lerp(pulse, 150, 255)
+        local segments = math.Clamp(math.floor(distance / 50), 4, 20)
+        for i = 1, segments do
+            local t = (i-1) / segments
+            local startPos = LerpVector(t, myPos, tarPos)
+            local endPos = LerpVector((i) / segments, myPos, tarPos)
+            local hue = Lerp(t, 120, 0)
             
-            draw.SimpleText("⬇", "DermaDefaultBold", screenPos.x, screenPos.y - 40, Color(255, 0, 0, markerAlpha), TEXT_ALIGN_CENTER)
-            draw.SimpleText(tar:Name(), "DermaDefault", screenPos.x, screenPos.y - 20, Color(255, 255, 255, 220), TEXT_ALIGN_CENTER)
+            render.DrawLine(startPos, endPos, HSVToColor(hue, 1, 1), true)
+        end
+
+        local pulse = math.sin(CurTime() * 3) * 0.3 + 0.7
+        local size = Lerp(pulse, 10, 20)
+
+        render.DrawWireframeBox(tarPos, Angle(0, CurTime() * 50, 0), 
+            Vector(-size, -size, 0), Vector(size, size, size * 2), 
+            Color(255, 0, 0, 255), true)
+
+        render.DrawWireframeBox(tarPos, Angle(0, -CurTime() * 70, 0), 
+            Vector(-size*0.6, -size*0.6, size*0.3), Vector(size*0.6, size*0.6, size), 
+            Color(255, 255, 0, 200), true)
+
+        render.DrawLine(tar:GetPos(), tarPos - Vector(0, 0, 10), Color(255, 100, 100, 150), true)
+
+        local myPulse = math.sin(CurTime() * 4) * 0.2 + 0.8
+        local mySize = Lerp(myPulse, 5, 8)
+        
+        render.DrawWireframeBox(pLocalPlayer:GetPos(), Angle(0, CurTime() * 30, 0), 
+            Vector(-mySize, -mySize, 0), Vector(mySize, mySize, 15), 
+            Color(0, 100, 255, 255), true)
+    end
+
+    hook.Add("PostDrawTranslucentRenderables", "DezzGPSTracker", DrawGPSTracker)
+
+    local function DrawGPSText()
+        if not dezz.cfg.vars["GPS"] then return end
+        
+        local target_steamid = dezz.cfg.vars["GFID"] or ""
+        
+        if target_steamid == "" then 
+            local alpha = math.sin(CurTime() * 3) * 55 + 200
+            draw.SimpleText("GPS: No target set (set GFID)", "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+            return 
         end
         
-    else
-        local alpha = math.sin(CurTime() * 4) * 55 + 200
-        draw.SimpleText("GPS Target not found: " .. target_steamid, "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+        local tar = player.GetBySteamID(target_steamid)
+
+        if IsValid(tar) and IsValid(pLocalPlayer) then
+            local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
+            local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
+
+            local bgColor = Color(0, 0, 0, 150)
+            surface.SetDrawColor(bgColor)
+            surface.DrawRect(5, 5, 300, 80)
+
+            draw.SimpleText("GPS TRACKER", "DermaDefaultBold", 10, 8, Color(0, 255, 100, 255), TEXT_ALIGN_LEFT)
+            draw.SimpleText("Target: " .. tar:Name(), "DermaDefault", 10, 25, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+            draw.SimpleText("Distance: " .. distance .. " units", "DermaDefault", 10, 40, Color(200, 200, 255, 255), TEXT_ALIGN_LEFT)
+            draw.SimpleText("Health: " .. tar:Health(), "DermaDefault", 10, 55, Color(255, 200, 100, 255), TEXT_ALIGN_LEFT)
+            draw.SimpleText("SteamID: " .. target_steamid, "DermaDefault", 10, 70, Color(150, 150, 150, 255), TEXT_ALIGN_LEFT)
+
+            if screenPos.visible then
+                local pulse = math.sin(CurTime() * 5) * 0.3 + 0.7
+                local markerAlpha = Lerp(pulse, 150, 255)
+                
+                draw.SimpleText("⬇", "DermaDefaultBold", screenPos.x, screenPos.y - 40, Color(255, 0, 0, markerAlpha), TEXT_ALIGN_CENTER)
+                draw.SimpleText(tar:Name(), "DermaDefault", screenPos.x, screenPos.y - 20, Color(255, 255, 255, 220), TEXT_ALIGN_CENTER)
+            end
+            
+        else
+            local alpha = math.sin(CurTime() * 4) * 55 + 200
+            draw.SimpleText("GPS Target not found: " .. target_steamid, "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+        end
     end
-end
 
-hook.Add("HUDPaint", "DezzGPSText", DrawGPSText)
+    hook.Add("HUDPaint", "DezzGPSText", DrawGPSText)
 
-local gpsToggleCooldown = 0
+    local gpsToggleCooldown = 0
 
-hook.Add("Think", "GPSRemoveKey", function()
-    if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > gpsToggleCooldown then
-        hook.Remove("PostDrawTranslucentRenderables", "DezzGPSTracker")
-        hook.Remove("HUDPaint", "DezzGPSText")
-        hook.Remove("Think", "GPSRemoveKey")
-        gpsToggleCooldown = CurTime() + 0.5
-    end
-end)
+    hook.Add("Think", "GPSRemoveKey", function()
+        if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > gpsToggleCooldown then
+            hook.Remove("PostDrawTranslucentRenderables", "DezzGPSTracker")
+            hook.Remove("HUDPaint", "DezzGPSText")
+            hook.Remove("Think", "GPSRemoveKey")
+            gpsToggleCooldown = CurTime() + 0.5
+        end
+    end)
 
     if dezz.cfg.vars["Air duck"] then
         local mode = dezz.cfg.vars["FastD"]
@@ -14935,91 +14766,89 @@ net.Receive("rp.police.SetLocalHandcuff", function()
     
     RunConsoleCommand("retry")
 end)
-hook.Add("PrePlayerDraw","nicespastil",function(chel) 
-    if dezz.cfg.vars["leg_breaker"] then 
-    if chel != LocalPlayer() then return end
-    chel:SetAnimTime(CurTime()+1,00001)
-end
-end)
 
 /*
     Hooks
 */
 
-dezz.hooks           = {}
+dezz.hooks = {}
 
-function dezz.Addezzook( event, func )
-    if func == nil and not dezz[ event ] then print("Failed to find hook: " .. event) return end
-    local name = util.Base64Encode( event ) .. CurTime()
-    hook.Add( event, name, dezz[ event ] or func )
-    dezz.hooks[ #dezz.hooks + 1 ] = { event, name }
+function dezz.AddHook(event, func)
+    if func == nil and dezz[event] == nil then
+        print("Failed to find hook function: " .. event)
+        return
+    end
+
+    local hookFunc = func or dezz[event]
+    local name = util.Base64Encode(event) .. CurTime()
+    hook.Add(event, name, hookFunc)
+    table.insert(dezz.hooks, {event, name})
 end
 
 function dezz.RemoveAllHooks()
     for i = #dezz.hooks, 1, -1 do
-        local chk = dezz.hooks[i]
-        hook.Remove(chk[1], chk[2])
+        local hookInfo = dezz.hooks[i]
+        if hookInfo and hookInfo[1] and hookInfo[2] then
+            hook.Remove(hookInfo[1], hookInfo[2])
+        end
         table.remove(dezz.hooks, i)
     end
 end
 
 function dezz.Unload()
-    dezz.frame:Remove()
+    if IsValid(dezz.frame) then
+        dezz.frame:Remove()
+    end
 
-    ded.SetBSendPacket( true )
-    ded.SetInterpolation( true )
-    ded.SetSequenceInterpolation( true )
-    dezz.RemoveAllHooks() 
+    if ded then
+        ded.SetBSendPacket(true)
+        ded.SetInterpolation(true)
+        ded.SetSequenceInterpolation(true)
+    end
 
-    render.SetLightingMode( 0 )
+    dezz.RemoveAllHooks()
+
+    render.SetLightingMode(0)
 end
 
-dezz.Addezzook( "CreateMove" )
-dezz.Addezzook( "Think" )
 
-dezz.Addezzook( "RenderScene" )
-dezz.Addezzook( "DrawOverlay" )
-dezz.Addezzook( "Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() end )   
+dezz.AddHook("AdjustMouseSensitivity")
 
-dezz.Addezzook( "CalcView" )
-dezz.Addezzook( "CalcViewModelView" )
+dezz.AddHook("CalcMainActivity")
+dezz.AddHook("CalcView")
+dezz.AddHook("CalcViewModelView")
 
-dezz.Addezzook( "PreDrawViewModel" )
-dezz.Addezzook( "PostDrawViewModel" )
+dezz.AddHook("CreateMove")
+dezz.AddHook("DrawOverlay")
 
-dezz.Addezzook( "PostDrawOpaqueRenderables" )
-dezz.Addezzook( "PostDrawEffects" )
+dezz.AddHook("entity_killed")
+dezz.AddHook("GetMotionBlurValues")
+dezz.AddHook("OnEntityCreated")
+dezz.AddHook("OnImpact")
+dezz.AddHook("player_hurt")
+dezz.AddHook("PostDrawEffects")
+dezz.AddHook("PostDrawOpaqueRenderables")
+dezz.AddHook("PostDrawTranslucentRenderables")
+dezz.AddHook("PostDrawViewModel")
+dezz.AddHook("PostFrameStageNotify")
+dezz.AddHook("PreDrawViewModel")
+dezz.AddHook("PreFrameStageNotify")
+dezz.AddHook("PrePlayerDraw")
+dezz.AddHook("PreRender")
+dezz.AddHook("RenderScene")
+dezz.AddHook("RenderScreenspaceEffects")
 
-dezz.Addezzook( "OnImpact" )
+dezz.AddHook("ShouldDrawLocalPlayer")
+dezz.AddHook("ShouldUpdateAnimation")
 
-dezz.Addezzook( "PreFrameStageNotify" )
-dezz.Addezzook( "PostFrameStageNotify" )
+dezz.AddHook("Think")
 
-dezz.Addezzook( "UpdateAnimation" )
-dezz.Addezzook( "ShouldUpdateAnimation" )
+dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() end)
 
-dezz.Addezzook( "AdjustMouseSensitivity" )
+dezz.AddHook("UpdateAnimation")
 
-dezz.Addezzook( "RenderScreenspaceEffects" )
-dezz.Addezzook( "PostDrawTranslucentRenderables" )
-
-dezz.Addezzook( "PreRender" )
-dezz.Addezzook( "GetMotionBlurValues" )
-
-
-dezz.Addezzook( "PrePlayerDraw" )
-dezz.Addezzook( "PostPlayerDraw" )
-
-
-dezz.Addezzook( "OnEntityCreated" )  
-
-dezz.Addezzook( "entity_killed" )  
-dezz.Addezzook( "player_hurt" )  
-
-dezz.Addezzook( "SetupWorldFog" )
-dezz.Addezzook( "SetupSkyboxFog" )
-
-dezz.Addezzook( "ShouldDrawLocalPlayer" )
+dezz.AddHook("SetupWorldFog")
+dezz.AddHook("SetupSkyboxFog")
 
 
 dezz.knownTrackedPlayers = dezz.knownTrackedPlayers or {}
