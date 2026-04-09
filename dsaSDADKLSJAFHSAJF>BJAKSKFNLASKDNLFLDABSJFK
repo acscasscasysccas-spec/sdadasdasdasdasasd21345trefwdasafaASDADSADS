@@ -161,7 +161,6 @@ dezz.cfg.vars["Multipoint groups-Legs"]     = false
 dezz.cfg.vars["Multipoint groups-Generic"]  = false
 
 dezz.cfg.vars["Adjust tickcount"]           = false
-dezz.cfg.vars["Gun switch"]                 = false
 dezz.cfg.vars["Auto detonator"]             = false
 dezz.cfg.vars["AutoD distance"]             = 96
 
@@ -3647,9 +3646,6 @@ function dezz.tabs.Rage()
 
     dezz.ui.CheckBox( p, "Auto detonator", "Auto detonator" )
     dezz.ui.Slider( p, "Detonation distance", "AutoD distance", 16, 128, 0 )
-    
-
-    dezz.ui.CheckBox( p, "Gun switch", "Gun switch" )
    
 end
 
@@ -6394,8 +6390,8 @@ function dezz.Aim(cmd)
 
     if dezz.SendPacket then
         dezz.fakeAngles.angle = cmd:GetViewAngles()
-        dezz.fakeAngles.movex = pLocalPlayer:GetPoseParameter("movex")
-        dezz.fakeAngles.movey = pLocalPlayer:GetPoseParameter("movey")
+        dezz.fakeAngles.movex = pLocalPlayer:GetPoseParameter("move_x")
+        dezz.fakeAngles.movey = pLocalPlayer:GetPoseParameter("move_y")
 
         local layers = {}
 
@@ -6422,7 +6418,7 @@ function dezz.Aim(cmd)
         for i = 1, #players do
             local v = players[i]
 
-            if v == LocalPlayer() then continue end
+            if v == pLocalPlayer then continue end
 
             local latency = ded.GetLatency(0) + ded.GetLatency(1)
             local fixFactor = dezz.cfg.vars["Fix Factor"] or 1
@@ -6491,7 +6487,7 @@ function dezz.Aim(cmd)
 
         angDiff:Normalize()
 
-        local fovDiff = math.sqrt(angDiff.x * angDiff.x + angDiff.y * angDiff.y)
+        local fovDiff = math.sqrt(angDiff.p * angDiff.p + angDiff.yaw * angDiff.yaw)
 
         if fovDiff > fov then
             dezz.targetVector = false
@@ -6518,7 +6514,7 @@ function dezz.Aim(cmd)
         return
     end
 
-    local finalAngle = Angle(aimang)
+    local finalAngle = Angle(aimang.p, aimang.y, aimang.r)
 
     if dezz.cfg.vars["Norecoil"] then
         finalAngle = dezz.NoRecoil(finalAngle)
@@ -6535,7 +6531,7 @@ function dezz.Aim(cmd)
 
     if dezz.cfg.vars["Try Predict"] then
         if dezz.targetVector and IsValid(ply) then
-            local localPlayer = LocalPlayer()
+            local localPlayer = pLocalPlayer
             local localPos = localPlayer:GetShootPos()
             local targetPos = dezz.targetVector
 
@@ -6582,7 +6578,7 @@ function dezz.Aim(cmd)
         end
 
         local data = ded.GetSimulationData()
-        local vec = data.m_vecAbsOrigin or data.mvecAbsOrigin
+        local vec = data.m_vecAbsOrigin or data.m_vecAbsOrigin or Vector(0,0,0)
 
         ded.FinishSimulation()
 
