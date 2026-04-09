@@ -12,6 +12,25 @@ local MetaPlayer                        = FindMetaTable("Player")
 
 local TraceHull                         = util.TraceHull    
 local TraceLine                         = util.TraceLine
+local settings = {
+
+}
+local theme = {
+    ["Frame background"] = Color(30, 10, 10, 200),      
+    ["Frame foreground"] = Color(56, 18, 18, 200),     
+    ["Frame title"] = Color(220, 120, 120),        
+}
+
+local pLocalPlayer = LocalPlayer()
+
+local screenWidth = ScrW()
+local screenHeight = ScrH()
+
+local traceResult = {}
+local traceStruct = { output = traceResult }
+
+local flTickInterval = engine.TickInterval()
+local materials = {"Player", "Local player", "Viewmodel", "Hands", "Entity", "Backtrack"}
 
 dezzCreateFont("Watermark_Bold", {
     font = "Verdana",
@@ -27,6 +46,17 @@ dezzCreateFont("Watermark_Symbols", {
     weight = 500,
     antialias = true
 })
+
+dezzCreateFont( "DermaSmall", {	
+    font = "Comic Sans MS", 
+    antialias = false,
+    size = 15
+} ) 
+dezzCreateFont( "Spec", {	
+    font = "CloseCaption_Bold", 
+    antialias = false,
+    size = 15
+} ) 
 
 dezzCreateFont("newfont", { font = "HudhintTextLarge", size = 10, antialias = false, outline = true })
 dezzCreateFont( "logo_clean", { font = "Open Sans", size = ScreenScale( 12 ), weight = 800, antialias = true } )
@@ -47,40 +77,6 @@ dezz.Colors["Red"] = Color( 255, 0, 0)
 
 dezz.accent = Color( 255, 255, 255 )
 
-
-
-
-local settings = {
-
-}
-
-local theme = {
-    ["Frame background"] = Color(30, 10, 10, 200),      
-    ["Frame foreground"] = Color(56, 18, 18, 200),     
-    ["Frame title"] = Color(220, 120, 120),        
-}
-
-local pLocalPlayer = LocalPlayer()
-
-local screenWidth = ScrW()
-local screenHeight = ScrH()
-
-local traceResult = {}
-local traceStruct = { output = traceResult }
-
-local flTickInterval = engine.TickInterval()
-
-dezzCreateFont( "DermaSmall", {	
-    font = "Comic Sans MS", 
-    antialias = false,
-    size = 15
-} ) 
-dezzCreateFont( "Spec", {	
-    font = "CloseCaption_Bold", 
-    antialias = false,
-    size = 15
-} ) 
-
 dezz.cached = {}
 
 dezz.Materials = {}
@@ -89,41 +85,33 @@ dezz.Materials["Gradient"] = Material("gui/gradient_up", "noclamp smooth")
 dezz.Materials["Gradient down"] = Material("gui/gradient_down", "noclamp smooth")
 dezz.Materials["Gradient right"] = Material("gui/gradient", "noclamp smooth")
 dezz.Materials["Alpha grid"] = Material("gui/alpha_grid.png", "noclamp smooth")
+dezz.chamsMaterials = { "Flat", "Wireframe", "Selfillum", "Selfillum additive", "Metallic", "Glass", "Glowing glass", "LGBT" }
 dezz.blur = Material("pp/blurscreen")
 
 
 dezz.presets = {}
 dezz.cfg = { vars = {}, binds = {}, colors = {} }
 
+// Aimbot
 dezz.cfg.vars["Enable aimbot"]              = false
 dezz.cfg.binds["Aim on key"]                = 0
 dezz.cfg.vars["Silent aim"]                 = true
 dezz.cfg.vars["pSilent"]                    = false
-dezz.cfg.vars["Auto reload"]                = false
-dezz.cfg.vars["Auto fire"]                  = false
-dezz.cfg.vars["Rapid fire"]                 = false
-dezz.cfg.vars["bind mode"]                  = 1
-dezz.cfg.vars["water mode"]                 = 1
-dezz.cfg.vars["Alt Rapid fire"]             = false
-dezz.cfg.vars["Bullet time"]                = false
-dezz.cfg.vars["Time"]                       = 0
-dezz.cfg.vars["Nospread"]                   = false
-dezz.cfg.vars["Force seed"]                 = false
-dezz.cfg.vars["Wait for seed"]              = false
-dezz.cfg.vars["Norecoil"]                   = false
-dezz.cfg.vars["test"]                       = false
-dezz.cfg.vars["Extrapolation"]              = false
-dezz.cfg.vars["last update"]                = false
-dezz.cfg.vars["Player Line"]    = false
-dezz.cfg.vars["ks"] = false
-dezz.cfg.vars["mks"] = false
-dezz.cfg.vars["Invalidate activity"]         = false
-dezz.cfg.vars["Bone fix"]                   = false
-dezz.cfg.vars["Update Client Anim fix"]     = false
-dezz.cfg.vars["Wait for simulation"]    = false
-dezz.cfg.vars["Disable interpolation"]      = false
-dezz.cfg.vars["Disable Sequence interpolation"] = false
+dezz.cfg.vars["Aimbot smoothing"]           = false
+dezz.cfg.vars["Smoothing"]                  = 0.05
+dezz.cfg.vars["Fov limit"]                  = false
+dezz.cfg.vars["Fov dynamic"]                = false
+dezz.cfg.vars["Aimbot FOV"]                 = 30
+dezz.cfg.vars["Show FOV"]                   = false
+dezz.cfg.colors["Show FOV"]                 = "255 255 0 255"
+dezz.cfg.vars["Aimbot snapline"]            = false
+dezz.cfg.colors["Aimbot snapline"]          = "255 128 0 255"
+dezz.cfg.vars["Aimbot marker"]              = false
+dezz.cfg.colors["Aimbot marker"]            = "255 255 255 255"
+dezz.cfg.vars["Max targets"]                = 0
+dezz.cfg.vars["Max distance"]               = 4096
 
+// Target selection
 dezz.cfg.vars["Target selection"]           = 2
 dezz.cfg.vars["Ignores-Friends"]            = false
 dezz.cfg.vars["Target-Priority-Only"]       = false
@@ -139,9 +127,7 @@ dezz.cfg.vars["Ignores-Head unhitable"]     = false
 dezz.cfg.vars["Ignores-Driver"]             = false
 dezz.cfg.vars["Wallz"]                      = false
 
-dezz.cfg.vars["Max targets"]                = 0
-dezz.cfg.vars["Max distance"]               = 4096
-
+// Hitscan & Multipoint
 dezz.cfg.vars["Hitbox selection"]           = 1
 dezz.cfg.vars["Hitscan"]                    = false
 dezz.cfg.vars["Hitscan groups-Head"]        = false
@@ -160,133 +146,59 @@ dezz.cfg.vars["Multipoint groups-Arms"]     = false
 dezz.cfg.vars["Multipoint groups-Legs"]     = false
 dezz.cfg.vars["Multipoint groups-Generic"]  = false
 
-dezz.cfg.vars["Adjust tickcount"]           = false
-dezz.cfg.vars["Auto detonator"]             = false
-dezz.cfg.vars["AutoD distance"]             = 96
-
-dezz.cfg.vars["Backtrack"]                  = false
-dezz.cfg.vars["Always backtrack"]           = false
-dezz.cfg.vars["Backtrack mode"]             = 1
-dezz.cfg.vars["Sampling interval"]          = 0
-dezz.cfg.vars["Backtrack time"]             = 200
-
-dezz.cfg.vars["Aimbot smoothing"]           = false
-dezz.cfg.vars["Smoothing"]                  = 0.05
-dezz.cfg.vars["Kill effect"]                = false
-dezz.cfg.vars["Fov limit"]                  = false
-dezz.cfg.vars["Fov dynamic"]                = false
-dezz.cfg.vars["Aimbot FOV"]                 = 30
-dezz.cfg.vars["Show FOV"]                   = false
-dezz.cfg.colors["Show FOV"]                 = "255 255 0 255"
-dezz.cfg.colors["WaterMarkColor"]           = "255 255 255 255"
-
-// Resolver 
-
-dezz.cfg.vars["Resolver"] = false
-dezz.cfg.vars["Adaptive resolver"] = false
-dezz.cfg.vars["Resolver type"] = 1
-dezz.cfg.vars["Pitch resolver"] = false
-dezz.cfg.vars["Taunt resolver"] = false
-dezz.cfg.vars["Taunt always hit"] = false
-
-dezz.cfg.vars["Auto Pitch"] = 1
-
-dezz.cfg.vars["Delta Left"] = 57
-dezz.cfg.vars["Delta Right"] = 57
-
-dezz.cfg.vars["Invert first shot"] = false
-dezz.cfg.vars["Resolver max misses"] = 2
-
-
-dezz.cfg.vars["Aimbot snapline"]                   = false
-dezz.cfg.colors["Aimbot snapline"]                 = "255 128 0 255"
-dezz.cfg.vars["Aimbot marker"]                   = false
-dezz.cfg.colors["Aimbot marker"]                 = "255 255 255 255"
-
-
-
+// Trigger & Fire
 dezz.cfg.vars["Trigger bot"]                = false
 dezz.cfg.binds["Trigger bot"]               = 0
+dezz.cfg.vars["Auto reload"]                = false
+dezz.cfg.vars["Auto fire"]                  = false
+dezz.cfg.vars["Rapid fire"]                 = false
+dezz.cfg.vars["Alt Rapid fire"]             = false
+dezz.cfg.vars["Bullet time"]                = false
+dezz.cfg.vars["Time"]                       = 0
 
+// Weapon specific
 dezz.cfg.vars["Prop aimbot"]                = false
 dezz.cfg.vars["PA thrower"]                 = true
 dezz.cfg.vars["PA thrower dist"]            = 128
 dezz.cfg.vars["Prop max simtime"]           = 4
 dezz.cfg.vars["Sync mode"]                  = 1
-
 dezz.cfg.vars["Crossbow prediction"]        = false
-dezz.cfg.vars["pulser"]        = false
-
-dezz.cfg.vars["Simulation limit"]           = 4
-
-dezz.cfg.vars["Baim low health"]            = false
-dezz.cfg.vars["Baim health"]                = 65
-dezz.cfg.vars["Fast stop"] = false
-dezz.cfg.binds["Sloww"] = 0
-dezz.cfg.vars["Slows"] = 8
-dezz.cfg.vars["spectating"]        = false
-dezz.cfg.vars["Healthkit-Heal closest"]     = false
-
-dezz.cfg.vars["Knifebot"]                   = false
-dezz.cfg.vars["Knifebot mode"]              = 1
-dezz.presets["Knifebot mode"] = { "Damage", "Fast", "Fatal" }
-
-dezz.cfg.vars["Facestab"]                   = false
-
-dezz.cfg.vars["Knifebot Range"]             = false
-
 dezz.cfg.vars["Projectile aimbot"]          = false
 dezz.cfg.vars["Predict fist"]               = false
-dezz.cfg.vars["Debug mode"]                 = true
+dezz.cfg.vars["Knifebot"]                   = false
+dezz.cfg.vars["Knifebot mode"]              = 1
+dezz.presets["Knifebot mode"]               = { "Damage", "Fast", "Fatal" }
+dezz.cfg.vars["Facestab"]                   = false
+dezz.cfg.vars["Knifebot Range"]             = false
+dezz.cfg.vars["Auto detonator"]             = false
+dezz.cfg.vars["AutoD distance"]             = 96
 
+// Backtrack
+dezz.cfg.vars["Backtrack"]                  = false
+dezz.cfg.vars["Always backtrack"]           = false
+dezz.cfg.vars["Backtrack mode"]             = 1
+dezz.cfg.vars["Sampling interval"]          = 0
+dezz.cfg.vars["Backtrack time"]             = 200
 dezz.cfg.vars["Forwardtrack"]               = false
 dezz.cfg.vars["Forwardtrack time"]          = 100
 
-dezz.cfg.vars["Fake lag Fix"]               = false
-dezz.cfg.vars["Fix Factor"]                 = 0.85
+// Resolver
+dezz.cfg.vars["Resolver"]                   = false
+dezz.cfg.vars["Adaptive resolver"]          = false
+dezz.cfg.vars["Resolver type"]              = 1
+dezz.cfg.vars["Pitch resolver"]             = false
+dezz.cfg.vars["Taunt resolver"]             = false
+dezz.cfg.vars["Taunt always hit"]           = false
+dezz.cfg.vars["Auto Pitch"]                 = 1
+dezz.cfg.vars["Delta Left"]                 = 57
+dezz.cfg.vars["Delta Right"]                = 57
+dezz.cfg.vars["Invert first shot"]          = false
+dezz.cfg.vars["Resolver max misses"]        = 2
 
-dezz.cfg.vars["NoAimLag"] = false
-
-dezz.cfg.vars["Lag fix"]                    = false
-dezz.cfg.vars["Backshoot"]                  = false
-
-
-
-
-
-
-// Tickbase 
-dezz.cfg.vars["Tickbase shift"] = false
-dezz.cfg.vars["Wait for unlag"] = false
-
-dezz.cfg.vars["Fakelag comp"] = 2
-
-dezz.cfg.vars["Skip fire tick"] = false
-dezz.cfg.vars["Double tap"] = false
-dezz.cfg.vars["Dodge projectiles"] = false
-dezz.cfg.vars["Passive recharge"] = false
-
-dezz.cfg.vars["Auto recharge"] = false
-dezz.cfg.vars["Wait for charge"] = false
-dezz.cfg.vars["Warp on peek"] = false
-
-dezz.cfg.vars["Charge ticks"] = 48
-dezz.cfg.vars["Shift ticks"] = 48
-dezz.cfg.binds["Tickbase shift"] = 0
-dezz.cfg.binds["Auto recharge"] = 0
-
-
-dezz.cfg.vars["Engine pred"] = false
-dezz.cfg.vars["GetManipulateInterp"] = false
-dezz.cfg.vars["LerpTime"] = false
-dezz.cfg.vars["LagCompensation"] = false
-
-
-
-
+// Anti aim
 dezz.cfg.vars["Anti aim"]                   = false
+dezz.cfg.binds["Anti aim"]                  = 0
 dezz.cfg.vars["Yaw randomisation"]          = false
-
 dezz.cfg.vars["Custom real"]                = 75
 dezz.cfg.vars["Custom fake"]                = 180
 dezz.cfg.vars["Fake switch"]                = 180
@@ -300,12 +212,10 @@ dezz.cfg.vars["Sin add"]                    = 11
 dezz.cfg.vars["Jitter delta"]               = 45
 dezz.cfg.vars["Low delta value"]            = 0
 dezz.cfg.vars["Switch time"]                = 0.6
-
 dezz.cfg.vars["Anti-BruteForce"]            = false
-dezz.cfg.vars["Desync1"]                     = false
-
+dezz.cfg.vars["Desync1"]                    = false
 dezz.cfg.vars["Yaw base"]                   = 1
-dezz.presets["Yaw base"] = { "Viewangles", "At targets" }
+dezz.presets["Yaw base"]                    = { "Viewangles", "At targets" }
 dezz.cfg.vars["Yaw"]                        = 1
 dezz.presets["Yaw"] = { 
     "Backward", "Fake Forward", "Legit Delta",
@@ -330,505 +240,419 @@ dezz.presets["Pitch"] = {
     "Custom pitch"
 }
 dezz.cfg.vars["Edge"]                       = 1
+dezz.cfg.vars["Antiaim material"]           = 1
+dezz.cfg.vars["Antiaim fullbright"]         = false
+dezz.cfg.colors["Real chams"]               = "128 128 255 255"
+dezz.cfg.vars["On shot aa"]                 = false
+dezz.cfg.vars["Freestanding"]               = false
+dezz.cfg.binds["freestand"]                 = 0
+dezz.cfg.vars["Free standing"]              = false
+dezz.cfg.vars["Inverter"]                   = false
+dezz.cfg.binds["Inverter"]                  = 0
+dezz.cfg.vars["Anti aim chams"]             = false
 
-dezz.cfg.binds["Anti aim"]                   = 0
+// Tickbase
+dezz.cfg.vars["Tickbase shift"]             = false
+dezz.cfg.binds["Tickbase shift"]            = 0
+dezz.cfg.vars["Wait for unlag"]             = false
+dezz.cfg.vars["Fakelag comp"]               = 2
+dezz.cfg.vars["Skip fire tick"]             = false
+dezz.cfg.vars["Double tap"]                 = false
+dezz.cfg.vars["Dodge projectiles"]          = false
+dezz.cfg.vars["Passive recharge"]           = false
+dezz.cfg.vars["Auto recharge"]              = false
+dezz.cfg.binds["Auto recharge"]             = 0
+dezz.cfg.vars["Wait for charge"]            = false
+dezz.cfg.vars["Warp on peek"]               = false
+dezz.cfg.vars["Charge ticks"]               = 48
+dezz.cfg.vars["Shift ticks"]                = 48
+dezz.cfg.vars["Sequence manip"]             = false
+dezz.cfg.binds["Sequence manip"]            = 0
+dezz.cfg.vars["OutSequence"]                = 500
+dezz.cfg.vars["Sequence min random"]        = false
+dezz.cfg.vars["Sequence min"]               = 1
+dezz.cfg.binds["Animation freezer"]         = 0
+dezz.cfg.vars["Animation freezer"]          = false
+dezz.cfg.vars["Gay"]                        = false
 
-
-
-
-
-
-dezz.cfg.vars["Antiaim material"] = 1
-dezz.cfg.vars["Antiaim fullbright"] = false
-dezz.cfg.colors["Real chams"] = "128 128 255 255"
-
-// Anim breakers 
-dezz.cfg.vars["Try Predict"]                = false
-dezz.cfg.vars["Taunt spam"] = false
-dezz.cfg.vars["Taunt"] = 1
-dezz.cfg.vars["Taunt Speed"] = 1
-dezz.cfg.vars["Taunt 2"] = false
-dezz.cfg.vars["Taunt 2.1"] = 1
-dezz.cfg.vars["Taunt 2 Speed"] = 1
-
-dezz.cfg.vars["Handjob"] = false
-dezz.cfg.vars["Handjob mode"] = 1
-
-
-dezz.cfg.vars["Micromovement"] = false
-dezz.cfg.vars["On shot aa"] = false
-dezz.cfg.vars["Freestanding"] = false
-dezz.cfg.binds["freestand"] = 0
-dezz.cfg.vars["Inverter"] = false
-dezz.cfg.binds["Inverter"] = 0
-dezz.cfg.vars["Anti aim chams"] = false
-
-dezz.cfg.vars["Angle arrows"] = false
-
-
-
-dezz.cfg.binds["Panic Key"] = KEY_END
-dezz.cfg.vars["Panic Key"] = true
-
-dezz.cfg.vars["background"] = false 
-
-
-
-    dezz.cfg.vars["Free standing"] = false
-    dezz.cfg.vars["Dancer"] = false
-    dezz.cfg.vars["Dance"] = 1
-    dezz.cfg.vars["Arm breaker"] = false
-    dezz.cfg.vars["Arm breaker mode"] = 1
-    dezz.cfg.vars["Fake duck"] = false
-    dezz.cfg.vars["Fake duck mode"] = 1
-    dezz.cfg.vars["Fake walk"] = false
-    dezz.cfg.vars["Crimwalk"] = false
-
-    dezz.cfg.vars["Air crouch"] = false
-    dezz.cfg.vars["Air crouch mode"] = 1
-
-// fake lag
-dezz.cfg.vars["Fake lag"] = false
-
+// Fake lag
+dezz.cfg.vars["Fake lag"]                   = false
 dezz.cfg.vars["Fake lag options-Disable on ladder"] = false
 dezz.cfg.vars["Fake lag options-Disable in attack"] = false
-dezz.cfg.vars["Fake lag options-On peek"] = false
+dezz.cfg.vars["Fake lag options-On peek"]   = false
 dezz.cfg.vars["Fake lag options-Randomise"] = false
-
-dezz.cfg.vars["Lag mode"] = 1
-
-dezz.cfg.vars["Lag limit"] = 1
-dezz.cfg.vars["Lag randomisation"] = 1
-
-dezz.cfg.vars["Fake duck"] = false
-dezz.cfg.binds["Fake duck"] = 0
-
-dezz.cfg.vars["Air lag duck"] = false
-dezz.cfg.vars["Jesus lag"] = false
-
-dezz.cfg.vars["indicators"] = false
-
-
-dezz.cfg.vars["Allah fly"] = false
-
-    
-// Sequence manip
-dezz.cfg.vars["Sequence manip"] = false
-dezz.cfg.vars["OutSequence"] = 500
-dezz.cfg.binds["Sequence manip"] = 0
-dezz.cfg.vars["Sequence min random"] = false
-dezz.cfg.vars["Sequence min"] = 1
-
-dezz.cfg.binds["Animation freezer"] = 0
-dezz.cfg.vars["Animation freezer"] = false
-
-dezz.cfg.vars["Gay"] = false 
-
-dezz.cfg.vars["Freeze on peek"] = false
-
-dezz.cfg.vars["Allah walk"] = false
-dezz.cfg.binds["allahwalk"] = 0
-
-// Animfix 
-
-dezz.cfg.vars["Interpolation-Disable interpolation"] = false
-dezz.cfg.vars["Interpolation-Fast sequences"] = false
-
-
-
-
-
-    // ESP
-    dezz.cfg.vars["Bounding box"] = false
-
-
+dezz.cfg.vars["Lag mode"]                   = 1
+dezz.cfg.vars["Lag limit"]                  = 1
+dezz.cfg.vars["Lag randomisation"]          = 1
+dezz.cfg.vars["Fake duck"]                  = false
+dezz.cfg.binds["Fake duck"]                 = 0
+dezz.cfg.vars["Air lag duck"]               = false
+dezz.cfg.vars["Jesus lag"]                  = false
 
 // Movement
-dezz.cfg.vars["Bhop"] = false
-dezz.cfg.vars["Sprint"] = false
-dezz.cfg.vars["Safe hop"] = false
-dezz.cfg.vars["edge"] = false
-dezz.cfg.vars["Air duck"] = false
-dezz.cfg.vars["FastD"] = 1
+dezz.cfg.vars["Bhop"]                       = false
+dezz.cfg.vars["Sprint"]                     = false
+dezz.cfg.vars["Safe hop"]                   = false
+dezz.cfg.vars["edge"]                       = false
+dezz.cfg.vars["Air duck"]                   = false
+dezz.cfg.vars["FastD"]                      = 1
+dezz.cfg.vars["Air strafer"]                = false
+dezz.cfg.vars["Strafe mode"]                = 1
+dezz.cfg.vars["Ground strafer"]             = false
+dezz.cfg.vars["Z Hop"]                      = false
+dezz.cfg.binds["Z Hop"]                     = 0
+dezz.cfg.vars["Water jump"]                 = false
+dezz.cfg.vars["Auto peak"]                  = false
+dezz.cfg.binds["Auto peak"]                 = 0
+dezz.cfg.vars["Auto peak tp"]               = false
+dezz.cfg.vars["Circle strafe"]              = false
+dezz.cfg.binds["Circle strafe"]             = 0
+dezz.cfg.vars["CStrafe ticks"]              = 64
+dezz.cfg.vars["CStrafe angle step"]         = 1
+dezz.cfg.vars["CStrafe angle max step"]     = 10
+dezz.cfg.vars["CStrafe ground diff"]        = 10
+dezz.cfg.vars["Fast stop"]                  = false
+dezz.cfg.binds["Sloww"]                     = 0
+dezz.cfg.vars["Slows"]                      = 8
+dezz.cfg.vars["Air crouch"]                 = false
+dezz.cfg.vars["Air crouch mode"]            = 1
 
-dezz.cfg.vars["Air strafer"] = false
-dezz.cfg.vars["Strafe mode"] = 1
-dezz.cfg.vars["Ground strafer"] = false
-dezz.cfg.vars["Z Hop"] = false
-dezz.cfg.binds["Z Hop"] = 0
+// Breakers
+dezz.cfg.vars["Try Predict"]                = false
+dezz.cfg.vars["Taunt spam"]                 = false
+dezz.cfg.vars["Taunt"]                      = 1
+dezz.cfg.vars["Taunt Speed"]                = 1
+dezz.cfg.vars["Taunt 2"]                    = false
+dezz.cfg.vars["Taunt 2.1"]                  = 1
+dezz.cfg.vars["Taunt 2 Speed"]              = 1
+dezz.cfg.vars["Handjob"]                    = false
+dezz.cfg.vars["Handjob mode"]               = 1
+dezz.cfg.vars["Micromovement"]              = false
+dezz.cfg.vars["Dancer"]                     = false
+dezz.cfg.vars["Dance"]                      = 1
+dezz.cfg.vars["Arm breaker"]                = false
+dezz.cfg.vars["Arm breaker mode"]           = 1
+dezz.cfg.vars["Fake walk"]                  = false
 
-dezz.cfg.vars["Water jump"] = false
+// Net
+dezz.cfg.vars["Nospread"]                   = false
+dezz.cfg.vars["Force seed"]                 = false
+dezz.cfg.vars["Wait for seed"]              = false
+dezz.cfg.vars["Norecoil"]                   = false
+dezz.cfg.vars["Extrapolation"]              = false
+dezz.cfg.vars["last update"]                = false
+dezz.cfg.vars["Invalidate activity"]        = false
+dezz.cfg.vars["Bone fix"]                   = false
+dezz.cfg.vars["Update Client Anim fix"]     = false
+dezz.cfg.vars["Wait for simulation"]        = false
+dezz.cfg.vars["Disable interpolation"]      = false
+dezz.cfg.vars["Disable Sequence interpolation"] = false
+dezz.cfg.vars["Fake lag Fix"]               = false
+dezz.cfg.vars["Fix Factor"]                 = 0.85
+dezz.cfg.vars["NoAimLag"]                   = false
+dezz.cfg.vars["Lag fix"]                    = false
+dezz.cfg.vars["Backshoot"]                  = false
+dezz.cfg.vars["Engine pred"]                = false
+dezz.cfg.vars["GetManipulateInterp"]        = false
+dezz.cfg.vars["LerpTime"]                   = false
+dezz.cfg.vars["LagCompensation"]            = false
+dezz.cfg.vars["Adjust tickcount"]           = false
+dezz.cfg.vars["Interpolation-Disable interpolation"] = false
+dezz.cfg.vars["Interpolation-Fast sequences"] = false
+dezz.cfg.vars["pulser"]                     = false
+dezz.cfg.vars["Simulation limit"]           = 4
+dezz.cfg.vars["Baim low health"]            = false
+dezz.cfg.vars["Baim health"]                = 65
 
-dezz.cfg.vars["Auto peak"] = false
-dezz.cfg.binds["Auto peak"] = 0
-dezz.cfg.vars["Auto peak tp"] = false
-
-/*dezz.cfg.vars["auto"] = false
-dezz.cfg.vars["rc"] = false
-dezz.cfg.vars["drc"] = false
-dezz.cfg.vars["src"] = false
-
-dezz.cfg.binds["auto"] = 0
-dezz.cfg.binds["rc"] = 0
-dezz.cfg.binds["drc"] = 0
-dezz.cfg.binds["src"] = 0*/
-
-dezz.cfg.vars["Circle strafe"] = false
-dezz.cfg.binds["Circle strafe"] = 0
-dezz.cfg.vars["CStrafe ticks"] = 64
-dezz.cfg.vars["CStrafe angle step"] = 1
-dezz.cfg.vars["CStrafe angle max step"] = 10
-dezz.cfg.vars["CStrafe ground diff"] = 10
-
-dezz.cfg.vars["Cvar name"] = ""
-dezz.cfg.vars["Cvar int"] = "1"
-dezz.cfg.vars["Cvar str"] = ""
-dezz.cfg.vars["Cvar mode"] = 1
-dezz.cfg.vars["Cvar flag"] = 1
-
-dezz.cfg.vars["Net Convar"] = ""
-dezz.cfg.vars["Net Convar str"] = ""
-dezz.cfg.vars["Net Convar int"] = 1
-dezz.cfg.vars["Net Convar mode"] = 1
-
-dezz.cfg.vars["Name Convar"] = ""
-dezz.cfg.vars["Disconnect reason"] = "VAC banned from secure server"
-dezz.cfg.vars["Name stealer"] = false
-dezz.cfg.vars["Auto reconnect"] = false
-
-dezz.cfg.vars["Chat spammer"]       = false
-dezz.cfg.vars["Chat mode"]          = 1
-dezz.cfg.vars["Chat group"]         = 1
-dezz.cfg.vars["Chat delay"]         = 1
-
-dezz.cfg.vars["Killsay"]            = false
-dezz.cfg.vars["Killsay mode"]          = 1
-dezz.cfg.vars["Killsay group"]         = 1
-dezz.cfg.vars["Retry on handcuff"] = false
-
-// FTPToPos abuse xd )))
-dezz.cfg.vars["FSpec Teleport"] = false
-dezz.cfg.binds["FSpec Teleport"] = 0
-
-dezz.cfg.vars["FSpec Masskill"] = false
-dezz.cfg.binds["FSpec Masskill"] = 0
-
-dezz.cfg.vars["FSpec ClickTP"] = false
-dezz.cfg.binds["FSpec ClickTP"] = 0
-
-dezz.cfg.vars["FSpec Velocity"] = false
-dezz.cfg.binds["FSpec Velocity"] = 0
-
-// Player visuals 
+// Player ESP
 dezz.cfg.vars["Box esp"]                    = false
 dezz.cfg.vars["Box style"]                  = 1
+dezz.cfg.vars["Box gradient"]               = false
+dezz.cfg.colors["Box esp"]                  = "255 0 255 255"
+dezz.cfg.colors["Box gradient"]             = "0 255 255 255"
+dezz.cfg.vars["Box team color"]             = false
+dezz.cfg.vars["Bounding box"]               = false
+dezz.cfg.vars["Name"]                       = false
+dezz.cfg.vars["Name pos"]                   = 1
+dezz.cfg.vars["Mark"]                       = false
+dezz.cfg.vars["Mark pos"]                   = 1
+dezz.cfg.vars["Distance"]                   = false
+dezz.cfg.vars["Distance pos"]               = 1
+dezz.cfg.vars["Health"]                     = false
+dezz.cfg.vars["Health bar"]                 = false
+dezz.cfg.vars["Health bar gradient"]        = false
+dezz.cfg.vars["Health pos"]                 = 4
+dezz.cfg.colors["Health"]                   = "75 255 0 255"
+dezz.cfg.colors["Health bar gradient"]      = "255 45 0 255"
+dezz.cfg.vars["Armor"]                      = false
+dezz.cfg.vars["Armor bar"]                  = false
+dezz.cfg.vars["Armor bar gradient"]         = false
+dezz.cfg.vars["Armor pos"]                  = 1
+dezz.cfg.colors["Armor"]                    = "72 72 255 255"
+dezz.cfg.colors["Armor bar gradient"]       = "72 255 72 255"
+dezz.cfg.vars["Weapon"]                     = false
+dezz.cfg.vars["Weapon pos"]                 = 1
+dezz.cfg.vars["Show ammo"]                  = false
+dezz.cfg.vars["Weapon printname"]           = false
+dezz.cfg.vars["Show reload"]                = false
+dezz.cfg.vars["Money"]                      = false
+dezz.cfg.vars["Money pos"]                  = 1
+dezz.cfg.vars["Ping"]                       = false
+dezz.cfg.vars["Ping pos"]                   = 1
+dezz.cfg.vars["Team"]                       = false
+dezz.cfg.vars["Team pos"]                   = 1
+dezz.cfg.vars["Player flags"]               = false
+dezz.cfg.vars["Skeleton"]                   = false
+dezz.cfg.colors["Skeleton"]                 = "255 255 255 255"
+dezz.cfg.vars["Hitbox"]                     = false
+dezz.cfg.colors["Hitbox"]                   = "255 255 255 255"
+dezz.cfg.vars["Player Line"]                = false
+dezz.cfg.vars["Sight lines"]                = false
+dezz.cfg.vars["Player Hat"]                 = false
+dezz.cfg.vars["Taunting"]                   = false
+dezz.cfg.vars["Taunting pos"]               = 1
+dezz.cfg.vars["AFK"]                        = false
+dezz.cfg.vars["AFK pos"]                    = 1
+dezz.cfg.vars["Usergroup icon"]             = false
+dezz.cfg.vars["Usergroup icon pos"]         = 1
+dezz.cfg.vars["Usergroup TXT"]              = false
+dezz.cfg.vars["Usergroup TXT pos"]          = 1
+dezz.cfg.vars["Krutit"]                     = false
+dezz.cfg.vars["ESP Distance"]               = 3500
+dezz.cfg.vars["ESP Font"]                   = 1
 
-dezz.cfg.vars["Sight lines"]        = false
-
-dezz.cfg.vars["ESP Font"]                  = 1
-
-dezz.cfg.vars["Box gradient"]   = false
-
-dezz.cfg.colors["Box esp"]      = "255 0 255 255"
-dezz.cfg.colors["Box gradient"] = "0 255 255 255"
-
-dezz.cfg.vars["Box team color"] = false
-
-dezz.cfg.vars["Krutit"] = false
-
-dezz.cfg.vars["Name"] = false
-dezz.cfg.vars["Name pos"] = 1
-
-dezz.cfg.vars["Mark"] = false
-dezz.cfg.vars["Mark pos"] = 1
-
-dezz.cfg.vars["Distance"] = false
-dezz.cfg.vars["Distance pos"] = 1
-
-dezz.cfg.vars["Usergroup icon"] = false
-dezz.cfg.vars["Usergroup icon pos"] = 1
-dezz.cfg.vars["Usergroup TXT pos"] = 1
-dezz.cfg.vars["Usergroup TXT"] = false
-
-dezz.cfg.vars["Team"] = false
-dezz.cfg.vars["Team pos"] = 1
-
-dezz.cfg.vars["Health"] = false
-dezz.cfg.vars["Health bar"] = false
-dezz.cfg.vars["Health bar gradient"] = false
-dezz.cfg.vars["Health pos"] = 4
-dezz.cfg.colors["Health"] = "75 255 0 255"
-dezz.cfg.colors["Health bar gradient"] = "255 45 0 255"
-
-
-dezz.cfg.vars["Armor"] = false
-dezz.cfg.vars["Armor bar"] = false
-dezz.cfg.vars["Armor bar gradient"] = false
-dezz.cfg.vars["Armor pos"] = 1
-dezz.cfg.colors["Armor"] = "72 72 255 255"
-dezz.cfg.colors["Armor bar gradient"] = "72 255 72 255"
-dezz.cfg.vars["KeyBind List"] = false
-dezz.cfg.colors["KeyBind List"] = "0 0 0 255"
-dezz.cfg.vars["Money"] = false
-dezz.cfg.vars["Money pos"] = 1
-
-dezz.cfg.vars["Weapon"] = false
-dezz.cfg.vars["Weapon pos"] = 1
-
-dezz.cfg.vars["Show ammo"] = false
-dezz.cfg.vars["Weapon printname"] = false
-dezz.cfg.vars["Show reload"] = false 
-
-/*dezz.cfg.vars["Break LC"] = false
-dezz.cfg.vars["Break LC pos"] = 1
-
-dezz.cfg.vars["Simtime updated"] = false
-dezz.cfg.vars["Simtime pos"] = 1*/
-
-dezz.cfg.vars["Taunting"] = false
-dezz.cfg.vars["Taunting pos"] = 1
-
-dezz.cfg.vars["AFK"] = false
-dezz.cfg.vars["AFK pos"] = 1
-
-dezz.cfg.vars["Ping"] = false
-dezz.cfg.vars["Ping pos"] = 1
-
-dezz.cfg.colors["Skeleton"] = "255 255 255 255"
-dezz.cfg.vars["Skeleton"] = false
-
-dezz.cfg.vars["Player flags"] = false
-dezz.cfg.vars["Hitbox"] = false
-dezz.cfg.colors["Hitbox"] = "255 255 255 255"
-
-dezz.cfg.colors["ksck"] = "70 3 3 255"
-dezz.cfg.colors["kscb"] = "0 0 0 200"
-
-
-
-
-dezz.cfg.vars["WaterMark"] = false
-dezz.cfg.vars["Player Hat"]    = false
-
+// Entity ESP
+dezz.cfg.binds["Ent add"]                   = 0
+dezz.cfg.vars["Ent box"]                    = false
+dezz.cfg.vars["Ent box style"]              = 1
+dezz.cfg.vars["Ent class"]                  = false
+dezz.cfg.vars["Ent ESP Distance"]           = 3500
+dezz.cfg.vars["Entity chams"]               = false
+dezz.cfg.vars["Entity material"]            = 1
+dezz.cfg.vars["Entity fullbright"]          = false
+dezz.cfg.colors["Entity chams"]             = "255 89 89 255"
+dezz.cfg.vars["Entity outline"]             = false
+dezz.cfg.colors["Entity outline"]           = "255 86 45 255"
 
 // Chams
-dezz.cfg.vars["Visible chams"] = false
-dezz.cfg.vars["Visible chams w"] = false
-dezz.cfg.vars["Visible mat"] = 1
-dezz.cfg.colors["Visible chams"] = "0 255 255 255"
+dezz.cfg.vars["Visible chams"]              = false
+dezz.cfg.vars["Visible chams w"]            = false
+dezz.cfg.vars["Visible mat"]                = 1
+dezz.cfg.colors["Visible chams"]            = "0 255 255 255"
+dezz.cfg.vars["inVisible chams"]            = false
+dezz.cfg.vars["inVisible chams w"]          = false
+dezz.cfg.vars["inVisible mat"]              = 1
+dezz.cfg.colors["inVisible chams"]          = "255 255 0 255"
+dezz.cfg.vars["Supress lighting"]           = false
+dezz.cfg.vars["Self chams"]                 = false
+dezz.cfg.vars["Self chams w"]               = false
+dezz.cfg.vars["Self mat"]                   = 1
+dezz.cfg.colors["Self chams"]               = "255 0 255 255"
+dezz.cfg.vars["Supress self lighting"]      = false
+dezz.cfg.vars["Backtrack chams"]            = false
+dezz.cfg.vars["Backtrack material"]         = 1
+dezz.cfg.vars["Backtrack fullbright"]       = false
+dezz.cfg.colors["Backtrack chams"]          = "255 128 255 255"
+dezz.cfg.vars["Backtrack skeleton"]         = false
+dezz.cfg.vars["Viewmodel chams"]            = false
+dezz.cfg.colors["Viewmodel chams"]          = "75 95 128 255"
+dezz.cfg.vars["Viewmodel chams type"]       = 1
+dezz.cfg.vars["Fullbright viewmodel"]       = false
+dezz.cfg.vars["Player outline"]             = false
+dezz.cfg.colors["Player outline"]           = "45 255 86 255"
+dezz.cfg.vars["Outline style"]              = 1
 
-dezz.cfg.vars["inVisible chams"] = false
-dezz.cfg.vars["inVisible chams w"] = false
-dezz.cfg.vars["inVisible mat"] = 1
-dezz.cfg.colors["inVisible chams"] = "255 255 0 255"
+// World visuals
+dezz.cfg.vars["Custom sky"]                 = GetConVar("sv_skyname"):GetString()
+dezz.cfg.vars["Sky color"]                  = false
+dezz.cfg.colors["Sky color"]                = "145 185 245 255"
+dezz.cfg.vars["Wall color"]                 = false
+dezz.cfg.colors["Wall color"]               = "37 40 80 255"
+dezz.cfg.vars["Night"]                      = false
+dezz.cfg.vars["Fullbright"]                 = false
+dezz.cfg.vars["Fullbright mode"]            = 1
+dezz.cfg.binds["Fullbright"]                = 0
+dezz.cfg.vars["Disable shadows"]            = false
+dezz.cfg.vars["FogChanger"]                 = false
+dezz.cfg.colors["FogChanger"]               = "255 255 255 255"
+dezz.cfg.vars["FogStart"]                   = 1500
+dezz.cfg.vars["FogEnd"]                     = 3000
+dezz.cfg.vars["Color Modify"]               = false
+dezz.cfg.vars["Color Modify Brightness"]    = 0
+dezz.cfg.vars["Color Modify Contrast"]      = 1
+dezz.cfg.vars["Color Modify Saturation"]    = 3
+dezz.cfg.vars["Color Modify Add Red"]       = 0
+dezz.cfg.vars["Color Modify Add Green"]     = 0
+dezz.cfg.vars["Color Modify Add Blue"]      = 0
+dezz.cfg.vars["Color Modify Mul Red"]       = 0
+dezz.cfg.vars["Color Modify Mul Green"]     = 0
+dezz.cfg.vars["Color Modify Mul Blue"]      = 0
+dezz.cfg.vars["water mode"]                 = 1
+dezz.cfg.vars["LGBTW"]                      = false
+dezz.cfg.vars["LGBTS"]                      = false
+dezz.cfg.vars["rastoman"]                   = false
+dezz.cfg.vars["musicr"]                     = false
 
-dezz.cfg.vars["Supress lighting"] = false
+// UI & Indicators
+dezz.cfg.vars["WaterMark"]                  = false
+dezz.cfg.colors["WaterMarkColor"]           = "255 255 255 255"
+dezz.cfg.vars["indicators"]                 = false
+dezz.cfg.vars["Tickbase indicator"]         = false
+dezz.cfg.vars["Radar"]                      = false
+dezz.cfg.vars["speclist"]                   = false
+dezz.cfg.vars["SpecL"]                      = false
+dezz.cfg.vars["Crosshair"]                  = false
+dezz.cfg.vars["Crosshair type"]             = 1
+dezz.cfg.vars["Angle arrows"]               = false
+dezz.cfg.vars["KeyBind List"]               = false
+dezz.cfg.colors["KeyBind List"]             = "0 0 0 255"
+dezz.cfg.vars["On screen logs"]             = false
+dezz.cfg.colors["On screen logs"]           = "69 255 69 255"
+dezz.cfg.colors["Miss lagcomp"]             = "69 69 255 255"
+dezz.cfg.colors["Miss spread"]              = "255 255 69 255"
+dezz.cfg.colors["Miss fail"]                = "255 69 69 255"
+dezz.cfg.colors["ksck"]                     = "70 3 3 255"
+dezz.cfg.colors["kscb"]                     = "0 0 0 200"
+dezz.cfg.vars["bind mode"]                  = 1
 
-dezz.cfg.vars["Self chams"] = false
-dezz.cfg.vars["Self chams w"] = false
-dezz.cfg.vars["Self mat"] = 1
-dezz.cfg.colors["Self chams"] = "255 0 255 255"
+// Hitmarker & Sounds
+dezz.cfg.vars["Hitmarker"]                  = false
+dezz.cfg.colors["Hitmarker"]                = "255 155 25 255"
+dezz.cfg.vars["Hit particles"]              = false
+dezz.cfg.colors["Hit particles"]            = "255 128 235 255"
+dezz.cfg.vars["Hitnumbers"]                 = false
+dezz.cfg.colors["Hitnumbers"]               = "255 255 255 255"
+dezz.cfg.colors["Hitnumbers krit"]          = "255 35 35 255"
+dezz.cfg.vars["Hitsound"]                   = false
+dezz.cfg.vars["Hitsound str"]               = "ambient/levels/canals/windchime2.wav"
+dezz.cfg.vars["Killsound"]                  = false
+dezz.cfg.vars["Killsound str"]              = "ambient/3dmeagle.wav"
+dezz.cfg.vars["Killstreak"]                 = false
 
-dezz.cfg.vars["Supress self lighting"] = false
-
---dezz.cfg.vars["Show records"] = false
-
-dezz.cfg.vars["Backtrack chams"] = false
-dezz.cfg.vars["Backtrack material"] = 1
-dezz.cfg.vars["Backtrack fullbright"] = false
-dezz.cfg.colors["Backtrack chams"] = "255 128 255 255"
-dezz.cfg.vars["Backtrack skeleton"] = false
-dezz.cfg.vars["line"] = false
-dezz.cfg.colors["line"] = "255 255 255 255"
-
-
-
-dezz.cfg.vars["On screen logs"] = false
-
-dezz.cfg.colors["On screen logs"] = "69 255 69 255"
-dezz.cfg.colors["Miss lagcomp"] = "69 69 255 255"
-dezz.cfg.colors["Miss spread"] = "255 255 69 255"
-dezz.cfg.colors["Miss fail"] = "255 69 69 255"
-
-dezz.cfg.vars["Entity chams"] = false
-dezz.cfg.vars["Entity material"] = 1
-dezz.cfg.vars["Entity fullbright"] = false
-dezz.cfg.colors["Entity chams"] = "255 89 89 255"
-
-dezz.cfg.vars["Player outline"] = false
-dezz.cfg.vars["Entity outline"] = false
-dezz.cfg.colors["Player outline"] = "45 255 86 255"
-dezz.cfg.colors["Entity outline"] = "255 86 45 255"
-
-dezz.cfg.vars["Outline style"] = 1 
-
-dezz.cfg.vars["ESP Distance"] = 3500
-
-dezz.cfg.binds["Player add"] = 0
-dezz.cfg.binds["Priority add"] = 0
-// Entity Esp
-dezz.cfg.binds["Ent add"] = 0
-dezz.cfg.vars["Ent box"] = false
-dezz.cfg.vars["Ent box style"] = 1
-dezz.cfg.vars["Ent class"] = false
-dezz.cfg.vars["Ent ESP Distance"] = 3500
-
-dezz.cfg.vars["Fresnel minimum illum"] = 0
-dezz.cfg.vars["Fresnel maximum illum"] = 1
-dezz.cfg.vars["Fresnel exponent"] = 1
-
-// Hitmarker
-dezz.cfg.vars["Hitmarker"] = false
-dezz.cfg.vars["Hit particles"] = false
-dezz.cfg.vars["Hitnumbers"] = false
-
-dezz.cfg.vars["Hitsound"] = false
-dezz.cfg.vars["Killsound"] = false
-dezz.cfg.vars["Killstreak"] = false
-
-dezz.cfg.vars["Hitsound str"] = "ambient/levels/canals/windchime2.wav"
-dezz.cfg.vars["Killsound str"] = "ambient/3dmeagle.wav"
-
-dezz.cfg.colors["Hit particles"] = "255 128 235 255"
-dezz.cfg.colors["Hitmarker"] = "255 155 25 255"
-dezz.cfg.colors["Hitnumbers"] = "255 255 255 255"
-dezz.cfg.colors["Hitnumbers krit"] = "255 35 35 255"
-
-// Name hide / visual misc
-
-dezz.cfg.vars["Hide name"] = false
-dezz.cfg.vars["Custom name"] = "Your mom"
-dezz.cfg.vars["Disable sensivity adjustment"] = false
-dezz.cfg.vars["Screengrab image"] = false
-
-
-// Visuals 
-dezz.cfg.vars["Tickbase indicator"] = false
-dezz.cfg.vars["Radar"] = false
-dezz.cfg.vars["speclist"] = false
-dezz.cfg.vars["Crosshair"] = false
-dezz.cfg.vars["Admin tool"] = false
-dezz.cfg.vars["BanPist"] = false
-dezz.cfg.binds["BanPist"] = 0
-dezz.cfg.vars["Crosshair type"] = 1
-dezz.cfg.vars["RusEliteDetector"]   = false
-
-dezz.cfg.vars["Killsound"] = false
-
-// World 
-dezz.cfg.vars["Custom sky"] = GetConVar("sv_skyname"):GetString()
-dezz.cfg.vars["Sky color"] = false 
-dezz.cfg.colors["Sky color"] = "145 185 245 255"
-dezz.cfg.vars["Wall color"] = false 
-dezz.cfg.colors["Wall color"] = "37 40 80 255"
-dezz.cfg.vars["Night"] = false
-dezz.cfg.vars["LGBTW"] = false
-dezz.cfg.vars["LGBTS"] = false
-dezz.cfg.vars["rastoman"] = false
-dezz.cfg.vars["musicr"] = false
-
-dezz.cfg.vars["Fullbright"] = false 
-dezz.cfg.vars["Fullbright mode"] = 1
-dezz.cfg.binds["Fullbright"] = 0
-dezz.cfg.vars["Disable shadows"] = false
-dezz.cfg.vars["FogChanger"] = false
-dezz.cfg.colors["FogChanger"] = "255 255 255 255"
-dezz.cfg.vars["FogStart"] = 1500
-dezz.cfg.vars["FogEnd"] = 3000
-dezz.cfg.vars["Color Modify"] = false
-dezz.cfg.vars["Color Modify Brightness"] = 0
-dezz.cfg.vars["Color Modify Contrast"] = 1
-dezz.cfg.vars["Color Modify Saturation"] = 3
-dezz.cfg.vars["Color Modify Add Red"] = 0
-dezz.cfg.vars["Color Modify Add Green"] = 0
-dezz.cfg.vars["Color Modify Add Blue"] = 0
-dezz.cfg.vars["Color Modify Mul Red"] = 0
-dezz.cfg.vars["Color Modify Mul Green"] = 0
-dezz.cfg.vars["Color Modify Mul Blue"] = 0
+// View & Camera
+dezz.cfg.vars["Third person"]               = false
+dezz.cfg.binds["Third person"]              = 0
+dezz.cfg.vars["Third person collision"]     = false
+dezz.cfg.vars["Third person smoothing"]     = false
+dezz.cfg.vars["Third person distance"]      = 150
+dezz.cfg.vars["Free camera"]                = false
+dezz.cfg.binds["Free camera"]               = 0
+dezz.cfg.vars["Free camera speed"]          = 25
+dezz.cfg.vars["Ghetto free cam"]            = false
+dezz.cfg.vars["Override view"]              = true
+dezz.cfg.vars["Fov override"]               = GetConVarNumber("fov_desired")
+dezz.cfg.vars["Aspect ratio"]               = 0
+dezz.cfg.vars["Viewmodel changer"]          = false
+dezz.cfg.vars["Viewmodel fov"]              = GetConVar("viewmodel_fov"):GetInt()
+dezz.cfg.vars["Viewmodel manip"]            = false
+dezz.cfg.vars["Viewmodel x"]                = 0
+dezz.cfg.vars["Viewmodel y"]                = 0
+dezz.cfg.vars["Viewmodel z"]                = 0
+dezz.cfg.vars["Viewmodel r"]                = 0
+dezz.cfg.vars["Viewmodel p"]                = 0
+dezz.cfg.vars["Viewmodel ya"]               = 0
+dezz.cfg.vars["spectating"]                 = false
+dezz.cfg.vars["Specta"]                     = "SteamID"
 
 // Effects
-dezz.cfg.vars["Bullet tracers"] = false 
-dezz.cfg.colors["Bullet tracers"] = "255 65 65 255"
-dezz.cfg.vars["Bullet tracers material"] = "sprites/tp_beam001" 
-dezz.cfg.vars["Tracers die time"] = 5 
-dezz.cfg.vars["Bullet tracers muzzle"] = false 
+dezz.cfg.vars["Bullet tracers"]             = false
+dezz.cfg.colors["Bullet tracers"]           = "255 65 65 255"
+dezz.cfg.vars["Bullet tracers material"]    = "sprites/tp_beam001"
+dezz.cfg.vars["Tracers die time"]           = 5
+dezz.cfg.vars["Bullet tracers muzzle"]      = false
+dezz.cfg.vars["Fresnel minimum illum"]      = 0
+dezz.cfg.vars["Fresnel maximum illum"]      = 1
+dezz.cfg.vars["Fresnel exponent"]           = 1
+dezz.cfg.vars["Kill effect"]                = false
 
-// View 
-dezz.cfg.vars["Third person"] = false
-dezz.cfg.binds["Third person"] = 0
-dezz.cfg.vars["Third person collision"] = false
-dezz.cfg.vars["Third person smoothing"] = false
-dezz.cfg.vars["Third person distance"] = 150
+// Visuals & Misc
+dezz.cfg.vars["background"]                 = false
+dezz.cfg.vars["test"]                       = false
+dezz.cfg.vars["ks"]                         = false
+dezz.cfg.vars["mks"]                        = false
+dezz.cfg.vars["line"]                       = false
+dezz.cfg.colors["line"]                     = "255 255 255 255"
+dezz.cfg.vars["Admin tool"]                 = false
+dezz.cfg.vars["BanPist"]                    = false
+dezz.cfg.binds["BanPist"]                   = 0
+dezz.cfg.vars["RusEliteDetector"]           = false
+dezz.cfg.vars["GPS"]                        = false
+dezz.cfg.vars["GFID"]                       = "SteamID"
+dezz.cfg.vars["KEF"]                        = "ValveBiped.Bip01_Head1"
+dezz.cfg.vars["Ghost follower"]             = false
+dezz.cfg.vars["Modelchanger"]               = false
+dezz.cfg.vars["Modelchanger model"]         = 1
+dezz.cfg.vars["Player_modelchanger"]        = false
+dezz.cfg.vars["Player_modelchanger_agent"]  = 1
 
-dezz.cfg.vars["Free camera"] = false
-dezz.cfg.binds["Free camera"] = 0
-dezz.cfg.vars["Free camera speed"] = 25
-dezz.cfg.vars["Ghetto free cam"] = false
+// Spam & Misc
+dezz.cfg.vars["Use spam"]                   = false
+dezz.cfg.vars["Flashlight spam"]            = false
+dezz.cfg.vars["Impulse spam"]               = false
+dezz.cfg.vars["Camera spam"]                = false
+dezz.cfg.vars["gravity"]                    = false
+dezz.cfg.vars["Fast lockpick"]              = false
+dezz.cfg.vars["kps"]                        = false
+dezz.cfg.vars["Chat spammer"]               = false
+dezz.cfg.vars["Chat mode"]                  = 1
+dezz.cfg.vars["Chat group"]                 = 1
+dezz.cfg.vars["Chat delay"]                 = 1
+dezz.cfg.vars["Killsay"]                    = false
+dezz.cfg.vars["Killsay mode"]               = 1
+dezz.cfg.vars["Killsay group"]              = 1
+dezz.cfg.vars["Retry on handcuff"]          = false
 
-dezz.cfg.vars["Override view"] = true
+// Name
+dezz.cfg.vars["Hide name"]                  = false
+dezz.cfg.vars["Custom name"]                = "Your mom"
+dezz.cfg.vars["Disable sensivity adjustment"] = false
+dezz.cfg.vars["Screengrab image"]           = false
+dezz.cfg.vars["Name stealer"]               = false
+dezz.cfg.vars["Name Convar"]                = ""
+dezz.cfg.vars["Disconnect reason"]          = "VAC banned from secure server"
 
-dezz.cfg.vars["Fov override"] = GetConVarNumber("fov_desired")
+// Convars
+dezz.cfg.vars["Cvar name"]                  = ""
+dezz.cfg.vars["Cvar int"]                   = "1"
+dezz.cfg.vars["Cvar str"]                   = ""
+dezz.cfg.vars["Cvar mode"]                  = 1
+dezz.cfg.vars["Cvar flag"]                  = 1
+dezz.cfg.vars["Net Convar"]                 = ""
+dezz.cfg.vars["Net Convar str"]             = ""
+dezz.cfg.vars["Net Convar int"]             = 1
+dezz.cfg.vars["Net Convar mode"]            = 1
 
-dezz.cfg.vars["Aspect ratio"] = 0
+// Teleport & Abuse
+dezz.cfg.vars["FSpec Teleport"]             = false
+dezz.cfg.binds["FSpec Teleport"]            = 0
+dezz.cfg.vars["FSpec Masskill"]             = false
+dezz.cfg.binds["FSpec Masskill"]            = 0
+dezz.cfg.vars["FSpec ClickTP"]              = false
+dezz.cfg.binds["FSpec ClickTP"]             = 0
+dezz.cfg.vars["FSpec Velocity"]             = false
+dezz.cfg.binds["FSpec Velocity"]            = 0
+dezz.cfg.vars["Allah fly"]                  = false
+dezz.cfg.vars["Allah walk"]                 = false
+dezz.cfg.binds["allahwalk"]                 = 0
+dezz.cfg.vars["Freeze on peek"]             = false
 
-dezz.cfg.vars["Viewmodel changer"] = false
+// Config
+dezz.cfg.binds["Panic Key"]                 = KEY_END
+dezz.cfg.vars["Panic Key"]                  = true
+dezz.cfg.vars["Config name"]                = "new"
+dezz.cfg.vars["Selected config"]            = 1
+dezz.cfg.colors["Menu color"]               = "0 0 0 255"
 
-dezz.cfg.vars["Viewmodel fov"] = GetConVar("viewmodel_fov"):GetInt()
-
-dezz.cfg.vars["Viewmodel chams"] = false
-dezz.cfg.colors["Viewmodel chams"] = "75 95 128 255"
-dezz.cfg.vars["Viewmodel chams type"] = 1
-dezz.cfg.vars["Fullbright viewmodel"] = false
-
-
-dezz.cfg.vars["Viewmodel x"] = 0
-dezz.cfg.vars["Viewmodel y"] = 0
-dezz.cfg.vars["Viewmodel z"] = 0
-dezz.cfg.vars["Viewmodel r"] = 0
-dezz.cfg.vars["Viewmodel manip"] = false
-dezz.cfg.vars["Viewmodel x"] = 0
-dezz.cfg.vars["Viewmodel y"] = 0
-dezz.cfg.vars["Viewmodel z"] = 0
-dezz.cfg.vars["Viewmodel r"] = 0
-dezz.cfg.vars["Viewmodel p"] = 0
-dezz.cfg.vars["Viewmodel ya"] = 0
-dezz.cfg.vars["Modelchanger"]   = false
-dezz.cfg.vars["Modelchanger model"] = 1
-dezz.cfg.vars["Player_modelchanger"] = false
-dezz.cfg.vars["Player_modelchanger_agent"] = 1
-
-dezz.cfg.vars["Ghost follower"] = false
-dezz.cfg.vars["GPS"] = false
-dezz.cfg.vars["GFID"] = "SteamID"
-dezz.cfg.vars["KEF"] = "ValveBiped.Bip01_Head1"
-dezz.cfg.vars["Specta"] = "SteamID"
-
-// Misc
-
-dezz.cfg.vars["Use spam"] = false
-dezz.cfg.vars["Flashlight spam"] = false
-dezz.cfg.vars["Impulse spam"] = false
-dezz.cfg.vars["Camera spam"] = false
-dezz.cfg.vars["gravity"] = false
-
-dezz.cfg.vars["Fast lockpick"] = false
-dezz.cfg.vars["kps"] = false
-dezz.cfg.vars["SpecL"] = false 
+// Add
+dezz.cfg.binds["Player add"]                = 0
+dezz.cfg.binds["Priority add"]              = 0
 
 
-
-dezz.cfg.vars["Config name"] = "new"
-dezz.cfg.vars["Selected config"] = 1
-
-dezz.cfg.colors["Menu color"] = "0 0 0 255"
 
 dezz.cfg.friends = {}
 dezz.cfg.priorityList = {}
 dezz.cfg.ents = {}
 dezz.cfg.admins = {}
-
-
-local materials = {"Player", "Local player", "Viewmodel", "Hands", "Entity", "Backtrack"}
 
 for i = 1, #materials do
     local key_name = materials[i]
@@ -874,13 +698,6 @@ for key, v in pairs(materials) do
     dezz.cfg.vars[key .. " Refract amount"] = 2
 end
 
-dezz.cfg.colors["Menu color"] = "0 0 0 255"
-
-dezz.cfg.friends = {}
-dezz.cfg.priorityList = {}
-dezz.cfg.ents = {}
-dezz.cfg.admins = {}
-
 do 
     local maxshift = GetConVar("sv_maxusrcmdprocessticks"):GetInt() - 1
     local tickrate = tostring(math.Round(1 / flTickInterval))
@@ -900,7 +717,6 @@ do
 end
 
 
-
 /*
     Miss / Hit logs
 */
@@ -915,10 +731,6 @@ dezz.MissReasons = {
     [ 4 ] =     { str = "lagcomp", var = "Miss lagcomp" },
     [ 5 ] =     { str = "resolver", var = "Miss fail" },
 }
-
- 
-
-
 
 
 // Config save / load
@@ -1079,22 +891,6 @@ local Utility = {}
 function Utility.TimeToTicks( flTime )
     return math.floor( 0.5 + flTime / flTickInterval )
 end
-
-/*
-    Materials 
-*/
-
-dezz.chamsMaterials = {
-    "Flat",
-    "Wireframe",
-    "Selfillum",
-    "Selfillum additive",
-    "Metallic",
-    "Glass",
-    "Glowing glass",
-    "LGBT"
-}
-
 
 /*
     Detours 
@@ -4604,146 +4400,146 @@ function dezz.tabs.LuaExecutor()
         end
     end, p)
 
-local cols = {
-    bg = Color(37, 37, 38),
-    header = Color(45, 45, 48),
-    editor_bg = Color(30, 30, 30),
-    text = Color(220, 220, 220),
-    placeholder = Color(100, 100, 100),
-    execute_hover = Color(155, 45, 48),
-    execute = Color(74, 21, 22),
-    clear_hover = Color(80, 80, 80),
-    clear = Color(60, 60, 60),
-    close_hover = Color(232, 17, 35),
-    close = Color(80, 80, 80),
-    highlight = Color(38, 79, 120),
-    line_numbers = Color(60, 60, 60),
-    line_numbers_text = Color(150, 150, 150)
-}
+    local cols = {
+        bg = Color(37, 37, 38),
+        header = Color(45, 45, 48),
+        editor_bg = Color(30, 30, 30),
+        text = Color(220, 220, 220),
+        placeholder = Color(100, 100, 100),
+        execute_hover = Color(155, 45, 48),
+        execute = Color(74, 21, 22),
+        clear_hover = Color(80, 80, 80),
+        clear = Color(60, 60, 60),
+        close_hover = Color(232, 17, 35),
+        close = Color(80, 80, 80),
+        highlight = Color(38, 79, 120),
+        line_numbers = Color(60, 60, 60),
+        line_numbers_text = Color(150, 150, 150)
+    }
 
-local white = Color(255, 255, 255)
-local separator = Color(60, 60, 60)
+    local white = Color(255, 255, 255)
+    local separator = Color(60, 60, 60)
 
-dezz.ui.Button("Custom script", function()
-    local fr = vgui.Create("DFrame")
-    fr:SetSize(1000, 600)
-    fr:SetTitle("Dezzaster Editor")
-    fr:SetDraggable(true)
-    fr:ShowCloseButton(false)
-    fr:Center()
-    fr:MakePopup()
+    dezz.ui.Button("Custom script", function()
+        local fr = vgui.Create("DFrame")
+        fr:SetSize(1000, 600)
+        fr:SetTitle("Dezzaster Editor")
+        fr:SetDraggable(true)
+        fr:ShowCloseButton(false)
+        fr:Center()
+        fr:MakePopup()
 
-    fr.Paint = function(s, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, cols.bg)
-        draw.RoundedBox(0, 0, 0, w, 25, cols.header)
-    end
+        fr.Paint = function(s, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, cols.bg)
+            draw.RoundedBox(0, 0, 0, w, 25, cols.header)
+        end
 
-    local lineNumbers = vgui.Create("DPanel", fr)
-    lineNumbers:SetPos(5, 30)
-    lineNumbers:SetSize(40, 510)
-    lineNumbers.Paint = function(s, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, cols.editor_bg)
-        draw.RoundedBox(0, w-1, 0, 1, h, separator)
-    end
+        local lineNumbers = vgui.Create("DPanel", fr)
+        lineNumbers:SetPos(5, 30)
+        lineNumbers:SetSize(40, 510)
+        lineNumbers.Paint = function(s, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, cols.editor_bg)
+            draw.RoundedBox(0, w-1, 0, 1, h, separator)
+        end
 
-    local txt = vgui.Create("DTextEntry", fr)
-    txt:SetPos(45, 30)
-    txt:SetSize(942, 510)
-    txt:SetMultiline(true)
-    txt:SetFont("DermaDefault")
-    txt:SetTextColor(cols.text)
-    txt:SetCursorColor(white)
-    txt:SetHighlightColor(cols.execute_hover)
+        local txt = vgui.Create("DTextEntry", fr)
+        txt:SetPos(45, 30)
+        txt:SetSize(942, 510)
+        txt:SetMultiline(true)
+        txt:SetFont("DermaDefault")
+        txt:SetTextColor(cols.text)
+        txt:SetCursorColor(white)
+        txt:SetHighlightColor(cols.execute_hover)
 
-    local function UpdateLineNumbers()
-        local text = txt:GetText()
-        local lines = string.Explode("\n", text)
-        local lineCount = #lines
-        
-        lineNumbers.PaintOver = function(s, w, h)
-            surface.SetFont("DermaDefault")
-            local lineHeight = 14
-            local startY = 5
+        local function UpdateLineNumbers()
+            local text = txt:GetText()
+            local lines = string.Explode("\n", text)
+            local lineCount = #lines
             
-            for i = 1, lineCount do
-                local yPos = startY + (i-1)*lineHeight
-                if yPos < h and yPos > -lineHeight then
-                    surface.SetTextColor(cols.line_numbers_text)
-                    surface.SetTextPos(5, yPos)
-                    surface.DrawText(tostring(i))
+            lineNumbers.PaintOver = function(s, w, h)
+                surface.SetFont("DermaDefault")
+                local lineHeight = 14
+                local startY = 5
+                
+                for i = 1, lineCount do
+                    local yPos = startY + (i-1)*lineHeight
+                    if yPos < h and yPos > -lineHeight then
+                        surface.SetTextColor(cols.line_numbers_text)
+                        surface.SetTextPos(5, yPos)
+                        surface.DrawText(tostring(i))
+                    end
                 end
             end
         end
-    end
 
-    txt.OnChange = UpdateLineNumbers
+        txt.OnChange = UpdateLineNumbers
 
-    txt.Paint = function(s, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, cols.editor_bg)
-        if s:GetText() == "" then
-            draw.SimpleText("-- Start typing your GLua script...", "DermaDefault", 5, 5, cols.placeholder)
+        txt.Paint = function(s, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, cols.editor_bg)
+            if s:GetText() == "" then
+                draw.SimpleText("-- Start typing your GLua script...", "DermaDefault", 5, 5, cols.placeholder)
+            end
+            s:DrawTextEntryText(cols.text, cols.highlight, cols.text)
+            draw.RoundedBox(0, 0, 0, 3, h, cols.execute)
         end
-        s:DrawTextEntryText(cols.text, cols.highlight, cols.text)
-        draw.RoundedBox(0, 0, 0, 3, h, cols.execute)
-    end
 
-    local exec = vgui.Create("DButton", fr)
-    exec:SetPos(5, 545)
-    exec:SetSize(120, 25)
-    exec:SetText("▶ Execute")
-    exec:SetTextColor(white)
-    exec:SetFont("DermaDefaultBold")
-    exec.Paint = function(s, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() and cols.execute_hover or cols.execute)
-    end
-    exec.DoClick = function()
-        local script = txt:GetText()
-        if script ~= "" then pcall(function() RunString(script, "CustomScript", false) end) end
-    end
+        local exec = vgui.Create("DButton", fr)
+        exec:SetPos(5, 545)
+        exec:SetSize(120, 25)
+        exec:SetText("▶ Execute")
+        exec:SetTextColor(white)
+        exec:SetFont("DermaDefaultBold")
+        exec.Paint = function(s, w, h)
+            draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() and cols.execute_hover or cols.execute)
+        end
+        exec.DoClick = function()
+            local script = txt:GetText()
+            if script ~= "" then pcall(function() RunString(script, "CustomScript", false) end) end
+        end
 
-    local clr = vgui.Create("DButton", fr)
-    clr:SetPos(130, 545)
-    clr:SetSize(120, 25)
-    clr:SetText("Clear")
-    clr:SetTextColor(cols.text)
-    clr.Paint = function(s, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() and cols.clear_hover or cols.clear)
-    end
-    clr.DoClick = function() 
-        txt:SetText("") 
-        UpdateLineNumbers() 
-    end
+        local clr = vgui.Create("DButton", fr)
+        clr:SetPos(130, 545)
+        clr:SetSize(120, 25)
+        clr:SetText("Clear")
+        clr:SetTextColor(cols.text)
+        clr.Paint = function(s, w, h)
+            draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() and cols.clear_hover or cols.clear)
+        end
+        clr.DoClick = function() 
+            txt:SetText("") 
+            UpdateLineNumbers() 
+        end
 
-    local cls = vgui.Create("DButton", fr)
-    cls:SetPos(255, 545)
-    cls:SetSize(120, 25)
-    cls:SetText("Close")
-    cls:SetTextColor(cols.text)
-    cls:SetFont("DermaDefaultBold")
-    cls.Paint = function(s, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, s:IsHovered() and cols.close_hover or cols.close)
-    end
-    cls.DoClick = function() fr:Close() end
+        local cls = vgui.Create("DButton", fr)
+        cls:SetPos(255, 545)
+        cls:SetSize(120, 25)
+        cls:SetText("Close")
+        cls:SetTextColor(cols.text)
+        cls:SetFont("DermaDefaultBold")
+        cls.Paint = function(s, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, s:IsHovered() and cols.close_hover or cols.close)
+        end
+        cls.DoClick = function() fr:Close() end
 
-    local defaultScript = {
-        "-- GLua Editor",
-        "function TestFunction()",
-        "    local player = LocalPlayer()",
-        "    if IsValid(player) then",
-        "        print(\"Hello World!\")",
-        "    end",
-        "end",
-        "",
-        "hook.Add(\"Think\", \"ExampleHook\", function()",
-        "    for i = 1, 5 do",
-        "        print(\"Count: \" .. i)",
-        "    end",
-        "end)"
-    }
-    
-    txt:SetText(table.concat(defaultScript, "\n"))
-    UpdateLineNumbers()
-end, p)
+        local defaultScript = {
+            "-- GLua Editor",
+            "function TestFunction()",
+            "    local player = LocalPlayer()",
+            "    if IsValid(player) then",
+            "        print(\"Hello World!\")",
+            "    end",
+            "end",
+            "",
+            "hook.Add(\"Think\", \"ExampleHook\", function()",
+            "    for i = 1, 5 do",
+            "        print(\"Count: \" .. i)",
+            "    end",
+            "end)"
+        }
+        
+        txt:SetText(table.concat(defaultScript, "\n"))
+        UpdateLineNumbers()
+    end, p)
 
     dezz.ui.Button("Refresh", function()
         local fresh = scanFiles()
@@ -4751,7 +4547,8 @@ end, p)
         for k = 1, #fresh do dropdown:AddChoice(fresh[k]) end
         if #fresh > 0 then dropdown:ChooseOptionID(1) end
     end, p)
-end    
+end
+
 dezz.ttable = {}
 
 dezz.ttable["Aimbot"]   = dezz.tabs.Aimbot
@@ -4812,6 +4609,7 @@ function dezz.tabButton(tab,par)
         surface.DrawText(tab)
     end
 end
+
 dezz.tabButton("Aimbot",         dezz.frame:GetTopPanel())
 dezz.tabButton( "Rage",          dezz.frame:GetTopPanel() ) 
 dezz.tabButton( "Visuals",       dezz.frame:GetTopPanel() ) 
@@ -6911,22 +6709,23 @@ do
     local prev_yaw = 0
     local old_yaw = 0.0
 
-    function dezz.AutoStrafe( cmd )
+    function dezz.AutoStrafe(cmd)
         ztick = ztick + 1
 
-        if ( dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) and dezz.cfg.vars["Circle strafe"] ) then
-        
-            dezz.CircleStrafe( cmd )
-    
-        elseif ( dezz.IsKeyDown(dezz.cfg.binds["Z Hop"]) and dezz.cfg.vars["Z Hop"] ) then
+        if (dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) and dezz.cfg.vars["Circle strafe"]) then
+            dezz.CircleStrafe(cmd)
+
+        elseif (dezz.IsKeyDown(dezz.cfg.binds["Z Hop"]) and dezz.cfg.vars["Z Hop"]) then
             local handler = ztick / 3.14
-            
-            cmd:SetSideMove( 5000 * math.sin(handler) )
+
+            cmd:SetSideMove(5000 * math.sin(handler))
+
         elseif dezz.cfg.vars["Air strafer"] and dezz.cfg.vars["Strafe mode"] == 3 then
-    
+            if not IsValid(pLocalPlayer) then return end
+
             local get_velocity_degree = function(velocity)
                 local tmp = math.deg(math.atan(30.0 / velocity))
-                    
+
                 if (tmp > 90.0) then
                     return 90.0
                 elseif (tmp < 0.0) then
@@ -6935,65 +6734,65 @@ do
                     return tmp
                 end
             end
-    
+
             local M_RADPI = 57.295779513082
             local side_speed = 10000
             local velocity = pLocalPlayer:GetVelocity()
             velocity.z = 0.0
-    
+
             local forwardmove = cmd:GetForwardMove()
             local sidemove = cmd:GetSideMove()
-    
-            if (!forwardmove || !sidemove) then
+
+            if (not forwardmove or not sidemove) then
                 return
             end
-    
-            if(velocity:Length2D() <= 15.0 && !(forwardmove != 0 || sidemove != 0)) then
+
+            if (velocity:Length2D() <= 15.0 and (forwardmove == 0 and sidemove == 0)) then
                 return
             end
-    
+
             local flip = cmd:TickCount() % 2 == 0
-    
-            local turn_direction_modifier = flip && 1.0 || -1.0
+
+            local turn_direction_modifier = flip and 1.0 or -1.0
             local viewangles = Angle(dezz.SilentAngle.x, dezz.SilentAngle.y, dezz.SilentAngle.z)
-    
-            if (forwardmove || sidemove) then
+
+            if (forwardmove ~= 0 or sidemove ~= 0) then
                 cmd:SetForwardMove(0)
                 cmd:SetSideMove(0)
-    
+
                 local turn_angle = math.atan2(-sidemove, forwardmove)
                 viewangles.y = viewangles.y + (turn_angle * M_RADPI)
-            elseif (forwardmove) then
+            elseif (forwardmove ~= 0) then
                 cmd:SetForwardMove(0)
             end
-    
+
             local strafe_angle = math.deg(math.atan(15 / velocity:Length2D()))
-    
+
             if (strafe_angle > 90) then
                 strafe_angle = 90
             elseif (strafe_angle < 0) then
                 strafe_angle = 0
             end
-    
+
             local temp = Vector(0, viewangles.y - old_yaw, 0)
             temp.y = math.NormalizeAngle(temp.y)
-    
+
             local yaw_delta = temp.y
             old_yaw = viewangles.y
-    
+
             local abs_yaw_delta = math.abs(yaw_delta)
-    
-            if (abs_yaw_delta <= strafe_angle || abs_yaw_delta >= 30) then
+
+            if (abs_yaw_delta <= strafe_angle or abs_yaw_delta >= 30) then
                 local velocity_angles = velocity:Angle()
-    
+
                 temp = Vector(0, viewangles.y - velocity_angles.y, 0)
                 temp.y = math.NormalizeAngle(temp.y)
-    
+
                 local velocityangle_yawdelta = temp.y
                 local velocity_degree = get_velocity_degree(velocity:Length2D() * 128)
-    
-                if (velocityangle_yawdelta <= velocity_degree || velocity:Length2D() <= 15) then
-                    if (-velocity_degree <= velocityangle_yawdelta || velocity:Length2D() <= 15) then
+
+                if (velocityangle_yawdelta <= velocity_degree or velocity:Length2D() <= 15) then
+                    if (-velocity_degree <= velocityangle_yawdelta or velocity:Length2D() <= 15) then
                         viewangles.y = viewangles.y + (strafe_angle * turn_direction_modifier)
                         cmd:SetSideMove(side_speed * turn_direction_modifier)
                     else
@@ -7009,68 +6808,38 @@ do
             elseif (yaw_delta < 0) then
                 cmd:SetSideMove(side_speed)
             end
-    
+
             local move = Vector(cmd:GetForwardMove(), cmd:GetSideMove(), 0)
             local speed = move:Length()
-    
+
             local angles_move = move:Angle()
-    
-            local normalized_x = math.modf(dezz.SilentAngle.x + 180, 360) - 180
-            local normalized_y = math.modf(dezz.SilentAngle.y + 180, 360) - 180
-    
+
+            local normalized_x = math.fmod(dezz.SilentAngle.x + 180, 360) - 180
+            local normalized_y = math.fmod(dezz.SilentAngle.y + 180, 360) - 180
+
             local yaw = math.rad(normalized_y - viewangles.y + angles_move.y)
-    
-            if (normalized_x >= 90 || normalized_x <= -90 || dezz.SilentAngle.x >= 90 && dezz.SilentAngle.x <= 200 || dezz.SilentAngle.x <= -90 && dezz.SilentAngle.x <= 200) then
+
+            if (normalized_x >= 90 or normalized_x <= -90 or (dezz.SilentAngle.x >= 90 and dezz.SilentAngle.x <= 200) or (dezz.SilentAngle.x <= -90 and dezz.SilentAngle.x >= -200)) then
                 cmd:SetForwardMove(-math.cos(yaw) * speed)
             else
                 cmd:SetForwardMove(math.cos(yaw) * speed)
             end
-    
+
             cmd:SetSideMove(math.sin(yaw) * speed)
 
         elseif dezz.cfg.vars["Air strafer"] and dezz.cfg.vars["Strafe mode"] == 2 then
+            if not IsValid(pLocalPlayer) then return end
+
             cmd:SetForwardMove(0)
 
-            if pLocalPlayer:IsFlagSet( FL_ONGROUND ) then
+            if pLocalPlayer:IsFlagSet(FL_ONGROUND) then
                 cmd:SetForwardMove(10000)
             else
-                cmd:SetForwardMove(5850 / pLocalPlayer:GetVelocity():Length2D())
-                cmd:SetSideMove((cmd:CommandNumber() % 2 == 0) && -400 || 400)
+                local velocityLen = pLocalPlayer:GetVelocity():Length2D()
+                if velocityLen == 0 then velocityLen = 1 end
+                cmd:SetForwardMove(5850 / velocityLen)
+                cmd:SetSideMove((cmd:CommandNumber() % 2 == 0) and -400 or 400)
             end
-
-            /*
-
-local ang_diff = math.NormalizeAngle( dezz.SilentAngle.y - prev_yaw )
-            
-            if ( math.abs( ang_diff ) > 0 ) then
-            
-                if ( ang_diff > 0 ) then
-                    cmd:SetSideMove( -10000 )
-                else
-                    cmd:SetSideMove( 10000 )
-                end
-            
-            else
-            
-                local vel = pLocalPlayer:GetAbsVelocity()
-                local vel_yaw = math.NormalizeAngle( math.deg( math.atan2( vel.y, vel.x ) ) )
-                local vel_yaw_diff = math.NormalizeAngle( dezz.SilentAngle.y - vel_yaw )
-                
-                if ( vel_yaw_diff > 0 ) then
-                    cmd:SetSideMove( -10000 )
-                else
-                    cmd:SetSideMove( 10000 )
-                end
-    
-                local viewangles = cmd:GetViewAngles() //dezz.SilentAngle //Angle( dezz.SilentAngle.x, dezz.SilentAngle.y, 0 )
-                viewangles.y = vel_yaw
-                cmd:SetViewAngles( viewangles )
-                
-            end
-    
-            prev_yaw = dezz.SilentAngle.y
-            */
-            
             
         end
     end
@@ -7584,39 +7353,6 @@ do
             dezz.fakeLagfactor = 21
         end
 
-        bSendPacket = true
-        bRunning = false
-        local desyncActive = true
-
-        hook.Add("Think", "DesyncPanicCheck", function()
-            if dezz.IsKeyDown and dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
-                desyncActive = false
-                hook.Remove("CreateMove", "Desynculator")
-                hook.Remove("Think", "DesyncPanicCheck")
-            end
-        end)
-
-        hook.Add("CreateMove", "Desynculator", function(cmd)
-            if not dezz.cfg.vars["Desync1"] or not desyncActive then return end
-            
-            ded.SetBSendPacket(bSendPacket)
-            local tickrate = math.floor(1 / engine.TickInterval())
-            local seqshift = tickrate - 3
-
-            if bSendPacket then
-                if seqshift > 0 then
-                    if not bRunning then
-                        ded.SetOutSequenceNr(ded.GetOutSequenceNr() + seqshift)
-                        bRunning = true
-                    else
-                        ded.SetNetChokedPackets(127)
-                    end
-                else
-                    bRunning = false
-                end
-            end
-        end)
-
         //if dezz.cfg.vars["Fakelag comp"] == 2 and ded.GetCurrentCharge() > 0 then 
         //    local nfactor = dezz.fakeLagfactor - ded.GetMaxShiftTicks() - 1
         //    dezz.fakeLagfactor = math.Clamp( nfactor, 0, 21 )
@@ -7883,42 +7619,30 @@ end
 
 
 local bWasOnGround = false 
-
+local bSendPacket = true
+local bRunning = false
 
 function dezz.CreateMove(cmd)
-    dezz.DoSilentAngleUpdate( cmd )
+    dezz.DoSilentAngleUpdate(cmd)
 
     dezz.aimingrn = false
-
-    //if ( ded.GetChokedPackets() > 14 ) then ded.SetChokedPackets( 14 ) end
 
     if cmd:CommandNumber() == 0 then 
         return 
     end
 
-
-    dezz.flServerTime = ded.GetServerTime( cmd )
-
-    //if ded.GetIsShifting() then dezz.shiftedTicks = dezz.shiftedTicks + 1 end
+    dezz.flServerTime = ded.GetServerTime(cmd)
 
     local w = pLocalPlayer:GetActiveWeapon()
-    dezz.activeWeapon       = IsValid( w ) and w or false
-    dezz.activeWeaponClass  = IsValid( w ) and w:GetClass() or false 
-    dezz.moveType           = pLocalPlayer:GetMoveType() 
+    dezz.activeWeapon = IsValid(w) and w or false
+    dezz.activeWeaponClass = IsValid(w) and w:GetClass() or false 
+    dezz.moveType = pLocalPlayer:GetMoveType() 
 
-    //if dezz.cfg.vars["Passive recharge"] and ded.GetCurrentCharge() < ded.GetMaxShiftTicks() and not pLocalPlayer:Alive() then
-    //    ded.SetReloadKeyPressed( true )
-    //end
+    if dezz.cfg.vars["Silent aim"] then 
+        cmd:SetViewAngles(dezz.SilentAngle) 
+    end
 
-
-    if dezz.cfg.vars["Silent aim"] then cmd:SetViewAngles(dezz.SilentAngle) end
-
-    //if ded.GetIsShifting() then
-        //  ded.AdjustTickbase()
-    //    print("shifting")
-    //end
-
-    if dezz.cfg.vars["Flashlight spam"] and input.IsKeyDown( KEY_F ) then
+    if dezz.cfg.vars["Flashlight spam"] and input.IsKeyDown(KEY_F) then
         cmd:SetImpulse(100)
     end
     if dezz.cfg.vars["Impulse spam"] then
@@ -7926,7 +7650,7 @@ function dezz.CreateMove(cmd)
     end
     if dezz.cfg.vars["gravity"] then
         local weapon = pLocalPlayer:GetActiveWeapon()
-        if IsValid(weapon) and string.StartsWith(dezz.activeWeaponClass, "weapon_physcannon") then
+        if IsValid(weapon) and string.StartWith(dezz.activeWeaponClass, "weapon_physcannon") then
             if FrameNumber() % 4 == 0 then
                 cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK, IN_ATTACK2))
             else
@@ -7936,11 +7660,10 @@ function dezz.CreateMove(cmd)
         end
     end
 
-
     if dezz.cfg.vars["Auto Vape"] then
-        if cmd:KeyDown( IN_ATTACK ) then
+        if cmd:KeyDown(IN_ATTACK) then
             if dezz.tyaga >= dezz.maxvape then
-                cmd:RemoveKey( IN_ATTACK )
+                cmd:RemoveKey(IN_ATTACK)
                 dezz.tyaga = 0
             elseif dezz.tyaga < dezz.maxvape then
                 dezz.tyaga = dezz.tyaga + 1 
@@ -7952,70 +7675,71 @@ function dezz.CreateMove(cmd)
 
     if dezz.vapecd then 
         dezz.vapecd = false 
-        cmd:RemoveKey( IN_ATTACK2 ) 
-    elseif dezz.cfg.vars["Vape spam"] and dezz.activeWeapon and not dezz.vapecd and string.StartsWith( dezz.activeWeaponClass, "weapon_vape" ) then
-        cmd:AddKey( IN_ATTACK2 )
+        cmd:RemoveKey(IN_ATTACK2) 
+    elseif dezz.cfg.vars["Vape spam"] and dezz.activeWeapon and not dezz.vapecd and string.StartWith(dezz.activeWeaponClass, "weapon_vape") then
+        cmd:AddKey(IN_ATTACK2)
         dezz.vapecd = true
     end   
 
     if dezz.cfg.vars["Handjob"] then
-        dezz.PerformHandjob( cmd )
+        dezz.PerformHandjob(cmd)
     end 
 
-    //if dezz.cfg.vars["Fake latency"] then
-    //    local amt = dezz.cfg.vars["Max latency"]
-    //    ded.SetInSequenceNr(ded.GetInSequenceNr() - amt)
-    //end
-
     if dezz.SkipCommand then 
-        cmd:RemoveKey( IN_ATTACK ) 
-    
-        dezz.SkipCommand = !dezz.SkipCommand 
+        cmd:RemoveKey(IN_ATTACK) 
+        dezz.SkipCommand = false
     end
 
-    if ( pLocalPlayer:IsFlagSet( FL_ONGROUND ) ) then
-		dezz.last_ground_pos = pLocalPlayer:GetNetworkOrigin().z
-	end
+    if pLocalPlayer:IsFlagSet(FL_ONGROUND) then
+        dezz.last_ground_pos = pLocalPlayer:GetNetworkOrigin().z
+    end
 
     if dezz.cfg.vars["Animation freezer"] then dezz.AnimationFreezer() end
-    
-	dezz.SequenceShit(cmd)
+
+    dezz.SequenceShit(cmd)
 
     if not dezz.seqshit then
         dezz.FakeLag(cmd)
 
-        if dezz.cfg.vars["Allah walk"] and pLocalPlayer:IsFlagSet( FL_ONGROUND ) and dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
-            
-            if dezz.fakeLagTicks != 20 then
+        if dezz.cfg.vars["Allah walk"] and pLocalPlayer:IsFlagSet(FL_ONGROUND) and dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
+            if dezz.fakeLagTicks ~= 20 then
                 dezz.ClampMovementSpeed(cmd, 0)
             else
                 dezz.ClampMovementSpeed(cmd, pLocalPlayer:GetWalkSpeed())
             end
-
-            //if(dezz.fakeLagTicks <= 20) then
-            //    dezz.ClampMovementSpeed(cmd, 0)
-            //    dezz.Stop(cmd)
-                //pLocalPlayer:SetPoseParameter("move_x", 0)
-	            //pLocalPlayer:SetPoseParameter("move_y", 0)
-            //else
-             //   dezz.ClampMovementSpeed(cmd, pLocalPlayer:GetWalkSpeed())
-            //end
-
-            --print(dezz.fakeLagTicks,pLocalPlayer:GetVelocity():Length2D())
         end
     end
 
     if dezz.cfg.vars["Fake lag options-On peek"] or dezz.cfg.vars["Warp on peek"] or dezz.cfg.vars["Freeze on peek"] then
         dezz.CheckPeeking()
     end
-    
-    // Movement
-    
-    dezz.FastWalk( cmd )
+
+    bSendPacket = true
+    bRunning = false
+
+    if dezz.cfg.vars["Desync1"] then
+        ded.SetBSendPacket(bSendPacket)
+        local tickrate = math.floor(1 / engine.TickInterval())
+        local seqshift = tickrate - 3
+
+        if bSendPacket then
+            if seqshift > 0 then
+                if not bRunning then
+                    ded.SetOutSequenceNr(ded.GetOutSequenceNr() + seqshift)
+                    bRunning = true
+                else
+                    ded.SetNetChokedPackets(127)
+                end
+            else
+                bRunning = false
+            end
+        end
+    end
+
+    dezz.FastWalk(cmd)
 
     if dezz.cfg.vars["Sprint"] then cmd:AddKey(IN_SPEED) end
 
-    // Edge Jump
     if dezz.cfg.vars["edge"] then
         local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
         local velocity = pLocalPlayer:GetVelocity()
@@ -8037,7 +7761,7 @@ function dezz.CreateMove(cmd)
 
     dezz.hoppin = false
 
-    if pLocalPlayer:GetMoveType() != MOVETYPE_NOCLIP and pLocalPlayer:GetMoveType() != MOVETYPE_LADDER and pLocalPlayer:GetMoveType() != MOVETYPE_OBSERVER and dezz.cfg.vars["Bhop"] then
+    if pLocalPlayer:GetMoveType() ~= MOVETYPE_NOCLIP and pLocalPlayer:GetMoveType() ~= MOVETYPE_LADDER and pLocalPlayer:GetMoveType() ~= MOVETYPE_OBSERVER and dezz.cfg.vars["Bhop"] then
         if cmd:KeyDown(IN_JUMP) then
             local bIsOnGround = pLocalPlayer:IsFlagSet(FL_ONGROUND)
             
@@ -8061,10 +7785,10 @@ function dezz.CreateMove(cmd)
                     
                     local all_hit = true
                     
-                    for i, offsets in ipairs(offsets) do
+                    for i, offset in ipairs(offsets) do
                         local trace = util.TraceLine({
-                            start = pos + offsets,
-                            endpos = pos + offsets + Vector(0, 0, -25),
+                            start = pos + offset,
+                            endpos = pos + offset + Vector(0, 0, -25),
                             filter = pLocalPlayer
                         })
 
@@ -8092,46 +7816,29 @@ function dezz.CreateMove(cmd)
         end
     end
 
-	if dezz.cfg.vars["Fast stop"] then
+    if dezz.cfg.vars["Fast stop"] then
         dezz.Stop(cmd)
     end
 
-    if dezz.cfg.binds["Sloww"] != 0 and dezz.IsKeyDown( dezz.cfg.binds["Sloww"] ) then
-        if(input.IsKeyDown(KEY_A)) then
+    if dezz.cfg.binds["Sloww"] ~= 0 and dezz.IsKeyDown(dezz.cfg.binds["Sloww"]) then
+        if input.IsKeyDown(KEY_A) then
             cmd:SetSideMove(-dezz.cfg.vars["Slows"])
         end
-        if(input.IsKeyDown(KEY_D)) then
+        if input.IsKeyDown(KEY_D) then
             cmd:SetSideMove(dezz.cfg.vars["Slows"])
         end
-        if(input.IsKeyDown(KEY_W)) then
+        if input.IsKeyDown(KEY_W) then
             cmd:SetForwardMove(dezz.cfg.vars["Slows"])
         end
-        if(input.IsKeyDown(KEY_S)) then
+        if input.IsKeyDown(KEY_S) then
             cmd:SetForwardMove(-dezz.cfg.vars["Slows"])
         end
     end
 
-    /*if dezz.cfg.vars["auto"] and dezz.IsKeyDown(dezz.cfg.binds["auto"]) then
-        -- Воспроизводит движение
-    end
-
-    if dezz.cfg.vars["rc"] and dezz.IsKeyDown(dezz.cfg.binds["rc"]) then
-        -- записывает движение
-    end
-
-    if dezz.cfg.vars["drc"] and dezz.IsKeyDown(dezz.cfg.binds["drc"]) then
-        -- удаляет записанное движение
-    end
-
-    if dezz.cfg.vars["src"] and dezz.IsKeyDown(dezz.cfg.binds["src"]) then
-        -- сохраняет записанное движение в конфиг (data/dezzaster/automove.txt)
-    end*/
-
     if dezz.cfg.vars["Water jump"] and pLocalPlayer:WaterLevel() > 1 then
-        cmd:AddKey( IN_JUMP )
-
+        cmd:AddKey(IN_JUMP)
     elseif dezz.cfg.vars["Jesus lag"] and dezz.SendPacket and pLocalPlayer:WaterLevel() == 1 then
-        cmd:AddKey( IN_DUCK )
+        cmd:AddKey(IN_DUCK)
     end
 
     if dezz.cfg.vars["Fake duck"] and dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
@@ -8141,57 +7848,55 @@ function dezz.CreateMove(cmd)
             cmd:RemoveKey(IN_DUCK)
         end
     end
+
     dezz.targetVector = false
 
-	ded.StartPrediction(cmd)
+    ded.StartPrediction(cmd)
         local wish_yaw = dezz.SilentAngle.y 
 
-        if ( dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) and dezz.cfg.vars["Circle strafe"] ) then
+        if dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) and dezz.cfg.vars["Circle strafe"] then
             wish_yaw = cmd:GetViewAngles().y
         end
 
         if dezz.cfg.vars["Crossbow prediction"] and dezz.activeWeaponClass == "weapon_crossbow" then
-            dezz.CrossbowPred( cmd )
+            dezz.CrossbowPred(cmd)
         elseif dezz.cfg.vars["pulser"] and dezz.activeWeaponClass == "weapon_ar2" then
             if cmd:KeyDown(IN_ATTACK2) then
                 dezz.PulseRifleAltPred(cmd)
             end
         elseif dezz.cfg.vars["Prop aimbot"] then
-            dezz.PropAim( cmd )
+            dezz.PropAim(cmd)
         else
             if not dezz.Aim(cmd) and cmd:KeyDown(IN_ATTACK) then
-                local va = Angle( dezz.SilentAngle.p, dezz.SilentAngle.y, 0 )
+                local va = Angle(dezz.SilentAngle.p, dezz.SilentAngle.y, 0)
 
                 if dezz.cfg.vars["Norecoil"] then
                     va = dezz.NoRecoil(va)
                 end
 
                 if dezz.cfg.vars["Nospread"] then
-                    va = dezz.NoSpread(cmd,va)
+                    va = dezz.NoSpread(cmd, va)
                 end
 
-                cmd:SetViewAngles( va )
-                
+                cmd:SetViewAngles(va)
             end
         end
         
         if dezz.cfg.vars["Silent aim"] then
-            dezz.MovementFix( cmd, wish_yaw )
+            dezz.MovementFix(cmd, wish_yaw)
         end
-
     ded.FinishPrediction() 
 
-    if dezz.cfg.vars["Trigger bot"] and dezz.IsKeyDown( dezz.cfg.binds["Trigger bot"] ) then
+    if dezz.cfg.vars["Trigger bot"] and dezz.IsKeyDown(dezz.cfg.binds["Trigger bot"]) then
         local tr = pLocalPlayer:GetEyeTrace().Entity 
         
         if tr and tr:IsPlayer() then
-            cmd:AddKey( IN_ATTACK )
+            cmd:AddKey(IN_ATTACK)
         end
     end
 
-    if dezz.cfg.vars["Double tap"] and dezz.cfg.vars["Tickbase shift"] and cmd:KeyDown( IN_ATTACK ) then
-        //dezz.shiftedTicks = 0
-        ded.StartShifting( true )
+    if dezz.cfg.vars["Double tap"] and dezz.cfg.vars["Tickbase shift"] and cmd:KeyDown(IN_ATTACK) then
+        ded.StartShifting(true)
     end
 
     if dezz.cfg.vars["Auto detonator"] and #dezz.slams > 0 then
@@ -8200,16 +7905,20 @@ function dezz.CreateMove(cmd)
 
         local plys = player.GetAll()
 
-        for jjj = 1, #plys do
-            if plys[ jjj ] == pLocalPlayer then continue end
+        for j = 1, #plys do
+            if plys[j] == pLocalPlayer then continue end
             
             for k, v in pairs(dezz.slams) do
-                if not IsValid(v) then dezz.slams[k] = nil continue end
+                if not IsValid(v) then 
+                    dezz.slams[k] = nil 
+                    continue 
+                end
     
                 local pos = v:GetPos()
-    
-                if pos:DistToSqr( plys[ jjj ]:GetPos() + plys[ jjj ]:GetVelocity() * ( flTickInterval * 4 ) ) < d then
-                    cmd:AddKey( IN_ATTACK2 )
+                local predictPos = plys[j]:GetPos() + plys[j]:GetVelocity() * (engine.TickInterval() * 4)
+
+                if pos:DistToSqr(predictPos) < d then
+                    cmd:AddKey(IN_ATTACK2)
                     break
                 end
             end
@@ -8368,7 +8077,7 @@ function dezz.CreateMove(cmd)
             Color(0, 100, 255, 255), true)
     end
 
-    hook.Add("PostDrawTranslucentRenderables", "DezzGPSTracker", DrawGPSTracker)
+    hook.Add("PostDrawTranslucentRenderables", "GPSTracker", DrawGPSTracker)
 
     local function DrawGPSText()
         if not dezz.cfg.vars["GPS"] then return end
@@ -8411,14 +8120,14 @@ function dezz.CreateMove(cmd)
         end
     end
 
-    hook.Add("HUDPaint", "DezzGPSText", DrawGPSText)
+    hook.Add("HUDPaint", "GPSText", DrawGPSText)
 
     local gpsToggleCooldown = 0
 
     hook.Add("Think", "GPSRemoveKey", function()
         if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and CurTime() > gpsToggleCooldown then
-            hook.Remove("PostDrawTranslucentRenderables", "DezzGPSTracker")
-            hook.Remove("HUDPaint", "DezzGPSText")
+            hook.Remove("PostDrawTranslucentRenderables", "GPSTracker")
+            hook.Remove("HUDPaint", "GPSText")
             hook.Remove("Think", "GPSRemoveKey")
             gpsToggleCooldown = CurTime() + 0.5
         end
@@ -15095,7 +14804,7 @@ local function RenderKeystrokers()
     DrawMKS()
 end
 
-hook.Add("HUDPaint", "DezzKeystrokers", RenderKeystrokers)
+hook.Add("HUDPaint", "Keystrokers", RenderKeystrokers)
 
 local function KillEffect(data)
     if not dezz.cfg.vars["Kill effect"] then return end
@@ -15130,7 +14839,7 @@ end
 local nextTrailUpdate = 0
 local panicKeyPressed = false
 
-hook.Add("Think", "DezzPlayerTrailSystem", function()
+hook.Add("Think", "PlayerTrailSystem", function()
     local ct = CurTime()
     
     if ct > nextTrailUpdate then
@@ -15140,7 +14849,7 @@ hook.Add("Think", "DezzPlayerTrailSystem", function()
     
     if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and not panicKeyPressed then
         panicKeyPressed = true
-        hook.Remove("Think", "DezzPlayerTrailSystem")
+        hook.Remove("Think", "PlayerTrailSystem")
         hook.Remove("PostDrawTranslucentRenderables", "DrawPlayerTrail")
         hook.Remove("entity_killed", "KillEffect")
         trailToggleCooldown = ct + 0.5
