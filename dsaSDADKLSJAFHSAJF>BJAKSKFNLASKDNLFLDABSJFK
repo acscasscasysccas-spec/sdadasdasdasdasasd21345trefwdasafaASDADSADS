@@ -12,9 +12,7 @@ local MetaPlayer                        = FindMetaTable("Player")
 
 local TraceHull                         = util.TraceHull    
 local TraceLine                         = util.TraceLine
-local settings = {
-
-}
+local settings = {}
 local theme = {
     ["Frame background"] = Color(30, 10, 10, 200),      
     ["Frame foreground"] = Color(56, 18, 18, 200),     
