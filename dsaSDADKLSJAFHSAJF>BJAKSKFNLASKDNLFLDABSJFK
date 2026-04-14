@@ -12,7 +12,9 @@ local MetaPlayer                        = FindMetaTable("Player")
 
 local TraceHull                         = util.TraceHull    
 local TraceLine                         = util.TraceLine
-local settings = {}
+local settings = {
+
+}
 local theme = {
     ["Frame background"] = Color(30, 10, 10, 200),      
     ["Frame foreground"] = Color(56, 18, 18, 200),     
@@ -48,6 +50,59 @@ dezzCreateFont("newfont", { font = "HudhintTextLarge", size = 30, antialias = fa
 dezzCreateFont("XVIDEOS FONT", { font = "Verdana", size = 45, antialias = false, shadow = true })
 
 dezz.Colors = {}
+
+dezz.fakeLagTicks = 0
+dezz.fakeLagfactor = 0
+dezz.chokedTicks = 0
+
+dezz.peeked = false 
+dezz.peeking = false 
+
+dezz.realAngle = IsValid(pLocalPlayer) and pLocalPlayer:EyeAngles() or Angle(0, 0, 0)
+dezz.inverted = false
+dezz.oldYaw = 0
+dezz.SwaySide = 1
+
+dezz.espposes = {"Up","Down","Right","Left"}
+dezz.espelements = {
+    "Name pos",
+    "Mark pos",
+    "Distance pos",
+    "Usergroup icon pos",
+    "Usergroup TXT pos",
+    "Health pos",
+    "Armor pos",
+    "Weapon pos",
+    "Team pos",
+    "Money pos",
+    "Taunting pos",
+    "AFK pos",
+    "Ping pos",
+    "Simtime updated pos",
+    "Break LC pos",
+    "AA Mode pos"
+}
+dezz.lastdrag = ""
+dezz.esppans = {}
+
+dezz.esppansposes = {
+    [1] = {
+        x = 85,
+        y = 0,
+    },
+    [2] = {
+        x = 85,
+        y = 250,
+    },
+    [3] = {
+        x = 170,
+        y = 125,
+    },
+    [4] = {
+        x = 0,
+        y = 125,
+    },
+}
 
 for i = 0,255 do  
     dezz.Colors[i] = Color( i, i, i )
@@ -427,6 +482,12 @@ dezz.cfg.vars["Weapon printname"]           = false
 dezz.cfg.vars["Show reload"]                = false
 dezz.cfg.vars["Money"]                      = false
 dezz.cfg.vars["Money pos"]                  = 1
+dezz.cfg.vars["Simtime updated"]            = false
+dezz.cfg.vars["Simtime updated pos"]        = 1
+dezz.cfg.vars["Break LC"]                   = false
+dezz.cfg.vars["Break LC pos"]               = 1
+dezz.cfg.vars["AA Mode"]                    = false
+dezz.cfg.vars["AA Mode pos"]                = 1
 dezz.cfg.vars["Ping"]                       = false
 dezz.cfg.vars["Ping pos"]                   = 1
 dezz.cfg.vars["Team"]                       = false
@@ -521,7 +582,6 @@ dezz.cfg.vars["water mode"]                 = 1
 dezz.cfg.vars["LGBTW"]                      = false
 dezz.cfg.vars["LGBTS"]                      = false
 dezz.cfg.vars["rastoman"]                   = false
-dezz.cfg.vars["musicr"]                     = false
 
 // UI & Indicators
 dezz.cfg.vars["WaterMark"]                  = false
@@ -3113,44 +3173,6 @@ end
     Drag n drop 
 */
 
-dezz.espposes = {"Up","Down","Right","Left"}
-dezz.espelements = {
-    "Name pos",
-    "Mark pos",
-    "Distance pos",
-    "Usergroup icon pos",
-    "Usergroup TXT pos",
-    "Health pos",
-    "Armor pos",
-    "Weapon pos",
-    "Team pos",
-    "Money pos",
-    "Taunting pos",
-    "AFK pos",
-    "Ping pos"
-}
-dezz.lastdrag = ""
-dezz.esppans = {}
-
-dezz.esppansposes = {
-    [1] = {
-        x = 85,
-        y = 0,
-    },
-    [2] = {
-        x = 85,
-        y = 250,
-    },
-    [3] = {
-        x = 170,
-        y = 125,
-    },
-    [4] = {
-        x = 0,
-        y = 125,
-    },
-}
-
 for i = 1, 4 do
     dezz.esppans[i] = {}
 end
@@ -3513,7 +3535,6 @@ dezz.spfuncs[40141] = function()
     dezz.ui.SettingsPan:SetSize(200,50)
 
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Drugs", "rastoman")
-    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Music for drugs", "musicr")
 end
 
 dezz.spfuncs[15] = function()
@@ -3695,8 +3716,9 @@ end
         dezz.ui.CheckBox( p, "Taunting", "Taunting", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Taunting pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         dezz.ui.CheckBox( p, "AFK", "AFK", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "AFK pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(3,0,0,0) end )
         dezz.ui.CheckBox( p, "Ping", "Ping", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Ping pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(3,0,0,0) end )
-        --dezz.ui.CheckBox( p, "Lag compensation", "Break LC", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Break LC pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
-       -- dezz.ui.CheckBox( p, "Packets ( Fake lag )", "Simtime updated", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Simtime pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
+        dezz.ui.CheckBox( p, "Lag compensation", "Break LC", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Break LC pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
+        dezz.ui.CheckBox( p, "Packets ( Fake lag )", "Simtime updated", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "Simtime updated pos", {"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
+        dezz.ui.CheckBox( p, "AA Mode", "AA Mode", false, false, false, false, false, function(p) local lbl, drop = dezz.ui.ComboBox( p, "", "AA Mode pos",{"Up","Down","Right","Left"} ) lbl:Remove() drop:Dock(RIGHT) drop:DockMargin(0,0,0,0) end )
         --dezz.ui.CheckBox( p, "Show records", "Show records" )
         dezz.ui.CheckBox( p, "Skeleton", "Skeleton" )
         dezz.ui.CheckBox( p, "Sight lines", "Sight lines" )
@@ -3712,198 +3734,199 @@ function dezz.tabs.Visuals()
         dezz.ui.MTButton( p, "Variant 2", dezz.spfuncs[35] )
         dezz.ui.MTButton( p, "Variant 1", dezz.spfuncs[8888])
     end
-dezz.itemPanelB( "Players",1, 470, func )
 
-    local p = dezz.itemPanel("Entity",1,135):GetItemPanel()
+    dezz.itemPanelB( "Players",1, 530, func )
 
-    dezz.ui.CheckBox( p, "Box", "Ent box", false, false, false, dezz.spfuncs[31] )
-    dezz.ui.CheckBox( p, "Class", "Ent class" )
-    dezz.ui.Slider( p, "Max distance","Ent ESP Distance",0, 20000,0 )
-    dezz.ui.Label( p, "Add entity key", function( p ) dezz.ui.Binder( "Ent add", p ) end )
-    
-    local p = dezz.itemPanel( "Misc", 1, 190 ):GetItemPanel()
+        local p = dezz.itemPanel("Entity",1,135):GetItemPanel()
 
-    dezz.ui.CheckBox( p, "Hide name", "Hide name" )
-    dezz.ui.TextEntry( "Custom name", "Custom name", p, 999 )
-    dezz.ui.CheckBox( p, "Disable sensivity adjustment", "Disable sensivity adjustment" )
-    dezz.ui.CheckBox( p, "Screengrab image", "Screengrab image" )
-    dezz.ui.ComboBox( p, "ESP Font", "ESP Font", { "Outlined", "Shadow" } )
-    
-    local p = dezz.itemPanel("Colored models",2,150):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Player chams", "Visible chams", false, false, true, dezz.spfuncs[14], false, function(p) dezz.ui.ColorPicker( "inVisible chams", p ) end )
-    dezz.ui.CheckBox( p, "Self chams", "Self chams", false, false, true, dezz.spfuncs[15] )
-    dezz.ui.CheckBox( p, "Backtrack chams", "Backtrack chams", false, false, true, dezz.spfuncs[16] )
-    dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[17], false )
-    dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[19], false )
-
-    local p = dezz.itemPanel("Local Player",2,100):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Player Hat", "Player Hat","Detect Screengrab" )
-    dezz.ui.CheckBox( p, "Player Line", "Player Line", "Visual Line" )
-    dezz.ui.CheckBox( p, "Lines", "line", false, false, true )
-
-    local p = dezz.itemPanel("Outlines",2,120):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Player outline", "Player outline", false, false, true )
-    dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
-    dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
-
-    local p = dezz.itemPanel( "Indicators", 2, 460 ):GetItemPanel()
-    dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[90])
-    dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
-    dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
-    dezz.ui.CheckBox( p, "Hitnumbers", "Hitnumbers", false, false, true, false, false, function(p) dezz.ui.ColorPicker( "Hitnumbers krit", p ) end )
-    //dezz.ui.CheckBox( p, "Hit particles", "Hit particles", false, false, true, dezz.spfuncs[31] )
-    dezz.ui.CheckBox( p, "On screen logs", "On screen logs", false, false, true, false, false, function(p) dezz.ui.ColorPicker( "Miss lagcomp", p ) dezz.ui.ColorPicker( "Miss spread", p ) dezz.ui.ColorPicker( "Miss fail", p ) end )
-    dezz.ui.CheckBox( p, "WaterMark", "WaterMark")
-    dezz.ui.CheckBox( p, "Spectator list", "speclist" )
-    dezz.ui.CheckBox( p, "Tickbase", "Tickbase indicator" )
-    dezz.ui.CheckBox( p, "Ping warning", "pw" )
-    dezz.ui.CheckBox( p, "Keystrokes", "ks", false, false, false, dezz.spfuncs[11152], false, function(p) dezz.ui.ColorPicker( "ksck", p ) dezz.ui.ColorPicker( "kscb", p ) end )
-    dezz.ui.CheckBox( p, "Radar", "Radar" )
-    dezz.ui.CheckBox( p, "Kill effect", "Kill effect" )
-    dezz.ui.CheckBox( p, "KeyBind List", "KeyBind List", false,false,true )
-    dezz.ui.ComboBox( p, "Keybinds mode", "bind mode", { "1", "2" })
-    dezz.ui.ComboBox( p, "WaterMark mode", "water mode", { "1", "2" })    
-    dezz.ui.TextEntry( "Effect", "KEF", p, 500 )
-    
-    local p = dezz.itemPanel("World",3,480):GetItemPanel()
-
-    dezz.ui.TextEntry( "Skybox texture", "Custom sky", p, 420 )
-    dezz.ui.CheckBox( p, "Sky color", "Sky color", false, false, true )
-    dezz.ui.CheckBox( p, "Wall color", "Wall color", false, false, true )
-    dezz.ui.CheckBox( p, "LGBT Sky", "LGBTS" )
-    dezz.ui.CheckBox( p, "LGBT Wall", "LGBTW", false, false, false, dezz.spfuncs[40141] )
-    dezz.ui.CheckBox( p, "Night mode", "Night")
-
-    dezz.ui.CheckBox( p, "Fullbright", "Fullbright", false, true )
-    dezz.ui.ComboBox( p, "Mode", "Fullbright mode", { "Default", "Corvus extreme" } )
-    dezz.ui.CheckBox( p, "Disable shadows", "Disable shadows" )
-
-    dezz.ui.CheckBox( p, "Fog changer", "FogChanger", false, false, true )
-    dezz.ui.Slider( p, "Fog start","FogStart", 1, 4200, 0 )
-    dezz.ui.Slider( p, "Fog end","FogEnd", 1, 9000, 0 )
-
-    dezz.ui.CheckBox( p, "Color modify", "Color Modify", false, false, false, dezz.spfuncs[229] )
-
-    dezz.ui.CheckBox( p, "Bullet tracers", "Bullet tracers", false, false, true, dezz.spfuncs[18] )
-    dezz.ui.TextEntry( "Material", "Bullet tracers material", p, 420 )
-
-
-    local p = dezz.itemPanel("View",3,240):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Override view", "Override view" )
-
-    dezz.ui.CheckBox( p, "Third person", "Third person", false, true, false, dezz.spfuncs[20] )
-    dezz.ui.CheckBox( p, "Free camera", "Free camera", false, true, false, dezz.spfuncs[21] )
-
-    dezz.ui.Slider( p, "Fov override","Fov override",75,160,0 )
-    dezz.ui.Slider( p, "Viewmodel fov","Viewmodel fov",50,180,0 )
-    dezz.ui.Slider( p, "Aspect ratio","Aspect ratio",0,2,3,function(val) RunConsoleCommand("r_aspectratio",val) end )
-    dezz.ui.CheckBox( p, "Viewmodel manip","Viewmodel manip", false, false, false, dezz.spfuncs[99] )
-
-
-    local p = dezz.itemPanel("model changer",3,100):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "ModelChanger player", "Modelchanger" )
-    dezz.ui.ComboBox( p, "ModelChanger model", "Modelchanger model", {"astolfo","protogen","walter","rusk", "niko", "george droyd", "wooman", "mark", "furry", "boykisser", "adidas combine"} )
-end
-
-dezz.spfuncs[24] = function()
-    dezz.ui.SettingsPan:SetSize(250,256)
-
-    dezz.ui.ComboBox( dezz.ui.SettingsPan, "Duck mode", "FastD", {"Fast","Super Fast","Ultra FAST"})
-end
-
-dezz.spfuncs[25] = function()
-    dezz.ui.SettingsPan:SetSize(250,256)
-
-    dezz.ui.ComboBox( dezz.ui.SettingsPan, "Strafe mode", "Strafe mode", {"Legit","Rage","Multidir"})
-    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Ground strafer", "Ground strafer" )
-    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Sin ( snake ) strafe", "Z Hop", false, true )
-end
-
-dezz.spfuncs[26] = function()
-    dezz.ui.SettingsPan:SetSize(250,256)
-    dezz.ui.Slider( dezz.ui.SettingsPan, "Predict ticks", "CStrafe ticks", 5, 128, 0 )
-    dezz.ui.Slider( dezz.ui.SettingsPan, "Angle step", "CStrafe angle step", 0, 10, 0 )
-    dezz.ui.Slider( dezz.ui.SettingsPan, "Angle max step", "CStrafe angle max step", 0, 50, 0 )
-    dezz.ui.Slider( dezz.ui.SettingsPan, "Ground diff", "CStrafe ground diff", 0, 65, 0 )
-end
-
-dezz.spfuncs[27] = function( p )
-    dezz.ui.TextEntry( "Name", "Name Convar", p, 250 )
-    dezz.ui.Button( "Change name", function() ded.NetSetConVar("name",dezz.cfg.vars["Name Convar"]) end, p )
-    dezz.ui.CheckBox( p, "Name stealer", "Name stealer" )
-
-    dezz.ui.TextEntry( "Disconnect reason", "Disconnect reason", p, 250 )
-    dezz.ui.Button( "Disconnect", function() ded.NetDisconnect(dezz.cfg.vars["Disconnect reason"]) end, p )
-end 
-
-function dezz.CustomCvarVal( net )
-    local m = net == 1 and "Net Convar mode" or "Cvar mode"
-    local n = net == 1 and "Net Convar int" or "Cvar int"
-    local s = net == 1 and "Net Convar str" or "Cvar str"
-
-    local mode = dezz.cfg.vars[m] 
-    local num = dezz.cfg.vars[n]
-    local set = mode == 2 and math.Round( num ) or num
-
-    if mode == 1 then set = dezz.cfg.vars[s] end
-
-    return set
-end
-
-dezz.spfuncs[28] = function( p )
-    dezz.ui.TextEntry( "Cvar name", "Net Convar", p, 250 )
-    dezz.ui.Slider( p, "Cvar int", "Net Convar int", 1, 100, 2 )
-    dezz.ui.TextEntry( "Cvar str", "Net Convar str", p, 250 )
-
-    dezz.ui.ComboBox( p, "Set mode", "Net Convar mode", {"String","Int","Float"})
-
-    dezz.ui.Button( "Send new val", function() ded.NetSetConVar( dezz.cfg.vars["Net Convar"] ,dezz.CustomCvarVal( 1 ) ) end, p )
-end 
-
-dezz.FCVAR = {
-    str = {
-        "Archive", "Archive XBOX", "Cheat", "Client can execute", "Client DLL", "Demo", "Dont record",
-        "Game DLL", "Lua client", "Lua server", "Never as string", "None", "Notify", "Not connected",
-        "Printable only", "Protected", "Replicated", "Server cannot query", "Server can execute",
-        "Sponly", "Unlogged", "Unregistered", "Userinfo"
-    },
-    int = {
-        128, 16777216, 16384, 1073741824, 8, 65536, 131072, 4, 262144, 524288, 4096, 0, 256, 4194304,
-        1024, 32, 8192, 536870912, 268435456, 64, 2048, 1, 512
-    }
-}
-
-dezz.spfuncs[29] = function( p )
-    dezz.ui.TextEntry( "Enter cvar name", "Cvar name", p, 500 )
-    dezz.ui.Slider( p, "Custom number", "Cvar int", 1, 1000, 2 )
-    dezz.ui.TextEntry( "Custom string", "Cvar str", p, 500 )
-
-    dezz.ui.ComboBox( p, "Cvar mode", "Cvar mode", {"String","Int","Float"})
-    
-    dezz.ui.Button( "Change cvar", function()
-        local s = dezz.CustomCvarVal( 0 )
-        local n = dezz.cfg.vars["Cvar name"]
+        dezz.ui.CheckBox( p, "Box", "Ent box", false, false, false, dezz.spfuncs[31] )
+        dezz.ui.CheckBox( p, "Class", "Ent class" )
+        dezz.ui.Slider( p, "Max distance","Ent ESP Distance",0, 20000,0 )
+        dezz.ui.Label( p, "Add entity key", function( p ) dezz.ui.Binder( "Ent add", p ) end )
         
-        local flag = GetConVar(n):GetFlags()
+        local p = dezz.itemPanel( "Misc", 1, 190 ):GetItemPanel()
 
-        ded.ConVarSetFlags( n, 0 )
+        dezz.ui.CheckBox( p, "Hide name", "Hide name" )
+        dezz.ui.TextEntry( "Custom name", "Custom name", p, 999 )
+        dezz.ui.CheckBox( p, "Disable sensivity adjustment", "Disable sensivity adjustment" )
+        dezz.ui.CheckBox( p, "Screengrab image", "Screengrab image" )
+        dezz.ui.ComboBox( p, "ESP Font", "ESP Font", { "Outlined", "Shadow" } )
+        
+        local p = dezz.itemPanel("Colored models",2,150):GetItemPanel()
 
-        RunConsoleCommand( n, s )
+        dezz.ui.CheckBox( p, "Player chams", "Visible chams", false, false, true, dezz.spfuncs[14], false, function(p) dezz.ui.ColorPicker( "inVisible chams", p ) end )
+        dezz.ui.CheckBox( p, "Self chams", "Self chams", false, false, true, dezz.spfuncs[15] )
+        dezz.ui.CheckBox( p, "Backtrack chams", "Backtrack chams", false, false, true, dezz.spfuncs[16] )
+        dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[17], false )
+        dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[19], false )
 
-        ded.ConVarSetFlags( n, flag )
-    end, p )
+        local p = dezz.itemPanel("Local Player",2,100):GetItemPanel()
 
-    dezz.ui.ComboBox( p, "Cvar flag", "Cvar flag", dezz.FCVAR.str)
+        dezz.ui.CheckBox( p, "Player Hat", "Player Hat","Detect Screengrab" )
+        dezz.ui.CheckBox( p, "Player Line", "Player Line", "Visual Line" )
+        dezz.ui.CheckBox( p, "Lines", "line", false, false, true )
 
-    dezz.ui.Button( "Change flag", function()
-        ded.ConVarSetFlags( dezz.cfg.vars["Cvar name"], dezz.FCVAR.int[ dezz.cfg.vars["Cvar flag"] ] )
-        print( dezz.cfg.vars["Cvar name"], dezz.FCVAR.int[ dezz.cfg.vars["Cvar flag"] ] )
-    end, p )
+        local p = dezz.itemPanel("Outlines",2,120):GetItemPanel()
+
+        dezz.ui.CheckBox( p, "Player outline", "Player outline", false, false, true )
+        dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
+        dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
+
+        local p = dezz.itemPanel( "Indicators", 2, 460 ):GetItemPanel()
+        dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[90])
+        dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
+        dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
+        dezz.ui.CheckBox( p, "Hitnumbers", "Hitnumbers", false, false, true, false, false, function(p) dezz.ui.ColorPicker( "Hitnumbers krit", p ) end )
+        //dezz.ui.CheckBox( p, "Hit particles", "Hit particles", false, false, true, dezz.spfuncs[31] )
+        dezz.ui.CheckBox( p, "On screen logs", "On screen logs", false, false, true, false, false, function(p) dezz.ui.ColorPicker( "Miss lagcomp", p ) dezz.ui.ColorPicker( "Miss spread", p ) dezz.ui.ColorPicker( "Miss fail", p ) end )
+        dezz.ui.CheckBox( p, "WaterMark", "WaterMark")
+        dezz.ui.CheckBox( p, "Spectator list", "speclist" )
+        dezz.ui.CheckBox( p, "Tickbase", "Tickbase indicator" )
+        dezz.ui.CheckBox( p, "Ping warning", "pw" )
+        dezz.ui.CheckBox( p, "Keystrokes", "ks", false, false, false, dezz.spfuncs[11152], false, function(p) dezz.ui.ColorPicker( "ksck", p ) dezz.ui.ColorPicker( "kscb", p ) end )
+        dezz.ui.CheckBox( p, "Radar", "Radar" )
+        dezz.ui.CheckBox( p, "Kill effect", "Kill effect" )
+        dezz.ui.CheckBox( p, "KeyBind List", "KeyBind List", false,false,true )
+        dezz.ui.ComboBox( p, "Keybinds mode", "bind mode", { "1", "2" })
+        dezz.ui.ComboBox( p, "WaterMark mode", "water mode", { "1", "2" })    
+        dezz.ui.TextEntry( "Effect", "KEF", p, 500 )
+        
+        local p = dezz.itemPanel("World",3,480):GetItemPanel()
+
+        dezz.ui.TextEntry( "Skybox texture", "Custom sky", p, 420 )
+        dezz.ui.CheckBox( p, "Sky color", "Sky color", false, false, true )
+        dezz.ui.CheckBox( p, "Wall color", "Wall color", false, false, true )
+        dezz.ui.CheckBox( p, "LGBT Sky", "LGBTS" )
+        dezz.ui.CheckBox( p, "LGBT Wall", "LGBTW", false, false, false, dezz.spfuncs[40141] )
+        dezz.ui.CheckBox( p, "Night mode", "Night")
+
+        dezz.ui.CheckBox( p, "Fullbright", "Fullbright", false, true )
+        dezz.ui.ComboBox( p, "Mode", "Fullbright mode", { "Default", "Corvus extreme" } )
+        dezz.ui.CheckBox( p, "Disable shadows", "Disable shadows" )
+
+        dezz.ui.CheckBox( p, "Fog changer", "FogChanger", false, false, true )
+        dezz.ui.Slider( p, "Fog start","FogStart", 1, 4200, 0 )
+        dezz.ui.Slider( p, "Fog end","FogEnd", 1, 9000, 0 )
+
+        dezz.ui.CheckBox( p, "Color modify", "Color Modify", false, false, false, dezz.spfuncs[229] )
+
+        dezz.ui.CheckBox( p, "Bullet tracers", "Bullet tracers", false, false, true, dezz.spfuncs[18] )
+        dezz.ui.TextEntry( "Material", "Bullet tracers material", p, 420 )
+
+
+        local p = dezz.itemPanel("View",3,240):GetItemPanel()
+
+        dezz.ui.CheckBox( p, "Override view", "Override view" )
+
+        dezz.ui.CheckBox( p, "Third person", "Third person", false, true, false, dezz.spfuncs[20] )
+        dezz.ui.CheckBox( p, "Free camera", "Free camera", false, true, false, dezz.spfuncs[21] )
+
+        dezz.ui.Slider( p, "Fov override","Fov override",75,160,0 )
+        dezz.ui.Slider( p, "Viewmodel fov","Viewmodel fov",50,180,0 )
+        dezz.ui.Slider( p, "Aspect ratio","Aspect ratio",0,2,3,function(val) RunConsoleCommand("r_aspectratio",val) end )
+        dezz.ui.CheckBox( p, "Viewmodel manip","Viewmodel manip", false, false, false, dezz.spfuncs[99] )
+
+
+        local p = dezz.itemPanel("model changer",3,100):GetItemPanel()
+
+        dezz.ui.CheckBox( p, "ModelChanger player", "Modelchanger" )
+        dezz.ui.ComboBox( p, "ModelChanger model", "Modelchanger model", {"astolfo","protogen","walter","rusk", "niko", "george droyd", "wooman", "mark", "furry", "boykisser", "adidas combine"} )
+    end
+
+    dezz.spfuncs[24] = function()
+        dezz.ui.SettingsPan:SetSize(250,256)
+
+        dezz.ui.ComboBox( dezz.ui.SettingsPan, "Duck mode", "FastD", {"Fast","Super Fast","Ultra FAST"})
+    end
+
+    dezz.spfuncs[25] = function()
+        dezz.ui.SettingsPan:SetSize(250,256)
+
+        dezz.ui.ComboBox( dezz.ui.SettingsPan, "Strafe mode", "Strafe mode", {"Legit","Rage","Multidir"})
+        dezz.ui.CheckBox( dezz.ui.SettingsPan, "Ground strafer", "Ground strafer" )
+        dezz.ui.CheckBox( dezz.ui.SettingsPan, "Sin ( snake ) strafe", "Z Hop", false, true )
+    end
+
+    dezz.spfuncs[26] = function()
+        dezz.ui.SettingsPan:SetSize(250,256)
+        dezz.ui.Slider( dezz.ui.SettingsPan, "Predict ticks", "CStrafe ticks", 5, 128, 0 )
+        dezz.ui.Slider( dezz.ui.SettingsPan, "Angle step", "CStrafe angle step", 0, 10, 0 )
+        dezz.ui.Slider( dezz.ui.SettingsPan, "Angle max step", "CStrafe angle max step", 0, 50, 0 )
+        dezz.ui.Slider( dezz.ui.SettingsPan, "Ground diff", "CStrafe ground diff", 0, 65, 0 )
+    end
+
+    dezz.spfuncs[27] = function( p )
+        dezz.ui.TextEntry( "Name", "Name Convar", p, 250 )
+        dezz.ui.Button( "Change name", function() ded.NetSetConVar("name",dezz.cfg.vars["Name Convar"]) end, p )
+        dezz.ui.CheckBox( p, "Name stealer", "Name stealer" )
+
+        dezz.ui.TextEntry( "Disconnect reason", "Disconnect reason", p, 250 )
+        dezz.ui.Button( "Disconnect", function() ded.NetDisconnect(dezz.cfg.vars["Disconnect reason"]) end, p )
+    end 
+
+    function dezz.CustomCvarVal( net )
+        local m = net == 1 and "Net Convar mode" or "Cvar mode"
+        local n = net == 1 and "Net Convar int" or "Cvar int"
+        local s = net == 1 and "Net Convar str" or "Cvar str"
+
+        local mode = dezz.cfg.vars[m] 
+        local num = dezz.cfg.vars[n]
+        local set = mode == 2 and math.Round( num ) or num
+
+        if mode == 1 then set = dezz.cfg.vars[s] end
+
+        return set
+    end
+
+    dezz.spfuncs[28] = function( p )
+        dezz.ui.TextEntry( "Cvar name", "Net Convar", p, 250 )
+        dezz.ui.Slider( p, "Cvar int", "Net Convar int", 1, 100, 2 )
+        dezz.ui.TextEntry( "Cvar str", "Net Convar str", p, 250 )
+
+        dezz.ui.ComboBox( p, "Set mode", "Net Convar mode", {"String","Int","Float"})
+
+        dezz.ui.Button( "Send new val", function() ded.NetSetConVar( dezz.cfg.vars["Net Convar"] ,dezz.CustomCvarVal( 1 ) ) end, p )
+    end 
+
+    dezz.FCVAR = {
+        str = {
+            "Archive", "Archive XBOX", "Cheat", "Client can execute", "Client DLL", "Demo", "Dont record",
+            "Game DLL", "Lua client", "Lua server", "Never as string", "None", "Notify", "Not connected",
+            "Printable only", "Protected", "Replicated", "Server cannot query", "Server can execute",
+            "Sponly", "Unlogged", "Unregistered", "Userinfo"
+        },
+        int = {
+            128, 16777216, 16384, 1073741824, 8, 65536, 131072, 4, 262144, 524288, 4096, 0, 256, 4194304,
+            1024, 32, 8192, 536870912, 268435456, 64, 2048, 1, 512
+        }
+    }
+
+    dezz.spfuncs[29] = function( p )
+        dezz.ui.TextEntry( "Enter cvar name", "Cvar name", p, 500 )
+        dezz.ui.Slider( p, "Custom number", "Cvar int", 1, 1000, 2 )
+        dezz.ui.TextEntry( "Custom string", "Cvar str", p, 500 )
+
+        dezz.ui.ComboBox( p, "Cvar mode", "Cvar mode", {"String","Int","Float"})
+        
+        dezz.ui.Button( "Change cvar", function()
+            local s = dezz.CustomCvarVal( 0 )
+            local n = dezz.cfg.vars["Cvar name"]
+            
+            local flag = GetConVar(n):GetFlags()
+
+            ded.ConVarSetFlags( n, 0 )
+
+            RunConsoleCommand( n, s )
+
+            ded.ConVarSetFlags( n, flag )
+        end, p )
+
+        dezz.ui.ComboBox( p, "Cvar flag", "Cvar flag", dezz.FCVAR.str)
+
+        dezz.ui.Button( "Change flag", function()
+            ded.ConVarSetFlags( dezz.cfg.vars["Cvar name"], dezz.FCVAR.int[ dezz.cfg.vars["Cvar flag"] ] )
+            print( dezz.cfg.vars["Cvar name"], dezz.FCVAR.int[ dezz.cfg.vars["Cvar flag"] ] )
+        end, p )
 
 end 
 
@@ -6812,11 +6835,6 @@ function dezz.Freestand(cmd)
     return false
 end
 
-dezz.realAngle = IsValid(pLocalPlayer) and pLocalPlayer:EyeAngles() or Angle(0, 0, 0)
-dezz.inverted = false
-dezz.oldYaw = 0
-dezz.SwaySide = 1
-
 local baseyaw = 0
 
 dezz.CalcYaw = {
@@ -7112,13 +7130,6 @@ end
 /*
     Fake lag  
 */
-dezz.fakeLagTicks = 0
-dezz.fakeLagfactor = 0
-dezz.chokedTicks = 0
-
-dezz.peeked = false 
-dezz.peeking = false 
-
 function dezz.FakeLagOnPeek()
     dezz.fakeLagTicks = 21 - dezz.chokedTicks - 1 
 
@@ -8044,169 +8055,6 @@ end
     end
 end
 
-if not file.Exists("dezzaster/music", "DATA") then
-    file.CreateDir("dezzaster/music")
-end
-
-local rastamanSound = nil
-local musicLoaded = false
-
-http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=1FkXdeyNFyiHvydEGqXirxEvQsJnEBUQv&export=download", function(body)
-    if body and #body > 0 then
-        file.Write("dezzaster/music/rast.mp3", body)
-        musicLoaded = true
-    end
-end)
-
-hook.Add("RenderScreenspaceEffects", "Rastaman_Screenspace", function()
-    if not dezz.cfg.vars["rastoman"] and not dezz.cfg.vars["musicr"] then 
-        if rastamanSound then
-            rastamanSound:Stop()
-            rastamanSound = nil
-        end
-        return 
-    end
-
-    local ply = LocalPlayer()
-    if not IsValid(ply) then return end
-    
-    if not ply:GetNWBool("rastoman_active") then
-        ply:SetNWBool("rastoman_active", true)
-        ply:SetNWFloat("rastoman_start", CurTime())
-    end
-
-    if not rastamanSound and musicLoaded and dezz.cfg.vars["musicr"] then
-        sound.PlayFile("data/dezzaster/music/rast.mp3", "noblock", function(snd)
-            if IsValid(snd) then
-                rastamanSound = snd
-                snd:EnableLooping(true)
-                snd:Play()
-            end
-        end)
-    end
-    
-    local start = ply:GetNWFloat("rastoman_start", CurTime())
-    local intensity = math.min((CurTime() - start) / 5, 1)
-    if intensity <= 0 then return end
-
-    DrawColorModify({
-        ["$pp_colour_addr"] = 0.05 * math.sin(2 * CurTime()) * intensity,
-        ["$pp_colour_addg"] = 0.05 * math.cos(5 * CurTime()) * intensity,
-        ["$pp_colour_addb"] = 0.05 * math.cos(3 * CurTime()) * intensity,
-        ["$pp_colour_brightness"] = 0,
-        ["$pp_colour_contrast"] = 1,
-        ["$pp_colour_colour"] = 3 * math.sin(CurTime()) * intensity,
-        ["$pp_colour_mulr"] = 0.02 * intensity,
-        ["$pp_colour_mulg"] = 0,
-        ["$pp_colour_mulb"] = 0,
-    })
-
-    DrawMotionBlur(0.2 * intensity, 0.99, 0.01)
-    util.ScreenShake(ply:GetPos(), 1 * intensity, 60, 0.1, 0)
-end)
-
-hook.Add("SetupWorldFog", "Rastaman_WorldFog", function()
-    if not dezz.cfg.vars["rastoman"] then return end
-    
-    local ply = LocalPlayer()
-    if not IsValid(ply) then return end
-    
-    local start = ply:GetNWFloat("rastoman_start", CurTime())
-    local intensity = math.min((CurTime() - start) / 5, 1)
-    if intensity <= 0 then return end
-
-    render.FogMaxDensity(intensity * 0.5)
-    render.FogStart(0)
-    render.FogEnd(1000)
-    render.FogColor(128, 0, 0)
-    render.FogMode(MATERIAL_FOG_LINEAR)
-    return true
-end)
-
-local rastamanBaseRoll = nil
-
-hook.Add("Think", "Rastaman_SetEyeAngles", function()
-    if not dezz.cfg.vars["rastoman"] then return end
-    
-    local ply = LocalPlayer()
-    if not IsValid(ply) then return end
-
-    local start = ply:GetNWFloat("rastoman_start", CurTime())
-    local intensity = math.min((CurTime() - start) / 5, 1)
-    if intensity <= 0 then return end
-
-    if not rastamanBaseRoll then
-        rastamanBaseRoll = ply:EyeAngles().r
-    end
-
-    local ang = ply:EyeAngles()
-    ang.r = rastamanBaseRoll + math.sin(CurTime() * 2) * 8 * intensity
-    ang.y = ang.y + math.sin(CurTime() * 3) * 2 * intensity
-    ang.p = ang.p + math.sin(CurTime() * 4) * 1.5 * intensity
-    ply:SetEyeAngles(ang)
-end)
-
-local rastamanBaseFOV = 0
-local rastamanActive = false
-
-hook.Add("Think", "Rastaman_FOVBreathing", function()
-    if not dezz.cfg.vars["rastoman"] then 
-        if rastamanActive then
-            rastamanActive = false
-            local ply = LocalPlayer()
-            if IsValid(ply) then
-                ply:SetFOV(0, 1)
-            end
-        end
-        return 
-    end
-    
-    local ply = LocalPlayer()
-    if not IsValid(ply) then return end
-    
-    if not rastamanActive then
-        rastamanActive = true
-        rastamanBaseFOV = ply:GetFOV()
-    end
-    
-    local start = ply:GetNWFloat("rastoman_start", CurTime())
-    local intensity = math.min((CurTime() - start) / 5, 1)
-    local pulse = math.sin(CurTime() * 2) * 5 * intensity
-    ply:SetFOV(rastamanBaseFOV + pulse, 0)
-end)
-
-hook.Add("Think", "Rastaman_Cleanup", function()
-    local ply = LocalPlayer()
-    if not IsValid(ply) then return end
-    
-    if not dezz.cfg.vars["rastoman"] and ply:GetNWBool("rastoman_active") then
-        ply:SetNWBool("rastoman_active", false)
-        rastamanBaseRoll = nil
-        rastamanActive = false
-        ply:SetNWFloat("rastoman_start", 0)
-        
-        if rastamanSound then
-            rastamanSound:Stop()
-            rastamanSound = nil
-        end
-    end
-end)
-
-hook.Add("Think", "removerast", function()
-    if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then 
-        if rastamanSound then
-            rastamanSound:Stop()
-            rastamanSound = nil
-        end
-        hook.Remove("Think", "Rastaman_Cleanup")
-        hook.Remove("Think", "Rastaman_FOVBreathing")
-        hook.Remove("Think", "Rastaman_SetEyeAngles")
-        hook.Remove("SetupWorldFog", "Rastaman_WorldFog")
-        hook.Remove("RenderScreenspaceEffects", "Rastaman_Screenspace")
-        hook.Remove("Think", "removerast")
-    end
-end)
-
 /* 
     Render Scene / Anti screengrab 
 */
@@ -8217,46 +8065,78 @@ do
     local oldsky, oldskycolor, oldwallcolor = dezz.cfg.vars["Custom sky"], dezz.cfg.vars["Sky color"], dezz.cfg.vars["Wall color"]
     local oldskyclr, oldwallclr = dezz.cfg.colors["Sky color"], dezz.cfg.colors["Wall color"]
 
-    local worldcollerp = string.ToColor(dezz.cfg.colors["Wall color"])
+    local worldcollerp = string.ToColor(dezz.cfg.colors["Wall color"] or "255 255 255 255")
     local worldmats = Entity(0):GetMaterials()
 
-    local origsky = GetConVar("sv_skyname"):GetString()
     local tsides = {"lf", "ft", "rt", "bk", "dn", "up"}
     local skymat = {}
 
-    for i = 1, 6 do 
-        skymat[i] = Material("skybox/" .. origsky .. tsides[i]) 
+    for i = 1, 6 do
+        skymat[i] = Material("skybox/" .. (oldsky or "sky_day01_01") .. tsides[i])
     end
 
     local function setSkyboxTexture(skyname)
         for i = 1, 6 do
-            local t = Material("skybox/" .. skyname .. tsides[i]):GetTexture("$basetexture")
-            skymat[i]:SetTexture("$basetexture", t)
+            local matName = "skybox/" .. skyname .. tsides[i]
+            local mat = Material(matName)
+            if not mat or mat:IsError() then continue end
+            local t = mat:GetTexture("$basetexture")
+            if t and skymat[i] and not skymat[i]:IsError() then
+                skymat[i]:SetTexture("$basetexture", t)
+            end
         end
     end
 
     local function setSkyColor(setcolor)
-        local cfg = string.ToColor(dezz.cfg.colors["Sky color"])
-        local vector = setcolor and Vector(cfg.r/255, cfg.g/255, cfg.b/255) or Vector(1, 1, 1)
-
+        if not setcolor then return end
+        local colStr = dezz.cfg.colors["Sky color"] or "255 255 255 255"
+        local cfg = string.ToColor(colStr)
+        local vector = Vector(cfg.r / 255, cfg.g / 255, cfg.b / 255)
         for i = 1, 6 do
-            skymat[i]:SetVector("$color", vector)
+            local mat = skymat[i]
+            if mat and not mat:IsError() then
+                mat:SetVector("$color", vector)
+                mat:Recompute()
+            end
         end
     end
 
     local function setWallColor(setcolor)
-        local cfg = string.ToColor(dezz.cfg.colors["Wall color"])
+        if not setcolor then return end
+        local colStr = dezz.cfg.colors["Wall color"] or "255 255 255 255"
+        local cfg = string.ToColor(colStr)
         worldcollerp = dezz.ColorLerp(worldcollerp, cfg)
-        local vector = setcolor and Vector(worldcollerp.r/255, worldcollerp.g/255, worldcollerp.b/255) or Vector(1, 1, 1)
+
+        local vector
+        if dezz.cfg.vars["LGBTW"] then
+            local hue = (CurTime() * 60) % 360
+            local rainbowColor = HSVToColor(hue, 1, 1)
+            vector = Vector(rainbowColor.r / 255, rainbowColor.g / 255, rainbowColor.b / 255)
+        else
+            vector = Vector(worldcollerp.r / 255, worldcollerp.g / 255, worldcollerp.b / 255)
+        end
 
         for i = 1, #worldmats do
-            local value = worldmats[i]
-            local mat = Material(value)
-            
+            local mat = Material(worldmats[i])
             if mat and not mat:IsError() then
                 mat:SetVector("$color", vector)
-                mat:SetFloat("$alpha", setcolor and (cfg.a / 255) or 1)
+                mat:SetFloat("$alpha", cfg.a / 255)
+                mat:Recompute()
             end
+        end
+    end
+
+    local changedSky, changedWall = false, false
+
+    function dezz.PostDraw2DSkyBox()
+        if dezz.cfg.vars["LGBTS"] then
+            render.OverrideDepthEnable(true, false)
+            cam.Start2D()
+            local color = HSVToColor(CurTime() * 60 % 360, 1, 1)
+            surface.SetDrawColor(color.r, color.g, color.b, 255)
+            surface.DrawRect(0, 0, ScrW(), ScrH())
+            cam.End2D()
+            render.OverrideDepthEnable(false, false)
         end
     end
 
@@ -8266,74 +8146,37 @@ do
             dezz.cfg.colors["Wall color"] = "13 13 13 255"
             dezz.cfg.vars["Sky color"] = true
             dezz.cfg.colors["Sky color"] = "8 8 8 255"
-            dezz.cfg.vars["Custom sky name"] = "sky_day01_06"
+            dezz.cfg.vars["Custom sky"] = "sky_day01_06"
         end
 
-        local newname = dezz.cfg.vars["Custom sky name"] or ""
+        local newname = dezz.cfg.vars["Custom sky"] or ""
         local newcolor = dezz.cfg.vars["Sky color"] or false
         local newcolor2 = dezz.cfg.vars["Wall color"] or false
         local newskyclr = dezz.cfg.colors["Sky color"] or "255 255 255 255"
         local newwallclr = dezz.cfg.colors["Wall color"] or "255 255 255 255"
-        local LGBTwall = dezz.cfg.vars["LGBTW"] or false
-        local LGBTsky = dezz.cfg.vars["LGBTS"] or false
-        
-        if LGBTsky then
-            hook.Add("PostDraw2DSkyBox", "RainbowSky", function()
-                render.OverrideDepthEnable(true, false)
-                cam.Start2D()
-                local color = HSVToColor(CurTime() * 60 % 360, 1, 1)
-                surface.SetDrawColor(color.r, color.g, color.b, 255)
-                surface.DrawRect(0, 0, ScrW(), ScrH())
-                cam.End2D()
-                render.OverrideDepthEnable(false, false)
-            end)
-            newcolor = true
-        else
-            hook.Remove("PostDraw2DSkyBox", "RainbowSky")
-        end
-        
-        if LGBTwall then
-            hook.Remove("RenderScreenspaceEffects", "RainbowWallsEffect")
-            
-            hook.Add("RenderScreenspaceEffects", "RainbowWallsEffect", function()
-                local hue = (CurTime() * 60) % 360
-                local rainbowColor = HSVToColor(hue, 1, 1)
-                
-                for i = 1, #worldmats do
-                    local mat = Material(worldmats[i])
-                    if mat and not mat:IsError() then
-                        mat:SetVector("$color", Vector(rainbowColor.r/255, rainbowColor.g/255, rainbowColor.b/255))
-                        mat:Recompute()
-                    end
-                end
-            end)
-            
-            newcolor2 = true
-        else
-            hook.Remove("RenderScreenspaceEffects", "RainbowWallsEffect")
-            
-            if newwallclr ~= tostring(worldcollerp) or newcolor2 ~= oldwallcolor then
-                setWallColor(newcolor2)
-                oldwallcolor = newcolor2
-            end
-        end
 
-        if dezz.IsKeyDown( dezz.cfg.binds["Panic Key"] ) then
-            hook.Remove("RenderScreenspaceEffects", "RainbowWallsEffect")
-            hook.Remove("PostDraw2DSkyBox", "RainbowSky")
+        if newname ~= "" and newname ~= oldsky then
+            setSkyboxTexture(newname)
+            oldsky = newname
         end
 
         if newskyclr ~= oldskyclr or newcolor ~= oldskycolor then
-            if not LGBTsky then
-                setSkyColor(newcolor)
-            end
             oldskyclr = newskyclr
             oldskycolor = newcolor
+            changedSky = true
         end
 
-        if newname and newname ~= "" and newname ~= oldsky then
-            setSkyboxTexture(newname)
-            oldsky = newname
+        if newcolor2 ~= oldwallcolor then
+            oldwallcolor = newcolor2
+            changedWall = true
+        end
+
+        if changedSky then
+            setSkyColor(newcolor)
+        end
+
+        if changedWall then
+            setWallColor(newcolor2)
         end
 
         if (not gui.IsConsoleVisible() and not gui.IsGameUIVisible()) or dezz.UnSafeFrame then
@@ -8350,10 +8193,10 @@ do
                 drawmonitors = true,
                 drawviewmodel = true
             }
-         
+
             render.RenderView(view)
             render.CopyTexture(nil, dezz.renderTarget)
-         
+
             cam.Start2D()
                 hook.Run("Ungrabbable2D")
             cam.End2D()
@@ -9150,7 +8993,7 @@ function dezz.DrawESP()
             end
         end
 
-        /*if dezz.cfg.vars["Break LC"] and v.break_lc then
+        if dezz.cfg.vars["Break LC"] and v.break_lc then
             local name = "Breaking LC"
             local pos = dezz.cfg.vars["Break LC pos"]
             local tw, th = surface.GetTextSize(name)
@@ -9159,18 +9002,7 @@ function dezz.DrawESP()
             surface.DrawText(name)
 
             ttbl[pos] = ttbl[pos] + 0.8
-        end*/
-
-        /*if dezz.cfg.vars["Simtime updated"] then
-            local name = v.simtime_updated and "Updated" or "Same"
-            local pos = dezz.cfg.vars["Simtime pos"]
-            local tw, th = surface.GetTextSize(name)
-
-            surface.SetTextPos(poses[pos]-dezz.getTextX(tw,pos),dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
-            surface.DrawText(name)
-
-            ttbl[pos] = ttbl[pos] + 0.8
-        end*/
+        end
 
         surface.SetTextColor( dezz.Colors[255] )
 
@@ -9195,26 +9027,6 @@ function dezz.DrawESP()
             return isAFK
         end
 
-        function dezz.UpdateMovementTime(ply)
-            if not IsValid(ply) then return end
-            
-            local vel = ply:GetVelocity():Length2D()
-            local ang = ply:EyeAngles()
-            
-            if vel > 10 or (dezz.LastAngles and dezz.LastAngles[ply] and not dezz.LastAngles[ply]:IsEqualTol(ang, 1)) then
-                ply.LastMovementTime = CurTime()
-            end
-            
-            dezz.LastAngles = dezz.LastAngles or {}
-            dezz.LastAngles[ply] = ang
-        end
-
-        hook.Add("Think", "AFKTracker", function()
-            for _, ply in ipairs(player.GetAll()) do
-                dezz.UpdateMovementTime(ply)
-            end
-        end)
-
         surface.SetTextColor(dezz.Colors[255])
 
         if dezz.cfg.vars["AFK"] then
@@ -9236,6 +9048,33 @@ function dezz.DrawESP()
 
             surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos),dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
             surface.DrawText('Ping: '..name,dFont)
+
+            ttbl[pos] = ttbl[pos] + 0.8
+        end
+
+        if dezz.cfg.vars["Simtime updated"] then
+            local name = v.simtime_updated and "Updated" or "Same"
+            local pos = dezz.cfg.vars["Simtime updated pos"]
+            local tw, th = surface.GetTextSize(name)
+
+            surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos),dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
+            surface.DrawText(name)
+
+            ttbl[pos] = ttbl[pos] + 0.8
+        end
+
+        if dezz.cfg.vars["AA Mode"] then
+            local pitch = v.entity:EyeAngles().p
+            local pos = dezz.cfg.vars["AA Mode pos"]
+            local tw, th = surface.GetTextSize(math.Round(pitch,2))
+
+            surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos),dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
+            surface.DrawText('Pitch: '..math.Round(pitch,4),DFont)
+            
+            ttbl[pos] = ttbl[pos] + 0.8
+
+            surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos),dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
+            surface.DrawText('Yaw: '..math.Round(pitch,4),DFont) 
 
             ttbl[pos] = ttbl[pos] + 0.8
         end
@@ -11407,6 +11246,44 @@ local lastPlayerUpdate = 0
 function dezz.RenderScreenspaceEffects()
     if dezz.UnSafeFrame then return end
 
+    if dezz.cfg.vars["rastoman"] then
+        local ply = LocalPlayer()
+        if not IsValid(ply) then return end
+
+        local intensity = math.min((CurTime()) / 5, 1)
+        if intensity <= 0 then return end
+
+        DrawColorModify({
+            ["$pp_colour_addr"] = 0.05 * math.sin(2 * CurTime()) * intensity,
+            ["$pp_colour_addg"] = 0.05 * math.cos(5 * CurTime()) * intensity,
+            ["$pp_colour_addb"] = 0.05 * math.cos(3 * CurTime()) * intensity,
+            ["$pp_colour_brightness"] = 0,
+            ["$pp_colour_contrast"] = 1,
+            ["$pp_colour_colour"] = 3 * math.sin(CurTime()) * intensity,
+            ["$pp_colour_mulr"] = 0.02 * intensity,
+            ["$pp_colour_mulg"] = 0,
+            ["$pp_colour_mulb"] = 0,
+        })
+
+        DrawMotionBlur(0.2 * intensity, 0.99, 0.01)
+        util.ScreenShake(ply:GetPos(), 1 * intensity, 60, 0.1, 0)
+    end
+
+    if dezz.cfg.vars["LGBTW"] then
+
+        local hue = (CurTime() * 60) % 360
+        local rainbowColor = HSVToColor(hue, 1, 1)
+        local worldmats = Entity(0):GetMaterials()
+            
+        for i = 1, #worldmats do
+            local mat = Material(worldmats[i])
+            if mat and not mat:IsError() then
+                mat:SetVector("$color", Vector(rainbowColor.r/255, rainbowColor.g/255, rainbowColor.b/255))
+                mat:Recompute()
+            end
+        end
+    end
+
     if dezz.cfg.vars["Color Modify"] then 
         DrawColorModify({
             ["$pp_colour_addr"] = dezz.cfg.vars["Color Modify Add Red"],
@@ -12824,6 +12701,24 @@ do
             dezz.Unload()
         end
 
+        function dezz.UpdateMovementTime(ply)
+            if not IsValid(ply) then return end
+            
+            local vel = ply:GetVelocity():Length2D()
+            local ang = ply:EyeAngles()
+            
+            if vel > 10 or (dezz.LastAngles and dezz.LastAngles[ply] and not dezz.LastAngles[ply]:IsEqualTol(ang, 1)) then
+                ply.LastMovementTime = CurTime()
+            end
+            
+            dezz.LastAngles = dezz.LastAngles or {}
+            dezz.LastAngles[ply] = ang
+        end
+
+        for _, ply in ipairs(player.GetAll()) do
+            dezz.UpdateMovementTime(ply)
+        end
+
         if dezz.cfg.vars["RusEliteDetector"] then
             if not dezz or not dezz.cfg or not dezz.cfg.vars then return end
 
@@ -13061,6 +12956,40 @@ do
     
         if dezz.cfg.vars["Name stealer"] then 
             dezz.nameChanger() 
+        end
+
+        if dezz.cfg.vars["rastoman"] then
+            local ply = LocalPlayer()
+            if not IsValid(ply) then return end
+
+            if not rastamanActive then
+                rastamanActive = true
+                rastamanBaseFOV = ply:GetFOV()
+            end
+
+            local intensity = math.min(CurTime() / 5, 1)
+            if intensity > 0 then
+                if not rastamanBaseRoll then
+                    rastamanBaseRoll = ply:EyeAngles().r
+                end
+
+                local ang = ply:EyeAngles()
+                ang.y = ang.y + math.sin(CurTime() * 3) * 2 * intensity
+                ang.p = ang.p + math.sin(CurTime() * 4) * 1.5 * intensity
+                ply:SetEyeAngles(ang)
+
+                local pulse = math.sin(CurTime() * 2) * 5 * intensity
+                ply:SetFOV(rastamanBaseFOV + pulse, 0)
+            end
+        else
+            local ply = LocalPlayer()
+            if IsValid(ply) then
+                ply:SetFOV(0, 1)
+            end
+            rastamanActive = false
+            rastamanBaseRoll = nil
+            rastamanBaseFOV = 0
+            return
         end
     
         if ded.GetCurrentCharge() < dezz.cfg.vars["Shift ticks"] then 
@@ -14196,71 +14125,6 @@ do
     end
 end
 
-hook.Add("PrePlayerDraw",  "WIP", function()
-	for k, v in ipairs(player.GetAll()) do
-        if dezz.cfg.vars["Modelchanger"] then
-            LocalPlayer():InvalidateBoneCache()
-			LocalPlayer():SetSequence(LocalPlayer():GetSequence())
-            local state = LocalPlayer():GetPredictable()
-            LocalPlayer():SetPredictable(not state)
-            LocalPlayer():SetPredictable(state)
-            if dezz.cfg.vars["Modelchanger model"] == 1 then
-                LocalPlayer():SetModel("models/cyanblue/fate_extella_link/astolfo/astolfo.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 2 then
-                LocalPlayer():SetModel("models/squids_pms/ocs/xani_protogen/xani_pm.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 3 then
-                LocalPlayer():SetModel("models/walter/playermodels/walter.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 4 then
-                LocalPlayer():SetModel("models/survivors/survivor_mechanic.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 5 then
-                LocalPlayer():SetModel("models/ray/nikoo/nikopm.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 6 then
-                LocalPlayer():SetModel("models/player/floyd/georgedroyd.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 7 then
-                LocalPlayer():SetModel("models/jazzmcfly/bgs/bgs.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 8 then
-                LocalPlayer():SetModel("models/invincible/mark/mark.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 9 then
-                LocalPlayer():SetModel("models/good/goob_outlined.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 10 then
-                LocalPlayer():SetModel("models/boykisser/boykisser.mdl")
-            elseif dezz.cfg.vars["Modelchanger model"] == 11 then   
-                LocalPlayer():SetModel("models/adidas_combine/playermodel/adidas_combine.mdl")            
-            end
-            LocalPlayer():SetupBones()
-        end
-        /*if dezz.cfg.vars["Player_modelchanger"] then
-            v:InvalidateBoneCache()	
-            v:SetupBones()
-            if dezz.cfg.vars["Player_modelchanger_agent"] == 1 then
-                v:InvalidateBoneCache()	
-                v:SetupBones()
-                v:SetModel("models/player/charple.mdl")
-            elseif dezz.cfg.vars["Player_modelchanger_agent"] == 2 then
-                v:InvalidateBoneCache()	
-                v:SetupBones()
-                v:SetModel("models/player/Group01/male_03.mdl")
-            elseif dezz.cfg.vars["Player_modelchanger_agent"] == 3 then
-                v:InvalidateBoneCache()	
-                v:SetupBones()
-                v:SetModel("models/player/gman_high.mdl")
-            elseif dezz.cfg.vars["Player_modelchanger_agent"] == 4 then
-                v:InvalidateBoneCache()	
-                v:SetupBones()
-                v:SetModel("models/player/zombie_classic.mdl")
-                elseif dezz.cfg.vars["Player_modelchanger_agent"] == 5 then
-                v:InvalidateBoneCache()    
-                v:SetupBones()
-                v:SetModel("models/player/Astolfo.mdl")
-            end			
-        end*/
-    
-    end
-		
-	
-end)
-
-
 function dezz.PostDrawEffects()
     if dezz.UnSafeFrame then return end
     if not dezz.cfg.vars["Player outline"] and not dezz.cfg.vars["Entity outline"] then return end
@@ -14335,6 +14199,22 @@ GAMEMODE["EntityFireBullets"] = function( self, p, data )
 end
 
 function dezz.SetupWorldFog()
+    if dezz.cfg.vars["rastoman"] then
+        
+        local ply = LocalPlayer()
+        if not IsValid(ply) then return end
+
+        local intensity = math.min((CurTime()) / 5, 1)
+        if intensity <= 0 then return end
+
+        render.FogMaxDensity(intensity * 0.5)
+        render.FogStart(0)
+        render.FogEnd(1000)
+        render.FogColor(128, 0, 0)
+        render.FogMode(MATERIAL_FOG_LINEAR)
+        return true
+    end
+
     if not dezz.cfg.vars[ "FogChanger" ] then return end 
 
     local color = string.ToColor(dezz.cfg.colors["FogChanger"])
@@ -14435,6 +14315,7 @@ dezz.AddHook("player_hurt")
 dezz.AddHook("PostDrawEffects")
 dezz.AddHook("PostDrawOpaqueRenderables")
 dezz.AddHook("PostDrawTranslucentRenderables")
+dezz.AddHook("PostDraw2DSkyBox")
 dezz.AddHook("PostDrawViewModel")
 dezz.AddHook("PostFrameStageNotify")
 dezz.AddHook("PreDrawViewModel")
