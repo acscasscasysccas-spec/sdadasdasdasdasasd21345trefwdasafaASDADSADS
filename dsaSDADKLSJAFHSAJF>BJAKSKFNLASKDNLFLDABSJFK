@@ -54,6 +54,8 @@ dezz.Colors = {}
 dezz.fakeLagTicks = 0
 dezz.fakeLagfactor = 0
 dezz.chokedTicks = 0
+ded.GetSimulationTime = function()return 0 end
+ded.GetServerTime = function()return 0 end
 
 dezz.peeked = false 
 dezz.peeking = false 
@@ -497,6 +499,7 @@ dezz.cfg.vars["Skeleton"]                   = false
 dezz.cfg.colors["Skeleton"]                 = "255 255 255 255"
 dezz.cfg.vars["Hitbox"]                     = false
 dezz.cfg.colors["Hitbox"]                   = "255 255 255 255"
+dezz.cfg.colors["HitboxLocal"]              = "255 255 255 255"
 dezz.cfg.vars["Player Line"]                = false
 dezz.cfg.vars["Sight lines"]                = false
 dezz.cfg.vars["Player Hat"]                 = false
@@ -761,6 +764,16 @@ do
     ded.SetInterpolation( true )
     ded.SetSequenceInterpolation( true )
     ded.EnableAnimFix( false )
+
+    /*
+    ded.SetInterpolation(dezz.cfg.vars["Disable interpolation"])
+    ded.SetSequenceInterpolation(dezz.cfg.vars["Disable Sequence interpolation"])
+    ded.EnableAnimFix(dezz.cfg.vars["Update Client Anim fix"])
+    ded.EnableBoneFix(dezz.cfg.vars["Bone fix"])
+
+    ded.SetMaxShift(dezz.cfg.vars["Charge ticks"])
+    ded.SetMinShift(dezz.cfg.vars["Shift ticks"])
+    ded.EnableTickbaseShifting(dezz.cfg.vars["Tickbase shift"])*/
 end
 
 
@@ -790,9 +803,13 @@ if not file.Exists( "dezzaster/default.txt", "DATA" ) then
     file.Write( "dezzaster/default.txt", util.TableToJSON( dezz.cfg, false ) ) 
 end
 
- /*http.Fetch("https://media.discordapp.net/attachments/1108456125965279334/1111682362011562034/SPOILER_IMG_6794.png", function(body)
+if not file.Exists( "dezzaster/png", "GAME" ) then 
+    file.CreateDir("dezzaster/png") 
+end
+
+ http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=1a2jclzyGaAix74c0s8Yel6d-8Gg_0SaC&export=download", function(body)
      file.Write("prikol.png", body)
- end)*/
+ end)
 
 
 dezz.cfgTable = {}
@@ -873,15 +890,6 @@ function dezz.LoadConfig()
 
     dezz.cfg.vars["Config name"] = ConfigName
     dezz.cfg.vars["Selected config"] = SelectedConfig
-
-    ded.SetInterpolation(dezz.cfg.vars["Disable interpolation"])
-    ded.SetSequenceInterpolation(dezz.cfg.vars["Disable Sequence interpolation"])
-    ded.EnableAnimFix(dezz.cfg.vars["Update Client Anim fix"])
-    ded.EnableBoneFix(dezz.cfg.vars["Bone fix"])
-
-    ded.SetMaxShift(dezz.cfg.vars["Charge ticks"])
-    ded.SetMinShift(dezz.cfg.vars["Shift ticks"])
-    ded.EnableTickbaseShifting(dezz.cfg.vars["Tickbase shift"])
 end
 
 function dezz.CreateConfig()
@@ -3226,7 +3234,7 @@ function dezz.tabs.Aimbot()
 
     dezz.ui.CheckBox( p, "Enable aimbot", "Enable aimbot", false, false, false, false, false, function( p ) dezz.ui.Binder( "Aim on key", p ) end )
     dezz.ui.CheckBox( p, "Silent aim", "Silent aim", "Invisible aim for you." )
-    dezz.ui.CheckBox( p, "pSilent", "pSilent", "Make aim completely invisible." )
+    dezz.ui.CheckBox( p, "pSilent", "pSilent", "Make aim completely invisible.(temporarily no work)" )
     dezz.ui.CheckBox( p, "Auto fire", "Auto fire", "Automatically fires when targets can be damaged.", false, false, dezz.spfuncs[2] )
     dezz.ui.CheckBox( p, "Auto reload", "Auto reload", "Automatically reloads weapon when clip is empty." )
 
@@ -3251,8 +3259,8 @@ function dezz.tabs.Aimbot()
 
     local p = dezz.itemPanel( "Prediction", 2, 120 ):GetItemPanel()
 
-    dezz.ui.CheckBox( p, "Crossbow prediction", "Crossbow prediction" )
-    dezz.ui.CheckBox( p, "Pulseriffle", "pulser" )
+    dezz.ui.CheckBox( p, "Crossbow prediction", "Crossbow prediction", "temporarily no work" )
+    dezz.ui.CheckBox( p, "Pulseriffle", "pulser", "temporarily no work" )
     /*dezz.ui.CheckBox( p, "Prop aimbot", "Prop aimbot")
     dezz.ui.CheckBox( p, "PA thrower", "PA thrower")*/
     dezz.ui.Slider( p, "Simulation limit", "Simulation limit", 1, 10, 2 )
@@ -3262,7 +3270,7 @@ function dezz.tabs.Aimbot()
 
     dezz.ui.CheckBox( p, "Knife bot", "Knifebot", false, false, false )
     dezz.ui.ComboBox( p, "Knifebot mode", "Knifebot mode"  )
-    dezz.ui.CheckBox( p, "Facestab", "Facestab" )
+    dezz.ui.CheckBox( p, "Facestab", "Facestab", "(temporarily no work)" )
 
     --local p = dezz.itemPanel( "Tickbase", 2, 100 ):GetItemPanel()
 
@@ -3359,7 +3367,7 @@ function dezz.tabs.Rage()
 
     dezz.ui.CheckBox( p, "Fake angle chams", "Anti aim chams", false, false, false, dezz.spfuncs[36], false, function( p ) dezz.ui.ColorPicker( "Real chams", p ) end ) 
     dezz.ui.CheckBox( p, "Angle arrows", "Angle arrows", "crash" )
-    dezz.ui.CheckBox( p, "Hitbox", "Hitbox",false,false,true )
+    dezz.ui.CheckBox( p, "Hitbox", "Hitbox",false,false,true,false,false, function(p) dezz.ui.ColorPicker( "HitboxLocal", p ) end )
     dezz.ui.CheckBox( p, "Indicators", "indicators" )
 
     local p = dezz.itemPanel( "Animation breaker", 2, 310 ):GetItemPanel()
@@ -3373,9 +3381,9 @@ function dezz.tabs.Rage()
     dezz.ui.ComboBox( p, "Taunt 2.1", "Taunt 2.1", dezz.act2Commands )
     dezz.ui.Slider( p, "Taunt 2 Speed", "Taunt 2 Speed", 0,1,2 ) 
 
-    local p = dezz.itemPanel( "Tickbase", 2, 265 ):GetItemPanel()
+    local p = dezz.itemPanel( "Tickbase", 2, 255 ):GetItemPanel()
 
-    dezz.ui.CheckBox( p, "Enable shift", "Tickbase shift", false, true, false, false, function(b) ded.EnableTickbaseShifting(b) end )
+    --dezz.ui.CheckBox( p, "Enable shift", "Tickbase shift", false, true, false, false, function(b) ded.EnableTickbaseShifting(b) end )
 
     dezz.ui.ComboBox( p, "Fakelag comp", "Fakelag comp", {"Disable","Compensate"} )
     dezz.ui.CheckBox( p, "Warp on peek", "Warp on peek" )
@@ -3402,8 +3410,8 @@ function dezz.tabs.Rage()
     dezz.ui.CheckBox( p, "Interpolation", "Disable interpolation", false, false, false, false, function( bval ) ded.SetInterpolation( bval ) end )
     dezz.ui.CheckBox( p, "Sequence interpolation", "Disable Sequence interpolation", false, false, false, false, function( bval ) ded.SetSequenceInterpolation( bval ) end )
     dezz.ui.CheckBox( p, "Tpose", "Invalidate activity" )
-    dezz.ui.CheckBox( p, "Fix bones", "Bone fix", false, false, false, false, function( bval ) ded.EnableBoneFix( bval ) end )
-    dezz.ui.CheckBox( p, "Fix animations", "Update Client Anim fix", false, false, false, false, function( bval ) ded.EnableAnimFix( bval ) end )
+    dezz.ui.CheckBox( p, "Fix bones", "Bone fix", "no work" )
+    dezz.ui.CheckBox( p, "Fix animations", "Update Client Anim fix", "no work" )
     dezz.ui.CheckBox( p, "Extrapolation", "Extrapolation" )
     dezz.ui.CheckBox( p, "Fake lag Fix", "Fake lag Fix" )
     dezz.ui.CheckBox( p, "Forward Track" , "Forward" )
@@ -3443,7 +3451,7 @@ dezz.spfuncs[2] = function()
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Rapid fire", "Rapid fire", "Allows to quickly fire semi-automatic weapons." )
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Wait for simulation", "Wait for simulation" )
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Alt Rapid fire", "Alt Rapid fire" )
-    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Bullet time", "Bullet time", "Aim will not work until weapon can fire." )
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Bullet time", "Bullet time", "Aim will not work until weapon can fire.(temporarily no work)" )
     dezz.ui.Slider( dezz.ui.SettingsPan, "Time", "Time", 0, 1, 3 )
 end
 
@@ -3534,7 +3542,7 @@ end
 dezz.spfuncs[40141] = function()
     dezz.ui.SettingsPan:SetSize(200,50)
 
-    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Drugs", "rastoman")
+    --dezz.ui.CheckBox( dezz.ui.SettingsPan, "Drugs", "rastoman")
 end
 
 dezz.spfuncs[15] = function()
@@ -3797,7 +3805,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Sky color", "Sky color", false, false, true )
         dezz.ui.CheckBox( p, "Wall color", "Wall color", false, false, true )
         dezz.ui.CheckBox( p, "LGBT Sky", "LGBTS" )
-        dezz.ui.CheckBox( p, "LGBT Wall", "LGBTW", false, false, false, dezz.spfuncs[40141] )
+        dezz.ui.CheckBox( p, "LGBT Wall", "LGBTW" )
         dezz.ui.CheckBox( p, "Night mode", "Night")
 
         dezz.ui.CheckBox( p, "Fullbright", "Fullbright", false, true )
@@ -4791,7 +4799,8 @@ function dezz.CanShoot( cmd )
         return false
     end
 
-	if dezz.cfg.vars["Bullet time"] and dezz.activeWeapon:GetNextPrimaryFire() >= ded.GetServerTime(cmd)-dezz.cfg.vars["Time"] then
+    --no work
+	if dezz.cfg.vars["Bullet time"] and dezz.activeWeapon:GetNextPrimaryFire() >= dezz.flServerTime-dezz.cfg.vars["Time"] then
 		return false
 	end
 
@@ -4805,8 +4814,7 @@ end
 
 function dezz.Spread( cmd, ang, spread )
 	if not dezz.activeWeapon or not dezz.cones[ dezz.activeWeaponClass ] then return ang end
-
-	local dir = ded.PredictSpread( cmd, ang, spread )
+	local dir = ded.PredictSpread( cmd, spread )
 
 	local newangle = ang + dir:Angle()
 	newangle:Normalize()
@@ -6295,14 +6303,16 @@ function dezz.Aim(cmd)
         finalAngle:Normalize()
     end
 
+    --no work
     if dezz.cfg.vars["Facestab"] then
         cmd:SetViewAngles(finalAngle)
-        ded.SetContextVector(cmd, aimang:Forward(), true)
+        ded.SetContextVector(cmd, aimang:Forward(), false)
     elseif dezz.cfg.vars["pSilent"] then
-        ded.SetContextVector(cmd, finalAngle:Forward(), true)
+        ded.SetContextVector(cmd, finalAngle:Forward(), false)
     else
         cmd:SetViewAngles(finalAngle)
     end
+    --
 
     if backtracking then
         targetTime = dezz.btrecords[ply][bttick].simulationtime
@@ -7556,6 +7566,14 @@ function dezz.CreateMove(cmd)
         end
     end
 
+    if dezz.cfg.vars["Yaw base"] == 2 then
+        tply = dezz.GetSortedPlayers( 1, 0, 1, false ) 
+
+        if tply then
+            dezz.aatarget = tply[1][1]
+        end
+    end
+
     if dezz.cfg.vars["Auto Vape"] then
         if cmd:KeyDown(IN_ATTACK) then
             if dezz.tyaga >= dezz.maxvape then
@@ -7634,7 +7652,8 @@ function dezz.CreateMove(cmd)
 
     dezz.FastWalk(cmd)
 
-    if dezz.cfg.vars["Sprint"] then cmd:AddKey(IN_SPEED) end
+    if dezz.cfg.vars["Sprint"] and not cmd:KeyDown(IN_ATTACK) or dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) then cmd:AddKey(IN_SPEED) end
+    if dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) and pLocalPlayer:Alive() and dezz.target then cmd:RemoveKey(IN_SPEED) end
 
     if dezz.cfg.vars["edge"] then
         local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
@@ -9149,7 +9168,7 @@ dezz.gradFov = false
 do
     local lc = Color(125, 255, 64)   
     local blc = Color(255, 64, 125)  
-    local indx, indy = screenWidth / 2 - 100, screenHeight/2 + 250
+    local indx, indy = ScrW() / 2 - 100, ScrH() / 2 + 250
     local charge = 0
 
     local gradcolor, chargedcolor, unchargedcolor = Color(200,200,200,128), Color(0,255,128), Color(255,155,0)
@@ -9160,14 +9179,14 @@ do
     function dezz.DrawSomeShit()
         if dezz.cfg.vars["Auto Vape"] then
             surface.SetTextColor( dezz.tyaga == 0 and blc or lc )
-            surface.SetTextPos( 38,screenHeight-220 ) 
+            surface.SetTextPos( 38, ScrH() - 220 ) 
             surface.DrawText( "Vape: " ) 
             
             surface.SetDrawColor( 0, 0, 0 )
-            surface.DrawRect( 78, screenHeight-219, 60, 14 )
+            surface.DrawRect( 78, ScrH() - 219, 60, 14 )
 
             surface.SetDrawColor( lc )
-            surface.DrawRect( 79, screenHeight-218, dezz.tyaga / dezz.maxvape * 58, 12 )
+            surface.DrawRect( 79, ScrH() - 218, dezz.tyaga / dezz.maxvape * 58, 12 )
         end
         
         if dezz.cfg.vars["Tickbase shift"] and dezz.cfg.vars["Tickbase indicator"] then
@@ -9175,7 +9194,7 @@ do
                 ccharge = ded.GetCurrentCharge() * 196 / dezz.cfg.vars["Shift ticks"]
             end
 
-            charge = math.Approach(charge,ccharge,FrameTime()*700)
+            charge = math.Approach(charge, ccharge, FrameTime() * 700)
 
             if ded.GetCurrentCharge() == 0 then
                 chargestate = "NO CHARGE"
@@ -9191,21 +9210,21 @@ do
             local tw, th = surface.GetTextSize(chargestate)
 
             surface.SetDrawColor(dezz.Colors[12])
-            surface.DrawRect(indx,indy,200,30)
+            surface.DrawRect(indx, indy, 200, 30)
 
             surface.SetDrawColor(chargecolor) 
-            surface.DrawRect(indx+2,indy+2,charge,26)
+            surface.DrawRect(indx + 2, indy + 2, charge, 26)
 
             surface.SetDrawColor( gradcolor )
             surface.SetMaterial( dezz.Materials["Gradient right"] )
-            surface.DrawTexturedRect( indx+2,indy+2,charge,26 )
+            surface.DrawTexturedRect( indx + 2, indy + 2, charge, 26 )
 
             surface.SetTextColor( dezz.Colors[245] )
 
-            surface.SetTextPos( indx+2,indy-20 ) 
-            surface.DrawText( "CHARGE "..ded.GetCurrentCharge() ) 
+            surface.SetTextPos( indx + 2, indy - 20 ) 
+            surface.DrawText( "CHARGE " .. ded.GetCurrentCharge() ) 
 
-            surface.SetTextPos( indx+196-tw,indy-20 ) 
+            surface.SetTextPos( indx + 196 - tw, indy - 20 ) 
             surface.DrawText( chargestate ) 
         end
 
@@ -9328,7 +9347,7 @@ do
             end
         end
 
-        if dezz.cfg.vars["test"]  then
+        if dezz.cfg.vars["test"] then
         end
 
         if dezz.cfg.vars["KeyBind List"] then
@@ -10117,7 +10136,7 @@ do
                 end
 
                 local elapsed = currentTime - hit.time
-                local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5
+                local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
 
                 local spreadProgress = math.min(elapsed / 0.3, 1.0)
                 local alphaProgress = 1.0 - math.max(0, (elapsed - 0.5) / 0.3)
@@ -10166,8 +10185,8 @@ do
                 local offsetX = math.cos(angle) * distance
                 local offsetY = math.sin(angle) * distance
 
-                local centerX = screenWidth * 0.5
-                local centerY = screenHeight * 0.5
+                local centerX = ScrW() * 0.5
+                local centerY = ScrH() * 0.5
 
                 surface.SetTextPos(
                     centerX + offsetX,
@@ -10183,20 +10202,20 @@ do
             local radius = dezz.GetFovRadius()
         
             surface.SetDrawColor( 0, 0, 0, 128 )
-            surface.DrawCircle( ( screenWidth * 0.5 ), ( screenHeight * 0.5 ), radius + 1 )
+            surface.DrawCircle( ( ScrW() * 0.5 ), ( ScrH() * 0.5 ), radius + 1 )
 
             surface.SetDrawColor( col.r, col.g, col.b )
-            surface.DrawCircle( ( screenWidth * 0.5 ), ( screenHeight * 0.5 ), radius )
+            surface.DrawCircle( ( ScrW() * 0.5 ), ( ScrH() * 0.5 ), radius )
 
             surface.SetDrawColor( 0, 0, 0, 128 )
-            surface.DrawCircle( ( screenWidth * 0.5 ), ( screenHeight * 0.5 ), radius - 1 )
+            surface.DrawCircle( ( ScrW() * 0.5 ), ( ScrH() * 0.5 ), radius - 1 )
         end
 
         if dezz.target and dezz.targetVector then
             if dezz.cfg.vars["Aimbot snapline"] then 
                 local pos = dezz.targetVector:ToScreen()
                 surface.SetDrawColor( string.ToColor( dezz.cfg.colors["Aimbot snapline"] ) )
-                surface.DrawLine( pos.x, pos.y, ( screenWidth * 0.5 ), ( screenHeight * 0.5 ) )
+                surface.DrawLine( pos.x, pos.y, ( ScrW() * 0.5 ), ( ScrH() * 0.5 ) )
             end
             if dezz.cfg.vars["Aimbot marker"] then 
                 local pos = dezz.targetVector:ToScreen()
@@ -10385,7 +10404,7 @@ do
 
         if dezz.cfg.vars["On screen logs"] and table.Count(dezz.onScreenLogs) > 0 then
             local tick = engine.TickCount()
-            local centerX, centerY = screenWidth * 0.5, screenHeight * 0.5 + 45
+            local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5 + 45
             
             for k, v in pairs(dezz.onScreenLogs) do
                 if dezz.TICKS_TO_TIME(tick - v.tick) > 8 then
@@ -10416,52 +10435,6 @@ do
             end
         end
 
-        
-        -- хуита а ни ватермарки блен
-        /*if dezz.cfg.vars["WaterMark"] then
-
-            local playerName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
-            local txt = "dezzaster ◆  " .. playerName .. "  ◆  v2 ◆  DEV"
-
-            surface.SetFont("Watermark_Bold")
-            local txtWidth, txtHeight = surface.GetTextSize(txt)
-
-            local paddingX = 30
-            local paddingY = 10
-            local x, y = 15, 15
-
-            local bgColor = Color(10, 10, 15, 240)
-            local accentColor = Color(0, 180, 255)  
-            local textColor = Color(255, 255, 255)  
-            local shadowColor = Color(0, 0, 0, 150)
-
-            draw.RoundedBox(4, x, y, txtWidth + paddingX, txtHeight + paddingY, bgColor)
-
-            surface.SetDrawColor(accentColor)
-            surface.DrawRect(x, y, txtWidth + paddingX, 2)
-
-            surface.SetDrawColor(accentColor.r, accentColor.g, accentColor.b, 40)
-            surface.DrawOutlinedRect(x, y, txtWidth + paddingX, txtHeight + paddingY)
-
-            draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2 + 1, y + paddingY/2 + 1, shadowColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2, y + paddingY/2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-
-            local pulse = math.sin(CurTime() * 3) * 0.2 + 0.8
-            surface.SetDrawColor(accentColor.r * pulse, accentColor.g * pulse, accentColor.b * pulse, 255)
-            surface.DrawRect(x + 5, y + txtHeight + paddingY - 4, 10, 2)
-            surface.DrawRect(x + txtWidth + paddingX - 15, y + txtHeight + paddingY - 4, 10, 2)
-
-            local iconSize = 14
-            if file.Exists("materials/icon16/shield.vmt", "GAME") then
-                surface.SetMaterial(Material("icon16/shield"))
-                surface.SetDrawColor(textColor)
-                surface.DrawTexturedRect(x + 8, y + (txtHeight + paddingY - iconSize)/2, iconSize, iconSize)
-            else
-                draw.SimpleText("✦", "Watermark_Symbols", x + 15, y + (txtHeight + paddingY)/2 + 1, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            end
-        end*/
-
-        -- а эта уже пацанские четкие ватермарки
         if dezz.cfg.vars["WaterMark"] then
             if dezz.cfg.vars["water mode"] == 1 then
                 local pName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
@@ -10502,9 +10475,7 @@ do
                 currentX = currentX + surface.GetTextSize("❤ ")
 
                 draw.SimpleText(pName, "Default", currentX, y1 + height1/2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                -- меня заставили вернуть эти кальные ватермарки
-                elseif dezz.cfg.vars["water mode"] == 2 then
-
+            elseif dezz.cfg.vars["water mode"] == 2 then
                 local playerName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
                 local txt = "dezzaster ◆  " .. playerName .. "  ◆  v2 ◆  DEV"
 
@@ -10543,575 +10514,567 @@ do
                     surface.DrawTexturedRect(x + 8, y + (txtHeight + paddingY - iconSize)/2, iconSize, iconSize)
                 else
                     draw.SimpleText("✦", "Watermark_Symbols", x + 15, y + (txtHeight + paddingY)/2 + 1, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
+            end
+        end
+    end
+
+
+    dezz.kd = false
+
+    function dezz.togglevisible()
+        if dezz.frame:IsVisible() then
+            dezz.frame:AlphaTo(0, 0.15, 0, function()
+                dezz.frame:SetVisible(false)
+                
+                if dezz.ui.MultiComboP then dezz.ui.RemovePanel(dezz.ui.MultiComboP) end
+                if dezz.ui.ColorWindow then dezz.ui.RemovePanel(dezz.ui.ColorWindow) end
+                if dezz.ui.SettingsPan then dezz.ui.RemovePanel(dezz.ui.SettingsPan) end
+
+                RememberCursorPosition()
+                if dezz.validsnd then dezz.validsnd:Pause() end
+            end)
+        else
+            dezz.frame:Center()
+            dezz.frame:SetAlpha(0)
+            dezz.frame:SetVisible(true)
+            dezz.frame:AlphaTo(255, 0.2)
+
+            RestoreCursorPosition()
+            if dezz.validsnd then dezz.validsnd:Play() end
+        end
+    end
+
+    function dezz.PostDrawHUD()
+        if dezz.cfg.vars["Radar"] then 
+            local RadarSize = 100
+            local RadarRange = 5000
+                
+            local centerX = ScrW() - RadarSize - 20
+            local centerY = RadarSize + 20
+            local time = CurTime() % 3
+            local color = HSVToColor(time * 120, 1, 1)
+            local ply = LocalPlayer()
+            local plyPos = ply:GetPos()
+            local realAngles = dezz.SilentAngle or ply:EyeAngles()
+
+            surface.SetDrawColor(20, 20, 30, 220)
+            surface.DrawRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
+                
+            surface.SetDrawColor(0, 150, 255, 100)
+            surface.DrawOutlinedRect(centerX - RadarSize - 1, centerY - RadarSize - 1, RadarSize * 2 + 2, RadarSize * 2 + 2)
+                
+            surface.SetDrawColor(50, 50, 70, 80)
+            for i = 1, 3 do
+                local pos = (i / 4) * RadarSize * 2
+                surface.DrawLine(centerX - RadarSize + pos, centerY - RadarSize, centerX - RadarSize + pos, centerY + RadarSize)
+                surface.DrawLine(centerX - RadarSize, centerY - RadarSize + pos, centerX + RadarSize, centerY - RadarSize + pos)
+            end
+                
+            surface.SetDrawColor(70, 70, 90, 120)
+            surface.DrawLine(centerX - RadarSize, centerY, centerX + RadarSize, centerY)
+            surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY + RadarSize)
+
+            surface.SetDrawColor(40, 40, 60, 90)
+            draw.NoTexture()
+            for i = 1, 3 do
+                local pulseTime = (CurTime() + i) % 3
+                local pulse = math.abs(math.sin(pulseTime * math.pi))
+                local alpha = 50 + pulse * 40
+                local radius = (i / 4) * RadarSize
+                    
+                surface.SetDrawColor(40, 40, 60, alpha)
+                draw.Circle(centerX, centerY, radius, 32)
+            end
+
+            local mapSize = 5000
+            local traceStart = plyPos + Vector(0, 0, 5000)
+            local traceEnd = plyPos - Vector(0, 0, 5000)
+            local trace = util.TraceLine({
+                start = traceStart,
+                endpos = traceEnd,
+                mask = MASK_SOLID_BRUSHONLY
+            })
+            local groundPos = trace.HitPos
+            local groundNormal = trace.HitNormal
+
+            for dx = -RadarRange, RadarRange, 500 do
+                for dy = -RadarRange, RadarRange, 500 do
+                    local worldPos = groundPos + Vector(dx, dy, 0)
+                    local relativePos = worldPos - plyPos
+                    local distance = relativePos:Length()
+                    if distance > RadarRange then continue end
+
+                    local traceCheck = util.TraceLine({
+                        start = worldPos + Vector(0, 0, 100),
+                        endpos = worldPos - Vector(0, 0, 200),
+                        mask = MASK_SOLID_BRUSHONLY
+                    })
+
+                    if traceCheck.Hit then
+                        local angle = realAngles.y - 90
+                        local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
+                        local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
+                            
+                        if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
+                        radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
+                            surface.SetDrawColor(30, 100, 30, 40)
+                            surface.DrawRect(radarX - 2, radarY - 2, 4, 4)
+                        end
                     end
                 end
             end
 
-        end
+            for x = -RadarRange, RadarRange, 1000 do
+                for y = -RadarRange, RadarRange, 1000 do
+                    local worldPos = groundPos + Vector(x, y, 0)
+                    local relativePos = worldPos - plyPos
+                    local distance = relativePos:Length()
+                    if distance > RadarRange then continue end
 
-/*
-hook.Add( "PostDrawTranslucentRenderables", "test", function()
-    if dezz.targetVector then
-        render.DrawWireframeSphere( dezz.targetVector, 0.5, 10, 10, Color( 255, 0, 64 ) )
-    end
-end)
-*/
-
-
-dezz.kd = false
-
-function dezz.togglevisible()
-    if dezz.frame:IsVisible() then
-        dezz.frame:AlphaTo(0, 0.15, 0, function()
-            dezz.frame:SetVisible(false)
-            
-            if dezz.ui.MultiComboP then dezz.ui.RemovePanel(dezz.ui.MultiComboP) end
-            if dezz.ui.ColorWindow then dezz.ui.RemovePanel(dezz.ui.ColorWindow) end
-            if dezz.ui.SettingsPan then dezz.ui.RemovePanel(dezz.ui.SettingsPan) end
-
-            RememberCursorPosition()
-            if dezz.validsnd then dezz.validsnd:Pause() end
-        end)
-    else
-        dezz.frame:Center()
-        dezz.frame:SetAlpha(0)
-        dezz.frame:SetVisible(true)
-        dezz.frame:AlphaTo(255, 0.2)
-
-        RestoreCursorPosition()
-        if dezz.validsnd then dezz.validsnd:Play() end
-    end
-end
-
-function dezz.PostDrawHUD()
-    if dezz.cfg.vars["Radar"] then 
-        local RadarSize = 100
-        local RadarRange = 5000
-            
-        local centerX = ScrW() - RadarSize - 20
-        local centerY = RadarSize + 20
-        local time = CurTime() % 3
-        local color = HSVToColor(time * 120, 1, 1)
-        local ply = LocalPlayer()
-        local plyPos = ply:GetPos()
-        local realAngles = dezz.SilentAngle or ply:EyeAngles()
-
-        surface.SetDrawColor(20, 20, 30, 220)
-        surface.DrawRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
-            
-        surface.SetDrawColor(0, 150, 255, 100)
-        surface.DrawOutlinedRect(centerX - RadarSize - 1, centerY - RadarSize - 1, RadarSize * 2 + 2, RadarSize * 2 + 2)
-            
-        surface.SetDrawColor(50, 50, 70, 80)
-        for i = 1, 3 do
-            local pos = (i / 4) * RadarSize * 2
-            surface.DrawLine(centerX - RadarSize + pos, centerY - RadarSize, centerX - RadarSize + pos, centerY + RadarSize)
-            surface.DrawLine(centerX - RadarSize, centerY - RadarSize + pos, centerX + RadarSize, centerY - RadarSize + pos)
-        end
-            
-        surface.SetDrawColor(70, 70, 90, 120)
-        surface.DrawLine(centerX - RadarSize, centerY, centerX + RadarSize, centerY)
-        surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY + RadarSize)
-
-        surface.SetDrawColor(40, 40, 60, 90)
-        draw.NoTexture()
-        for i = 1, 3 do
-            local pulseTime = (CurTime() + i) % 3
-            local pulse = math.abs(math.sin(pulseTime * math.pi))
-            local alpha = 50 + pulse * 40
-            local radius = (i / 4) * RadarSize
-                
-            surface.SetDrawColor(40, 40, 60, alpha)
-            draw.Circle(centerX, centerY, radius, 32)
-        end
-
-        local mapSize = 5000
-        local traceStart = plyPos + Vector(0, 0, 5000)
-        local traceEnd = plyPos - Vector(0, 0, 5000)
-        local trace = util.TraceLine({
-            start = traceStart,
-            endpos = traceEnd,
-            mask = MASK_SOLID_BRUSHONLY
-        })
-        local groundPos = trace.HitPos
-        local groundNormal = trace.HitNormal
-
-        for dx = -RadarRange, RadarRange, 500 do
-            for dy = -RadarRange, RadarRange, 500 do
-                local worldPos = groundPos + Vector(dx, dy, 0)
-                local relativePos = worldPos - plyPos
-                local distance = relativePos:Length()
-                if distance > RadarRange then continue end
-
-                local traceCheck = util.TraceLine({
-                    start = worldPos + Vector(0, 0, 100),
-                    endpos = worldPos - Vector(0, 0, 200),
-                    mask = MASK_SOLID_BRUSHONLY
-                })
-
-                if traceCheck.Hit then
                     local angle = realAngles.y - 90
                     local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
                     local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
                         
-                    if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
+                        if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
                     radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
-                        surface.SetDrawColor(30, 100, 30, 40)
-                        surface.DrawRect(radarX - 2, radarY - 2, 4, 4)
+                        surface.SetDrawColor(80, 80, 120, 60)
+                        surface.DrawLine(radarX - 3, radarY, radarX + 3, radarY)
+                        surface.DrawLine(radarX, radarY - 3, radarX, radarY + 3)
                     end
                 end
             end
-        end
 
-        for x = -RadarRange, RadarRange, 1000 do
-            for y = -RadarRange, RadarRange, 1000 do
-                local worldPos = groundPos + Vector(x, y, 0)
-                local relativePos = worldPos - plyPos
+            surface.SetDrawColor(0, 200, 255)
+            surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY - RadarSize + 6)
+
+            surface.SetDrawColor(255, 50, 50)
+            draw.Circle(centerX, centerY, 5, 12)
+            
+            for _, target in ipairs(player.GetAll()) do
+                if target == ply or not target:Alive() then continue end
+                
+                local relativePos = target:GetPos() - plyPos
                 local distance = relativePos:Length()
+                
                 if distance > RadarRange then continue end
 
                 local angle = realAngles.y - 90
                 local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
                 local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
-                    
-                    if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
+                
+                if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
                 radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
-                    surface.SetDrawColor(80, 80, 120, 60)
-                    surface.DrawLine(radarX - 3, radarY, radarX + 3, radarY)
-                    surface.DrawLine(radarX, radarY - 3, radarX, radarY + 3)
+                    
+                    local playerColor = team.GetColor(target:Team())
+                        
+                    surface.SetDrawColor(0, 0, 0, 200)
+                    draw.Circle(radarX, radarY, 4, 8)
+                        
+                    surface.SetDrawColor(playerColor)
+                    draw.Circle(radarX, radarY, 3, 8)
                 end
             end
+
+            surface.SetDrawColor(color.r, color.g, color.b, 150)
+            surface.DrawOutlinedRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
+                
+            surface.SetDrawColor(0, 100, 200, 80)
+            surface.DrawOutlinedRect(centerX - RadarSize - 2, centerY - RadarSize - 2, RadarSize * 2 + 4, RadarSize * 2 + 4)
+
+            draw.SimpleText("RADAR", "DefaultSmall", centerX, centerY - RadarSize - 25, 
+                        Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
         end
 
-        surface.SetDrawColor(0, 200, 255)
-        surface.DrawLine(centerX, centerY - RadarSize, centerX, centerY - RadarSize + 6)
-
-        surface.SetDrawColor(255, 50, 50)
-        draw.Circle(centerX, centerY, 5, 12)
-        
-        for _, target in ipairs(player.GetAll()) do
-            if target == ply or not target:Alive() then continue end
-            
-            local relativePos = target:GetPos() - plyPos
-            local distance = relativePos:Length()
-            
-            if distance > RadarRange then continue end
-
-            local angle = realAngles.y - 90
-            local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
-            local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
-            
-            if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-            radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
-                
-                local playerColor = team.GetColor(target:Team())
+        if not draw.Circle then
+            function draw.Circle(x, y, radius, segments)
+                local circle = {}
                     
-                surface.SetDrawColor(0, 0, 0, 200)
-                draw.Circle(radarX, radarY, 4, 8)
+                for i = 0, segments do
+                    local angle = math.rad((i / segments) * -360)
+                    table.insert(circle, {x = x + math.sin(angle) * radius, y = y + math.cos(angle) * radius})
+                end
                     
-                surface.SetDrawColor(playerColor)
-                draw.Circle(radarX, radarY, 3, 8)
+                surface.DrawPoly(circle)
             end
         end
-
-        surface.SetDrawColor(color.r, color.g, color.b, 150)
-        surface.DrawOutlinedRect(centerX - RadarSize, centerY - RadarSize, RadarSize * 2, RadarSize * 2)
-            
-        surface.SetDrawColor(0, 100, 200, 80)
-        surface.DrawOutlinedRect(centerX - RadarSize - 2, centerY - RadarSize - 2, RadarSize * 2 + 4, RadarSize * 2 + 4)
-
-        draw.SimpleText("RADAR", "DefaultSmall", centerX, centerY - RadarSize - 25, 
-                    Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
     end
 
-    if not draw.Circle then
-        function draw.Circle(x, y, radius, segments)
-            local circle = {}
-                
-            for i = 0, segments do
-                local angle = math.rad((i / segments) * -360)
-                table.insert(circle, {x = x + math.sin(angle) * radius, y = y + math.cos(angle) * radius})
-            end
-                
-            surface.DrawPoly(circle)
+    function dezz.HUDPaint()
+        local function GetKeypads()
+            return ents.FindByClass("keypad")
         end
-    end
-end
 
-function dezz.HUDPaint()
-    local function GetKeypads()
-        return ents.FindByClass("keypad")
-    end
-
-    if dezz.cfg.vars["kps"] then
-        local me = LocalPlayer()
-        if not IsValid(me) then return end
-                
-        local trace_ent = me:GetEyeTrace().Entity
-                
-        for _, v in ipairs(GetKeypads()) do
-            if v.hacked then
-                local pos = v:GetPos():ToScreen()
-                if pos.visible then
-                    if v == trace_ent then
-                        draw.SimpleText(v.passi, "TargetID", pos.x + 20, pos.y + 8, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                    else
-                        draw.SimpleText(v.passi, "TargetID", pos.x + 5, pos.y + 6, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        if dezz.cfg.vars["kps"] then
+            local me = LocalPlayer()
+            if not IsValid(me) then return end
+                    
+            local trace_ent = me:GetEyeTrace().Entity
+                    
+            for _, v in ipairs(GetKeypads()) do
+                if v.hacked then
+                    local pos = v:GetPos():ToScreen()
+                    if pos.visible then
+                        if v == trace_ent then
+                            draw.SimpleText(v.passi, "TargetID", pos.x + 20, pos.y + 8, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        else
+                            draw.SimpleText(v.passi, "TargetID", pos.x + 5, pos.y + 6, green, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        end
                     end
                 end
             end
         end
-    end
 
-    dezz.ksPos = dezz.ksPos or { x = 100, y = 100, dragging = false }
-    dezz.mksPos = dezz.mksPos or { x = 300, y = 100, dragging = false }
-    dezz.mksData = dezz.mksData or { x = 0, y = 0, lastAngle = 0, lastPitch = 0 }
+        dezz.ksPos = dezz.ksPos or { x = 100, y = 100, dragging = false }
+        dezz.mksPos = dezz.mksPos or { x = 300, y = 100, dragging = false }
+        dezz.mksData = dezz.mksData or { x = 0, y = 0, lastAngle = 0, lastPitch = 0 }
 
-    if dezz.cfg.vars["ks"] then
-        local x, y = dezz.ksPos.x, dezz.ksPos.y or 10, 10
-        local size = 120
-        local keySize = 30
-        local spacing = 4
+        if dezz.cfg.vars["ks"] then
+            local x, y = dezz.ksPos.x, dezz.ksPos.y or 10, 10
+            local size = 120
+            local keySize = 30
+            local spacing = 4
 
-        draw.RoundedBox(6, x+2, y+1, size-4, size+16, string.ToColor(dezz.cfg.colors["kscb"]))
+            draw.RoundedBox(6, x+2, y+1, size-4, size+16, string.ToColor(dezz.cfg.colors["kscb"]))
 
-        local wColor = input.IsKeyDown(KEY_W) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        draw.RoundedBox(4, x + size/2 - keySize/2, y + 8, keySize, keySize, wColor)
-        draw.SimpleText("W", "DermaDefaultBold", x + size/2, y + 8 + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local wColor = input.IsKeyDown(KEY_W) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            draw.RoundedBox(4, x + size/2 - keySize/2, y + 8, keySize, keySize, wColor)
+            draw.SimpleText("W", "DermaDefaultBold", x + size/2, y + 8 + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-        local aColor = input.IsKeyDown(KEY_A) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        draw.RoundedBox(4, x + 8, y + 8 + keySize + spacing, keySize, keySize, aColor)
-        draw.SimpleText("A", "DermaDefaultBold", x + 8 + keySize/2, y + 8 + keySize + spacing + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local aColor = input.IsKeyDown(KEY_A) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            draw.RoundedBox(4, x + 8, y + 8 + keySize + spacing, keySize, keySize, aColor)
+            draw.SimpleText("A", "DermaDefaultBold", x + 8 + keySize/2, y + 8 + keySize + spacing + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-        local sColor = input.IsKeyDown(KEY_S) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        draw.RoundedBox(4, x + size/2 - keySize/2, y + 8 + keySize + spacing, keySize, keySize, sColor)
-        draw.SimpleText("S", "DermaDefaultBold", x + size/2, y + 8 + keySize + spacing + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local sColor = input.IsKeyDown(KEY_S) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            draw.RoundedBox(4, x + size/2 - keySize/2, y + 8 + keySize + spacing, keySize, keySize, sColor)
+            draw.SimpleText("S", "DermaDefaultBold", x + size/2, y + 8 + keySize + spacing + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-        local dColor = input.IsKeyDown(KEY_D) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        draw.RoundedBox(4, x + size - keySize - 8, y + 8 + keySize + spacing, keySize, keySize, dColor)
-        draw.SimpleText("D", "DermaDefaultBold", x + size - keySize - 8 + keySize/2, y + 8 + keySize + spacing + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local dColor = input.IsKeyDown(KEY_D) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            draw.RoundedBox(4, x + size - keySize - 8, y + 8 + keySize + spacing, keySize, keySize, dColor)
+            draw.SimpleText("D", "DermaDefaultBold", x + size - keySize - 8 + keySize/2, y + 8 + keySize + spacing + keySize/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-        local mouseY = y + 8 + (keySize * 2) + (spacing * 2) + 5
+            local mouseY = y + 8 + (keySize * 2) + (spacing * 2) + 5
 
-        local spaceColor = input.IsKeyDown(KEY_SPACE) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        draw.RoundedBox(4, x + 8, mouseY, size - 16, 20, spaceColor)
-        draw.SimpleText("SPACE", "DermaDefaultBold", x + size/2, mouseY + 10, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local spaceColor = input.IsKeyDown(KEY_SPACE) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            draw.RoundedBox(4, x + 8, mouseY, size - 16, 20, spaceColor)
+            draw.SimpleText("SPACE", "DermaDefaultBold", x + size/2, mouseY + 10, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-        local lmbColor = input.IsMouseDown(MOUSE_LEFT) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        local rmbColor = input.IsMouseDown(MOUSE_RIGHT) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
-        
-        draw.RoundedBox(4, x + 8, mouseY + 24, (size - 24) / 2, 18, lmbColor)
-        draw.RoundedBox(4, x + size/2 + 4, mouseY + 24, (size - 24) / 2, 18, rmbColor)
-        
-        draw.SimpleText("LMB", "DermaDefaultBold", x + 8 + ((size - 24) / 4), mouseY + 33, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("RMB", "DermaDefaultBold", x + size/2 + 4 + ((size - 24) / 4), mouseY + 33, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+            local lmbColor = input.IsMouseDown(MOUSE_LEFT) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            local rmbColor = input.IsMouseDown(MOUSE_RIGHT) and Color(50, 3, 3) or string.ToColor(dezz.cfg.colors["ksck"])
+            
+            draw.RoundedBox(4, x + 8, mouseY + 24, (size - 24) / 2, 18, lmbColor)
+            draw.RoundedBox(4, x + size/2 + 4, mouseY + 24, (size - 24) / 2, 18, rmbColor)
+            
+            draw.SimpleText("LMB", "DermaDefaultBold", x + 8 + ((size - 24) / 4), mouseY + 33, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("RMB", "DermaDefaultBold", x + size/2 + 4 + ((size - 24) / 4), mouseY + 33, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
 
-    if dezz.cfg.vars["mks"] then
-        local ply = LocalPlayer()
-        if IsValid(ply) then
-            local x, y = dezz.mksPos.x, dezz.mksPos.y or 10, 10
-            local size = 130
-            local centerX, centerY = x + size/2, y + size/2
+        if dezz.cfg.vars["mks"] then
+            local ply = LocalPlayer()
+            if IsValid(ply) then
+                local x, y = dezz.mksPos.x, dezz.mksPos.y or 10, 10
+                local size = 130
+                local centerX, centerY = x + size/2, y + size/2
 
+                local angles = ply:EyeAngles()
+
+                local angleDiff = angles.y - (dezz.mksData.lastAngle or angles.y)
+                local pitchDiff = angles.p - (dezz.mksData.lastPitch or angles.p)
+                
+                dezz.mksData.lastAngle = angles.y
+                dezz.mksData.lastPitch = angles.p
+
+                dezz.mksData.x = dezz.mksData.x * 0.9 + angleDiff * 1.5
+                dezz.mksData.y = dezz.mksData.y * 0.9 + pitchDiff * 1.5
+
+                dezz.mksData.x = math.Clamp(dezz.mksData.x, -45, 45)
+                dezz.mksData.y = math.Clamp(dezz.mksData.y, -45, 45)
+
+                draw.RoundedBox(6, x, y, size, size, Color(0, 0, 0, 200))
+
+                surface.SetDrawColor(50, 50, 50, 255)
+                surface.DrawLine(x + size/2, y + 15, x + size/2, y + size - 15)
+                surface.DrawLine(x + 15, y + size/2, x + size - 15, y + size/2)
+
+                local dotX = centerX - dezz.mksData.x
+                local dotY = centerY + dezz.mksData.y
+                draw.RoundedBox(4, dotX - 5, dotY - 5, 10, 10, Color(50, 3, 3))
+            end
+        end
+
+        if dezz.cfg.vars["ks"] then
+            local mouseX, mouseY = input.GetCursorPos()
+            
+            if input.IsMouseDown(MOUSE_LEFT) then
+                if not dezz.ksPos.dragging then
+                    if mouseX >= dezz.ksPos.x and mouseX <= dezz.ksPos.x + 120 and
+                    mouseY >= dezz.ksPos.y and mouseY <= dezz.ksPos.y + 25 then
+                        dezz.ksPos.dragging = true
+                        dezz.ksPos.dragX = mouseX - dezz.ksPos.x
+                        dezz.ksPos.dragY = mouseY - dezz.ksPos.y
+                    end
+                end
+                
+                if dezz.ksPos.dragging then
+                    dezz.ksPos.x = math.Clamp(mouseX - dezz.ksPos.dragX, 0, ScrW() - 120)
+                    dezz.ksPos.y = math.Clamp(mouseY - dezz.ksPos.dragY, 0, ScrH() - 180)
+                end
+            else
+                dezz.ksPos.dragging = false
+            end
+        end
+
+        if dezz.cfg.vars["mks"] then
+            local mouseX, mouseY = input.GetCursorPos()
+            
+            if input.IsMouseDown(MOUSE_LEFT) then
+                if not dezz.mksPos.dragging then
+                    if mouseX >= dezz.mksPos.x and mouseX <= dezz.mksPos.x + 130 and
+                    mouseY >= dezz.mksPos.y and mouseY <= dezz.mksPos.y + 25 then
+                        dezz.mksPos.dragging = true
+                        dezz.mksPos.dragX = mouseX - dezz.mksPos.x
+                        dezz.mksPos.dragY = mouseY - dezz.mksPos.y
+                    end
+                end
+                
+                if dezz.mksPos.dragging then
+                    dezz.mksPos.x = math.Clamp(mouseX - dezz.mksPos.dragX, 0, ScrW() - 130)
+                    dezz.mksPos.y = math.Clamp(mouseY - dezz.mksPos.dragY, 0, ScrH() - 130)
+                end
+            else
+                dezz.mksPos.dragging = false
+            end
+        end
+
+        if dezz.cfg.vars["indicators"] then           
+            local ply = LocalPlayer()
+            if not IsValid(ply) or not ply:Alive() then return end
+                
+            local speed = math.Round(ply:GetVelocity():Length2D())
             local angles = ply:EyeAngles()
+            local yaw = math.Round(angles.y)
+                
+            local w, h = 200, 80
+            local x, y = 20, ScrH()/2 - h/2
 
-            local angleDiff = angles.y - (dezz.mksData.lastAngle or angles.y)
-            local pitchDiff = angles.p - (dezz.mksData.lastPitch or angles.p)
-            
-            dezz.mksData.lastAngle = angles.y
-            dezz.mksData.lastPitch = angles.p
+            surface.SetDrawColor(31, 30, 30, 200)
+            surface.DrawRect(x, y, w, h)
 
-            dezz.mksData.x = dezz.mksData.x * 0.9 + angleDiff * 1.5
-            dezz.mksData.y = dezz.mksData.y * 0.9 + pitchDiff * 1.5
+            surface.SetDrawColor(100, 60, 60, 255)
+            surface.DrawOutlinedRect(x, y, w, h)
+            surface.DrawOutlinedRect(x+1, y+1, w-2, h-2)
 
-            dezz.mksData.x = math.Clamp(dezz.mksData.x, -45, 45)
-            dezz.mksData.y = math.Clamp(dezz.mksData.y, -45, 45)
+            draw.SimpleText("Indicators", "DermaDefaultBold", x + w/2, y + 8, Color(255, 255, 255), TEXT_ALIGN_CENTER)
 
-            draw.RoundedBox(6, x, y, size, size, Color(0, 0, 0, 200))
+            surface.SetDrawColor(130, 60, 60, 255)
+            surface.DrawLine(x + 5, y + 25, x + w - 5, y + 25)
 
+            draw.SimpleText("Speed", "DermaDefault", x + 10, y + 35, Color(255, 155, 0))
+            draw.SimpleText(speed .. " Vel", "DermaDefaultBold", x + 10, y + 50, Color(255, 155, 0))
+
+            draw.SimpleText("Angle", "DermaDefault", x + 70, y + 35, Color(200, 200, 200))
+            draw.SimpleText(yaw .. "°", "DermaDefaultBold", x + 70, y + 50, Color(200, 200, 200))
+
+            local compass_x, compass_y = x + 103, y + 52.3
+            local compass_size = 10
+                
             surface.SetDrawColor(50, 50, 50, 255)
-            surface.DrawLine(x + size/2, y + 15, x + size/2, y + size - 15)
-            surface.DrawLine(x + 15, y + size/2, x + size - 15, y + size/2)
+            surface.DrawRect(compass_x, compass_y, compass_size, compass_size)
+                
+            local needle_angle = -angles.y
+            local needle_x = compass_x + compass_size/2 + math.cos(math.rad(needle_angle)) * (compass_size/2 - 2)
+            local needle_y = compass_y + compass_size/2 + math.sin(math.rad(needle_angle)) * (compass_size/2 - 2)
+                
+            surface.SetDrawColor(255, 0, 0)
+            surface.DrawLine(compass_x + compass_size/2, compass_y + compass_size/2, needle_x, needle_y)
 
-            local dotX = centerX - dezz.mksData.x
-            local dotY = centerY + dezz.mksData.y
-            draw.RoundedBox(4, dotX - 5, dotY - 5, 10, 10, Color(50, 3, 3))
+            local speed_bar_width = math.min(speed / 500 * (w - 20), w - 20)
+            surface.SetDrawColor(255, 155, 0, 150)
+            surface.DrawRect(x + 10, y + 65, speed_bar_width, 8)
+
+            surface.SetDrawColor(100, 100, 100, 255)
+            surface.DrawOutlinedRect(x + 10, y + 65, w - 20, 8)
         end
-    end
 
-    if dezz.cfg.vars["ks"] then
-        local mouseX, mouseY = input.GetCursorPos()
-        
-        if input.IsMouseDown(MOUSE_LEFT) then
-            if not dezz.ksPos.dragging then
-                if mouseX >= dezz.ksPos.x and mouseX <= dezz.ksPos.x + 120 and
-                   mouseY >= dezz.ksPos.y and mouseY <= dezz.ksPos.y + 25 then
-                    dezz.ksPos.dragging = true
-                    dezz.ksPos.dragX = mouseX - dezz.ksPos.x
-                    dezz.ksPos.dragY = mouseY - dezz.ksPos.y
+        if dezz.cfg.vars["GPS"] then       
+            local target_steamid = dezz.cfg.vars["GFID"] or ""
+            
+            if target_steamid == "" then 
+                local alpha = math.sin(CurTime() * 3) * 55 + 200
+                draw.SimpleText("GPS: No target set (set GFID)", "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+                return 
+            end
+            
+            local tar = player.GetBySteamID(target_steamid)
+
+            if IsValid(tar) and IsValid(pLocalPlayer) then
+                local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
+                local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
+
+                local bgColor = Color(0, 0, 0, 150)
+                surface.SetDrawColor(bgColor)
+                surface.DrawRect(5, 5, 300, 80)
+
+                draw.SimpleText("GPS TRACKER", "DermaDefaultBold", 10, 8, Color(0, 255, 100, 255), TEXT_ALIGN_LEFT)
+                draw.SimpleText("Target: " .. tar:Name(), "DermaDefault", 10, 25, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+                draw.SimpleText("Distance: " .. distance .. " units", "DermaDefault", 10, 40, Color(200, 200, 255, 255), TEXT_ALIGN_LEFT)
+                draw.SimpleText("Health: " .. tar:Health(), "DermaDefault", 10, 55, Color(255, 200, 100, 255), TEXT_ALIGN_LEFT)
+                draw.SimpleText("SteamID: " .. target_steamid, "DermaDefault", 10, 70, Color(150, 150, 150, 255), TEXT_ALIGN_LEFT)
+
+                if screenPos.visible then
+                    local pulse = math.sin(CurTime() * 5) * 0.3 + 0.7
+                    local markerAlpha = Lerp(pulse, 150, 255)
+                    
+                    draw.SimpleText("⬇", "DermaDefaultBold", screenPos.x, screenPos.y - 40, Color(255, 0, 0, markerAlpha), TEXT_ALIGN_CENTER)
+                    draw.SimpleText(tar:Name(), "DermaDefault", screenPos.x, screenPos.y - 20, Color(255, 255, 255, 220), TEXT_ALIGN_CENTER)
                 end
+                
+            else
+                local alpha = math.sin(CurTime() * 4) * 55 + 200
+                draw.SimpleText("GPS Target not found: " .. target_steamid, "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
             end
-            
-            if dezz.ksPos.dragging then
-                dezz.ksPos.x = math.Clamp(mouseX - dezz.ksPos.dragX, 0, ScrW() - 120)
-                dezz.ksPos.y = math.Clamp(mouseY - dezz.ksPos.dragY, 0, ScrH() - 180)
-            end
-        else
-            dezz.ksPos.dragging = false
         end
+
     end
 
-    if dezz.cfg.vars["mks"] then
-        local mouseX, mouseY = input.GetCursorPos()
-        
-        if input.IsMouseDown(MOUSE_LEFT) then
-            if not dezz.mksPos.dragging then
-                if mouseX >= dezz.mksPos.x and mouseX <= dezz.mksPos.x + 130 and
-                   mouseY >= dezz.mksPos.y and mouseY <= dezz.mksPos.y + 25 then
-                    dezz.mksPos.dragging = true
-                    dezz.mksPos.dragX = mouseX - dezz.mksPos.x
-                    dezz.mksPos.dragY = mouseY - dezz.mksPos.y
-                end
-            end
-            
-            if dezz.mksPos.dragging then
-                dezz.mksPos.x = math.Clamp(mouseX - dezz.mksPos.dragX, 0, ScrW() - 130)
-                dezz.mksPos.y = math.Clamp(mouseY - dezz.mksPos.dragY, 0, ScrH() - 130)
-            end
-        else
-            dezz.mksPos.dragging = false
-        end
-    end
-
-    if dezz.cfg.vars["indicators"] then           
-        local ply = LocalPlayer()
-        if not IsValid(ply) or not ply:Alive() then return end
-            
-        local speed = math.Round(ply:GetVelocity():Length2D())
-        local angles = ply:EyeAngles()
-        local yaw = math.Round(angles.y)
-            
-        local w, h = 200, 80
-        local x, y = 20, ScrH()/2 - h/2
-
-        surface.SetDrawColor(31, 30, 30, 200)
-        surface.DrawRect(x, y, w, h)
-
-        surface.SetDrawColor(100, 60, 60, 255)
-        surface.DrawOutlinedRect(x, y, w, h)
-        surface.DrawOutlinedRect(x+1, y+1, w-2, h-2)
-
-        draw.SimpleText("Indicators", "DermaDefaultBold", x + w/2, y + 8, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-
-        surface.SetDrawColor(130, 60, 60, 255)
-        surface.DrawLine(x + 5, y + 25, x + w - 5, y + 25)
-
-        draw.SimpleText("Speed", "DermaDefault", x + 10, y + 35, Color(255, 155, 0))
-        draw.SimpleText(speed .. " Vel", "DermaDefaultBold", x + 10, y + 50, Color(255, 155, 0))
-
-        draw.SimpleText("Angle", "DermaDefault", x + 70, y + 35, Color(200, 200, 200))
-        draw.SimpleText(yaw .. "°", "DermaDefaultBold", x + 70, y + 50, Color(200, 200, 200))
-
-        local compass_x, compass_y = x + 103, y + 52.3
-        local compass_size = 10
-            
-        surface.SetDrawColor(50, 50, 50, 255)
-        surface.DrawRect(compass_x, compass_y, compass_size, compass_size)
-            
-        local needle_angle = -angles.y
-        local needle_x = compass_x + compass_size/2 + math.cos(math.rad(needle_angle)) * (compass_size/2 - 2)
-        local needle_y = compass_y + compass_size/2 + math.sin(math.rad(needle_angle)) * (compass_size/2 - 2)
-            
-        surface.SetDrawColor(255, 0, 0)
-        surface.DrawLine(compass_x + compass_size/2, compass_y + compass_size/2, needle_x, needle_y)
-
-        local speed_bar_width = math.min(speed / 500 * (w - 20), w - 20)
-        surface.SetDrawColor(255, 155, 0, 150)
-        surface.DrawRect(x + 10, y + 65, speed_bar_width, 8)
-
-        surface.SetDrawColor(100, 100, 100, 255)
-        surface.DrawOutlinedRect(x + 10, y + 65, w - 20, 8)
-    end
-
-    if dezz.cfg.vars["GPS"] then       
-        local target_steamid = dezz.cfg.vars["GFID"] or ""
-        
-        if target_steamid == "" then 
-            local alpha = math.sin(CurTime() * 3) * 55 + 200
-            draw.SimpleText("GPS: No target set (set GFID)", "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
+    function dezz.PrePlayerDraw(pEntity, iFlags)
+        if pEntity == pLocalPlayer then
             return 
         end
-        
-        local tar = player.GetBySteamID(target_steamid)
 
-        if IsValid(tar) and IsValid(pLocalPlayer) then
-            local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
-            local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
+        pEntity:AnimResetGestureSlot(GESTURE_SLOT_VCD)
+        pEntity:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
 
-            local bgColor = Color(0, 0, 0, 150)
-            surface.SetDrawColor(bgColor)
-            surface.DrawRect(5, 5, 300, 80)
+        pEntity:SetPoseParameter("head_pitch", 0)
+        pEntity:SetPoseParameter("head_yaw", 0)
 
-            draw.SimpleText("GPS TRACKER", "DermaDefaultBold", 10, 8, Color(0, 255, 100, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("Target: " .. tar:Name(), "DermaDefault", 10, 25, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("Distance: " .. distance .. " units", "DermaDefault", 10, 40, Color(200, 200, 255, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("Health: " .. tar:Health(), "DermaDefault", 10, 55, Color(255, 200, 100, 255), TEXT_ALIGN_LEFT)
-            draw.SimpleText("SteamID: " .. target_steamid, "DermaDefault", 10, 70, Color(150, 150, 150, 255), TEXT_ALIGN_LEFT)
+        if dezz.cfg.vars["Resolver"] then
+            local shots = pEntity.aimshots or 0
+            local data = dezz.player_data and dezz.player_data[pEntity:EntIndex()]
+            local base_yaw = pEntity:EyeAngles().y
+            
+            if not dezz.player_data then 
+                dezz.player_data = {} 
+            end
 
-            if screenPos.visible then
-                local pulse = math.sin(CurTime() * 5) * 0.3 + 0.7
-                local markerAlpha = Lerp(pulse, 150, 255)
+            if not dezz.player_data[pEntity:EntIndex()] then
+                dezz.player_data[pEntity:EntIndex()] = {}
+            end
+
+            data = dezz.player_data[pEntity:EntIndex()]
+
+            if data and data.last_angles and #data.last_angles > 0 then
+                local idx = (data.brute_stage or 0) % #data.last_angles + 1
+                base_yaw = data.last_angles[idx]
+            end
+
+            local brute_modes = {
+                ["Absolute"] = { -90, 0, 90, 180 },
+                ["Rage"] = { 0, -30, 30, -60, 60, -90, 90, -120, 120, -150, 150, -179, 179 },
+                ["Legit"] = { 0, -15, 15, -30, 30, -45, 45 },
+                ["Delta"] = { 0, -60, 60, -90, 90, -120, 120, -150, 150, -179, 179 },
+                ["Experimental"] = { math.random(-179, 179) },
+                ["HVH"] = { -180, -135, -90, -45, 0, 45, 90, 135, 179, -179, -120, -60, 60, 120, 160, -160 }
+            }
+            
+            local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
+
+            if dezz.cfg.vars["Adaptive resolver"] and mode != "Experimental" and mode != "HVH" then
+                local vel = (pEntity.GetVelocity and pEntity:GetVelocity():Length2D()) or 0
+                local crouch = (pEntity.Crouching and pEntity:Crouching()) or false
+                local onground = (pEntity.IsOnGround and pEntity:IsOnGround()) or true
+
+                if not onground then
+                    mode = "Delta"
+                elseif vel > 120 and not crouch then
+                    mode = "Rage"
+                elseif crouch and vel < 10 then
+                    mode = "Legit"
+                else
+                    mode = "Absolute"
+                end
+            end
+
+            local deltas = brute_modes[mode] or brute_modes["Absolute"]
+
+            if mode == "Experimental" then
+                local rand = math.random(-179, 179)
+                local final_yaw = math.NormalizeAngle(base_yaw + rand)
+                local angs = Angle(0, final_yaw, 0)
+                pEntity:SetRenderAngles(angs)
+                pEntity:SetPoseParameter("move_yaw", angs.y)
+                pEntity:InvalidateBoneCache()
+                pEntity:SetupBones()
+                return
+            end
+
+            if mode == "HVH" then
+                local tick = engine.TickCount()
+                local entropy = pEntity:EntIndex() * 17 + tick * 0.01
+                local dynamic_offset = math.sin(CurTime() * 2 + entropy) * 120
+                local static_offsets = { -180, -90, 0, 90, 180 }
                 
-                draw.SimpleText("⬇", "DermaDefaultBold", screenPos.x, screenPos.y - 40, Color(255, 0, 0, markerAlpha), TEXT_ALIGN_CENTER)
-                draw.SimpleText(tar:Name(), "DermaDefault", screenPos.x, screenPos.y - 20, Color(255, 255, 255, 220), TEXT_ALIGN_CENTER)
+                local current_stage = (shots % 3)
+                local final_offset = 0
+                
+                if current_stage == 0 then
+                    final_offset = dynamic_offset
+                elseif current_stage == 1 then
+                    final_offset = static_offsets[(tick % #static_offsets) + 1]
+                else
+                    final_offset = brute_modes.HVH[(shots % #brute_modes.HVH) + 1]
+                end
+                
+                local final_yaw = math.NormalizeAngle(base_yaw + final_offset)
+                local angs = Angle(0, final_yaw, 0)
+                pEntity:SetRenderAngles(angs)
+                pEntity:SetPoseParameter("move_yaw", angs.y)
+                pEntity:InvalidateBoneCache()
+                pEntity:SetupBones()
+                return
             end
-            
-        else
-            local alpha = math.sin(CurTime() * 4) * 55 + 200
-            draw.SimpleText("GPS Target not found: " .. target_steamid, "DermaDefaultBold", ScrW() / 2, 100, Color(255, 50, 50, alpha), TEXT_ALIGN_CENTER)
-        end
-    end
 
-end
+            local brute_idx = (shots % #deltas) + 1
+            local final_yaw = base_yaw + deltas[brute_idx]
+            final_yaw = math.NormalizeAngle(final_yaw)
 
-function dezz.PrePlayerDraw(pEntity, iFlags)
-    if pEntity == pLocalPlayer then
-        return 
-    end
-
-    pEntity:AnimResetGestureSlot(GESTURE_SLOT_VCD)
-    pEntity:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-
-    pEntity:SetPoseParameter("head_pitch", 0)
-    pEntity:SetPoseParameter("head_yaw", 0)
-
-    if dezz.cfg.vars["Resolver"] then
-        local shots = pEntity.aimshots or 0
-        local data = dezz.player_data and dezz.player_data[pEntity:EntIndex()]
-        local base_yaw = pEntity:EyeAngles().y
-        
-        if not dezz.player_data then 
-            dezz.player_data = {} 
-        end
-
-        if not dezz.player_data[pEntity:EntIndex()] then
-            dezz.player_data[pEntity:EntIndex()] = {}
-        end
-
-        data = dezz.player_data[pEntity:EntIndex()]
-
-        if data and data.last_angles and #data.last_angles > 0 then
-            local idx = (data.brute_stage or 0) % #data.last_angles + 1
-            base_yaw = data.last_angles[idx]
-        end
-
-        local brute_modes = {
-            ["Absolute"] = { -90, 0, 90, 180 },
-            ["Rage"] = { 0, -30, 30, -60, 60, -90, 90, -120, 120, -150, 150, -179, 179 },
-            ["Legit"] = { 0, -15, 15, -30, 30, -45, 45 },
-            ["Delta"] = { 0, -60, 60, -90, 90, -120, 120, -150, 150, -179, 179 },
-            ["Experimental"] = { math.random(-179, 179) },
-            ["HVH"] = { -180, -135, -90, -45, 0, 45, 90, 135, 179, -179, -120, -60, 60, 120, 160, -160 }
-        }
-        
-        local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
-
-        if dezz.cfg.vars["Adaptive resolver"] and mode != "Experimental" and mode != "HVH" then
-            local vel = (pEntity.GetVelocity and pEntity:GetVelocity():Length2D()) or 0
-            local crouch = (pEntity.Crouching and pEntity:Crouching()) or false
-            local onground = (pEntity.IsOnGround and pEntity:IsOnGround()) or true
-
-            if not onground then
-                mode = "Delta"
-            elseif vel > 120 and not crouch then
-                mode = "Rage"
-            elseif crouch and vel < 10 then
-                mode = "Legit"
-            else
-                mode = "Absolute"
-            end
-        end
-
-        local deltas = brute_modes[mode] or brute_modes["Absolute"]
-
-        if mode == "Experimental" then
-            local rand = math.random(-179, 179)
-            local final_yaw = math.NormalizeAngle(base_yaw + rand)
             local angs = Angle(0, final_yaw, 0)
             pEntity:SetRenderAngles(angs)
             pEntity:SetPoseParameter("move_yaw", angs.y)
-            pEntity:InvalidateBoneCache()
-            pEntity:SetupBones()
-            return
         end
 
-        if mode == "HVH" then
-            local tick = engine.TickCount()
-            local entropy = pEntity:EntIndex() * 17 + tick * 0.01
-            local dynamic_offset = math.sin(CurTime() * 2 + entropy) * 120
-            local static_offsets = { -180, -90, 0, 90, 180 }
-            
-            local current_stage = (shots % 3)
-            local final_offset = 0
-            
-            if current_stage == 0 then
-                final_offset = dynamic_offset
-            elseif current_stage == 1 then
-                final_offset = static_offsets[(tick % #static_offsets) + 1]
-            else
-                final_offset = brute_modes.HVH[(shots % #brute_modes.HVH) + 1]
+        if dezz.cfg.vars["Taunt resolver"] and pEntity:IsValid() and pEntity:GetNWBool("IsTaunting", false) then
+            local tauntYaw = nil
+
+            if pEntity.GetVelocity and pEntity:GetVelocity():Length2D() > 5 then
+                local vel = pEntity:GetVelocity()
+                tauntYaw = math.deg(math.atan2(vel.y, vel.x))
+            elseif pEntity.EyeAngles then
+                tauntYaw = pEntity:EyeAngles().y
             end
-            
-            local final_yaw = math.NormalizeAngle(base_yaw + final_offset)
-            local angs = Angle(0, final_yaw, 0)
-            pEntity:SetRenderAngles(angs)
-            pEntity:SetPoseParameter("move_yaw", angs.y)
-            pEntity:InvalidateBoneCache()
-            pEntity:SetupBones()
-            return
+
+            if tauntYaw then
+                local angs = pEntity:GetRenderAngles() or Angle()
+                angs.y = tauntYaw
+                pEntity:SetRenderAngles(angs)
+            end
+
+            if pEntity.SetPoseParameter then
+                pEntity:SetPoseParameter("aim_pitch", 0)
+                pEntity:SetPoseParameter("head_pitch", 0)
+            end
         end
 
-        local brute_idx = (shots % #deltas) + 1
-        local final_yaw = base_yaw + deltas[brute_idx]
-        final_yaw = math.NormalizeAngle(final_yaw)
+        if dezz.cfg.vars["Pitch resolver"] and pEntity.fakepitch then
+            pEntity:SetPoseParameter("aim_pitch", -89)
+            pEntity:SetPoseParameter("head_pitch", -89)
+        end
+        
+        pEntity:InvalidateBoneCache()
+        pEntity:SetupBones()
 
-        local angs = Angle(0, final_yaw, 0)
-        pEntity:SetRenderAngles(angs)
-        pEntity:SetPoseParameter("move_yaw", angs.y)
+        pEntity.ChatGestureWeight = 0
     end
-
-    if dezz.cfg.vars["Taunt resolver"] and pEntity:IsValid() and pEntity:GetNWBool("IsTaunting", false) then
-        local tauntYaw = nil
-
-        if pEntity.GetVelocity and pEntity:GetVelocity():Length2D() > 5 then
-            local vel = pEntity:GetVelocity()
-            tauntYaw = math.deg(math.atan2(vel.y, vel.x))
-        elseif pEntity.EyeAngles then
-            tauntYaw = pEntity:EyeAngles().y
-        end
-
-        if tauntYaw then
-            local angs = pEntity:GetRenderAngles() or Angle()
-            angs.y = tauntYaw
-            pEntity:SetRenderAngles(angs)
-        end
-
-        if pEntity.SetPoseParameter then
-            pEntity:SetPoseParameter("aim_pitch", 0)
-            pEntity:SetPoseParameter("head_pitch", 0)
-        end
-    end
-
-    if dezz.cfg.vars["Pitch resolver"] and pEntity.fakepitch then
-        pEntity:SetPoseParameter("aim_pitch", -89)
-        pEntity:SetPoseParameter("head_pitch", -89)
-    end
-    
-    pEntity:InvalidateBoneCache()
-    pEntity:SetupBones()
-
-    pEntity.ChatGestureWeight = 0
 end
 
 // Chams
@@ -11528,6 +11491,9 @@ function dezz.CS_Model_update(ply,model,tbl)
 	mdl:SetPos( tbl.origin )
 end
 
+local playerTrail = {}
+local nextTrailUpdate = 0
+
 function dezz.PostDrawTranslucentRenderables()
     if dezz.UnSafeFrame then return end
 
@@ -11536,6 +11502,18 @@ function dezz.PostDrawTranslucentRenderables()
 
     render.SetBlend(1)
     render.MaterialOverride()
+
+    if dezz.cfg.vars["Player Line"] then        
+        local trailCount = #playerTrail
+        for i = 1, trailCount - 1 do
+            local startPos = playerTrail[i] + Vector(0, 0, 10)
+            local endPos = playerTrail[i + 1] + Vector(0, 0, 10)
+            local t = i / trailCount
+            local hue = Lerp(t, 300, 0)
+            local color = HSVToColor(hue, 1, 1)
+            render.DrawLine(startPos, endPos, color, true)
+        end
+    end
 
     if dezz.cfg.vars["Player Hat"] and dezz.tpenabled then
         local ply = LocalPlayer()
@@ -12154,40 +12132,40 @@ dezz.chatmsg =
         [8] = {"gtfo", "shut up", "get out", "you talking to me", "what is the point", "this is bad", "not good", "stop looking at me", "and if you see dr. breen tell him i said fuck you",
         "and if you see dr. breen tell him i said fuck you", "and if you see dr. breen tell him i said fuck you","bullshit", "bullshit", "you never know", "you never know ", "hax",
         "hax", "haxx",  "hacks", "figures", "he's dead", "he's dead", "he's dead", "it cant be", "it cant be", "take this medkit", "take this medkit", "take this medkit","cut it","get down","come!","heads up", "got one", "take cover", "this is bad", "same here", "you talking to me","fantastic"},
-[9] = { 
-    "Жди... докс", "Жди... сват", "Жди... деанон", "Жди... ОМОН", "Жди... ФБР", "Жди... ФСБ",
-    "Жди... снайперов", "Жди... вагнеров", "Жди... офицеров", "Жди... редановцев", "Жди... вайперов",
-    "Жди... фурри в памперсах", "Жди... танкистов", "Жди... спецназ", "Жди... ГРУ", "Жди... спортсменов",
-    "Жди... чеченских боевиков", "Жди... СС", "Жди... ФБИ", "Жди... ВСРФ", "Жди... КГБ",
-    "Жди... накаченных таджиков с автоматами", "Жди... милиционеров", "Жди... разведчиков",
-    "Жди... диверсантов", "Жди... кибершпионов", "Жди... пограничников", "Жди... парашютистов",
-    "Жди... морпехов", "Жди... артиллеристов", "Жди... инженеров-саперов", "Жди... контрразведчиков",
-    "Жди... наемников", "Жди... десантников", "Жди... радистов", "Жди... военных врачей",
-    "Жди... пилотов", "Жди... штурманов", "Жди... космонавтов", "Жди... геодезистов",
-    "Жди... инструкторов по выживанию", "Жди... пожарных", "Жди... сантехников", "Жди... электриков",
-    "Жди... водителей бронетехники", "Жди... грузчиков", "Жди... строителей укреплений",
-    "Жди... психологов", "Жди... логистов", "Жди... переводчиков", "Жди... судей", "Жди... следователей",
-    "Жди... прокуроров", "Жди... адвокатов", "Жди... учителей военной подготовки",
-    "Жди... журналистов военной тематики", "Жди... инженеров-строителей", "Жди... ветеринаров",
-    "Жди... физиотерапевтов", "Жди... психотерапевтов", "Жди... историков", "Жди... философов",
-    "Жди... лингвистов", "Жди... педагогов", "Жди... социологов", "Жди... экономистов",
-    "Жди... юристов", "Жди... политологов", "Жди... психологов", "Жди... астрономов",
-    "Жди... генетиков", "Жди... нейробиологов", "Жди... робототехников", "Жди... нанотехнологов",
-    "Жди... энергетиков", "Жди... транспортников", "Жди... связистов", "Жди... геодезистов",
-    "Жди... гидротехников", "Жди... мелиораторов", "Жди... лесоводов", "Жди... охотоведов",
-    "Жди... рыбоводов", "Жди... виноделов", "Жди... пивоваров", "Жди... кондитеров",
-    "Жди... поваров", "Жди... шеф-поваров", "Жdi... барменов", "Жди... официантов",
-    "Жди... гостиничников", "Жди... туристов", "Жди... гидов", "Жди... экскурсоводов",
-    "Жди... спортсменов-профессионалов", "Жди... любителей спорта", "Жди... фитнес-тренеров",
-    "Жди... йогов", "Жди... массажистов", "Жди... астрологов", "Жди... гадалок",
-    "Жди... психологов-консультантов", "Жди... психотерапевтов-психоаналитиков",
-    "Жди... гипнотерапевтов", "Жди... нутрициологов", "Жди... диетологов", "Жди... фитотерапевтов",
-    "Жди... гомеопатов", "Жди... акупунктуристов", "Жди... мануальных терапевтов",
-    "Жди... реабилитологов", "Жди... ортопедов", "Жди... травматологов",
-    "Жди... стоматологов-ортодонтов", "Жди... стоматологов-хирургов",
-    "Жди... стоматологов-педиатров", "Жди... оптометристов"
+    [9] = { 
+        "Жди... докс", "Жди... сват", "Жди... деанон", "Жди... ОМОН", "Жди... ФБР", "Жди... ФСБ",
+        "Жди... снайперов", "Жди... вагнеров", "Жди... офицеров", "Жди... редановцев", "Жди... вайперов",
+        "Жди... фурри в памперсах", "Жди... танкистов", "Жди... спецназ", "Жди... ГРУ", "Жди... спортсменов",
+        "Жди... чеченских боевиков", "Жди... СС", "Жди... ФБИ", "Жди... ВСРФ", "Жди... КГБ",
+        "Жди... накаченных таджиков с автоматами", "Жди... милиционеров", "Жди... разведчиков",
+        "Жди... диверсантов", "Жди... кибершпионов", "Жди... пограничников", "Жди... парашютистов",
+        "Жди... морпехов", "Жди... артиллеристов", "Жди... инженеров-саперов", "Жди... контрразведчиков",
+        "Жди... наемников", "Жди... десантников", "Жди... радистов", "Жди... военных врачей",
+        "Жди... пилотов", "Жди... штурманов", "Жди... космонавтов", "Жди... геодезистов",
+        "Жди... инструкторов по выживанию", "Жди... пожарных", "Жди... сантехников", "Жди... электриков",
+        "Жди... водителей бронетехники", "Жди... грузчиков", "Жди... строителей укреплений",
+        "Жди... психологов", "Жди... логистов", "Жди... переводчиков", "Жди... судей", "Жди... следователей",
+        "Жди... прокуроров", "Жди... адвокатов", "Жди... учителей военной подготовки",
+        "Жди... журналистов военной тематики", "Жди... инженеров-строителей", "Жди... ветеринаров",
+        "Жди... физиотерапевтов", "Жди... психотерапевтов", "Жди... историков", "Жди... философов",
+        "Жди... лингвистов", "Жди... педагогов", "Жди... социологов", "Жди... экономистов",
+        "Жди... юристов", "Жди... политологов", "Жди... психологов", "Жди... астрономов",
+        "Жди... генетиков", "Жди... нейробиологов", "Жди... робототехников", "Жди... нанотехнологов",
+        "Жди... энергетиков", "Жди... транспортников", "Жди... связистов", "Жди... геодезистов",
+        "Жди... гидротехников", "Жди... мелиораторов", "Жди... лесоводов", "Жди... охотоведов",
+        "Жди... рыбоводов", "Жди... виноделов", "Жди... пивоваров", "Жди... кондитеров",
+        "Жди... поваров", "Жди... шеф-поваров", "Жdi... барменов", "Жди... официантов",
+        "Жди... гостиничников", "Жди... туристов", "Жди... гидов", "Жди... экскурсоводов",
+        "Жди... спортсменов-профессионалов", "Жди... любителей спорта", "Жди... фитнес-тренеров",
+        "Жди... йогов", "Жди... массажистов", "Жди... астрологов", "Жди... гадалок",
+        "Жди... психологов-консультантов", "Жди... психотерапевтов-психоаналитиков",
+        "Жди... гипнотерапевтов", "Жди... нутрициологов", "Жди... диетологов", "Жди... фитотерапевтов",
+        "Жди... гомеопатов", "Жди... акупунктуристов", "Жди... мануальных терапевтов",
+        "Жди... реабилитологов", "Жди... ортопедов", "Жди... травматологов",
+        "Жди... стоматологов-ортодонтов", "Жди... стоматологов-хирургов",
+        "Жди... стоматологов-педиатров", "Жди... оптометристов"
     },
-        [10] = {"Smokin,Blay Smokin,Blay Smokin,Blay",
+    [10] = {"Smokin,Blay Smokin,Blay Smokin,Blay",
         "Smokin Doowop Smokin Doowop Smokin Doowop",
         "Smokin Jacob Smokin Jacob Smokin Jacob",
         "Smokin Jacob Smokin Jacob Smokin Jacob",
@@ -12337,7 +12315,8 @@ dezz.chatmsg =
         "Smokin Jacob Smokin Jacob Smokin Jacob",
         "Smokin JB Smokin JB Smokin JB",
         "Smokin JB Smokin JB Smokin JB",
-        "Smokin JB Smokin JB Smokin JB",}
+        "Smokin JB Smokin JB Smokin JB"
+    }
 }
 
 
@@ -12701,6 +12680,27 @@ do
             dezz.Unload()
         end
 
+        local function UpdatePlayerTrail()
+            local ply = pLocalPlayer
+            if not ply:Alive() then
+                playerTrail = {}
+                return
+            end
+            
+            playerTrail[#playerTrail + 1] = ply:GetPos()
+            
+            if #playerTrail > 100 then
+                table.remove(playerTrail, 1)
+            end
+        end
+
+        local ct = CurTime()
+    
+        if ct > nextTrailUpdate then
+            nextTrailUpdate = ct + 0.01
+            UpdatePlayerTrail()
+        end
+
         function dezz.UpdateMovementTime(ply)
             if not IsValid(ply) then return end
             
@@ -13024,14 +13024,6 @@ do
 
             RunConsoleCommand("act2", act2)
             dezz.nextact2 = CurTime() + delay2
-        end
-
-        if dezz.cfg.vars["Yaw base"] == 2 then
-            tply = dezz.GetSortedPlayers( 1, 0, 1, false ) 
-    
-            if tply then
-                dezz.aatarget = tply[1][1]
-            end
         end
 
         if dezz.cfg.vars["Auto peak"] then
@@ -13415,13 +13407,17 @@ do
         end
 
         if dezz.cfg.vars["Hitbox"] and pLocalPlayer:Alive() then
-            local hitbox_color = string.ToColor(dezz.cfg.colors["Hitbox"])
+            local hitbox_color_enemy = string.ToColor(dezz.cfg.colors["Hitbox"])
+            local hitbox_color_local = string.ToColor(dezz.cfg.colors["HitboxLocal"])
             local eye_pos, eye_ang = EyePos(), EyeAngles()
             
             cam.Start3D(eye_pos, eye_ang)
             
             for _, ply in ipairs(player.GetAll()) do
                 if not IsValid(ply) or not ply:Alive() then continue end
+                
+                local isLocal = (ply == pLocalPlayer)
+                local hitbox_color = isLocal and hitbox_color_local or hitbox_color_enemy
                 
                 if not ply.fakeModel then
                     ply.fakeModel = dezz.CS_Model(ply:GetModel())
@@ -14400,59 +14396,3 @@ hook.Add("EntityRemoved", "dezz_TrackPlayerLeave", function(ent)
         dezz.alreadyNotified[ent] = nil
     end
 end)
-
-local playerTrail = {}
-local trailToggleCooldown = 0
-local nextTrailUpdate = 0
-local panicKeyPressed = false
-
-local function UpdatePlayerTrail()
-    local ply = pLocalPlayer
-    if not ply:Alive() then
-        playerTrail = {}
-        return
-    end
-    
-    playerTrail[#playerTrail + 1] = ply:GetPos()
-    
-    if #playerTrail > 100 then
-        table.remove(playerTrail, 1)
-    end
-end
-
-local function DrawPlayerTrail()
-    if not dezz.cfg.vars["Player Line"] then return end
-    
-    local trailCount = #playerTrail
-    for i = 1, trailCount - 1 do
-        local startPos = playerTrail[i] + Vector(0, 0, 10)
-        local endPos = playerTrail[i + 1] + Vector(0, 0, 10)
-        local t = i / trailCount
-        local hue = Lerp(t, 300, 0)
-        local color = HSVToColor(hue, 1, 1)
-        render.DrawLine(startPos, endPos, color, true)
-    end
-end
-
-local function OnThink()
-    local ct = CurTime()
-    
-    if ct > nextTrailUpdate then
-        nextTrailUpdate = ct + 0.01
-        UpdatePlayerTrail()
-    end
-    
-    if dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) and not panicKeyPressed then
-        panicKeyPressed = true
-        hook.Remove("Think", "PlayerTrailSystem")
-        hook.Remove("PostDrawTranslucentRenderables", "DrawPlayerTrail")
-        trailToggleCooldown = ct + 0.5
-    elseif not dezz.IsKeyDown(dezz.cfg.binds["Panic Key"]) then
-        panicKeyPressed = false
-    end
-end
-
-hook.Add("PostDrawTranslucentRenderables", "DrawPlayerTrail", DrawPlayerTrail)
-hook.Add("Think", "PlayerTrailSystem", OnThink)
-
-end
