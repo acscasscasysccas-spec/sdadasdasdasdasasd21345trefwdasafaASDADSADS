@@ -21,6 +21,14 @@ local theme = {
     ["Frame title"] = Color(220, 120, 120),        
 }
 
+local pitches = { 
+    [1] = 89,
+    [2] = -89,
+    [3] = 0,
+    [4] = -180,
+    [5] = 180,
+}
+
 local pLocalPlayer = LocalPlayer()
 
 local screenWidth = ScrW()
@@ -31,6 +39,11 @@ local traceStruct = { output = traceResult }
 
 local flTickInterval = engine.TickInterval()
 local materials = {"Player", "Local player", "Viewmodel", "Hands", "Entity", "Backtrack"}
+
+local ic = false
+local bWasOnGround = false 
+local bSendPacket = true
+local bRunning = false
 
 // Font
 dezzCreateFont("Watermark_Bold", { font = "Verdana", size = 13, weight = 1000, antialias = true, shadow = true })
@@ -51,11 +64,25 @@ dezzCreateFont("XVIDEOS FONT", { font = "Verdana", size = 45, antialias = false,
 
 dezz.Colors = {}
 
+dezz.norf = {
+    ["laserjetpack"] = true,
+    ["weapon_physgun"] = true,
+}
+
+dezz.vapecd = false
+dezz.tyaga = 0
+dezz.hoppin = false
+
+dezz.slams = {}
+
 dezz.fakeLagTicks = 0
 dezz.fakeLagfactor = 0
 dezz.chokedTicks = 0
+
 ded.GetSimulationTime = function()return 0 end
 ded.GetServerTime = function()return 0 end
+
+dezz.aatarget = nil
 
 dezz.peeked = false 
 dezz.peeking = false 
@@ -64,6 +91,29 @@ dezz.realAngle = IsValid(pLocalPlayer) and pLocalPlayer:EyeAngles() or Angle(0, 
 dezz.inverted = false
 dezz.oldYaw = 0
 dezz.SwaySide = 1
+
+dezz.bruteYaw = { -180, -120, -90, -60, -30, 0, 30, 60, 90, 120, 180  }
+
+dezz.viewfov    = 0
+dezz.znear      = 0
+
+dezz.tpenabled = false
+dezz.tptoggled = false
+
+dezz.fcvector = pLocalPlayer:EyePos()
+dezz.fcangles = pLocalPlayer:EyeAngles()
+dezz.fcenabled = false
+dezz.fctoggled = false
+
+dezz.fakeAngles = {
+    angle = pLocalPlayer:EyeAngles(),
+    movex = 0,
+    movey = 0,
+    layers = {},
+    seq = 0,
+    cycle = 0,
+    origin = pLocalPlayer:GetPos(),
+}
 
 dezz.espposes = {"Up","Down","Right","Left"}
 dezz.espelements = {
@@ -3451,7 +3501,7 @@ dezz.spfuncs[2] = function()
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Rapid fire", "Rapid fire", "Allows to quickly fire semi-automatic weapons." )
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Wait for simulation", "Wait for simulation" )
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Alt Rapid fire", "Alt Rapid fire" )
-    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Bullet time", "Bullet time", "Aim will not work until weapon can fire.(temporarily no work)" )
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Bullet time", "Bullet time", "Aim will not work until weapon can fire." )
     dezz.ui.Slider( dezz.ui.SettingsPan, "Time", "Time", 0, 1, 3 )
 end
 
@@ -3946,7 +3996,7 @@ function dezz.tabs.Misc()
         dezz.ui.MTButton( p, "Net", dezz.spfuncs[27] )
     end
 
-    local p = dezz.itemPanel("Movement",1,320):GetItemPanel()
+    local p = dezz.itemPanel("Movement",1,330):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Bunny hop", "Bhop" )
     dezz.ui.CheckBox( p, "Air strafer", "Air strafer", false, false, false, dezz.spfuncs[25] )
@@ -3955,6 +4005,7 @@ function dezz.tabs.Misc()
     dezz.ui.CheckBox( p, "Edge Jump", "edge", "Jump if near ledge.")
     dezz.ui.CheckBox( p, "Safe Hop", "Safe Hop", "Stop jump if near ledge.")
     dezz.ui.CheckBox( p, "Keep sprint", "Sprint" )
+    dezz.ui.CheckBox( p, "Fast stop", "Fast stop" )
     dezz.ui.CheckBox( p, "Auto peak", "Auto peak", false, true )
     dezz.ui.CheckBox( p, "Auto teleport back", "Auto peak tp" )
     dezz.ui.CheckBox( p, "Water walk", "Water jump" )
@@ -4303,7 +4354,7 @@ function dezz.tabs.Por()
     local browser = vgui.Create("DHTML", googlePanel)
     browser:Dock(FILL)
     browser:SetSize(googlePanel:GetWide(), 580)
-    browser:OpenURL("https://google.com")
+    browser:OpenURL("https://duckduckgo.com")
 
     function googlePanel:OnSizeChanged()
         browser:SetSize(self:GetWide(), self:GetTall())
@@ -4799,10 +4850,11 @@ function dezz.CanShoot( cmd )
         return false
     end
 
-    --no work
-	if dezz.cfg.vars["Bullet time"] and dezz.activeWeapon:GetNextPrimaryFire() >= dezz.flServerTime-dezz.cfg.vars["Time"] then
-		return false
-	end
+    if dezz.cfg.vars["Bullet time"] and IsValid(dezz.activeWeapon) then
+        if dezz.activeWeapon:GetNextPrimaryFire() > CurTime() - (dezz.cfg.vars["Time"]) then
+            return false
+        end
+    end
 
     // print(ded.GetRandomSeed( cmd ))
     if dezz.cfg.vars["Wait for seed"] and ded.GetRandomSeed( cmd ) != 134 then
@@ -6767,8 +6819,6 @@ end
     Anti aim
 
 */
-
-dezz.aatarget = nil
 local flTickInterval = engine.TickInterval()
 
 function dezz.PredictedPos(ply)
@@ -7020,14 +7070,6 @@ dezz.CalcYaw = {
     
         return dezz.inverted and a or b
     end
-}
-
-local pitches = { 
-    [1] = 89,
-    [2] = -89,
-    [3] = 0,
-    [4] = -180,
-    [5] = 180,
 }
 
 local mm_side = false
@@ -7501,32 +7543,13 @@ end
 
 // create move hook 
 
-dezz.norf = {
-    ["laserjetpack"] = true,
-    ["weapon_physgun"] = true,
-}
-
-dezz.vapecd = false
-dezz.tyaga = 0
 dezz.maxvape = dezz.TIME_TO_TICKS(5)
-dezz.hoppin = false
-local ic = false
-
-dezz.slams = {}
 
 function dezz.OnEntityCreated(ent)
     if ent:GetClass() == "npc_satchel" and ent:GetOwner() == pLocalPlayer then 
         dezz.slams[ #dezz.slams + 1 ] = ent
     end
 end
-
-
-
-
-
-local bWasOnGround = false 
-local bSendPacket = true
-local bRunning = false
 
 function dezz.CreateMove(cmd)
     dezz.DoSilentAngleUpdate(cmd)
@@ -7652,8 +7675,8 @@ function dezz.CreateMove(cmd)
 
     dezz.FastWalk(cmd)
 
-    if dezz.cfg.vars["Sprint"] and not cmd:KeyDown(IN_ATTACK) or dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) then cmd:AddKey(IN_SPEED) end
-    if dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) and pLocalPlayer:Alive() and dezz.target then cmd:RemoveKey(IN_SPEED) end
+    if dezz.cfg.vars["Sprint"] and not cmd:KeyDown(IN_ATTACK) and not (dezz.IsKeyDown(dezz.cfg.binds["Aim on key"]) and dezz.target) then cmd:AddKey(IN_SPEED) end
+    if dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) and pLocalPlayer:Alive() and dezz.target and not dezz.cfg.vars["Knifebot"] then cmd:RemoveKey(IN_SPEED) end
 
     if dezz.cfg.vars["edge"] then
         local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
@@ -7983,14 +8006,15 @@ function dezz.CreateMove(cmd)
         
 end
 
-    if dezz.cfg.vars["Air lag duck"] and dezz.SendPacket then
+    if dezz.cfg.vars["Air lag duck"] and dezz.SendPacket and IsValid(pLocalPlayer) then
         local startPosUnducked = pLocalPlayer:GetPos()
         local isDucking = bit.band(pLocalPlayer:GetFlags(), FL_DUCKING) != 0
+        
         if isDucking then
-            startPosUnducked.z = startPosUnducked.z - (72 - 36)
+            startPosUnducked.z = startPosUnducked.z - 36
         end
 
-        ded.StartSimulation( pLocalPlayer:EntIndex() )
+        ded.StartSimulation(pLocalPlayer:EntIndex())
 
         local shouldduck = true 
 
@@ -7998,17 +8022,24 @@ end
             ded.SimulateTick()
 
             local simData = ded.GetSimulationData()
+            
+            if not simData or not simData.m_vecAbsOrigin then
+                shouldduck = false
+                break
+            end
 
             local maxs = pLocalPlayer:OBBMaxs()
             maxs.z = 72 
 
+            local tracePos = simData.m_vecAbsOrigin
+            
             if isDucking then
-                simData.m_vecAbsOrigin.z = simData.m_vecAbsOrigin.z - (72 - 36)
+                tracePos.z = tracePos.z - 36
             end
 
-            local trace = TraceHull({
+            local trace = util.TraceHull({
                 start = startPosUnducked,
-                endpos = simData.m_vecAbsOrigin,
+                endpos = tracePos,
                 mins = pLocalPlayer:OBBMins(),
                 maxs = maxs,
                 filter = pLocalPlayer,
@@ -8023,8 +8054,8 @@ end
 
         ded.FinishSimulation()
 
-        if shouldduck and !pLocalPlayer:IsFlagSet( FL_ONGROUND ) then 
-            cmd:AddKey( IN_DUCK )   
+        if shouldduck and not pLocalPlayer:IsOnGround() then 
+            cmd:AddKey(IN_DUCK)   
         end
     end
 
@@ -8165,7 +8196,7 @@ do
             dezz.cfg.colors["Wall color"] = "13 13 13 255"
             dezz.cfg.vars["Sky color"] = true
             dezz.cfg.colors["Sky color"] = "8 8 8 255"
-            dezz.cfg.vars["Custom sky"] = "sky_day01_06"
+            dezz.cfg.vars["Custom sky"] = "sky_borealis01"
         end
 
         local newname = dezz.cfg.vars["Custom sky"] or ""
@@ -13039,17 +13070,6 @@ end
 if not dezz.cfg.vars["spectating"] then
     dezz.vieworigin = pLocalPlayer:EyePos()
 end
-dezz.viewfov    = 0
-dezz.znear      = 0
-
-dezz.tpenabled = false
-dezz.tptoggled = false
-
-dezz.fcvector = pLocalPlayer:EyePos()
-dezz.fcangles = pLocalPlayer:EyeAngles()
-dezz.fcenabled = false
-dezz.fctoggled = false
-
 
 /* // TODO
 dezz.checkbox("Collision","Third person collision",p:GetItemPanel())
@@ -13670,10 +13690,6 @@ end
 
 
 // Resolver 
-
-dezz.bruteYaw = { -180, -120, -90, -60, -30, 0, 30, 60, 90, 120, 180  }
-
-
 do
     local localData = {}
 
@@ -13905,17 +13921,6 @@ end
 /*
     hooks -> ShouldUpdateAnimation ( cpp )
 */
-
-dezz.fakeAngles = {
-    angle = pLocalPlayer:EyeAngles(),
-    movex = 0,
-    movey = 0,
-    layers = {},
-    seq = 0,
-    cycle = 0,
-    origin = pLocalPlayer:GetPos(),
-}
-
 function dezz.UpdateAnimation( v )
     v:InvalidateBoneCache()
 end
