@@ -2058,7 +2058,7 @@ do
         if self.Trapping then return end
         
         self:SetText("PRESS A KEY")
-        self:SetTextColor(Color(200, 190, 190))
+        self:SetTextColor(Color(190, 170, 170))
         self.Trapping = true
         input.StartKeyTrapping()
     end
@@ -2997,7 +2997,7 @@ function dezz.ui.Slider( p, str, cfg, min, max, dec, onChange )
     local pan = vgui.Create( "DPanel", p )
     pan:Dock( TOP )
     pan:DockMargin( 4, 2, 4, 0 )
-    pan:SetTall( 20 )
+    pan:SetTall( 18 )
 
     function pan:Paint( w, h )
         surface.SetFont("2121DermaSmall2121")
@@ -3129,10 +3129,50 @@ function dezz.ui.MultiCombo( pan, str, choices )
     local d = vgui.Create("DButton",pan)
     d:Dock(TOP)
     d:DockMargin(4,1,4,0)
-    d:SetTall(20)
+    d:SetTall(21)
     d:SetText("")
     
     d.preview = {}
+    d.open_progress = 0
+    d.menu_alpha = 0
+    d.text_alpha = 0
+    d.item_appear_order = {}
+    d.item_appear_timer = 0
+    d.item_appear_speed = 0.15
+    d.Menu = nil
+
+    function d:Think()
+        local target = IsValid(d.Menu) and 1 or 0
+        d.open_progress = Lerp(FrameTime() * 10, d.open_progress or 0, target)
+        
+        if IsValid(d.Menu) then
+            local target_alpha = IsValid(d.Menu) and 255 or 0
+            d.menu_alpha = Lerp(FrameTime() * 15, d.menu_alpha or 0, target_alpha)
+            d.Menu:SetAlpha(d.menu_alpha or 0)
+            
+            if IsValid(d.Menu) then
+                d.item_appear_timer = (d.item_appear_timer or 0) + FrameTime()
+                
+                for k, item in ipairs(d.item_appear_order) do
+                    if item and IsValid(item) then
+                        local delay = (k - 1) * 0.08
+                        local progress = math.Clamp((d.item_appear_timer - delay) / d.item_appear_speed, 0, 1)
+                        item.alpha = progress * 255
+                        item.y_offset = Lerp(progress, 10, 0)
+                    end
+                end
+            end
+        end
+        
+        local hasPreview = false
+        for k, v in pairs(choices) do
+            if dezz.cfg.vars[str.."-"..v] == true then
+                hasPreview = true
+                break
+            end
+        end
+        d.text_alpha = Lerp(FrameTime() * 8, d.text_alpha or 0, hasPreview and 255 or 0)
+    end
 
     function d:Paint(w,h)
         local preview = ""
@@ -3149,40 +3189,115 @@ function dezz.ui.MultiCombo( pan, str, choices )
 
         preview = table.concat(d.preview,", ")
 
-        surface.SetDrawColor(dezz.Colors[25])
-        surface.DrawRect(0,0,w,h)
+        local bgCol = dezz.Colors[25] or Color(25, 25, 35)
+        surface.SetDrawColor(bgCol.r, bgCol.g, bgCol.b, 255)
+        surface.DrawRect(0, 0, w, h)
     
-        surface.SetTextColor(dezz.Colors[165])
-        surface.SetTextPos(8,20/2-15/2)
-        surface.SetFont("2121DermaSmall2121")
-        surface.DrawText(preview)
+        if preview ~= "" and (d.text_alpha or 0) > 0 then
+            local textCol = dezz.Colors[165] or Color(165, 165, 165)
+            surface.SetTextColor(textCol.r, textCol.g, textCol.b, d.text_alpha or 0)
+            surface.SetTextPos(8, h / 2 - 7)
+            surface.SetFont("2121DermaSmall2121")
+            surface.DrawText(preview)
+        end
     
         surface.SetDrawColor(dezz.Colors[32])
         surface.DrawRect(w-25,0,25,25)
     
-        surface.SetTextColor(dezz.Colors[165])
-        surface.SetTextPos(w-20,20/2-15/2)
+        local arrowCol = dezz.Colors[165] or Color(165, 165, 165)
+        surface.SetTextColor(arrowCol.r, arrowCol.g, arrowCol.b, 255)
+        surface.SetTextPos(w - 20, h / 2 - 7)
         surface.SetFont("2121DermaSmall2121")
-        surface.DrawText("▼")
+        surface.DrawText((d.open_progress or 0) > 0.5 and "▲" or "▼")
 
-        surface.SetDrawColor(dezz.Colors[54])
-        surface.DrawOutlinedRect(0,0,w,h,1)
+        local borderCol = dezz.Colors[54] or Color(54, 54, 54)
+        surface.SetDrawColor(borderCol.r, borderCol.g, borderCol.b, 255)
+        surface.DrawOutlinedRect(0, 0, w, h, 1)
+    end
+
+    function d:OpenMenu()
+        if IsValid(d.Menu) then
+            d.Menu:Remove()
+            d.Menu = nil
+            return
+        end
+        
+        local x, y = self:LocalToScreen(0, self:GetTall())
+        local ctoh = #choices
+    
+        d.Menu = vgui.Create("ULifeTimeBase")
+        d.Menu:SetPos(x, y - 1)
+        d.Menu:SetSize(243, ctoh * 24 + 4)
+        d.Menu:SetAlpha(0)
+        d.Menu:MakePopup()
+        
+        d.item_appear_order = {}
+        d.item_appear_timer = 0
+        
+        function d.Menu:Paint(w, h)
+            local bgCol = dezz.Colors[24] or Color(24, 24, 30)
+            surface.SetDrawColor(bgCol.r, bgCol.g, bgCol.b, self:GetAlpha() or 0)
+            surface.DrawRect(0, 0, w, h)
+            
+            local borderCol = dezz.Colors[54] or Color(54, 54, 54)
+            surface.SetDrawColor(borderCol.r, borderCol.g, borderCol.b, self:GetAlpha() or 0)
+            surface.DrawOutlinedRect(0, 0, w, h, 1)
+        end
+        
+        function d.Menu:OnRemove()
+            d.Menu = nil
+        end
+    
+        for k, v in pairs(choices) do
+            local btn = vgui.Create("DButton", d.Menu)
+            btn:Dock(TOP)
+            btn:SetTall(22)
+            btn:SetText("")
+            btn.txt = v
+            btn.alpha = 0
+            btn.y_offset = 10
+            btn.selected = dezz.cfg.vars[str.."-"..v] == true
+            
+            table.insert(d.item_appear_order, btn)
+            
+            function btn:Paint(w, h)
+                if self:IsHovered() then 
+                    local hoverCol = dezz.Colors[35] or Color(35, 35, 45)
+                    surface.SetDrawColor(hoverCol.r, hoverCol.g, hoverCol.b, self.alpha or 0)
+                    surface.DrawRect(1, 1, w - 2, h - 2)
+                end
+                
+                if self.selected then
+                    local checkCol = dezz.Colors[165] or Color(165, 165, 165)
+                    surface.SetTextColor(checkCol.r, checkCol.g, checkCol.b, self.alpha or 0)
+                    surface.SetTextPos(8, h / 2 - 7)
+                    surface.SetFont("2121DermaSmall2121")
+                    surface.DrawText("✓")
+                end
+                
+                local textCol = dezz.Colors[165] or Color(165, 165, 165)
+                surface.SetTextColor(textCol.r, textCol.g, textCol.b, self.alpha or 0)
+                surface.SetTextPos(20, 4 + (self.y_offset or 0))
+                surface.SetFont("2121DermaSmall2121")
+                surface.DrawText(self.txt or "")
+            end
+            
+            function btn:DoClick()
+                dezz.cfg.vars[str.."-"..v] = not self.selected
+                self.selected = not self.selected
+                
+                d.preview = {}
+                for k2, v2 in pairs(choices) do
+                    if dezz.cfg.vars[str.."-"..v2] == true then
+                        table.insert(d.preview, v2)
+                    end
+                end
+            end
+        end
     end
 
     function d:DoClick()
-        local x,y = self:LocalToScreen( 0, self:GetTall() )
-
-        dezz.ui.RemovePanel( dezz.ui.MultiComboP )
-
-        local ctoh = #choices
-    
-        dezz.ui.MultiComboP = vgui.Create( "ULifeTimeBase" )
-        dezz.ui.MultiComboP:SetPos( x, y - 1 )
-        dezz.ui.MultiComboP:SetSize( 243, ctoh * 22 + 2 )
-    
-        for k, v in pairs(choices) do
-            dezz.ui.dropdownButton( str, v, dezz.ui.MultiComboP, d.preview )
-        end
+        self:OpenMenu()
     end
 end
 
@@ -3196,6 +3311,7 @@ function dezz.ui.ComboBox( pan, str, cfg, choices )
 
     local dropdown = vgui.Create("UComboBox",pan)
     dropdown:Dock(TOP)
+    dropdown:SetTall(21)
     dropdown:DockMargin(4,1,4,0)
     
     if dezz.presets[ cfg ] then
@@ -3410,7 +3526,7 @@ function dezz.tabs.Aimbot()
 
 
 
-    local p = dezz.itemPanel( "Target selection", 3, 270 ):GetItemPanel()
+    local p = dezz.itemPanel( "Target selection", 3, 260 ):GetItemPanel()
 
     dezz.ui.ComboBox( p, "Target selection", "Target selection", { "Distance", "FOV", "More chance" } )
     dezz.ui.MultiCombo( p, "Ignores", { "Friends", "Steam friends", "Teammates", "Driver", "Head unhitable", "God time", "Nocliping", "Nodraw", "Frozen", "Bots", "Admins" } )
@@ -3467,7 +3583,7 @@ function dezz.tabs.Rage()
     dezz.ui.CheckBox( p, "Desynculator", "Desync1" )
     dezz.ui.CheckBox( p, "Anti BruteForce", "Anti-BruteForce" )
 
-    local p = dezz.itemPanel( "Custom angles", 1, 520 ):GetItemPanel()
+    local p = dezz.itemPanel( "Custom angles", 1, 500 ):GetItemPanel()
 
     dezz.ui.Slider( p, "Custom real","Custom real", -180, 180, 0 )
     dezz.ui.Slider( p, "Custom fake","Custom fake", -180, 180, 0 )
@@ -3564,7 +3680,7 @@ function dezz.tabs.Rage()
     dezz.ui.Slider( p, "Backtrack time", "Backtrack time", 0, 1000, 0 )
     dezz.ui.CheckBox( p, "Always backtrack", "Always backtrack" )
 
-    local p = dezz.itemPanel( "Misc", 3, 120 ):GetItemPanel()
+    local p = dezz.itemPanel( "Misc", 3, 100 ):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Auto detonator", "Auto detonator" )
     dezz.ui.Slider( p, "Detonation distance", "AutoD distance", 16, 128, 0 )
@@ -3874,7 +3990,7 @@ function dezz.tabs.Visuals()
         dezz.ui.MTButton( p, "Variant 1", dezz.spfuncs[8888])
     end
 
-    dezz.itemPanelB( "Players",1, 540, func )
+    dezz.itemPanelB( "Players",1, 535, func )
 
         local p = dezz.itemPanel("Entity",1,135):GetItemPanel()
 
@@ -3931,7 +4047,7 @@ function dezz.tabs.Visuals()
         dezz.ui.ComboBox( p, "WaterMark mode", "water mode", { "1", "2" })    
         dezz.ui.TextEntry( "Effect", "KEF", p, 500 )
         
-        local p = dezz.itemPanel("World",3,480):GetItemPanel()
+        local p = dezz.itemPanel("World",3,475):GetItemPanel()
 
         dezz.ui.TextEntry( "Skybox texture", "Custom sky", p, 420 )
         dezz.ui.CheckBox( p, "Sky color", "Sky color", false, false, true )
@@ -4095,7 +4211,7 @@ function dezz.tabs.Misc()
     dezz.ui.CheckBox( p, "Slow walk", "Sloww", false, true )
     dezz.ui.Slider( p, "Slow walk speed", "Slows", 8, 100, 0 )
 
-    local p = dezz.itemPanel("Key spam",1,210):GetItemPanel()
+    local p = dezz.itemPanel("Key spam",1,190):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Use spam", "Use spam" )
     dezz.ui.CheckBox( p, "Flashlight spam", "Flashlight spam", "F for use" )
