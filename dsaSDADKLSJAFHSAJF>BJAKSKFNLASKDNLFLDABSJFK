@@ -225,6 +225,26 @@ dezz.Materials["Gradient right"] = Material("gui/gradient", "noclamp smooth")
 dezz.Materials["Alpha grid"] = Material("gui/alpha_grid.png", "noclamp smooth")
 dezz.chamsMaterials = { "Flat", "Wireframe", "Selfillum", "Selfillum additive", "Metallic", "Glass", "Glowing glass", "LGBT" }
 dezz.blur = Material("pp/blurscreen")
+dezz.chamMats = {
+    vis = {
+        Material("!flat"), -- flat
+        Material("!wireframe"), -- wireframe
+        Material("!selfillum"), -- glow
+        Material("!selfillum_a"), -- glow outline
+        Material("!metallic"), -- metallic
+        Material("effects/nightvision"), -- _rt_fullframefb
+        Material("effects/flashbang"), -- _rt_fullframefb
+    },
+    invis = {
+        Material("!flat_z"), -- flat
+        Material("!wireframe_z"), -- wireframe
+        Material("!selfillum_z"), -- glow
+        Material("!selfillum_a_z"), -- glow outline
+        Material("!metallic_z"), -- metallic
+        Material("effects/nightvision"), -- _rt_fullframefb
+        Material("effects/flashbang"), -- _rt_fullframefb
+    }
+}
 
 // cm stuff
 dezz.target             = false  
@@ -4731,18 +4751,10 @@ function dezz.tabs.LuaExecutor()
 
         local defaultScript = {
             "-- GLua Editor",
-            "function TestFunction()",
-            "    local player = LocalPlayer()",
-            "    if IsValid(player) then",
-            "        print(\"Hello World!\")",
-            "    end",
-            "end",
-            "",
-            "hook.Add(\"Think\", \"ExampleHook\", function()",
-            "    for i = 1, 5 do",
-            "        print(\"Count: \" .. i)",
-            "    end",
-            "end)"
+            "local player = LocalPlayer()",
+            "if IsValid(player) then",
+            "   print(\"Hello World!\")",
+            "end"
         }
         
         txt:SetText(table.concat(defaultScript, "\n"))
@@ -6465,6 +6477,7 @@ function dezz.Aim(cmd)
     if dezz.cfg.vars["Wait for simulation"] and ply:GetVelocity():Length() != 0 and ply:GetSimulationData() == false then
         return
     end
+    --
 
     if not dezz.cfg.vars["Aimbot smoothing"] and dezz.SkipCommand then return end
 
@@ -8812,118 +8825,118 @@ function dezz.DrawESP()
 
         local teamcolor = v.TeamColor
 
-    if dezz.cfg.vars["Box esp"] then
-        local boxColor = dezz.cfg.vars["Box team color"] and teamcolor or color_box or color_box_g
-        local blackColor = dezz.Colors[0]
-        local style = dezz.cfg.vars["Box style"]
-        
-        if style == 1 then
-            surface.SetDrawColor(blackColor)
-            surface.DrawOutlinedRect(MinX-1, MinY-1, XLen+2, YLen+2)
-            surface.SetDrawColor(boxColor)
-            surface.DrawOutlinedRect(MinX, MinY, XLen, YLen)
-
-            if dezz.cfg.vars["Box gradient"] then
+        if dezz.cfg.vars["Box esp"] then
+            local boxColor = dezz.cfg.vars["Box team color"] and teamcolor or color_box or color_box_g
+            local blackColor = dezz.Colors[0]
+            local style = dezz.cfg.vars["Box style"]
+            
+            if style == 1 then
                 surface.SetDrawColor(blackColor)
-                surface.DrawTexturedRect(MinX+1, MinY, 1, YLen-1)
-                surface.DrawTexturedRect(MaxX-2, MinY, 1, YLen-1)
-                surface.DrawTexturedRect(MinX+1, MaxY-2, XLen-2, 1)
+                surface.DrawOutlinedRect(MinX-1, MinY-1, XLen+2, YLen+2)
+                surface.SetDrawColor(boxColor)
+                surface.DrawOutlinedRect(MinX, MinY, XLen, YLen)
+
+                if dezz.cfg.vars["Box gradient"] then
+                    surface.SetDrawColor(blackColor)
+                    surface.DrawTexturedRect(MinX+1, MinY, 1, YLen-1)
+                    surface.DrawTexturedRect(MaxX-2, MinY, 1, YLen-1)
+                    surface.DrawTexturedRect(MinX+1, MaxY-2, XLen-2, 1)
+                end
+
+            elseif style == 2 then
+                local wlen, hlen = math.floor(XLen / 3), math.floor(YLen / 3)
+                local wlen2, hlen2 = wlen - 2, hlen - 2
+                local MaxX_m_wlen = MaxX - wlen + 2
+                local MaxY_m_hlen = MaxY - hlen
+
+                surface.SetDrawColor(blackColor)
+                surface.DrawRect(MinX-1, MinY-1, wlen, 3)
+                surface.DrawRect(MinX-1, MinY-1, 3, hlen)
+                surface.DrawRect(MaxX_m_wlen, MinY-1, wlen, 3)
+                surface.DrawRect(MaxX-1, MinY-1, 3, hlen)
+                surface.DrawRect(MinX-1, MaxY-2, wlen, 3)
+                surface.DrawRect(MinX-1, MaxY_m_hlen, 3, hlen)
+                surface.DrawRect(MaxX_m_wlen, MaxY-2, wlen, 3)
+                surface.DrawRect(MaxX-1, MaxY_m_hlen, 3, hlen)
+
+                surface.SetDrawColor(boxColor)
+                surface.DrawRect(MinX, MinY, wlen2, 1)
+                surface.DrawRect(MinX, MinY, 1, hlen2)
+                surface.DrawRect(MaxX-wlen2+1, MinY, wlen2, 1)
+                surface.DrawRect(MaxX, MinY, 1, hlen2)
+                surface.DrawRect(MinX, MaxY-1, wlen2, 1)
+                surface.DrawRect(MinX, MaxY-hlen2-1, 1, hlen2)
+                surface.DrawRect(MaxX-wlen2+1, MaxY-1, wlen2, 1)
+                surface.DrawRect(MaxX, MaxY-hlen2-1, 1, hlen2)
+
+            elseif style == 3 then
+                local wlen, hlen = math.floor(XLen / 3), math.floor(YLen / 3)
+                local xc = math.floor(XLen / 2)
+                local MinY_hlen = MinY - 1 + hlen
+                local MinY_2hlen = MinY - 2 + hlen*2
+                local MaxY_plus = MaxY + 1
+
+                surface.SetDrawColor(blackColor)
+                surface.DrawRect(MinX-1, MinY_hlen, 3, hlen)
+                surface.DrawLine(MinX-1, MinY_hlen, MinX+xc, MinY-1)
+                surface.DrawLine(MinX+1, MinY_hlen, MinX+xc, MinY+1)
+                surface.DrawLine(MinX-1, MinY_2hlen, MinX+xc, MaxY_plus)
+                surface.DrawLine(MinX+1, MinY_2hlen, MinX+xc, MinY-1+YLen)
+
+                surface.DrawRect(MaxX-1, MinY_hlen, 3, hlen)
+                surface.DrawLine(MaxX-1, MinY_hlen, MinX+xc, MinY+1)
+                surface.DrawLine(MaxX+1, MinY_hlen, MinX+xc, MinY-1)
+                surface.DrawLine(MaxX-1, MinY_2hlen, MinX+xc, MinY-1+YLen)
+                surface.DrawLine(MaxX+1, MinY_2hlen, MinX+xc, MaxY_plus)
+
+                surface.SetDrawColor(boxColor)
+                surface.DrawRect(MinX, MinY+hlen-1, 1, hlen)
+                surface.DrawLine(MinX, MinY_hlen, MinX+xc, MinY)
+                surface.DrawLine(MinX, MinY_2hlen, MinX+xc, MinY+YLen)
+                surface.DrawRect(MaxX, MinY+hlen-1, 1, hlen)
+                surface.DrawLine(MaxX, MinY_hlen, MinX+xc, MinY)
+                surface.DrawLine(MaxX, MinY_2hlen, MinX+xc, MinY+YLen)
+
+            elseif style == 4 then
+                local wlen, hlen = math.floor(XLen / 3) + 3, math.floor(YLen / 3) + 3
+                local x, y, xw, xh = MinX - 3, MinY - 3, MaxX + 3, MaxY + 3
+                local polys = {}
+
+                for i = 1, 3 do
+                    polys[1] = { x = x + wlen, y = y }
+                    polys[2] = { x = xw - wlen, y = y }
+                    polys[3] = { x = xw, y = y + hlen }
+                    polys[4] = { x = xw, y = xh - hlen }
+                    polys[5] = { x = xw - wlen, y = xh }
+                    polys[6] = { x = x + wlen, y = xh }
+                    polys[7] = { x = x, y = xh - hlen }
+                    polys[8] = { x = x, y = y + hlen }
+
+                    surface.SetDrawColor(i == 2 and boxColor or blackColor) 
+                    dezz.DrawOutlinedPoly(polys)
+
+                    wlen = wlen - i
+                    hlen = hlen - i
+                    y = y + i
+                    x = x + i
+                    xw = xw - i
+                    xh = xh - i
+                end
+
+            elseif style == 5 then
+                cam.Start3D(EyePos(), EyeAngles())
+                render.DrawWireframeBox(v.entity:GetPos(), v.entity:GetAngles(), 
+                                    v.entity:OBBMins(), v.entity:OBBMaxs(), 
+                                    boxColor, true)
+                cam.End3D()
+
+            elseif style == 6 then
+                surface.SetDrawColor(boxColor.r, boxColor.g, boxColor.b, 30)
+                surface.DrawRect(MinX, MinY, XLen, YLen)
+                surface.SetDrawColor(boxColor)
+                surface.DrawOutlinedRect(MinX, MinY, XLen, YLen)
             end
-
-        elseif style == 2 then
-            local wlen, hlen = math.floor(XLen / 3), math.floor(YLen / 3)
-            local wlen2, hlen2 = wlen - 2, hlen - 2
-            local MaxX_m_wlen = MaxX - wlen + 2
-            local MaxY_m_hlen = MaxY - hlen
-
-            surface.SetDrawColor(blackColor)
-            surface.DrawRect(MinX-1, MinY-1, wlen, 3)
-            surface.DrawRect(MinX-1, MinY-1, 3, hlen)
-            surface.DrawRect(MaxX_m_wlen, MinY-1, wlen, 3)
-            surface.DrawRect(MaxX-1, MinY-1, 3, hlen)
-            surface.DrawRect(MinX-1, MaxY-2, wlen, 3)
-            surface.DrawRect(MinX-1, MaxY_m_hlen, 3, hlen)
-            surface.DrawRect(MaxX_m_wlen, MaxY-2, wlen, 3)
-            surface.DrawRect(MaxX-1, MaxY_m_hlen, 3, hlen)
-
-            surface.SetDrawColor(boxColor)
-            surface.DrawRect(MinX, MinY, wlen2, 1)
-            surface.DrawRect(MinX, MinY, 1, hlen2)
-            surface.DrawRect(MaxX-wlen2+1, MinY, wlen2, 1)
-            surface.DrawRect(MaxX, MinY, 1, hlen2)
-            surface.DrawRect(MinX, MaxY-1, wlen2, 1)
-            surface.DrawRect(MinX, MaxY-hlen2-1, 1, hlen2)
-            surface.DrawRect(MaxX-wlen2+1, MaxY-1, wlen2, 1)
-            surface.DrawRect(MaxX, MaxY-hlen2-1, 1, hlen2)
-
-        elseif style == 3 then
-            local wlen, hlen = math.floor(XLen / 3), math.floor(YLen / 3)
-            local xc = math.floor(XLen / 2)
-            local MinY_hlen = MinY - 1 + hlen
-            local MinY_2hlen = MinY - 2 + hlen*2
-            local MaxY_plus = MaxY + 1
-
-            surface.SetDrawColor(blackColor)
-            surface.DrawRect(MinX-1, MinY_hlen, 3, hlen)
-            surface.DrawLine(MinX-1, MinY_hlen, MinX+xc, MinY-1)
-            surface.DrawLine(MinX+1, MinY_hlen, MinX+xc, MinY+1)
-            surface.DrawLine(MinX-1, MinY_2hlen, MinX+xc, MaxY_plus)
-            surface.DrawLine(MinX+1, MinY_2hlen, MinX+xc, MinY-1+YLen)
-
-            surface.DrawRect(MaxX-1, MinY_hlen, 3, hlen)
-            surface.DrawLine(MaxX-1, MinY_hlen, MinX+xc, MinY+1)
-            surface.DrawLine(MaxX+1, MinY_hlen, MinX+xc, MinY-1)
-            surface.DrawLine(MaxX-1, MinY_2hlen, MinX+xc, MinY-1+YLen)
-            surface.DrawLine(MaxX+1, MinY_2hlen, MinX+xc, MaxY_plus)
-
-            surface.SetDrawColor(boxColor)
-            surface.DrawRect(MinX, MinY+hlen-1, 1, hlen)
-            surface.DrawLine(MinX, MinY_hlen, MinX+xc, MinY)
-            surface.DrawLine(MinX, MinY_2hlen, MinX+xc, MinY+YLen)
-            surface.DrawRect(MaxX, MinY+hlen-1, 1, hlen)
-            surface.DrawLine(MaxX, MinY_hlen, MinX+xc, MinY)
-            surface.DrawLine(MaxX, MinY_2hlen, MinX+xc, MinY+YLen)
-
-        elseif style == 4 then
-            local wlen, hlen = math.floor(XLen / 3) + 3, math.floor(YLen / 3) + 3
-            local x, y, xw, xh = MinX - 3, MinY - 3, MaxX + 3, MaxY + 3
-            local polys = {}
-
-            for i = 1, 3 do
-                polys[1] = { x = x + wlen, y = y }
-                polys[2] = { x = xw - wlen, y = y }
-                polys[3] = { x = xw, y = y + hlen }
-                polys[4] = { x = xw, y = xh - hlen }
-                polys[5] = { x = xw - wlen, y = xh }
-                polys[6] = { x = x + wlen, y = xh }
-                polys[7] = { x = x, y = xh - hlen }
-                polys[8] = { x = x, y = y + hlen }
-
-                surface.SetDrawColor(i == 2 and boxColor or blackColor) 
-                dezz.DrawOutlinedPoly(polys)
-
-                wlen = wlen - i
-                hlen = hlen - i
-                y = y + i
-                x = x + i
-                xw = xw - i
-                xh = xh - i
-            end
-
-        elseif style == 5 then
-            cam.Start3D(EyePos(), EyeAngles())
-            render.DrawWireframeBox(v.entity:GetPos(), v.entity:GetAngles(), 
-                                v.entity:OBBMins(), v.entity:OBBMaxs(), 
-                                boxColor, true)
-            cam.End3D()
-
-        elseif style == 6 then
-            surface.SetDrawColor(boxColor.r, boxColor.g, boxColor.b, 30)
-            surface.DrawRect(MinX, MinY, XLen, YLen)
-            surface.SetDrawColor(boxColor)
-            surface.DrawOutlinedRect(MinX, MinY, XLen, YLen)
         end
-    end
 
         // Sight lines 
 
@@ -8943,163 +8956,164 @@ function dezz.DrawESP()
 
         surface.SetTextColor( dezz.Colors[255] )
 
-    if dezz.cfg.vars["Name"] then 
-        local name = v.Name
-        local pos = dezz.cfg.vars["Name pos"]
-        local tw, th = surface.GetTextSize(name)
+            if dezz.cfg.vars["Name"] then 
+                local name = v.Name
+                local pos = dezz.cfg.vars["Name pos"]
+                local tw, th = surface.GetTextSize(name)
 
-        if dezz.cfg.priorityList and dezz.cfg.priorityList[v.entity:SteamID()] then
-            surface.SetTextColor(255, 0, 0, 255)
-        elseif dezz.cfg.friends[v.entity:SteamID()] or v.entity:GetFriendStatus() == "friend" then
-            surface.SetTextColor(0, 255, 0, 255)
-        elseif dezz.trackedPlayers and dezz.trackedPlayers[steamId] then
-            Color(255,255,255,255)
-        elseif dezz.cfg.admins[v.entity:SteamID()] or v.entity:GetFriendStatus() == "Admin" then
-            surface.SetTextColor(128, 0, 255, 255)
-        else
-        end
+                if dezz.cfg.priorityList and dezz.cfg.priorityList[v.entity:SteamID()] then
+                    surface.SetTextColor(255, 0, 0, 255)
+                elseif dezz.cfg.friends[v.entity:SteamID()] or v.entity:GetFriendStatus() == "friend" then
+                    surface.SetTextColor(0, 255, 0, 255)
+                elseif dezz.trackedPlayers and dezz.trackedPlayers[steamId] then
+                    Color(255,255,255,255)
+                elseif dezz.cfg.admins[v.entity:SteamID()] or v.entity:GetFriendStatus() == "Admin" then
+                    surface.SetTextColor(128, 0, 255, 255)
+                else
+                end
 
 
-        surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos), dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
-        surface.DrawText(name)
+                surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos), dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
+                surface.DrawText(name)
 
-        ttbl[pos] = ttbl[pos] + 0.8
-    end
+                ttbl[pos] = ttbl[pos] + 0.8
+            end
 
-        surface.SetTextColor( dezz.Colors[255] )
+                surface.SetTextColor( dezz.Colors[255] )
 
-    if dezz.cfg.vars["Usergroup icon"] then
-        local name = v.GetUserGroup
-        local pos = dezz.cfg.vars["Usergroup icon pos"]
-        local tw, th = surface.GetTextSize(name)
+            if dezz.cfg.vars["Usergroup icon"] then
+                local name = v.GetUserGroup
+                local pos = dezz.cfg.vars["Usergroup icon pos"]
+                local tw, th = surface.GetTextSize(name)
 
-        local textX = poses[pos] - dezz.getTextX(v, tw, pos)
-        local textY = dezz.getTextY(MaxY, MinY, th, pos, ttbl[pos])
+                local textX = poses[pos] - dezz.getTextX(v, tw, pos)
+                local textY = dezz.getTextY(MaxY, MinY, th, pos, ttbl[pos])
 
-        surface.SetTextPos(textX, textY)
-        surface.DrawText("")
-        if name == "Игрок" then
-            local iconPath = "icon16/user.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                surface.SetTextPos(textX, textY)
+                surface.DrawText("")
+                if name == "Игрок" then
+                    local iconPath = "icon16/user.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "Вип" then
-            local iconPath = "icon16/star.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "Вип" then
+                    local iconPath = "icon16/star.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "Модератор" then
-            local iconPath = "icon16/shield.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "Модератор" then
+                    local iconPath = "icon16/shield.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "Админ" then
-            local iconPath = "icon16/flag_red.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "Админ" then
+                    local iconPath = "icon16/flag_red.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "СуперАдмин" then
-            local iconPath = "icon16/world.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "СуперАдмин" then
+                    local iconPath = "icon16/world.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "Owner" then
-            local iconPath = "icon16/ruby.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "Owner" then
+                    local iconPath = "icon16/ruby.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "НаборАдмин" then
-            local iconPath = "icon16/color_wheel.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "НаборАдмин" then
+                    local iconPath = "icon16/color_wheel.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "Хелпер" then
-            local iconPath = "icon16/rosette.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "Хелпер" then
+                    local iconPath = "icon16/rosette.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "СудоРут" then
-            local iconPath = "icon16/tux.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "СудоРут" then
+                    local iconPath = "icon16/tux.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "СабКуратор" then
-            local iconPath = "icon16/user_suit.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "СабКуратор" then
+                    local iconPath = "icon16/user_suit.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-        if name == "Куратор" then
-            local iconPath = "icon16/user_gray.png"
-            local iconMaterial = Material(iconPath)
-            local iconSize = 16 
-            local iconX = textX - iconSize - 2 
-            local iconY = textY + (th - iconSize) / 2 
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+                if name == "Куратор" then
+                    local iconPath = "icon16/user_gray.png"
+                    local iconMaterial = Material(iconPath)
+                    local iconSize = 16 
+                    local iconX = textX - iconSize - 2 
+                    local iconY = textY + (th - iconSize) / 2 
 
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(iconMaterial)
-            surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
-        end
-    end
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.SetMaterial(iconMaterial)
+                    surface.DrawTexturedRect(iconX, iconY, iconSize, iconSize)
+                end
+            end
+
             if dezz.cfg.vars["Usergroup TXT"] then
                 local name = v.GetUserGroup
                 local pos = dezz.cfg.vars["Usergroup TXT pos"]
@@ -9148,20 +9162,20 @@ function dezz.DrawESP()
 
             surface.SetTextColor( dezz.Colors[255] )
 
-    if dezz.cfg.vars["Weapon"] then 
-        local name = dezz.cfg.vars["Show ammo"] and v.WeaponClass .. " (" .. v.WeaponAmmo .. ")" or v.WeaponClass
-        
-        if dezz.cfg.vars["Show reloading"] and IsValid(v.entity) then
-            for i = 0, 13 do
-                if v.entity:IsValidLayer(i) then
-                    local activityName = v.entity:GetSequenceActivityName(v.entity:GetLayerSequence(i))
-                    if activityName and activityName:find("RELOAD") then
-                        name = "RELOADING"
-                        break
+            if dezz.cfg.vars["Weapon"] then 
+                local name = dezz.cfg.vars["Show ammo"] and v.WeaponClass .. " (" .. v.WeaponAmmo .. ")" or v.WeaponClass
+                
+                if dezz.cfg.vars["Show reloading"] and IsValid(v.entity) then
+                    for i = 0, 13 do
+                        if v.entity:IsValidLayer(i) then
+                            local activityName = v.entity:GetSequenceActivityName(v.entity:GetLayerSequence(i))
+                            if activityName and activityName:find("RELOAD") then
+                                name = "RELOADING"
+                                break
+                        end
+                    end
                 end
             end
-        end
-    end
 
             local pos = dezz.cfg.vars["Weapon pos"]
             local tw, th = surface.GetTextSize(name)
@@ -10813,28 +10827,6 @@ local weaponparams = {
         TextureScroll = {
             texturescrollvar = "$basetexturetransform",
         }
-    }
-}
-
-
-dezz.chamMats = {
-    vis = {
-        Material("!flat"), -- flat
-        Material("!wireframe"), -- wireframe
-        Material("!selfillum"), -- glow
-        Material("!selfillum_a"), -- glow outline
-        Material("!metallic"), -- metallic
-        Material("effects/nightvision"), -- _rt_fullframefb
-        Material("effects/flashbang"), -- _rt_fullframefb
-    },
-    invis = {
-        Material("!flat_z"), -- flat
-        Material("!wireframe_z"), -- wireframe
-        Material("!selfillum_z"), -- glow
-        Material("!selfillum_a_z"), -- glow outline
-        Material("!metallic_z"), -- metallic
-        Material("effects/nightvision"), -- _rt_fullframefb
-        Material("effects/flashbang"), -- _rt_fullframefb
     }
 }
  
@@ -12884,22 +12876,6 @@ function dezz.PlayerButtonDown(ply, key)
     end
 end
 
-function dezz.PreDrawViewModel(viewmodel, ply, weapon_entity)
-    if (weapon_entity.CW_VM) then
-        return
-    end
-        
-    model_render:override("Viewmodel", viewmodel)
-end
-
-function dezz.PreDrawPlayerHands(hands, viewmodel, ply, weapon_entity)
-    model_render:override("Hands", hands)
-end
-
-function dezz.PostDrawPlayerHands(hands, viewmodel, ply, weapon_entity)
-    model_render:restore()
-end
-
 /*
     hooks -> CalcViewModelView
 */
@@ -13267,52 +13243,28 @@ end
 
 // Entity data
 
-dezz.cfg.ents = {}
-
 dezz.entity_cache = {}
 
-function dezz.RenderOverride(entity, flags)
-    local classname = entity:GetClass()
-
-    if classname == "player" or not dezz.cfg.ents[classname] then 
-        entity.RenderOverride = nil 
-
-        return 
-    end
-
-    model_render:override("Entity", entity)
-
-    entity:DrawModel(flags)
-
-    model_render:restore()
-end
+dezz.cfg.ents = {}
 
 function dezz.entTableUpdate()
-    local entitylist = ents.GetAll()
-
+    
     dezz.entity_cache = {}
 
-    for i = 1, #entitylist do
-        local entity = entitylist[ i ]
+    local entitys = ents.GetAll()
 
-        if not IsValid( entity ) then 
-            continue 
-        end 
+    for i = 1, #entitys do
+        local v = entitys[ i ]
+        local v_class = v:GetClass()
 
-        local classname = entity:GetClass()
-
-        if classname == "player" or not dezz.cfg.ents[classname] then 
-            continue 
-        end
-
-        if (not isfunction(entity.RenderOverride)) then
-            entity.RenderOverride = dezz.RenderOverride
-        end
+        if not IsValid( v ) then continue end 
+        if v_class == "player" then continue end
+        if not dezz.cfg.ents[ v_class ] then continue end
 
         dezz.entity_cache[ #dezz.entity_cache + 1 ] = {
-            entity = entity,
-            class = classname,
-            position = entity:GetPos()
+            entity = v,
+            class = v_class,
+            position = v:GetPos(),
         }
     end
 end
