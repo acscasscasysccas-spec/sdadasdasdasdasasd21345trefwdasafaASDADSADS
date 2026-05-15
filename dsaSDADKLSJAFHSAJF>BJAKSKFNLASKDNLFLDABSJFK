@@ -209,6 +209,7 @@ dezz.validsnd = false
 dezz.activetab = "Aimbot"
 dezz.multicombo = false
 
+dezz.entity_cache = {}
 
 dezz.hint = false
 dezz.hintText = ""
@@ -285,6 +286,10 @@ dezz.backtracktick      =  0
 //cfg
 dezz.presets = {}
 dezz.cfg = { vars = {}, binds = {}, colors = {} }
+dezz.cfg.friends = {}
+dezz.cfg.priorityList = {}
+dezz.cfg.ents = {}
+dezz.cfg.admins = {}
 
 // Aimbot
 dezz.cfg.vars["Enable aimbot"]              = false
@@ -852,14 +857,6 @@ dezz.cfg.colors["Menu color"]               = "0 0 0 255"
 dezz.cfg.binds["Player add"]                = 0
 dezz.cfg.binds["Priority add"]              = 0
 
-// List
-dezz.cfg.friends = {}
-dezz.cfg.priorityList = {}
-dezz.cfg.ents = {}
-dezz.cfg.admins = {}
-
-
-
 do 
     local maxshift = GetConVar("sv_maxusrcmdprocessticks"):GetInt() - 1
     local tickrate = tostring(math.Round(1 / flTickInterval))
@@ -1021,7 +1018,7 @@ function dezz.DeleteConfig()
     local str = dezz.cfgTable[selectedConfigId]
 
     if str then
-        file.Delete("dezz/" .. str .. ".txt")
+        file.Delete("dezzaster/" .. str .. ".txt")
 
         table.remove(dezz.cfgTable, selectedConfigId)
 
@@ -13242,14 +13239,7 @@ function dezz.playerDataUpdate( )
 end
 
 // Entity data
-
-dezz.entity_cache = {}
-
-dezz.cfg.ents = {}
-
 function dezz.entTableUpdate()
-    
-    dezz.entity_cache = {}
 
     local entitys = ents.GetAll()
 
