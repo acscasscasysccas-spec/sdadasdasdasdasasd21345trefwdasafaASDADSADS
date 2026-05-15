@@ -100,6 +100,7 @@ dezz.Colors = {}
 
 dezz.hitmarkers = {}
 dezz.hitnums = {}
+dezz.headshotindicators = {}
 
 dezz.norf = {
     ["laserjetpack"] = true,
@@ -202,6 +203,7 @@ dezz.Colors["Red"] = Color( 255, 0, 0)
 dezz.accent = Color( 255, 255, 255 )
 
 dezz.cached = {}
+dezz.entity_cache = {}
 
 dezz.ui = {}
 dezz.validsnd = false 
@@ -209,12 +211,15 @@ dezz.validsnd = false
 dezz.activetab = "Aimbot"
 dezz.multicombo = false
 
-dezz.entity_cache = {}
+dezz.killstreak = 0 
 
 dezz.hint = false
 dezz.hintText = ""
 dezz.hintX = 0
 dezz.hintY = 0
+
+dezz.CustomSpread = {}
+dezz.SpreadComps = {}
 
 dezz.ttable = {}
 
@@ -711,6 +716,11 @@ dezz.cfg.vars["SpecL"]                      = false
 dezz.cfg.vars["Crosshair"]                  = false
 dezz.cfg.vars["Crosshair type"]             = 1
 dezz.cfg.vars["Angle arrows"]               = false
+
+dezz.cfg.vars["hdshot"]                     = false
+dezz.cfg.colors["hdshot"]                   = "0 255 0 255"
+dezz.cfg.vars["hdshot str"]                 = "HeAdShOt!"
+
 dezz.cfg.vars["KeyBind List"]               = false
 dezz.cfg.colors["KeyBind List"]             = "0 0 0 255"
 dezz.cfg.vars["On screen logs"]             = false
@@ -4045,7 +4055,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
         dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
 
-        local p = dezz.itemPanel( "Indicators", 2, 480 ):GetItemPanel()
+        local p = dezz.itemPanel( "Indicators", 2, 540 ):GetItemPanel()
         dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[90])
         dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
         dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
@@ -4055,6 +4065,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "WaterMark", "WaterMark")
         dezz.ui.CheckBox( p, "Spectator list", "speclist" )
         dezz.ui.CheckBox( p, "Tickbase", "Tickbase indicator" )
+        dezz.ui.CheckBox( p, "Headshot indicator", "hdshot", false, false, true )
         dezz.ui.CheckBox( p, "Ping warning", "pw" )
         dezz.ui.CheckBox( p, "Keystrokes", "ks", false, false, false, dezz.spfuncs[11152], false, function(p) dezz.ui.ColorPicker( "ksck", p ) dezz.ui.ColorPicker( "kscb", p ) end )
         dezz.ui.CheckBox( p, "Radar", "Radar" )
@@ -4063,6 +4074,7 @@ function dezz.tabs.Visuals()
         dezz.ui.ComboBox( p, "Keybinds mode", "bind mode", { "1", "2" })
         dezz.ui.ComboBox( p, "WaterMark mode", "water mode", { "1", "2" })    
         dezz.ui.TextEntry( "Effect", "KEF", p, 500 )
+        dezz.ui.TextEntry( "Headshot indicator", "hdshot str", p, 500 )
         
         local p = dezz.itemPanel("World",3,475):GetItemPanel()
 
@@ -5085,8 +5097,6 @@ end
     Nospread 
 */
 
-dezz.CustomSpread = {}
-
 function dezz.CustomSpread.swb( cmd, ang )
     /*
     local vel = pLocalPlayer:GetVelocity():Length()
@@ -5218,20 +5228,11 @@ local function Zc(self, bd)
     )
 end
 */
-
-dezz.SpreadComps = {}
-
 dezz.SpreadComps["swb"]     = dezz.CustomSpread.swb
 dezz.SpreadComps["cw"]      = dezz.CustomSpread.cw
 dezz.SpreadComps["fas2"]    = dezz.CustomSpread.fas2
 dezz.SpreadComps["tfa"]     = dezz.CustomSpread.tfa
 dezz.SpreadComps["mg"]     = dezz.CustomSpread.mg
-
-
-
-
-
-
 
 
 function dezz.NoSpread(cmd, ang)
@@ -5883,9 +5884,6 @@ function dezz.DoSilentAngleUpdate( UserCmd )
 end
 
 
-
-
-
 // Knife bot ( Etot zaichik knifer )
 
 dezz.knifes = {}
@@ -6471,8 +6469,8 @@ function dezz.Aim(cmd)
     if not dezz.CanShoot(cmd) then return end
 
     --no work
-    if dezz.cfg.vars["Wait for simulation"] and ply:GetVelocity():Length() != 0 and ply:GetSimulationData() == false then
-        return
+    if ( dezz.cfg.vars["Wait for simulation"] and ( ply:GetVelocity():Length() ~= 0 and not ply.simtime_updated ) ) then
+        return 
     end
     --
 
@@ -9421,6 +9419,38 @@ do
             surface.SetDrawColor( lc )
             surface.DrawRect( 79, ScrH() - 218, dezz.tyaga / dezz.maxvape * 58, 12 )
         end
+
+        if dezz.cfg.vars["hdshot"] and #dezz.headshotindicators > 0 then 
+            local col = string.ToColor(dezz.cfg.colors["hdshot"])
+            
+            surface.SetFont("DebugOverlay")
+
+            for i = #dezz.headshotindicators, 1, -1 do
+                local v = dezz.headshotindicators[i]
+                local lifeTime = CurTime() - v.time
+                local alpha = 255
+
+                if lifeTime > 0.7 then
+                    alpha = 255 - (lifeTime - 0.7) / 0.3 * 255
+                    alpha = math.Clamp(alpha, 0, 255)
+                end
+
+                if lifeTime >= 1 then 
+                    table.remove(dezz.headshotindicators, i) 
+                    continue 
+                end
+
+                surface.SetTextColor(col.r, col.g, col.b, alpha)
+
+                local randomX = v.randomX or 0
+                local randomY = v.randomY or 0
+
+                v.add = math.Approach(v.add, v.add - lifeTime * 300, FrameTime() * 8)
+
+                surface.SetTextPos((screenWidth * 0.5) - v.add * v.xdir + randomX, (screenHeight * 0.5) - v.add * v.ydir - (lifeTime * 50) + randomY)
+                surface.DrawText(dezz.cfg.vars["hdshot str"])
+            end
+        end
         
         if dezz.cfg.vars["Tickbase shift"] and dezz.cfg.vars["Tickbase indicator"] then
             if ded.GetCurrentCharge() <= dezz.cfg.vars["Shift ticks"] then
@@ -11939,142 +11969,142 @@ dezz.chatmsg = {
     }
 }
 
-
-dezz.killstreak = 0 
-
 // Init player vars 
-gameevent.Listen( "player_spawn" )
-gameevent.Listen( "player_activate" )
-gameevent.Listen( "entity_killed" )
+gameevent.Listen("player_spawn")
+gameevent.Listen("player_activate")
+gameevent.Listen("entity_killed")
 
 function dezz.entity_killed(data)
+    local victim = Entity(data.entindex_killed)
+    local attacker = Entity(data.entindex_attacker)
+
+    if not IsValid(attacker) or not IsValid(victim) then return end
+    if attacker ~= pLocalPlayer then return end
+    if attacker == victim then return end
+    if victim:IsNPC() then return end
+    if not (victim:IsPlayer() or victim:IsBot()) then return end
 
     if dezz.cfg.vars["Kill effect"] then  
-        local kills1 = 0      
-        local victim = Entity(data.entindex_killed)
-        local attacker = Entity(data.entindex_attacker)
+        local vPoint = pLocalPlayer:GetPos()
+        local effectdata = EffectData()
+        effectdata:SetOrigin(vPoint)
+        effectdata:SetStart(vPoint)
+        util.Effect("VortDispel", effectdata)
 
-        if attacker == pLocalPlayer and attacker ~= victim and (victim:IsPlayer() or victim:IsBot()) then 
-            local vPoint = pLocalPlayer:GetPos()
-            local effectdata = EffectData()
-            effectdata:SetOrigin(vPoint)
-            effectdata:SetStart(vPoint)
-            util.Effect("VortDispel", effectdata)
+        local vpos = victim:GetPos()
+        local effectdata2 = EffectData()
+        local boneName = dezz.cfg.vars["KEF"]
+        local boneId = victim:LookupBone(boneName)
+        
+        if boneId then
+            effectdata2:SetOrigin(victim:GetBonePosition(boneId))
+        else
+            effectdata2:SetOrigin(vpos)
+        end
+        
+        effectdata2:SetMagnitude(5)
+        effectdata2:SetScale(3)
+        util.Effect("ElectricSpark", effectdata2)
+    end
 
-            local vpos = victim:GetPos()
-            local effectdata2 = EffectData()
-            local boneName = dezz.cfg.vars["KEF"]
-            local boneId = victim:LookupBone(boneName)
-            
-            if boneId then
-                effectdata2:SetOrigin(victim:GetBonePosition(boneId))
-            else
-                effectdata2:SetOrigin(vpos)
-            end
-            
-            effectdata2:SetMagnitude(5)
-            effectdata2:SetScale(3)
-            util.Effect("ElectricSpark", effectdata2)
+    if dezz.cfg.vars["hdshot"] then
+        local tr = TraceLine( dezz.traceStruct )
+        local hitgroup = tr.HitGroup
+
+        if hitgroup == 1 then
+            dezz.headshotindicators[ #dezz.headshotindicators + 1 ] = { time = CurTime(), add = 0, xdir = math.random(-1,1), ydir = math.random(-1,1) }
         end
     end
 
-    local aid = Entity(data.entindex_attacker)  
-    local vid = Entity(data.entindex_killed)
-
-    if aid == pLocalPlayer and aid != vid and !vid:IsNPC() and (vid:IsPlayer() or vid:IsBot() ) then
-        if dezz.cfg.vars["Killsay"] then
-    local chatPrefixes = {
-        [2] = "/ooc ",
-        [3] = "/ad ",
-        [4] = "/pm " 
-    }
-    
-    local chatGroup = dezz.cfg.vars["Killsay group"] or 1
-    
-    local prefix = chatPrefixes[chatGroup] or ""
-    
-    local tbl = dezz.chatmsg[ dezz.cfg.vars["Killsay mode"] ]
-    local str = tbl[ math.random( 1, #tbl ) ]
-    
-    if str:find("%s") then 
-        str = str:gsub("%%s", vid:Nick()) 
-    end
-    if str:find("%n") then 
-        str = str:gsub("%%n", vid:SteamID()) 
-    end
-
-    if chatGroup == 4 then
-        local steamID = vid:SteamID()
-        RunConsoleCommand("say", "/pm " .. steamID .. " " .. str)
-    else
-        RunConsoleCommand("say", prefix .. str)
-    end
-end
-
-        if dezz.cfg.vars["Killsound"] then
-            surface.PlaySound( dezz.cfg.vars["Killsound str"] )
-        end
-
-        if not file.IsDir("dezzaster/music", "DATA") then
-            file.CreateDir("dezzaster/music")
-        end
-
-        local musicFiles = {
-            {id = "1UMdrLzeCnb2Gdd-dGpnZCic7sW3e5mER", name = "1.wav"},
-            {id = "1efVTMN7BNLWGBgX-GnJyzM2QVzg2CztI", name = "2.wav"},
-            {id = "1_p4N-Llfxzy-l9RnnAYiPYCkcb95vuRk", name = "3.wav"},
-            {id = "1dh04zEA5cvoRocErO-3A1yG_u2UocJVC", name = "4.wav"},
-            {id = "17NavR_c5NB_9jvxE0B9yP0JHWuRKGnes", name = "5.wav"},
-            {id = "1ytQbCIF1kVVxyYOpGpbY6ppStKKsroZL", name = "6.wav"},
-            {id = "16ybXSU0HdxjxkjRbdjqIFMFghuT6SCLZ", name = "7.wav"},
-            {id = "1HweGtx7gsee6qB4k-nGrikWBrUotK0xL", name = "8.wav"},
-            {id = "1Q7rWnZMkHrsmcBSW7EnrZV594opHh3o6", name = "9.wav"},
-            {id = "1POegjGJoylzi-kTSWAb8xHLNja7kF859", name = "10.wav"},
-            {id = "19NqUgyTlduEhvnEgMVb86K7-YjrjPlkn", name = "11.wav"}
+    if dezz.cfg.vars["Killsay"] then
+        local chatPrefixes = {
+            [2] = "/ooc ",
+            [3] = "/ad ",
+            [4] = "/pm " 
         }
+        
+        local chatGroup = dezz.cfg.vars["Killsay group"] or 1
+        local prefix = chatPrefixes[chatGroup] or ""
+        
+        local tbl = dezz.chatmsg[dezz.cfg.vars["Killsay mode"]]
+        local str = tbl[math.random(1, #tbl)]
+        
+        if str:find("%s") then 
+            str = str:gsub("%%s", victim:Nick()) 
+        end
+        if str:find("%n") then 
+            str = str:gsub("%%n", victim:SteamID()) 
+        end
 
-        for _, fileData in ipairs(musicFiles) do
-            local filePath = "dezzaster/music/" .. fileData.name
-            if not file.Exists(filePath, "DATA") then
-                http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=" .. fileData.id .. "&export=download", function(body)
-                    if body and #body > 0 then
-                        file.Write(filePath, body)
+        if chatGroup == 4 then
+            local steamID = victim:SteamID()
+            RunConsoleCommand("say", "/pm " .. steamID .. " " .. str)
+        else
+            RunConsoleCommand("say", prefix .. str)
+        end
+    end
+
+    if dezz.cfg.vars["Killsound"] then
+        surface.PlaySound(dezz.cfg.vars["Killsound str"])
+    end
+
+    if not file.IsDir("dezzaster/music", "DATA") then
+        file.CreateDir("dezzaster/music")
+    end
+
+    local musicFiles = {
+        {id = "1UMdrLzeCnb2Gdd-dGpnZCic7sW3e5mER", name = "1.wav"},
+        {id = "1efVTMN7BNLWGBgX-GnJyzM2QVzg2CztI", name = "2.wav"},
+        {id = "1_p4N-Llfxzy-l9RnnAYiPYCkcb95vuRk", name = "3.wav"},
+        {id = "1dh04zEA5cvoRocErO-3A1yG_u2UocJVC", name = "4.wav"},
+        {id = "17NavR_c5NB_9jvxE0B9yP0JHWuRKGnes", name = "5.wav"},
+        {id = "1ytQbCIF1kVVxyYOpGpbY6ppStKKsroZL", name = "6.wav"},
+        {id = "16ybXSU0HdxjxkjRbdjqIFMFghuT6SCLZ", name = "7.wav"},
+        {id = "1HweGtx7gsee6qB4k-nGrikWBrUotK0xL", name = "8.wav"},
+        {id = "1Q7rWnZMkHrsmcBSW7EnrZV594opHh3o6", name = "9.wav"},
+        {id = "1POegjGJoylzi-kTSWAb8xHLNja7kF859", name = "10.wav"},
+        {id = "19NqUgyTlduEhvnEgMVb86K7-YjrjPlkn", name = "11.wav"}
+    }
+
+    for _, fileData in ipairs(musicFiles) do
+        local filePath = "dezzaster/music/" .. fileData.name
+        if not file.Exists(filePath, "DATA") then
+            http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=" .. fileData.id .. "&export=download", function(body)
+                if body and #body > 0 then
+                    file.Write(filePath, body)
+                end
+            end)
+        end
+    end
+
+    if dezz.cfg.vars["Killstreak"] then
+        dezz.killstreak = (dezz.killstreak or 0) + 1  
+        
+        local soundPaths = {
+            [1] = "1.wav",
+            [2] = "3.wav",
+            [3] = "2.wav",
+            [4] = "5.wav",
+            [5] = "4.wav",
+            [6] = "6.wav",
+            [7] = "8.wav",
+            [8] = "7.wav",
+            [9] = "9.wav",
+            [10] = "10.wav",
+            [11] = "11.wav"
+        }
+        
+        if soundPaths[dezz.killstreak] then
+            local soundFile = "data/dezzaster/music/" .. soundPaths[dezz.killstreak]
+            if file.Exists("dezzaster/music/" .. soundPaths[dezz.killstreak], "DATA") then
+                sound.PlayFile(soundFile, "noblock", function(snd)
+                    if IsValid(snd) then
+                        snd:Play()
                     end
                 end)
             end
-        end
-
-        if dezz.cfg.vars["Killstreak"] then
-            dezz.killstreak = (dezz.killstreak or 0) + 1  
-            
-            if dezz.killstreak > 0 then
-                local soundPaths = {
-                    [1] = "1.wav",
-                    [2] = "3.wav",
-                    [3] = "2.wav",
-                    [4] = "5.wav",
-                    [5] = "4.wav",
-                    [6] = "6.wav",
-                    [7] = "8.wav",
-                    [8] = "7.wav",
-                    [9] = "9.wav",
-                    [10] = "10.wav",
-                    [11] = "11.wav"
-                }
-                
-                if soundPaths[dezz.killstreak] then
-                    local soundFile = "data/dezzaster/music/" .. soundPaths[dezz.killstreak]
-                    if file.Exists("dezzaster/music/" .. soundPaths[dezz.killstreak], "DATA") then
-                        sound.PlayFile(soundFile, "noblock", function(snd)
-                            if IsValid(snd) then
-                                snd:Play()
-                            end
-                        end)
-                    end
-                elseif dezz.killstreak > 11 then
-                    dezz.killstreak = 0
-                end
-            end
+        elseif dezz.killstreak > 11 then
+            dezz.killstreak = 0
         end
     end
 end
