@@ -5,7 +5,8 @@ local dezzCreateFont = surface.CreateFont
 
 local c = Color(160,0,0)MsgC(c,"▓█████▄  ▓█████▒███████▒▒███████▒ ▄▄▄       ██████ ▄▄▄█████▓ ▓█████ ██▀███\n",c,"▒██▀ ██▌ ▓█   ▀▒ ▒ ▒ ▄▀░▒ ▒ ▒ ▄▀░▒████▄   ▒██    ▒ ▓  ██▒ ▓▒ ▓█   ▀▓██ ▒ ██▒\n",c,"░██   █▌ ▒███  ░ ▒ ▄▀▒░ ░ ▒ ▄▀▒░ ▒██  ▀█▄ ░ ▓██▄   ▒ ▓██░ ▒░ ▒███  ▓██ ░▄█ ▒\n",c,"░▓█▄   ▌ ▒▓█  ▄  ▄▀▒   ░  ▄▀▒   ░░██▄▄▄▄██  ▒   ██▒░ ▓██▓ ░  ▒▓█  ▄▒██▀▀█▄  \n",c,"░▒████▓ ▒░▒████▒███████▒▒███████▒▒▓█   ▓██▒██████▒▒  ▒██▒ ░ ▒░▒████░██▓ ▒██▒\n",c,"▒▒▓  ▒ ░░░ ▒░ ░▒▒ ▓░▒░▒░▒▒ ▓░▒░▒░▒▒   ▓▒█▒ ▒▓▒ ▒ ░  ▒ ░░   ░░░ ▒░ ░ ▒▓ ░▒▓░\n",c," ░ ▒  ▒ ░ ░ ░   ░▒ ▒ ░ ▒ ░▒ ▒ ░ ▒░ ░   ▒▒ ░ ░▒  ░ ░    ░    ░ ░ ░    ░▒ ░ ▒ \n",c," ░ ░  ░     ░  ░ ░ ░ ░ ░░ ░ ░ ░ ░  ░   ▒  ░  ░  ░    ░          ░    ░░   ░ \n",c,"    ░    ░   ░    ░ ░      ░ ░          ░        ░           ░   ░     ░     ")
 
-local dezz                          = {}
+
+local dezz           /*🤍🤍🤍🤍*/       = {}
 
 
 local MetaPlayer                        = FindMetaTable("Player")
@@ -69,8 +70,19 @@ dezz.Fonts = {
 
 --track
 dezz.trackedPlayers = {["STEAM_0:1:436828002"] = true,["STEAM_0:0:527475945"] = true,["STEAM_0:1:543095867"] = true,["STEAM_0:0:85161933"] = true,["STEAM_0:0:539832760"] = true,["STEAM_0:0:768366475"] = true,["STEAM_0:1:839703715"] = true,["STEAM_0:1:100134965"] = true,["STEAM_0:1:190920688"] = true,["STEAM_0:1:567882"] = true,["STEAM_0:0:641838651"] = true,["STEAM_0:1:589073347"] = true,["STEAM_0:0:14148252"] = true,["STEAM_0:0:811209569"] = true,["STEAM_0:1:806312846"] = true,["STEAM_0:0:556281083"] = true,["STEAM_0:0:616631834"] = true,["STEAM_0:0:453356413"] = true,["STEAM_0:1:565888199"] = true,["STEAM_0:1:813938330"] = true,["STEAM_0:1:428620691"] = true,["STEAM_0:0:529497837"] = true,["STEAM_0:1:762276521"] = true,["STEAM_0:1:448764194"] = true,["STEAM_0:1:765078061"] = true,["STEAM_0:1:106651565"] = true,["STEAM_0:1:176142806"] = true,["STEAM_0:1:455428067"] = true,["STEAM_0:1:566826019"] = true,["STEAM_0:1:16149313"] = true,["STEAM_0:0:423333338"] = true,["STEAM_0:1:600204671"] = true,["STEAM_0:1:460002163"] = true,["STEAM_0:1:795560908"] = true,["STEAM_0:0:527794979"] = true,["STEAM_0:1:2393854"] = true,["STEAM_0:0:109145007"] = true,["STEAM_0:1:702436824"] = true,["STEAM_0:0:534763468"] = true,["STEAM_0:0:4727797"] = true,["STEAM_0:1:203904700"] = true,["STEAM_0:0:41386936"] = true,["STEAM_0:0:779325404"] = true,["STEAM_0:0:39774534"] = true,["STEAM_0:0:904420245"] = true,["STEAM_0:1:547180217"] = true,["STEAM_0:1:532170488"] = true,["STEAM_0:1:579803502"] = true,["STEAM_0:0:621614166"] = true,["STEAM_0:1:579307406"] = true,["STEAM_0:0:704051703"] = true,["STEAM_0:0:144381831"] = true,["STEAM_0:1:513066207"] = true,["STEAM_0:0:105213013"] = true,["STEAM_0:0:641587985"] = true,["STEAM_0:0:62528412"] = true,["STEAM_0:0:195296219"] = true,["STEAM_0:1:705841459"] = true,["STEAM_0:0:200336136"] = true,["STEAM_0:1:587428386"] = true,["STEAM_0:1:639100548"] = true,["STEAM_0:0:485250012"] = true,["STEAM_0:0:42185710"] = true,["STEAM_0:1:540519170"] = true,["STEAM_0:1:832608163"] = true,["STEAM_0:0:51108817"] = true,["STEAM_0:1:157029890"] = true,["STEAM_0:1:546227826"] = true,["STEAM_0:1:712876207"] = true,["STEAM_0:1:593884587"] = true,["STEAM_0:0:85931768"] = true,["STEAM_0:1:755790469"] = true,["STEAM_0:1:713442817"] = true,["STEAM_0:1:239993978"] = true,["STEAM_0:0:920903890"] = true,["STEAM_0:0:816613189"] = true,["STEAM_0:0:421990246"] = true,["STEAM_0:1:774602853"] = true,["STEAM_0:1:484736827"] = true,["STEAM_0:0:443419471"] = true,["STEAM_0:1:577054975"] = true,["STEAM_0:1:629293263"] = true,["STEAM_0:1:555276375"] = true,["STEAM_0:1:585861369"] = true,["STEAM_0:1:775979697"] = true,["STEAM_0:1:612388155"] = true,["STEAM_0:0:569559588"] = true,["STEAM_0:0:571089796"] = true,["STEAM_0:1:508504180"] = true,["STEAM_0:0:541075273"] = true,["STEAM_0:1:607870972"] = true,["STEAM_0:1:504308746"] = true,["STEAM_0:1:570889301"] = true,["STEAM_0:0:601460790"] = true,["STEAM_0:0:664615776"] = true,["STEAM_0:1:770395308"] = true,["STEAM_0:1:165101731"] = true,["STEAM_0:1:775416457"] = true,["STEAM_0:1:244442659"] = true,["STEAM_0:1:519663063"] = true,["STEAM_0:0:164190289"] = true,["STEAM_0:1:556253186"] = true,["STEAM_0:0:786870009"] = true,["STEAM_0:1:784802416"] = true,["STEAM_0:0:165421836"] = true,["STEAM_0:0:922388644"] = true,["STEAM_0:1:636552585"] = true,["STEAM_0:0:674935943"] = true,["STEAM_0:1:628929307"] = true,["STEAM_0:0:509236870"] = true,["STEAM_0:1:853836896"] = true,["STEAM_0:1:912278580"] = true,["STEAM_0:1:204403113"] = true,["STEAM_0:0:596711323"] = true,["STEAM_0:0:635888330"] = true,["STEAM_0:0:629576309"] = true,["STEAM_0:0:640858754"] = true,["STEAM_0:0:711503752"] = true,["STEAM_0:1:557146787"] = true,["STEAM_0:1:815938285"] = true,["STEAM_0:1:424647225"] = true,["STEAM_0:0:540487084"] = true,["STEAM_0:0:568460345"] = true,["STEAM_0:0:564544243"] = true,["STEAM_0:1:578798068"] = true,["STEAM_0:1:846772301"] = true,["STEAM_0:0:626409394"] = true,["STEAM_0:1:33128632"] = true,["STEAM_0:1:229499093"] = true,["STEAM_0:0:874984034"] = true,["STEAM_0:1:797496435"] = true,["STEAM_0:0:636153158"] = true,["STEAM_0:0:231670303"] = true,["STEAM_0:1:836118391"] = true,["STEAM_0:0:56811722"] = true,["STEAM_0:1:517211563"] = true,["STEAM_0:0:633230814"] = true,["STEAM_0:0:507509808"] = true,["STEAM_0:1:648929572"] = true,["STEAM_0:0:636273808"] = true,["STEAM_0:0:559068505"] = true,["STEAM_0:1:117597227"] = true,["STEAM_0:0:509211855"] = true,["STEAM_0:1:778468550"] = true,["STEAM_0:0:450705388"] = true,["STEAM_0:1:868884361"] = true,["STEAM_0:0:486041428"] = true,["STEAM_0:0:714504867"] = true,["STEAM_0:0:531426256"] = true,["STEAM_0:1:187613416"] = true,["STEAM_0:0:462689539"] = true,["STEAM_0:1:192913718"] = true,["STEAM_0:0:804267023"] = true,["STEAM_0:1:244388356"] = true,["STEAM_0:0:605513382"] = true,["STEAM_0:1:677960346"] = true,["STEAM_0:1:517760046"] = true,["STEAM_0:1:174311327"] = true,["STEAM_0:0:756724781"] = true,["STEAM_0:0:35717190"] = true,["STEAM_0:1:76873410"] = true,["STEAM_0:0:712512864"] = true,["STEAM_0:0:865451227"] = true,["STEAM_0:1:781603244"] = true,["STEAM_0:1:765111757"] = true,["STEAM_0:0:151653729"] = true,["STEAM_0:1:792058179"] = true,["STEAM_0:0:774141380"] = true,["STEAM_0:1:522611108"] = true,["STEAM_0:1:188616486"] = true,["STEAM_0:1:778586351"] = true,["STEAM_0:1:817429243"] = true,["STEAM_0:0:775422976"] = true,["STEAM_0:0:743578999"] = true,["STEAM_0:1:186999125"] = true,["STEAM_0:0:839382000"] = true,["STEAM_0:0:631485478"] = true,["STEAM_0:1:843710495"] = true,["STEAM_0:1:636691197"] = true,["STEAM_0:1:649239708"] = true,["STEAM_0:1:535964227"] = true,["STEAM_0:1:226101328"] = true,["STEAM_0:0:538394034"] = true,["STEAM_0:0:135734974"] = true,["STEAM_0:0:502379199"] = true,["STEAM_0:1:149906042"] = true,["STEAM_0:0:150281729"] = true,["STEAM_0:0:626788056"] = true,["STEAM_0:0:769459253"] = true,["STEAM_0:0:68377468"] = true,["STEAM_0:1:583676910"] = true,["STEAM_0:1:579605196"] = true,["STEAM_0:1:567384525"] = true,["STEAM_0:0:215017624"] = true,["STEAM_0:0:574398411"] = true,["STEAM_0:1:525915233"] = true,["STEAM_0:1:53555168"] = true,["STEAM_0:1:760503879"] = true,["STEAM_0:1:193787083"] = true,["STEAM_0:1:425150145"] = true,["STEAM_0:1:514315052"] = true,["STEAM_0:1:533247655"] = true,["STEAM_0:1:497545627"] = true,["STEAM_0:1:564877715"] = true,["STEAM_0:1:774317159"] = true,["STEAM_0:1:780000239"] = true,["STEAM_0:0:475054153"] = true,["STEAM_0:1:774522420"] = true,["STEAM_0:1:129017331"] = true,["STEAM_0:1:646389338"] = true,["STEAM_0:1:421024681"] = true,["STEAM_0:0:209746218"] = true,["STEAM_0:0:212374353"] = true,["STEAM_0:1:156546630"] = true,["STEAM_0:1:737887038"] = true,["STEAM_0:0:509725910"] = true,["STEAM_0:1:639206089"] = true,["STEAM_0:0:781200124"] = true,["STEAM_0:1:50482471"] = true,["STEAM_0:1:460011581"] = true,["STEAM_0:0:84060435"] = true,["STEAM_0:1:549114111"] = true,["STEAM_0:0:171614366"] = true,["STEAM_0:1:213591736"] = true,["STEAM_0:0:201369258"] = true,["STEAM_0:0:636144181"] = true,["STEAM_0:0:428575723"] = true,["STEAM_0:0:881096656"] = true,["STEAM_0:0:848703377"] = true,["STEAM_0:0:127506252"] = true,["STEAM_0:1:418178655"] = true,["STEAM_0:1:612009028"] = true,["STEAM_0:0:135631558"] = true,["STEAM_0:0:912930125"] = true,["STEAM_0:1:712220742"] = true,["STEAM_0:1:666883711"] = true,["STEAM_0:1:922471308"] = true,["STEAM_0:0:223427594"] = true,["STEAM_0:0:657187892"] = true,["STEAM_0:1:846102233"] = true,["STEAM_0:0:91370481"] = true,["STEAM_0:0:916551193"] = true,["STEAM_0:1:860078324"] = true,["STEAM_0:0:765632211"] = true,["STEAM_0:0:539534285"] = true,["STEAM_0:1:218419600"] = true,["STEAM_0:1:779502874"] = true,["STEAM_0:0:799384795"] = true,["STEAM_0:1:833764577"] = true,["STEAM_0:0:582141084"] = true,["STEAM_0:0:551275401"] = true,["STEAM_0:1:51776059"] = true,["STEAM_0:1:784159876"] = true,["STEAM_0:1:862543822"] = true,["STEAM_0:0:513272382"] = true,["STEAM_0:0:757793591"] = true,["STEAM_0:0:49401058"] = true,["STEAM_0:1:853430336"] = true,["STEAM_0:1:644564560"] = true,["STEAM_0:1:63306774"] = true,["STEAM_0:0:571719635"] = true,["STEAM_0:1:439425808"] = true,["STEAM_0:1:98953571"] = true,["STEAM_0:0:602528761"] = true,["STEAM_0:1:90662689"] = true,["STEAM_0:1:711444991"] = true,["STEAM_0:1:528433029"] = true,["STEAM_0:1:93569289"] = true,["STEAM_0:1:170335505"] = true,["STEAM_0:0:555584412"] = true,["STEAM_0:0:630922153"] = true,["STEAM_0:1:861441617"] = true,["STEAM_0:1:77141376"] = true,["STEAM_0:0:53755660"] = true,["STEAM_0:0:657187892"] = true,["STEAM_0:1:570360423"] = true,["STEAM_0:0:520369783"] = true,["STEAM_0:0:634678362"] = true,["STEAM_0:1:27075092"] = true,["STEAM_0:0:740515639"] = true,["STEAM_0:0:793121967"] = true,["STEAM_0:0:591420493"] = true,["STEAM_0:1:583113641"] = true,["STEAM_0:1:520863677"] = true,["STEAM_0:0:444264538"] = true,["STEAM_0:1:84188955"] = true,["STEAM_0:1:231434392"] = true,["STEAM_0:0:28441369"] = true,["STEAM_0:1:657938019"] = true,["STEAM_0:0:515314538"] = true,["STEAM_0:1:781644113"] = true,["STEAM_0:0:74295630"] = true,["STEAM_0:0:234031824"] = true,["STEAM_0:0:542694144"] = true,["STEAM_0:1:919919275"] = true,["STEAM_0:1:526065628"] = true,["STEAM_0:1:836965014"] = true,["STEAM_0:1:219758362"] = true,["STEAM_0:0:777522568"] = true,["STEAM_0:0:901171679"] = true,["STEAM_0:0:495224761"] = true,["STEAM_0:0:919759762"] = true,["STEAM_0:1:919928730"] = true,["STEAM_0:0:586663622"] = true,["STEAM_0:0:549625209"] = true,["STEAM_0:1:432855707"] = true,["STEAM_0:0:586678919"] = true,["STEAM_0:1:568644289"] = true,["STEAM_0:0:540348770"] = true,["STEAM_0:1:855906142"] = true,["STEAM_0:1:495520600"] = true,["STEAM_0:1:771512939"] = true,["STEAM_0:1:434484359"] = true,["STEAM_0:1:455474396"] = true,["STEAM_0:1:695198635"] = true,["STEAM_0:1:593338531"] = true,["STEAM_0:0:664957682"] = true,["STEAM_0:0:530587169"] = true,["STEAM_0:1:757969903"] = true,["STEAM_0:1:30917262"] = true,["STEAM_0:0:858769899"] = true,["STEAM_0:1:729382505"] = true,["STEAM_0:1:880863426"] = true,["STEAM_0:1:32831663"] = true,["STEAM_0:1:763930692"] = true,["STEAM_0:0:787675179"] = true,["STEAM_0:1:558686328"] = true,["STEAM_0:1:605953199"] = true,["STEAM_0:1:25194"] = true,["STEAM_0:0:926569939"] = true,["STEAM_0:0:623709208"] = true,["STEAM_0:0:780091977"] = true,["STEAM_0:0:200583762"] = true,["STEAM_0:0:205376238"] = true,["STEAM_0:0:420254835"] = true,["STEAM_0:1:725882394"] = true,["STEAM_0:1:798169611"] = true,["STEAM_0:0:495860643"] = true,["STEAM_0:0:765927738"] = true,["STEAM_0:0:591418882"] = true,["STEAM_0:0:629148604"] = true,["STEAM_0:1:791197409"] = true,["STEAM_0:1:90594485"] = true,["STEAM_0:0:557428449"] = true,["STEAM_0:0:459070089"] = true,["STEAM_0:0:595115402"] = true,["STEAM_0:0:563987516"] = true,["STEAM_0:1:461981523"] = true,["STEAM_0:1:875334304"] = true,["STEAM_0:1:154576620"] = true,["STEAM_0:0:839341058"] = true,["STEAM_0:0:420045146"] = true,["STEAM_0:1:186905963"] = true,["STEAM_0:0:785447926"] = true,["STEAM_0:1:200711382"] = true,["STEAM_0:1:627885222"] = true,["STEAM_0:0:539101555"] = true,["STEAM_0:1:525142284"] = true,["STEAM_0:1:607180975"] = true,["STEAM_0:0:150035229"] = true,["STEAM_0:1:127418290"] = true,["STEAM_0:1:439030289"] = true,["STEAM_0:1:593058511"] = true,["STEAM_0:0:817068708"] = true,["STEAM_0:0:785447926"] = true,["STEAM_0:0:520369783"] = true,["STEAM_0:0:557428449"] = true,["STEAM_0:1:860844599"] = true,["STEAM_0:0:149023685"] = true,["STEAM_0:0:183504169"] = true,["STEAM_0:1:18496459"] = true,["STEAM_0:0:817068708"] = true,["STEAM_0:0:915271811"] = true,["STEAM_0:0:241845755"] = true,["STEAM_0:0:130910880"] = true,["STEAM_0:1:226091576"] = true,["STEAM_0:0:104702236"] = true,["STEAM_0:1:540140220"] = true,["STEAM_0:1:526713154"] = true,["STEAM_0:0:81786806"] = true,["STEAM_0:1:847010097"] = true,["STEAM_0:0:511670197"] = true,["STEAM_0:1:859751657"] = true,["STEAM_0:0:536748292"] = true,["STEAM_0:1:601457943"] = true,["STEAM_0:1:870164545"] = true,["STEAM_0:0:568362937"] = true,["STEAM_0:1:529720142"] = true,["STEAM_0:0:924898394"] = true,["STEAM_0:0:566102944"] = true,["STEAM_0:1:863880541"] = true,["STEAM_0:0:569348968"] = true,["STEAM_0:0:569348968"] = true,["STEAM_0:0:931401417"] = true,["STEAM_0:1:709827768"] = true,["STEAM_0:0:569422843"] = true,["STEAM_0:0:741914722"] = true,["STEAM_0:0:75204909"] = true,["STEAM_0:0:779577878"] = true,["STEAM_0:1:650470689"] = true,["STEAM_0:0:830569928"] = true,["STEAM_0:0:578760519"] = true,["STEAM_0:0:492511280"] = true,["STEAM_0:0:635022953"] = true,["STEAM_0:1:584035409"] = true,["STEAM_0:1:743481318"] = true,["STEAM_0:1:519676029"] = true,["STEAM_0:0:807430647"] = true,["STEAM_0:1:462322174"] = true,["STEAM_0:0:95663991"] = true,["STEAM_0:0:798580016"] = true,["STEAM_0:1:861179470"] = true,["STEAM_0:0:755026709"] = true,["STEAM_0:1:868895683"] = true,["STEAM_0:1:555281996"] = true,["STEAM_0:1:515906715"] = true,["STEAM_0:0:104090227"] = true,["STEAM_0:1:115609036"] = true,["STEAM_0:0:555477456"] = true,["STEAM_0:1:870058984"] = true,["STEAM_0:0:918520635"] = true,["STEAM_0:0:184946154"] = true,["STEAM_0:0:151986320"] = true,["STEAM_0:1:186083776"] = true,["STEAM_0:0:132295660"] = true,["STEAM_0:0:741677848"] = true,["STEAM_0:1:462961543"] = true,["STEAM_0:0:204076914"] = true,["STEAM_0:1:587679665"] = true,["STEAM_0:0:864140194"] = true,["STEAM_0:1:608584338"] = true,["STEAM_0:1:546554251"] = true,["STEAM_0:1:191672390"] = true,["STEAM_0:0:624929397"] = true,["STEAM_0:0:933163396"] = true,["STEAM_0:1:936545957"] = true,["STEAM_0:0:113765605"] = true,["STEAM_0:1:523640224"] = true,["STEAM_0:0:507354907"] = true,["STEAM_0:1:124515142"] = true,["STEAM_0:1:193254860"] = true,["STEAM_0:0:722038990"] = true,["STEAM_0:0:166676025"] = true,["STEAM_0:1:158504649"] = true,["STEAM_0:1:453981063"] = true,["STEAM_0:0:694647569"] = true,["STEAM_0:0:184271806"] = true,["STEAM_0:1:763453475"] = true,["STEAM_0:0:200958615"] = true,["STEAM_0:1:168826317"] = true,["STEAM_0:0:504890412"] = true,["STEAM_0:0:504890412"] = true,["STEAM_0:0:856144016"] = true,["STEAM_0:0:492588152"] = true,["STEAM_0:1:558622343"] = true,["STEAM_0:1:105489577"] = true,["STEAM_0:1:203244510"] = true,["STEAM_0:0:59454187"] = true,["STEAM_0:0:703907148"] = true,["STEAM_0:1:803668004"] = true,["STEAM_0:0:457914866"] = true,["STEAM_0:1:103834547"] = true,["STEAM_0:1:564103660"] = true,["STEAM_0:1:506210750"] = true,["STEAM_0:0:542880793"] = true,["STEAM_0:0:457914866"] = true,["STEAM_0:1:803668004"] = true,["STEAM_0:1:810031466"] = true,["STEAM_0:1:189017573"] = true,["STEAM_0:1:32616914"] = true,["STEAM_0:0:789412369"] = true,["STEAM_0:1:562060350"] = true,["STEAM_0:0:543079075"] = true,["STEAM_0:1:944667323"] = true,["STEAM_0:0:599999607"] = true,["STEAM_0:0:690791256"] = true,["STEAM_0:0:484918447"] = true,["STEAM_0:1:600334345"] = true,["STEAM_0:1:189126659"] = true,["STEAM_0:0:547447446"] = true,["STEAM_0:0:204833828"] = true,["STEAM_0:1:792884581"] = true,["STEAM_0:0:507900653"] = true,["STEAM_0:1:180893359"] = true,["STEAM_0:0:520483191"] = true,["STEAM_0:1:922061635"] = true,["STEAM_0:1:852756722"] = true,["STEAM_0:1:439011181"] = true,["STEAM_0:1:579458160"] = true,["STEAM_0:1:942875026"] = true,["STEAM_0:0:418093452"] = true,["STEAM_0:0:721334581"] = true,["STEAM_0:0:534684252"] = true,["STEAM_0:1:929864360"] = true,["STEAM_0:0:201018665"] = true,["STEAM_0:1:920904568"] = true,["STEAM_0:1:782982347"] = true,["STEAM_0:1:461536897"] = true,["STEAM_0:1:508128944"] = true,["STEAM_0:1:603798141"] = true,["STEAM_0:1:197292451"] = true,["STEAM_0:0:641212780"] = true,["STEAM_0:1:818565307"] = true,["STEAM_0:0:753488600"] = true,["STEAM_1:1:936208505"] = true,["STEAM_1:1:884357560"] = true,["STEAM_1:0:922239105"] = true,["STEAM_1:0:214166591"] = true,["STEAM_1:1:721991989"] = true,["STEAM_1:0:808841060"] = true,["STEAM_1:0:79017947"] = true,["STEAM_1:1:549804715"] = true,["STEAM_0:0:939155025"] = true,["STEAM_0:0:866757991"] = true,["STEAM_0:0:775986659"] = true,["STEAM_0:1:816249907"] = true,["STEAM_0:0:945022645"] = true,["STEAM_0:1:876160217"] = true,["STEAM_0:0:700923507"] = true,["STEAM_0:0:944865252"] = true,["STEAM_0:0:852177142"] = true,["STEAM_0:1:859083547"] = true,["STEAM_0:1:547873004"] = true,["STEAM_0:1:450637180"] = true,["STEAM_0:1:793273845"] = true,["STEAM_0:0:594169301"] = true,["STEAM_0:1:778589700"] = true,["STEAM_0:0:555171001"] = true,["STEAM_0:1:29010309"] = true,["STEAM_0:0:733704815"] = true,["STEAM_0:0:90828257"] = true,["STEAM_0:1:87011806"] = true,["STEAM_0:1:444806615"] = true,["STEAM_0:0:635379702"] = true,["STEAM_0:1:503016806"] = true,["STEAM_0:1:553151280"] = true,["STEAM_0:0:709634922"] = true,["STEAM_0:0:95680184"] = true,["STEAM_0:0:465817063"] = true,["STEAM_0:1:789374585"] = true,["STEAM_0:1:912314120"] = true,["STEAM_0:0:921732035"] = true,["STEAM_0:1:521115009"] = true,["STEAM_0:1:437305415"] = true,["STEAM_0:0:420386790"] = true,["STEAM_0:0:854044409"] = true,["STEAM_0:1:160968120"] = true,["STEAM_0:1:768247177"] = true,["STEAM_0:1:221743542"] = true,["STEAM_0:0:538212720"] = true,["STEAM_0:1:551725832"] = true,["STEAM_0:0:556466396"] = true,["STEAM_0:0:77760461"] = true,["STEAM_0:1:912314120"] = true,["STEAM_0:1:220263464"] = true,["STEAM_0:0:947360651"] = true,["STEAM_0:1:162263841"] = true,["STEAM_0:1:2274502"] = true,["STEAM_0:0:428898435"] = true,["STEAM_0:1:586292106"] = true,["STEAM_0:1:448982070"] = true,["STEAM_0:0:887428339"] = true,["STEAM_0:0:947422068"] = true,["STEAM_0:0:116003133"] = true,["STEAM_1:0:817429243"] = true,["STEAM_0:1:118223185"] = true,["STEAM_0:1:539082277"] = true,["STEAM_0:0:555181600"] = true,["STEAM_0:1:920399498"] = true,["STEAM_0:1:745830085"] = true,["STEAM_0:0:552314562"] = true,["STEAM_0:0:585514744"] = true,["STEAM_0:0:816194621"] = true,["STEAM_0:1:591337701"] = true,["STEAM_0:1:777915991"] = true,["STEAM_0:0:63826996"] = true,["STEAM_0:1:511090883"] = true,["STEAM_0:0:524186698"] = true,["STEAM_0:0:45561379"] = true,["STEAM_0:1:899972340"] = true,["STEAM_0:0:452950093"] = true,["STEAM_0:1:520087429"] = true,["STEAM_0:0:185449352"] = true,["STEAM_0:1:796808901"] = true,["STEAM_0:0:737318455"] = true,["STEAM_0:0:838501860"] = true,["STEAM_0:0:840179637"] = true,["STEAM_0:0:722965474"] = true,["STEAM_0:1:868912570"] = true,["STEAM_0:0:628154972"] = true,["STEAM_0:1:808289897"] = true,["STEAM_0:1:1058595"] = true,["STEAM_0:1:570496513"] = true,["STEAM_0:1:599567902"] = true,["STEAM_0:1:454644559"] = true,["STEAM_0:0:191754705"] = true,["STEAM_0:0:898970135"] = true,["STEAM_0:1:771936882"] = true,["STEAM_0:0:497571103"] = true,["STEAM_0:1:939582318"] = true,["STEAM_0:1:46342874"] = true,["STEAM_0:1:562337802"] = true,["STEAM_0:0:618714199"] = true,["STEAM_0:1:863512620"] = true,["STEAM_0:0:774141380"] = true,["STEAM_0:0:917689761"] = true,["STEAM_0:1:591713904"] = true,["STEAM_0:0:890014793"] = true,["STEAM_0:0:713675235"] = true,["STEAM_0:1:621641466"] = true,["STEAM_0:1:95196227"] = true,["STEAM_0:0:794694761"] = true,["STEAM_0:0:3127626"] = true,["STEAM_0:0:913766304"] = true,["STEAM_0:1:224598890"] = true,["STEAM_0:0:580592536"] = true,["STEAM_0:1:30151182"] = true,["STEAM_0:1:703906403"] = true,["STEAM_0:1:876160217"] = true,["STEAM_0:0:948412435"] = true,["STEAM_0:1:721208596"] = true,["STEAM_0:1:740792720"] = true,["STEAM_0:1:95196227"] = true,["STEAM_0:1:224598890"] = true,["STEAM_0:1:621641466"] = true,["STEAM_0:1:546597457"] = true,["STEAM_0:1:11539441"] = true,["STEAM_0:1:504644783"] = true,["STEAM_0:1:124161389"] = true,["STEAM_0:1:722763526"] = true,["STEAM_0:1:788848746"] = true,["STEAM_0:1:789877432"] = true,["STEAM_0:1:709342764"] = true,["STEAM_0:0:717919337"] = true,["STEAM_0:0:920153475"] = true,["STEAM_0:0:611509151"] = true,["STEAM_0:1:949867613"] = true,["STEAM_0:0:633017652"] = true,["STEAM_0:1:34279496"] = true,["STEAM_0:1:628545106"] = true,["STEAM_0:1:770019410"] = true,["STEAM_0:0:659353483"] = true,["STEAM_0:1:717665116"] = true,["STEAM_0:0:530810595"] = true,["STEAM_0:1:743575197"] = true,["STEAM_0:1:624952386"] = true,["STEAM_0:0:765176209"] = true,["STEAM_0:1:104859112"] = true,["STEAM_0:0:927114246"] = true,["STEAM_1:0:741942042"] = true,["STEAM_0:1:82141713"] = true,["STEAM_0:1:876703593"] = true,["STEAM_0:0:741942042"] = true,["STEAM_0:1:429692806"] = true,["STEAM_0:1:92343765"] = true,["STEAM_0:0:550032644"] = true,["STEAM_0:1:161463867"] = true,["STEAM_0:1:532020296"] = true,["STEAM_0:0:799753225"] = true,["STEAM_0:1:922146713"] = true,["STEAM_0:0:552533078"] = true,["STEAM_0:1:648251785"] = true,["STEAM_0:0:149585396"] = true,["STEAM_0:1:839717091"] = true,["STEAM_0:0:737984190"] = true,["STEAM_0:1:648251785"] = true,["STEAM_0:1:572225163"] = true,["STEAM_0:0:780307387"] = true,["STEAM_0:1:648251785"] = true,["STEAM_0:0:625005878"] = true,["STEAM_0:0:149585396"] = true,["STEAM_0:1:839717091"] = true,["STEAM_0:0:737984190"] = true,["STEAM_0:1:518761660"] = true,["STEAM_0:0:524089364"] = true,["STEAM_0:1:570984315"] = true,["STEAM_0:1:635535744"] = true,["STEAM_0:1:623285780"] = true,["STEAM_0:0:833337658"] = true,["STEAM_0:1:218965416"] = true,["STEAM_0:1:105646017"] = true,["STEAM_0:1:117878305"] = true,["STEAM_0:0:515340292"] = true,["STEAM_0:0:435756603"] = true,["STEAM_0:1:79576718"] = true,["STEAM_0:1:211976613"] = true,["STEAM_0:1:713329250"] = true,["STEAM_0:0:567986646"] = true,["STEAM_0:1:151183997"] = true,["STEAM_0:0:563142577"] = true,["STEAM_0:1:430035016"] = true,["STEAM_0:0:895015374"] = true,["STEAM_0:0:551379648"] = true,["STEAM_0:0:847972216"] = true,["STEAM_0:0:656073323"] = true,["STEAM_0:0:43451635"] = true,["STEAM_0:0:641897240"] = true,["STEAM_0:1:928995382"] = true,["STEAM_0:0:598802172"] = true,["STEAM_0:0:945170348"] = true,["STEAM_0:1:458398992"] = true,["STEAM_0:1:670282933"] = true,["STEAM_0:1:517281045"] = true,["STEAM_0:1:419360020"] = true,["STEAM_0:0:813085378"] = true,["STEAM_0:1:442827682"] = true,["STEAM_0:0:454873017"] = true,["STEAM_0:0:709080985"] = true,["STEAM_0:1:555638706"] = true,["STEAM_0:0:906074941"] = true,["STEAM_0:1:892056836"] = true,["STEAM_0:1:806976483"] = true,["STEAM_0:0:592085439"] = true,["STEAM_0:1:797651822"] = true,["STEAM_0:1:52645859"] = true,["STEAM_0:1:801524405"] = true,["STEAM_0:1:544500372"] = true,["STEAM_0:1:772772091"] = true,["STEAM_0:1:121782969"] = true,["STEAM_0:1:772772091"] = true,["STEAM_0:1:121782969"] = true,["STEAM_0:1:564606135"] = true,["STEAM_0:1:825715754"] = true,["STEAM_0:1:571270369"] = true,["STEAM_0:0:657007399"] = true,["STEAM_0:1:837414887"] = true,["STEAM_0:0:728581580"] = true,["STEAM_0:1:543047025"] = true,["STEAM_0:1:12768375"] = true,["STEAM_0:0:454750318"] = true,["STEAM_0:1:634990044"] = true,["STEAM_0:1:176015835"] = true,["STEAM_0:0:192102037"] = true,["STEAM_0:1:555656687"] = true,["STEAM_0:0:797978620"] = true,["STEAM_0:0:148912316"] = true,["STEAM_0:1:865284504"] = true,["STEAM_0:1:163549246"] = true,["STEAM_0:1:765026908"] = true,["STEAM_0:1:544346420"] = true,["STEAM_0:0:934907081"] = true,["STEAM_0:0:636128933"] = true,["STEAM_0:0:443315757"] = true,["STEAM_0:1:927288805"] = true,["STEAM_0:1:927465431"] = true,["STEAM_0:1:422433133"] = true,["STEAM_0:0:743213338"] = true,["STEAM_0:0:642238857"] = true,["STEAM_0:1:753731692"] = true,["STEAM_0:0:569650994"] = true,["STEAM_0:0:87994335"] = true,["STEAM_0:0:850805133"] = true,["STEAM_0:1:762680554"] = true,["STEAM_0:0:567188921"] = true,["STEAM_0:0:536998053"] = true,["STEAM_0:1:783401400"] = true,["STEAM_0:1:16749755"] = true,["STEAM_0:1:807348073"] = true,["STEAM_0:0:854901979"] = true,["STEAM_0:1:523131808"] = true,["STEAM_0:0:894312289"] = true,["STEAM_0:1:761473340"] = true,["STEAM_0:0:527704999"] = true,["STEAM_0:0:672672217"] = true,["STEAM_0:1:922319536"] = true,["STEAM_0:1:753651797"] = true,["STEAM_0:1:884116288"] = true,["STEAM_0:0:769668722"] = true,["STEAM_0:0:785086074"] = true,["STEAM_0:1:180302600"] = true,["STEAM_0:1:514155057"] = true,["STEAM_0:0:449997691"] = true,["STEAM_0:0:615140146"] = true,["STEAM_0:0:198542759"] = true,["STEAM_0:1:785527959"] = true,["STEAM_0:1:781429712"] = true,["STEAM_0:0:628648805"] = true,["STEAM_0:1:939065257"] = true,["STEAM_0:1:918574347"] = true,["STEAM_0:0:610126456"] = true,["STEAM_0:0:558233996"] = true,["STEAM_0:0:842674206"] = true,["STEAM_0:0:841231319"] = true,["STEAM_0:1:119115259"] = true,["STEAM_0:1:765877069"] = true,["STEAM_0:0:84413404"] = true,["STEAM_0:0:59012257"] = true,["STEAM_0:1:770162126"] = true,["STEAM_0:0:441357711"] = true,["STEAM_0:0:851902288"] = true,["STEAM_0:0:457589993"] = true,["STEAM_0:0:543276016"] = true,["STEAM_0:0:606802913"] = true,["STEAM_0:0:800850358"] = true,["STEAM_0:1:852465095"] = true,["STEAM_0:0:431143642"] = true,["STEAM_0:0:955198948"] = true,["STEAM_0:0:948497693"] = true,["STEAM_0:0:445214660"] = true,["STEAM_0:1:603846931"] = true,["STEAM_0:1:948925129"] = true,["STEAM_0:1:731071929"] = true,["STEAM_0:0:45255855"] = true,["STEAM_0:1:553897769"] = true,["STEAM_0:0:920928206"] = true,["STEAM_0:0:172562376"] = true,["STEAM_0:1:762252049"] = true,["STEAM_0:1:544346420"] = true,["STEAM_0:0:853723114"] = true,["STEAM_0:0:613400749"] = true,["STEAM_0:0:783022886"] = true,["STEAM_0:0:935301216"] = true,["STEAM_0:1:540522801"] = true,["STEAM_0:1:28480875"] = true,["STEAM_0:0:518956852"] = true,["STEAM_0:0:164481968"] = true,["STEAM_0:0:551106214"] = true,["STEAM_0:1:627564669"] = true,["STEAM_0:1:800040299"] = true,["STEAM_0:1:76120031"] = true,["STEAM_0:0:179072055"] = true,["STEAM_0:1:666396418"] = true,["STEAM_0:0:532660363"] = true,["STEAM_0:0:924866881"] = true,["STEAM_0:0:866015802"] = true,["STEAM_0:0:644426135"] = true,["STEAM_0:0:951899484"] = true,["STEAM_0:1:619736579"] = true,["STEAM_0:0:834885927"] = true,["STEAM_0:0:644426135"] = true,["STEAM_0:1:618682461"] = true,["STEAM_0:0:575060537"] = true,["STEAM_0:0:846035146"] = true,["STEAM_0:0:637969207"] = true,["STEAM_0:0:626544221"] = true,["STEAM_0:0:722920243"] = true,["STEAM_0:0:635389035"] = true,["STEAM_0:1:552900308"] = true,["STEAM_0:1:925402363"] = true,["STEAM_0:0:956166435"] = true,["STEAM_0:0:761402397"] = true,["STEAM_0:1:632760808"] = true,["STEAM_0:0:86374018"] = true,["STEAM_0:1:722366218"] = true,["STEAM_0:0:782765176"] = true,["STEAM_0:0:25809095"] = true,["STEAM_0:0:800041024"] = true,["STEAM_0:1:10207891"] = true,["STEAM_0:1:766382835"] = true,["STEAM_0:0:447319593"] = true,["STEAM_0:0:564458180"] = true,["STEAM_0:0:214954847"] = true,["STEAM_0:0:893334411"] = true,["STEAM_0:0:924152622"] = true,["STEAM_0:0:629027852"] = true,["STEAM_0:0:450174583"] = true,["STEAM_0:0:939349847"] = true,["STEAM_0:1:693894667"] = true,["STEAM_0:1:832948563"] = true,["STEAM_0:1:79509711"] = true,["STEAM_0:0:764280919"] = true,["STEAM_0:0:100133352"] = true,["STEAM_0:0:232248871"] = true,["STEAM_0:0:502682741"] = true,["STEAM_0:0:500812442"] = true,["STEAM_0:1:925088307"] = true,["STEAM_0:1:181688046"] = true,["STEAM_0:1:558038790"] = true,["STEAM_0:0:587393661"] = true,["STEAM_0:1:523016186"] = true,["STEAM_0:0:887415759"] = true,["STEAM_0:1:577896791"] = true,["STEAM_0:0:563650780"] = true,["STEAM_0:1:798390975"] = true,["STEAM_0:0:959639799"] = true,["STEAM_0:1:498252502"] = true,["STEAM_0:1:714045377"] = true,["STEAM_0:0:432333776"] = true,["STEAM_0:0:135821566"] = true,["STEAM_0:0:764624158"] = true,["STEAM_0:0:890215513"] = true,["STEAM_0:0:741829930"] = true,["STEAM_0:1:957708724"] = true,["STEAM_0:1:447645029"] = true,["STEAM_0:0:591991254"] = true,["STEAM_0:1:775822089"] = true,["STEAM_0:1:601938434"] = true,["STEAM_0:1:740509885"] = true,["STEAM_0:1:775822089"] = true,["STEAM_0:0:709968640"] = true,["STEAM_0:0:486971663"] = true,["STEAM_0:1:456802379"] = true,["STEAM_0:1:28472581"] = true,["STEAM_0:1:766955262"] = true,["STEAM_0:0:959741147"] = true,["STEAM_0:0:564841047"] = true,["STEAM_0:0:488341598"] = true,["STEAM_0:0:865153876"] = true,["STEAM_0:1:649097643"] = true,["STEAM_0:0:770064621"] = true,["STEAM_0:1:222562696"] = true,["STEAM_0:0:904695171"] = true,["STEAM_0:0:804657468"] = true,["STEAM_0:0:435519104"] = true,["STEAM_0:1:551725832"] = true,["STEAM_0:1:632318329"] = true,["STEAM_0:1:920850878"] = true,["STEAM_0:0:904695171"] = true,["STEAM_0:1:768876638"] = true,["STEAM_0:0:900031683"] = true,["STEAM_0:1:711493072"] = true,["STEAM_1:0:635888330"] = true,["STEAM_0:0:857165807"] = true,["STEAM_0:1:957888706"] = true,["STEAM_0:0:709971908"] = true,["STEAM_0:1:534777764"] = true,["STEAM_0:0:580304173"] = true,["STEAM_0:1:607909349"] = true,["STEAM_0:0:679297788"] = true,["STEAM_0:0:611001036"] = true,["STEAM_0:0:926124558"] = true,["STEAM_0:1:12110847"] = true,["STEAM_0:1:672322016"] = true,["STEAM_0:0:228893737"] = true,["STEAM_0:1:921997915"] = true,["STEAM_0:1:742497732"] = true,["STEAM_0:1:871028450"] = true,["STEAM_0:0:533846617"] = true,["STEAM_0:0:672602433"] = true,["STEAM_0:0:785714777"] = true,["STEAM_0:0:946725212"] = true,["STEAM_0:1:498321142"] = true,["STEAM_0:1:864317493"] = true,["STEAM_0:1:528550418"] = true,["STEAM_0:1:950537959"] = true,["STEAM_0:1:638200551"] = true,["STEAM_0:0:467120931"] = true,["STEAM_0:1:922138880"] = true,["STEAM_0:1:853521505"] = true,["STEAM_0:1:911297992"] = true,["STEAM_0:0:923364789"] = true,["STEAM_0:1:926166072"] = true,["STEAM_0:0:734409402"] = true,["STEAM_0:1:512430589"] = true,["STEAM_0:1:619212758"] = true,["STEAM_0:1:738648637"] = true,["STEAM_0:0:773341506"] = true}
+
+local cheaters = {}
+
+cheaters.list = {}
+cheaters.list_temp = {}
+cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/dsadsadadsadasdadsdas/refs/heads/main/asdadsdasdsadsadshjadskhadshdhasdkdas.json"
 --
 
+
+dezz.fovColor = Color( 255, 255, 255 )
+dezz.gradFov = false
+
+dezz.knifes = {}
 
 dezz.ekd = false
 dezz.ekd2 = false
@@ -98,6 +110,8 @@ dezz.BarPadding = 0
 
 dezz.Colors = {}
 
+dezz.hooks = {}
+
 dezz.hitmarkers = {}
 dezz.hitnums = {}
 dezz.headshotindicators = {}
@@ -109,9 +123,15 @@ dezz.norf = {
 
 dezz.vapecd = false
 dezz.tyaga = 0
+
 dezz.hoppin = false
+dezz.last_ground_pos = 0
+dezz.cstrafe_dir = 0
 
 dezz.slams = {}
+
+dezz.freezedTicks = 0
+dezz.maxFreezeTicks = math.Round( 1 / flTickInterval ) 
 
 dezz.fakeLagTicks = 0
 dezz.fakeLagfactor = 0
@@ -124,6 +144,9 @@ dezz.aatarget = nil
 
 dezz.peeked = false 
 dezz.peeking = false 
+dezz.startedPeeking = false 
+dezz.needToMoveBack = false
+dezz.startPeekPosition = Vector(0,0,0)
 
 dezz.realAngle = IsValid(pLocalPlayer) and pLocalPlayer:EyeAngles() or Angle(0, 0, 0)
 dezz.inverted = false
@@ -134,6 +157,10 @@ dezz.bruteYaw = { -180, -120, -90, -60, -30, 0, 30, 60, 90, 120, 180  }
 
 dezz.viewfov    = 0
 dezz.znear      = 0
+
+dezz.UnSafeFrame = false
+dezz.renderTarget = GetRenderTarget( "YaPidoras" .. os.time(), screenWidth, screenHeight )
+dezz.prikol = Material( "a/prikol" ):GetTexture( "$basetexture" ) //  Material( file.Read( "prikol.png", "DATA" ) )
 
 dezz.tpenabled = false
 dezz.tptoggled = false
@@ -203,6 +230,7 @@ dezz.Colors["Red"] = Color( 255, 0, 0)
 dezz.accent = Color( 255, 255, 255 )
 
 dezz.cached = {}
+dezz.playerCache = {}
 dezz.entity_cache = {}
 
 dezz.ui = {}
@@ -220,6 +248,8 @@ dezz.hintY = 0
 
 dezz.CustomSpread = {}
 dezz.SpreadComps = {}
+
+dezz.bulletImpacts = {}
 
 dezz.ttable = {}
 
@@ -287,6 +317,8 @@ dezz.activeWeaponClass  = false
 dezz.moveType           = pLocalPlayer:GetMoveType() 
 
 dezz.backtracktick      =  0
+dezz.btrecords = {}
+dezz.predicted = {}
 
 //cfg
 dezz.presets = {}
@@ -307,9 +339,9 @@ dezz.cfg.vars["Fov limit"]                  = false
 dezz.cfg.vars["Fov dynamic"]                = false
 dezz.cfg.vars["Aimbot FOV"]                 = 30
 dezz.cfg.vars["Show FOV"]                   = false
-dezz.cfg.colors["Show FOV"]                 = "255 255 0 255"
+dezz.cfg.colors["Show FOV"]                 = "255 255 255 255"
 dezz.cfg.vars["Aimbot snapline"]            = false
-dezz.cfg.colors["Aimbot snapline"]          = "255 128 0 255"
+dezz.cfg.colors["Aimbot snapline"]          = "255 255 255 255"
 dezz.cfg.vars["Aimbot marker"]              = false
 dezz.cfg.colors["Aimbot marker"]            = "255 255 255 255"
 dezz.cfg.vars["Max targets"]                = 0
@@ -446,7 +478,7 @@ dezz.presets["Pitch"] = {
 dezz.cfg.vars["Edge"]                       = 1
 dezz.cfg.vars["Antiaim material"]           = 1
 dezz.cfg.vars["Antiaim fullbright"]         = false
-dezz.cfg.colors["Real chams"]               = "128 128 255 255"
+dezz.cfg.colors["Real chams"]               = "255 255 255 255"
 dezz.cfg.vars["On shot aa"]                 = false
 dezz.cfg.vars["Freestanding"]               = false
 dezz.cfg.binds["freestand"]                 = 0
@@ -572,8 +604,8 @@ dezz.cfg.vars["Baim health"]                = 65
 dezz.cfg.vars["Box esp"]                    = false
 dezz.cfg.vars["Box style"]                  = 1
 dezz.cfg.vars["Box gradient"]               = false
-dezz.cfg.colors["Box esp"]                  = "255 0 255 255"
-dezz.cfg.colors["Box gradient"]             = "0 255 255 255"
+dezz.cfg.colors["Box esp"]                  = "255 255 255 255"
+dezz.cfg.colors["Box gradient"]             = "255 255 255 255"
 dezz.cfg.vars["Box team color"]             = false
 dezz.cfg.vars["Bounding box"]               = false
 dezz.cfg.vars["Name"]                       = false
@@ -586,14 +618,14 @@ dezz.cfg.vars["Health"]                     = false
 dezz.cfg.vars["Health bar"]                 = false
 dezz.cfg.vars["Health bar gradient"]        = false
 dezz.cfg.vars["Health pos"]                 = 4
-dezz.cfg.colors["Health"]                   = "75 255 0 255"
-dezz.cfg.colors["Health bar gradient"]      = "255 45 0 255"
+dezz.cfg.colors["Health"]                   = "255 255 255 255"
+dezz.cfg.colors["Health bar gradient"]      = "255 255 255 255"
 dezz.cfg.vars["Armor"]                      = false
 dezz.cfg.vars["Armor bar"]                  = false
 dezz.cfg.vars["Armor bar gradient"]         = false
 dezz.cfg.vars["Armor pos"]                  = 1
-dezz.cfg.colors["Armor"]                    = "72 72 255 255"
-dezz.cfg.colors["Armor bar gradient"]       = "72 255 72 255"
+dezz.cfg.colors["Armor"]                    = "255 255 255 255"
+dezz.cfg.colors["Armor bar gradient"]       = "255 255 255 255"
 dezz.cfg.vars["Weapon"]                     = false
 dezz.cfg.vars["Weapon pos"]                 = 1
 dezz.cfg.vars["Show ammo"]                  = false
@@ -643,44 +675,44 @@ dezz.cfg.vars["Ent ESP Distance"]           = 3500
 dezz.cfg.vars["Entity chams"]               = false
 dezz.cfg.vars["Entity material"]            = 1
 dezz.cfg.vars["Entity fullbright"]          = false
-dezz.cfg.colors["Entity chams"]             = "255 89 89 255"
+dezz.cfg.colors["Entity chams"]             = "255 255 255 255"
 dezz.cfg.vars["Entity outline"]             = false
-dezz.cfg.colors["Entity outline"]           = "255 86 45 255"
+dezz.cfg.colors["Entity outline"]           = "255 255 255 255"
 
 // Chams
 dezz.cfg.vars["Visible chams"]              = false
 dezz.cfg.vars["Visible chams w"]            = false
 dezz.cfg.vars["Visible mat"]                = 1
-dezz.cfg.colors["Visible chams"]            = "0 255 255 255"
+dezz.cfg.colors["Visible chams"]            = "255 255 255 255"
 dezz.cfg.vars["inVisible chams"]            = false
 dezz.cfg.vars["inVisible chams w"]          = false
 dezz.cfg.vars["inVisible mat"]              = 1
-dezz.cfg.colors["inVisible chams"]          = "255 255 0 255"
+dezz.cfg.colors["inVisible chams"]          = "255 255 255 255"
 dezz.cfg.vars["Supress lighting"]           = false
 dezz.cfg.vars["Self chams"]                 = false
 dezz.cfg.vars["Self chams w"]               = false
 dezz.cfg.vars["Self mat"]                   = 1
-dezz.cfg.colors["Self chams"]               = "255 0 255 255"
+dezz.cfg.colors["Self chams"]               = "255 255 255 255"
 dezz.cfg.vars["Supress self lighting"]      = false
 dezz.cfg.vars["Backtrack chams"]            = false
 dezz.cfg.vars["Backtrack material"]         = 1
 dezz.cfg.vars["Backtrack fullbright"]       = false
-dezz.cfg.colors["Backtrack chams"]          = "255 128 255 255"
+dezz.cfg.colors["Backtrack chams"]          = "255 255 255 255"
 dezz.cfg.vars["Backtrack skeleton"]         = false
 dezz.cfg.vars["Viewmodel chams"]            = false
-dezz.cfg.colors["Viewmodel chams"]          = "75 95 128 255"
+dezz.cfg.colors["Viewmodel chams"]          = "255 255 255 255"
 dezz.cfg.vars["Viewmodel chams type"]       = 1
 dezz.cfg.vars["Fullbright viewmodel"]       = false
 dezz.cfg.vars["Player outline"]             = false
-dezz.cfg.colors["Player outline"]           = "45 255 86 255"
+dezz.cfg.colors["Player outline"]           = "255 255 255 255"
 dezz.cfg.vars["Outline style"]              = 1
 
 // World visuals
 dezz.cfg.vars["Custom sky"]                 = GetConVar("sv_skyname"):GetString()
 dezz.cfg.vars["Sky color"]                  = false
-dezz.cfg.colors["Sky color"]                = "145 185 245 255"
+dezz.cfg.colors["Sky color"]                = "255 255 255 255"
 dezz.cfg.vars["Wall color"]                 = false
-dezz.cfg.colors["Wall color"]               = "37 40 80 255"
+dezz.cfg.colors["Wall color"]               = "255 255 255 255"
 dezz.cfg.vars["Night"]                      = false
 dezz.cfg.vars["Fullbright"]                 = false
 dezz.cfg.vars["Fullbright mode"]            = 1
@@ -716,11 +748,9 @@ dezz.cfg.vars["SpecL"]                      = false
 dezz.cfg.vars["Crosshair"]                  = false
 dezz.cfg.vars["Crosshair type"]             = 1
 dezz.cfg.vars["Angle arrows"]               = false
-
 dezz.cfg.vars["hdshot"]                     = false
 dezz.cfg.colors["hdshot"]                   = "0 255 0 255"
 dezz.cfg.vars["hdshot str"]                 = "HeAdShOt!"
-
 dezz.cfg.vars["KeyBind List"]               = false
 dezz.cfg.colors["KeyBind List"]             = "0 0 0 255"
 dezz.cfg.vars["On screen logs"]             = false
@@ -731,6 +761,9 @@ dezz.cfg.colors["Miss fail"]                = "255 69 69 255"
 dezz.cfg.colors["ksck"]                     = "70 3 3 255"
 dezz.cfg.colors["kscb"]                     = "0 0 0 200"
 dezz.cfg.vars["bind mode"]                  = 1
+dezz.cfg.vars["whol"]                       = false
+dezz.cfg.colors["whol"]                     = "0 255 0 255"
+dezz.cfg.vars["pw"]                         = false
 
 // Hitmarker & Sounds
 dezz.cfg.vars["Hitmarker"]                  = false
@@ -776,7 +809,7 @@ dezz.cfg.vars["Specta"]                     = "SteamID"
 
 // Effects
 dezz.cfg.vars["Bullet tracers"]             = false
-dezz.cfg.colors["Bullet tracers"]           = "255 65 65 255"
+dezz.cfg.colors["Bullet tracers"]           = "255 255 255 255"
 dezz.cfg.vars["Bullet tracers material"]    = "sprites/tp_beam001"
 dezz.cfg.vars["Tracers die time"]           = 5
 dezz.cfg.vars["Bullet tracers muzzle"]      = false
@@ -1112,15 +1145,6 @@ function dezz.CalcMainActivity(ply, velocity)
         return -1, -1
     end
 end
-
-/*
-sound.PlayURL ( "https://cdn.discordapp.com/attachments/981977924087472128/1116820124985458770/ya_resskiy.mp3", "noblock", function( s ) 
-    if not IsValid( s ) then return end
-    dezz.validsnd = s
-
-    dezz.validsnd:EnableLooping( true )
-end )
-*/
 
 --------------------------- UI ---------------------------
 
@@ -4055,7 +4079,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
         dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
 
-        local p = dezz.itemPanel( "Indicators", 2, 540 ):GetItemPanel()
+        local p = dezz.itemPanel( "Indicators", 2, 570 ):GetItemPanel()
         dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[90])
         dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
         dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
@@ -4067,6 +4091,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Tickbase", "Tickbase indicator" )
         dezz.ui.CheckBox( p, "Headshot indicator", "hdshot", false, false, true )
         dezz.ui.CheckBox( p, "Ping warning", "pw" )
+        dezz.ui.CheckBox( p, "Who look", "whol", false, false, true)
         dezz.ui.CheckBox( p, "Keystrokes", "ks", false, false, false, dezz.spfuncs[11152], false, function(p) dezz.ui.ColorPicker( "ksck", p ) dezz.ui.ColorPicker( "kscb", p ) end )
         dezz.ui.CheckBox( p, "Radar", "Radar" )
         dezz.ui.CheckBox( p, "Kill effect", "Kill effect" )
@@ -4298,20 +4323,9 @@ function dezz.tabs.Misc()
     end
     btnReload.DoClick = function()
         chat.AddText(Color(155, 45, 48), "https://discord.gg/RzFfz3zRza \n https://discord.gg/RzFfz3zRza \n https://discord.gg/RzFfz3zRza")
+        SetClipboardText("https://discord.gg/RzFfz3zRza")
     end
 end
-
-/*
-function dezz.updateMenuColor( col )
-    local r, g, b = col.r, col.g, col.b 
-
-    for i = 1,255 do 
-        dezz.Colors[i] = Color( i + r, i + g, i + b, 255 )
-    end
-end
-*/
-
-
 
 function dezz.tabs.Config()
     local p = dezz.itemPanel("Settings",1,270):GetItemPanel()
@@ -5199,35 +5213,6 @@ function dezz.CustomSpread.mg( cmd, ang )
     */
 end
 
-/*
-local function Zc(self, bd)
-    local cd = self:GetCone()
-    Xc(self.Cone.Seed + self:Clip1() + self:Ammo1())
-    local dd = Wc(-cd, cd) * 1000
-    if (dd < -cd) then
-        dd = -cd
-    elseif (dd > cd) then
-        dd = cd
-    end
-    dd = dd * 0.1
-    Yc.x = dd
-    Yc.y = -dd
-    local ed = self.Bullet
-    self:FireBullets(
-        {
-            Attacker = bd,
-            Src = bd:EyePos(),
-            Dir = (bd:EyeAngles() + bd:GetViewPunchAngles()):Forward(),
-            Spread = Yc,
-            Num = ed.NumBullets,
-            Distance = (ed.Range * 100) / 2.54,
-            Tracer = ed.Tracer and 1 or 0,
-            Callback = function(fd, gd, hd)
-            end
-        }
-    )
-end
-*/
 dezz.SpreadComps["swb"]     = dezz.CustomSpread.swb
 dezz.SpreadComps["cw"]      = dezz.CustomSpread.cw
 dezz.SpreadComps["fas2"]    = dezz.CustomSpread.fas2
@@ -5262,11 +5247,6 @@ function dezz.NoRecoil(ang)
 
     return ang
 end
-
-/*
-dezz.ui.ComboBox( p, "Hitscan mode", { "Damage", "Safety", "Scale" }, "Hitscan mode" )
-
-*/
 
 function dezz.ParseBones( ply, bone )
     local mdl = ply:GetModel()
@@ -5886,8 +5866,6 @@ end
 
 // Knife bot ( Etot zaichik knifer )
 
-dezz.knifes = {}
-
 dezz.knifes[1] = {
     str = "csgo_",
 
@@ -6276,7 +6254,6 @@ dezz.predictedPoint = {}
 function dezz.PropAim(cmd)
     if not dezz.grabbingEnt or not IsValid(dezz.grabbingEnt) or not cmd:KeyDown(IN_ATTACK) then return end
 
-    local pLocalPlayer = LocalPlayer()
     local plys = dezz.GetSortedPlayers(dezz.cfg.vars["Target selection"])
     if not plys then return end
 
@@ -6653,9 +6630,6 @@ end
 
 // adaptive Cstrafe
 
-dezz.last_ground_pos = 0
-dezz.cstrafe_dir = 0
-
 function dezz.PredictVelocity( velocity, viewangles, dir, maxspeed, accel )
 
 	local forward = viewangles:Forward()
@@ -7026,365 +7000,366 @@ end
     Anti aim
 
 */
-local flTickInterval = engine.TickInterval()
+do
+    local flTickInterval = engine.TickInterval()
 
-function dezz.PredictedPos(ply)
-    if not IsValid(ply) then return Vector(0, 0, 0) end
-    return ply:GetPos() + ply:GetVelocity() * flTickInterval
-end
-
-function dezz.PredictedEyePos()
-    if not IsValid(pLocalPlayer) then return Vector(0, 0, 0) end
-    return pLocalPlayer:EyePos() + pLocalPlayer:GetVelocity() * flTickInterval
-end
-
-function dezz.GetBaseYaw()
-    if not IsValid(dezz.aatarget) or dezz.cfg.vars["Yaw base"] ~= 2 then
-        return dezz.SilentAngle and dezz.SilentAngle.y or 0
+    function dezz.PredictedPos(ply)
+        if not IsValid(ply) then return Vector(0, 0, 0) end
+        return ply:GetPos() + ply:GetVelocity() * flTickInterval
     end
 
-    local targetPos = dezz.PredictedPos(dezz.aatarget)
-    local eyePos = dezz.PredictedEyePos()
-    local direction = (targetPos - eyePos)
-    
-    return math.NormalizeAngle(direction:Angle().y)
-end
-
-function dezz.Freestand(cmd)
-    if not IsValid(dezz.aatarget) then return false end
-
-    local headpos = pLocalPlayer:GetBonePosition(pLocalPlayer:LookupBone("ValveBiped.Bip01_Head1"))
-    if not headpos then return false end
-
-    local selfpos = pLocalPlayer:GetPos()
-    local headoffset = Vector(selfpos.x, selfpos.y, headpos.z):Distance(headpos) + 5
-
-    local pos = dezz.aatarget:WorldToLocal(selfpos)
-    local bearing = math.deg(-math.atan2(pos.y, pos.x)) + 180 + 90
-    local left, right = bearing - 180 - 90, bearing - 180 + 90
-
-    local function CheckYaw(yaw)
-        yaw = math.rad(yaw)
-        local x, y = math.sin(yaw), math.cos(yaw)
-
-        local headoffsetvec = Vector(x, y, 0) * headoffset
-        headoffsetvec.z = headpos.z - selfpos.z
-
-        local tr = util.TraceLine({
-            start = dezz.aatarget:EyePos() + dezz.aatarget:GetVelocity() * flTickInterval * 4,
-            endpos = selfpos + headoffsetvec,
-            filter = dezz.aatarget
-        })
-
-        return tr.Fraction < 1 and tr.Entity ~= pLocalPlayer
+    function dezz.PredictedEyePos()
+        if not IsValid(pLocalPlayer) then return Vector(0, 0, 0) end
+        return pLocalPlayer:EyePos() + pLocalPlayer:GetVelocity() * flTickInterval
     end
 
-    local function Normalize(ang) 
-        return 360 - ang + 90 
+    function dezz.GetBaseYaw()
+        if not IsValid(dezz.aatarget) or dezz.cfg.vars["Yaw base"] ~= 2 then
+            return dezz.SilentAngle and dezz.SilentAngle.y or 0
+        end
+
+        local targetPos = dezz.PredictedPos(dezz.aatarget)
+        local eyePos = dezz.PredictedEyePos()
+        local direction = (targetPos - eyePos)
+        
+        return math.NormalizeAngle(direction:Angle().y)
     end
 
-    local leftcheck, rightcheck = CheckYaw(left), CheckYaw(right)
-    left, right = Normalize(left), Normalize(right)
+    function dezz.Freestand(cmd)
+        if not IsValid(dezz.aatarget) then return false end
 
-    local headlocal = pLocalPlayer:WorldToLocal(headpos)
-    if headlocal.x > 0 then
-        left, right = right, left
-    end
+        local headpos = pLocalPlayer:GetBonePosition(pLocalPlayer:LookupBone("ValveBiped.Bip01_Head1"))
+        if not headpos then return false end
 
-    if leftcheck and rightcheck then
+        local selfpos = pLocalPlayer:GetPos()
+        local headoffset = Vector(selfpos.x, selfpos.y, headpos.z):Distance(headpos) + 5
+
+        local pos = dezz.aatarget:WorldToLocal(selfpos)
+        local bearing = math.deg(-math.atan2(pos.y, pos.x)) + 180 + 90
+        local left, right = bearing - 180 - 90, bearing - 180 + 90
+
+        local function CheckYaw(yaw)
+            yaw = math.rad(yaw)
+            local x, y = math.sin(yaw), math.cos(yaw)
+
+            local headoffsetvec = Vector(x, y, 0) * headoffset
+            headoffsetvec.z = headpos.z - selfpos.z
+
+            local tr = util.TraceLine({
+                start = dezz.aatarget:EyePos() + dezz.aatarget:GetVelocity() * flTickInterval * 4,
+                endpos = selfpos + headoffsetvec,
+                filter = dezz.aatarget
+            })
+
+            return tr.Fraction < 1 and tr.Entity ~= pLocalPlayer
+        end
+
+        local function Normalize(ang) 
+            return 360 - ang + 90 
+        end
+
+        local leftcheck, rightcheck = CheckYaw(left), CheckYaw(right)
+        left, right = Normalize(left), Normalize(right)
+
+        local headlocal = pLocalPlayer:WorldToLocal(headpos)
+        if headlocal.x > 0 then
+            left, right = right, left
+        end
+
+        if leftcheck and rightcheck then
+            return false
+        elseif leftcheck then
+            return true, left, right
+        elseif rightcheck then
+            return true, right, left
+        end
+
         return false
-    elseif leftcheck then
-        return true, left, right
-    elseif rightcheck then
-        return true, right, left
     end
 
-    return false
-end
+    local baseyaw = 0
 
-local baseyaw = 0
-
-dezz.CalcYaw = {
-    [1] = function(cmd) 
-        return baseyaw - 178 
-    end,
-    
-    [2] = function(cmd)
-        return dezz.SendPacket and baseyaw or baseyaw + 178 
-    end,
-    
-    [3] = function(cmd)     
-        return dezz.SendPacket and baseyaw or baseyaw + (dezz.inverted and 43 or -43)
-    end,
-    
-    [4] = function(cmd)     
-        local delta = dezz.inverted and 89 or -89
-        return baseyaw - (dezz.SendPacket and delta or -delta) 
-    end,
-    
-    [5] = function(cmd)     
-        local delta = dezz.inverted and 89 or -89
-        return baseyaw - (dezz.SendPacket and delta or 178) 
-    end,
-    
-    [6] = function(cmd)     
-        local add = math.NormalizeAngle(CurTime() * (dezz.cfg.vars["Spin speed"] or 1) * 10)
-        return dezz.SendPacket and (dezz.inverted and (baseyaw - 178) or add) or (dezz.inverted and add or (baseyaw - 178))
-    end,
-    
-    [7] = function(cmd)
-        if not ded or not ded.GetCurrentLowerBodyYaw then 
-            return dezz.SendPacket and baseyaw or baseyaw + 178
-        end
+    dezz.CalcYaw = {
+        [1] = function(cmd) 
+            return baseyaw - 178 
+        end,
         
-        local lby = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
-        if not lby then
-            return dezz.SendPacket and baseyaw or baseyaw + 178
-        end
+        [2] = function(cmd)
+            return dezz.SendPacket and baseyaw or baseyaw + 178 
+        end,
         
-        return lby + (dezz.SendPacket and 180 or 0)
-    end,
-    
-    [8] = function(cmd)
-        local yaw = baseyaw - 178
-
-        if pLocalPlayer:GetVelocity():Length2D() > 1 then
-            if ded and ded.GetCurrentLowerBodyYaw then
-                local lby = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
-                if lby then
-                    yaw = lby + (dezz.SendPacket and 180 or 0)
-                end
+        [3] = function(cmd)     
+            return dezz.SendPacket and baseyaw or baseyaw + (dezz.inverted and 43 or -43)
+        end,
+        
+        [4] = function(cmd)     
+            local delta = dezz.inverted and 89 or -89
+            return baseyaw - (dezz.SendPacket and delta or -delta) 
+        end,
+        
+        [5] = function(cmd)     
+            local delta = dezz.inverted and 89 or -89
+            return baseyaw - (dezz.SendPacket and delta or 178) 
+        end,
+        
+        [6] = function(cmd)     
+            local add = math.NormalizeAngle(CurTime() * (dezz.cfg.vars["Spin speed"] or 1) * 10)
+            return dezz.SendPacket and (dezz.inverted and (baseyaw - 178) or add) or (dezz.inverted and add or (baseyaw - 178))
+        end,
+        
+        [7] = function(cmd)
+            if not ded or not ded.GetCurrentLowerBodyYaw then 
+                return dezz.SendPacket and baseyaw or baseyaw + 178
             end
-        elseif not dezz.SendPacket then
-            local side = dezz.inverted and -1 or 1
             
-            if ded and ded.GetTargetLowerBodyYaw and ded.GetCurrentLowerBodyYaw then
-                local lbyTarget = ded.GetTargetLowerBodyYaw(pLocalPlayer:EntIndex())
-                local currentLBY = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
+            local lby = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
+            if not lby then
+                return dezz.SendPacket and baseyaw or baseyaw + 178
+            end
+            
+            return lby + (dezz.SendPacket and 180 or 0)
+        end,
+        
+        [8] = function(cmd)
+            local yaw = baseyaw - 178
+
+            if pLocalPlayer:GetVelocity():Length2D() > 1 then
+                if ded and ded.GetCurrentLowerBodyYaw then
+                    local lby = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
+                    if lby then
+                        yaw = lby + (dezz.SendPacket and 180 or 0)
+                    end
+                end
+            elseif not dezz.SendPacket then
+                local side = dezz.inverted and -1 or 1
                 
-                if lbyTarget and currentLBY then
-                    if math.abs(math.NormalizeAngle(lbyTarget - dezz.oldYaw)) < (dezz.cfg.vars["LBY min delta"] or 35) then
-                        yaw = math.NormalizeAngle(dezz.oldYaw + (dezz.cfg.vars["LBY break delta"] or 60) * side)
-                    else
-                        yaw = math.NormalizeAngle(currentLBY - 44 * side)
+                if ded and ded.GetTargetLowerBodyYaw and ded.GetCurrentLowerBodyYaw then
+                    local lbyTarget = ded.GetTargetLowerBodyYaw(pLocalPlayer:EntIndex())
+                    local currentLBY = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
+                    
+                    if lbyTarget and currentLBY then
+                        if math.abs(math.NormalizeAngle(lbyTarget - dezz.oldYaw)) < (dezz.cfg.vars["LBY min delta"] or 35) then
+                            yaw = math.NormalizeAngle(dezz.oldYaw + (dezz.cfg.vars["LBY break delta"] or 60) * side)
+                        else
+                            yaw = math.NormalizeAngle(currentLBY - 44 * side)
+                        end
                     end
                 end
             end
+            
+            return yaw
+        end,
+        
+        [9] = function(cmd)     
+            local add = dezz.cfg.vars["Sin add"] or 0
+            local sin = math.sin(CurTime()) * (dezz.cfg.vars["Sin delta"] or 30)
+            return dezz.SendPacket and baseyaw + sin + add or baseyaw - sin - add
+        end,
+        
+        [10] = function(cmd)
+            local ct = CurTime()
+            local delta = dezz.cfg.vars["Sin delta"] or 30
+            local ct1 = (ct % 0.9)
+            local ct2 = (ct % 2)
+
+            local x1 = ct2 * math.sin(ct1)
+            local y1 = ct2 * -1 * math.cos(ct1)
+        
+            local x2 = x1 + ct1 * math.sin(ct2)
+            local y2 = y1 - ct1 * math.cos(ct2)
+
+            local sin = dezz.SendPacket and x2 * delta or y2 * delta
+            return baseyaw + sin
+        end,
+        
+        [11] = function(cmd)     
+            local swaySpeed = ((dezz.fakeLagTicks or 0) + 1) / 12 * math.pi
+            local swayAmount = math.sin(CurTime() * swaySpeed) * 45
+        
+            return (baseyaw - 180) + 55 * dezz.SwaySide + swayAmount * dezz.SwaySide * -1
+        end,
+        
+        [12] = function(cmd)     
+            local delta = dezz.cfg.vars["Jitter delta"] or 25
+            
+            local a = dezz.SendPacket and baseyaw - 178 or baseyaw - 178 + math.random(-delta, delta)
+            local b = dezz.SendPacket and baseyaw - 178 + math.random(-delta, delta) or baseyaw - 178
+
+            return dezz.inverted and a or b
+        end,
+        
+        [13] = function(cmd)    
+            local delta = dezz.cfg.vars["Jitter delta"] or 25
+
+            local a = dezz.SendPacket and baseyaw - 178 or baseyaw + (delta * dezz.SwaySide)
+            local b = dezz.SendPacket and baseyaw + (delta * dezz.SwaySide) or baseyaw - 178
+
+            return dezz.inverted and a or b
+        end,
+        
+        [14] = function(cmd)   
+            local ctjit = math.sin(CurTime() * 30) * 25
+
+            return ctjit + (dezz.SendPacket and baseyaw - 160 * dezz.SwaySide or baseyaw - 160 * -dezz.SwaySide)
+        end,
+        
+        [15] = function(cmd) 
+            local side = dezz.inverted and 1 or -1
+            local satanicvalue = math.sin(CurTime() * 666) * 666
+
+            return math.NormalizeAngle(dezz.SendPacket and satanicvalue * side or satanicvalue * -side)
+        end,
+        
+        [16] = function(cmd)   
+            return dezz.SendPacket and baseyaw + (dezz.cfg.vars["Custom real"] or 0) or baseyaw + (dezz.cfg.vars["Custom fake"] or 0)
+        end,
+        
+        [17] = function(cmd)
+            return baseyaw - 90
+        end,
+        
+        [18] = function(cmd)
+            local delta = dezz.cfg.vars["Low delta value"] or 28
+            local dynamic_delta = math.sin(CurTime() * 2) * (delta / 2)
+            
+            if dezz.SendPacket then
+                return baseyaw - (dezz.inverted and -delta or delta) + dynamic_delta
+            else
+                return baseyaw + (dezz.inverted and -delta or delta) - dynamic_delta
+            end
+        end,
+        
+        [19] = function(cmd)        
+            local baseyaw = dezz.GetBaseYaw()
+            local inverter = dezz.cfg.vars["Inverter"]
+
+            local jitterRange = dezz.cfg.vars["Jitter delta"] or 35
+            local jitter = math.random(-jitterRange, jitterRange)
+
+            local realYaw = baseyaw + (inverter and -(dezz.cfg.vars["Custom real"] or 0) or (dezz.cfg.vars["Custom real"] or 0))
+            local fakeYaw = baseyaw + (inverter and (dezz.cfg.vars["Custom fake"] or 0) or -(dezz.cfg.vars["Custom fake"] or 0)) + jitter
+
+            local timeSwitch = (CurTime() * 3) % 2 > 1
+            if timeSwitch then fakeYaw = fakeYaw + math.random(-20, 20) end
+
+            return dezz.SendPacket and realYaw or fakeYaw
+        end,
+        
+        [20] = function(cmd)
+            local tankaarad = 87
+            local a = dezz.SendPacket and baseyaw - 178 or baseyaw + (tankaarad * dezz.SwaySide)
+            local b = dezz.SendPacket and baseyaw + (tankaarad * dezz.SwaySide) or baseyaw - 178
+        
+            return dezz.inverted and a or b
         end
-        
-        return yaw
-    end,
-    
-    [9] = function(cmd)     
-        local add = dezz.cfg.vars["Sin add"] or 0
-        local sin = math.sin(CurTime()) * (dezz.cfg.vars["Sin delta"] or 30)
-        return dezz.SendPacket and baseyaw + sin + add or baseyaw - sin - add
-    end,
-    
-    [10] = function(cmd)
-        local ct = CurTime()
-        local delta = dezz.cfg.vars["Sin delta"] or 30
-        local ct1 = (ct % 0.9)
-        local ct2 = (ct % 2)
+    }
 
-        local x1 = ct2 * math.sin(ct1)
-        local y1 = ct2 * -1 * math.cos(ct1)
-    
-        local x2 = x1 + ct1 * math.sin(ct2)
-        local y2 = y1 - ct1 * math.cos(ct2)
+    local mm_side = false
+    local pitchflip = false
 
-        local sin = dezz.SendPacket and x2 * delta or y2 * delta
-        return baseyaw + sin
-    end,
-    
-    [11] = function(cmd)     
-        local swaySpeed = ((dezz.fakeLagTicks or 0) + 1) / 12 * math.pi
-        local swayAmount = math.sin(CurTime() * swaySpeed) * 45
-    
-        return (baseyaw - 180) + 55 * dezz.SwaySide + swayAmount * dezz.SwaySide * -1
-    end,
-    
-    [12] = function(cmd)     
-        local delta = dezz.cfg.vars["Jitter delta"] or 25
-        
-        local a = dezz.SendPacket and baseyaw - 178 or baseyaw - 178 + math.random(-delta, delta)
-        local b = dezz.SendPacket and baseyaw - 178 + math.random(-delta, delta) or baseyaw - 178
+    local function CalcPitch()
+        local cfg = dezz.cfg.vars["Pitch"] or 1
+        local x = 0
 
-        return dezz.inverted and a or b
-    end,
-    
-    [13] = function(cmd)    
-        local delta = dezz.cfg.vars["Jitter delta"] or 25
+        if cfg <= 5 then return pitches[cfg] or 0 end
 
-        local a = dezz.SendPacket and baseyaw - 178 or baseyaw + (delta * dezz.SwaySide)
-        local b = dezz.SendPacket and baseyaw + (delta * dezz.SwaySide) or baseyaw - 178
-
-        return dezz.inverted and a or b
-    end,
-    
-    [14] = function(cmd)   
-        local ctjit = math.sin(CurTime() * 30) * 25
-
-        return ctjit + (dezz.SendPacket and baseyaw - 160 * dezz.SwaySide or baseyaw - 160 * -dezz.SwaySide)
-    end,
-    
-    [15] = function(cmd) 
-        local side = dezz.inverted and 1 or -1
-        local satanicvalue = math.sin(CurTime() * 666) * 666
-
-        return math.NormalizeAngle(dezz.SendPacket and satanicvalue * side or satanicvalue * -side)
-    end,
-    
-    [16] = function(cmd)   
-        return dezz.SendPacket and baseyaw + (dezz.cfg.vars["Custom real"] or 0) or baseyaw + (dezz.cfg.vars["Custom fake"] or 0)
-    end,
-    
-    [17] = function(cmd)
-        return baseyaw - 90
-    end,
-    
-    [18] = function(cmd)
-        local delta = dezz.cfg.vars["Low delta value"] or 28
-        local dynamic_delta = math.sin(CurTime() * 2) * (delta / 2)
-        
         if dezz.SendPacket then
-            return baseyaw - (dezz.inverted and -delta or delta) + dynamic_delta
-        else
-            return baseyaw + (dezz.inverted and -delta or delta) - dynamic_delta
+            pitchflip = not pitchflip
         end
-    end,
-    
-    [19] = function(cmd)        
-        local baseyaw = dezz.GetBaseYaw()
-        local inverter = dezz.cfg.vars["Inverter"]
+        
+        if cfg == 6 then
+            x = pitchflip and 180 or -180
+        elseif cfg == 7 then
+            x = pitchflip and -180 or 271
+        elseif cfg == 8 then
+            x = math.random() > 0.5 and math.random(-180, 95) or math.random(177, 180)
+        elseif cfg == 9 then
+            x = math.random() > 0.5 and math.random(-180, -55) or math.random(55, 180)
+        elseif cfg == 10 then
+            x = math.random() > 0.5 and math.random(180, 95) or math.random(-180, -95)
+        elseif cfg == 11 then
+            x = math.random() > 0.5 and math.random(-180, -95) or math.random(166, 181)
+        elseif cfg == 12 then
+            x = math.random() > 0.5 and math.random(-180, -115) or math.random(177, 181)
+        elseif cfg == 13 then
+            x = pitchflip and -180 or 271
+        elseif cfg == 14 then    
+            x = dezz.cfg.vars["Custom pitch"] or 0
+        end
 
-        local jitterRange = dezz.cfg.vars["Jitter delta"] or 35
-        local jitter = math.random(-jitterRange, jitterRange)
-
-        local realYaw = baseyaw + (inverter and -(dezz.cfg.vars["Custom real"] or 0) or (dezz.cfg.vars["Custom real"] or 0))
-        local fakeYaw = baseyaw + (inverter and (dezz.cfg.vars["Custom fake"] or 0) or -(dezz.cfg.vars["Custom fake"] or 0)) + jitter
-
-        local timeSwitch = (CurTime() * 3) % 2 > 1
-        if timeSwitch then fakeYaw = fakeYaw + math.random(-20, 20) end
-
-        return dezz.SendPacket and realYaw or fakeYaw
-    end,
-    
-    [20] = function(cmd)
-        local tankaarad = 87
-        local a = dezz.SendPacket and baseyaw - 178 or baseyaw + (tankaarad * dezz.SwaySide)
-        local b = dezz.SendPacket and baseyaw + (tankaarad * dezz.SwaySide) or baseyaw - 178
-    
-        return dezz.inverted and a or b
-    end
-}
-
-local mm_side = false
-local pitchflip = false
-
-local function CalcPitch()
-    local cfg = dezz.cfg.vars["Pitch"] or 1
-    local x = 0
-
-    if cfg <= 5 then return pitches[cfg] or 0 end
-
-    if dezz.SendPacket then
-        pitchflip = not pitchflip
-    end
-    
-    if cfg == 6 then
-        x = pitchflip and 180 or -180
-    elseif cfg == 7 then
-        x = pitchflip and -180 or 271
-    elseif cfg == 8 then
-        x = math.random() > 0.5 and math.random(-180, 95) or math.random(177, 180)
-    elseif cfg == 9 then
-        x = math.random() > 0.5 and math.random(-180, -55) or math.random(55, 180)
-    elseif cfg == 10 then
-        x = math.random() > 0.5 and math.random(180, 95) or math.random(-180, -95)
-    elseif cfg == 11 then
-        x = math.random() > 0.5 and math.random(-180, -95) or math.random(166, 181)
-    elseif cfg == 12 then
-        x = math.random() > 0.5 and math.random(-180, -115) or math.random(177, 181)
-    elseif cfg == 13 then
-        x = pitchflip and -180 or 271
-    elseif cfg == 14 then    
-        x = dezz.cfg.vars["Custom pitch"] or 0
+        return x
     end
 
-    return x
-end
+    local function micromovement(cmd)
+        if not dezz.cfg.vars["Micromovement"] then return end
+        if not IsValid(pLocalPlayer) or not pLocalPlayer:Alive() then return end
+        if not pLocalPlayer:IsOnGround() then return end
+        if cmd:KeyDown(IN_BACK) or cmd:KeyDown(IN_FORWARD) or cmd:KeyDown(IN_MOVELEFT) or cmd:KeyDown(IN_MOVERIGHT) then return end
 
-local function micromovement(cmd)
-    if not dezz.cfg.vars["Micromovement"] then return end
-    if not IsValid(pLocalPlayer) or not pLocalPlayer:Alive() then return end
-    if not pLocalPlayer:IsOnGround() then return end
-    if cmd:KeyDown(IN_BACK) or cmd:KeyDown(IN_FORWARD) or cmd:KeyDown(IN_MOVELEFT) or cmd:KeyDown(IN_MOVERIGHT) then return end
-
-    cmd:SetSideMove(mm_side and -15.0 or 15.0)
-    mm_side = not mm_side
-end
-
-local function aacheck(cmd)
-    if not dezz.cfg.vars["Anti aim"] then return false end
-    if cmd:KeyDown(IN_ATTACK) then return false end
-    if cmd:KeyDown(IN_USE) then return false end
-    if dezz.moveType == MOVETYPE_LADDER then return false end
-    if dezz.moveType == MOVETYPE_NOCLIP then return false end
-
-    if dezz.cfg.binds["Anti aim"] ~= 0 and not dezz.IsKeyDown(dezz.cfg.binds["Anti aim"]) then
-        return false
+        cmd:SetSideMove(mm_side and -15.0 or 15.0)
+        mm_side = not mm_side
     end
 
-    return true 
-end
+    local function aacheck(cmd)
+        if not dezz.cfg.vars["Anti aim"] then return false end
+        if cmd:KeyDown(IN_ATTACK) then return false end
+        if cmd:KeyDown(IN_USE) then return false end
+        if dezz.moveType == MOVETYPE_LADDER then return false end
+        if dezz.moveType == MOVETYPE_NOCLIP then return false end
 
-function dezz.AntiAim(cmd)
-    if not IsValid(pLocalPlayer) or not pLocalPlayer:Alive() then return end
-    
-    local freestandsucc, freestandsafe, freestandunsafe 
+        if dezz.cfg.binds["Anti aim"] ~= 0 and not dezz.IsKeyDown(dezz.cfg.binds["Anti aim"]) then
+            return false
+        end
 
-    if dezz.cfg.vars["Freestanding"] then
-        freestandsucc, freestandsafe, freestandunsafe = dezz.Freestand(cmd)
+        return true 
     end
 
-    if dezz.SendPacket then
-        dezz.SwaySide = dezz.SwaySide * -1 
-    end
+    function dezz.AntiAim(cmd)
+        if not IsValid(pLocalPlayer) or not pLocalPlayer:Alive() then return end
+        
+        local freestandsucc, freestandsafe, freestandunsafe 
 
-    baseyaw = dezz.GetBaseYaw()
-    local pitch = CalcPitch()
-    
-    local yawMode = dezz.cfg.vars["Yaw"] or 1
-    local yawFunc = dezz.CalcYaw[yawMode]
-    
-    if not yawFunc then
-        yawFunc = dezz.CalcYaw[1]
-    end
-    
-    local success, yaw = pcall(yawFunc, cmd)
-    if not success then
-        yaw = baseyaw
-    end
+        if dezz.cfg.vars["Freestanding"] then
+            freestandsucc, freestandsafe, freestandunsafe = dezz.Freestand(cmd)
+        end
 
-    if dezz.cfg.vars["Yaw randomisation"] then
-        yaw = yaw + math.random(-0.9, 0.9) 
-    end 
+        if dezz.SendPacket then
+            dezz.SwaySide = dezz.SwaySide * -1 
+        end
 
-    if freestandsucc then
-        yaw = dezz.SendPacket and freestandunsafe or freestandsafe
-    end
+        baseyaw = dezz.GetBaseYaw()
+        local pitch = CalcPitch()
+        
+        local yawMode = dezz.cfg.vars["Yaw"] or 1
+        local yawFunc = dezz.CalcYaw[yawMode]
+        
+        if not yawFunc then
+            yawFunc = dezz.CalcYaw[1]
+        end
+        
+        local success, yaw = pcall(yawFunc, cmd)
+        if not success then
+            yaw = baseyaw
+        end
 
-    if aacheck(cmd) then
-        local pyAngle = Angle(pitch, yaw, 0)
+        if dezz.cfg.vars["Yaw randomisation"] then
+            yaw = yaw + math.random(-0.9, 0.9) 
+        end 
 
-        micromovement(cmd)
+        if freestandsucc then
+            yaw = dezz.SendPacket and freestandunsafe or freestandsafe
+        end
 
-        cmd:SetViewAngles(pyAngle)
-        dezz.oldYaw = pyAngle.y
+        if aacheck(cmd) then
+            local pyAngle = Angle(pitch, yaw, 0)
+
+            micromovement(cmd)
+
+            cmd:SetViewAngles(pyAngle)
+            dezz.oldYaw = pyAngle.y
+        end
     end
 end
-
 
 /*
     Fake lag  
@@ -7401,38 +7376,6 @@ function dezz.FakeLagOnPeek()
 		return
     end
 end
-
-
-/*if dezz.cfg.vars["Lag fix"] then
-    if not IsValid(ply) then return end
-    
-    if dezz.cfg.vars["Backtrack mode"] then
-        local targetTime = ded.GetSimulationTime(ply:EntIndex())
-        if not targetTime then return end
-        
-        local serverTime = ded.GetServerTime(cmd)
-        local serverArriveTick = serverTime + ded.GetLatency(0) + ded.GetLatency(1)
-        
-        if ply.aimshots and ply.aimshots.sw_backshoot_data and ply.aimshots.sw_backshoot_data.simTime then
-            local diff = serverArriveTick - ply.aimshots.sw_backshoot_data.simTime
-            if diff < 0.2 then 
-                local tick = dezz.TIME_TO_TICKS(targetTime + dezz.GetLerpTime())
-                ded.SetCommandTick(cmd, tick)
-            else
-                ded.SetTargetInterp(serverTime - targetTime)
-                local tick = dezz.TIME_TO_TICKS(serverTime)
-                ded.SetCommandTick(cmd, tick - 1)
-            end
-        end
-    else
-        local simTime = ded.GetSimulationTime(ply:EntIndex())
-        if simTime then
-            local tick = dezz.TIME_TO_TICKS(simTime + dezz.GetLerpTime())
-            ded.SetCommandTick(cmd, tick)
-        end
-    end
-end*/
-
 
 function dezz.WarpOnPeek()
 	ded.StartShifting( true )
@@ -7462,14 +7405,9 @@ function dezz.CheckPeeking()
 			dezz.WarpOnPeek()
         elseif dezz.cfg.vars["Freeze on peek"] then
             ded.SetOutSequenceNr( ded.GetOutSequenceNr() + dezz.maxFreezeTicks - 1 ) 
-		//elseif dezz.cfg.vars["Fake lag options-On peek"] then
-		//	dezz.FakeLagOnPeek()
 		end
 	end
 end
-
-
-
 
 do
     
@@ -7507,11 +7445,6 @@ do
         if dezz.cfg.vars["Allah walk"] and pLocalPlayer:IsFlagSet( FL_ONGROUND ) and dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
             dezz.fakeLagfactor = 21
         end
-
-        //if dezz.cfg.vars["Fakelag comp"] == 2 and ded.GetCurrentCharge() > 0 then 
-        //    local nfactor = dezz.fakeLagfactor - ded.GetMaxShiftTicks() - 1
-        //    dezz.fakeLagfactor = math.Clamp( nfactor, 0, 21 )
-        //end
 
         if shouldlag(cmd) then
             dezz.SendPacket = false
@@ -7605,25 +7538,7 @@ function dezz.Stop(cmd)
     end
 end
 
-// Slidewalk 
-
-function dezz.SlideWalk( cmd )
-    local ticksToStop = dezz.fakeLagfactor
-
-
-
-
-
-end
-
-
-
-
 // Auto peak 
-
-dezz.startedPeeking = false 
-dezz.needToMoveBack = false
-dezz.startPeekPosition = Vector(0,0,0)
 
 function dezz.MoveTo( cmd, pos )
     local ang = ( pos - pLocalPlayer:GetPos() ):Angle().y
@@ -7683,8 +7598,6 @@ end
 
 // Sequence Manipulation 
 
-dezz.freezedTicks = 0
-dezz.maxFreezeTicks = math.Round( 1 / flTickInterval ) 
 function dezz.AnimationFreezer()
     if not dezz.IsKeyDown( dezz.cfg.binds["Animation freezer"] ) then return end
 
@@ -8079,15 +7992,10 @@ function dezz.CreateMove(cmd)
         end
 
         if dezz.startedPeeking then
-            //if not dezz.IsMovementKeysDown( cmd ) then
-            //    dezz.needToMoveBack = true
-            //end
-
             if dezz.needToMoveBack then
                 dezz.MoveTo( cmd, ppos )
 
                 if dezz.cfg.vars["Auto peak tp"] and dezz.cfg.vars["Tickbase shift"] then
-                    //dezz.shiftedTicks = 0
                     ded.StartShifting( true )
                 end
             end
@@ -8273,35 +8181,13 @@ end
         cmd:SetViewAngles(dezz.fcangles)
     end
 
-    /*if dezz.cfg.vars["Dodge projectiles"] and ded.GetCurrentCharge() >= ded.GetMaxShiftTicks() and not ded.GetIsShifting() then
-        local entitys = ents.GetAll()
-
-        for i = 1, #entitys do
-            local v = entitys[ i ]
-
-            if v:GetClass() != "crossbow_bolt" then continue end 
-
-            local mypos = pLocalPlayer:GetPos() + pLocalPlayer:GetVelocity() * flTickInterval 
-            local entpos = v:GetPos() + ( v:GetAngles():Forward() * 3500 ) * flTickInterval
-
-            if mypos:DistToSqr( entpos ) > 320 then
-                cmd:ClearMovement()
-                cmd:ClearButtons()
-
-                cmd:AddKey( IN_SPEED )
-                cmd:SetSideMove( 10000 )
-                ded.StartShifting( true )
-            end
-        end
-    end*/
-
     if dezz.SendPacket then
         dezz.chokedTicks = 0 
     else
         dezz.chokedTicks = dezz.chokedTicks + 1
     end
 
-    if not dezz.cfg.vars["Silent aim"] or dezz.cfg.vars["spectating"] then 
+    if not dezz.cfg.vars["Silent aim"] then 
         dezz.SilentAngle = cmd:GetViewAngles() 
     end
 
@@ -8315,8 +8201,6 @@ end
 /* 
     Render Scene / Anti screengrab 
 */
-dezz.UnSafeFrame = false
-dezz.renderTarget = GetRenderTarget( "YaPidoras" .. os.time(), screenWidth, screenHeight )
 
 do
     local oldsky, oldskycolor, oldwallcolor = dezz.cfg.vars["Custom sky"], dezz.cfg.vars["Sky color"], dezz.cfg.vars["Wall color"]
@@ -8488,8 +8372,6 @@ function dezz.PreScreenGrab()
  
 	dezz.UnSafeFrame = false
 end
-
-dezz.prikol = Material( "a/prikol" ):GetTexture( "$basetexture" ) //  Material( file.Read( "prikol.png", "DATA" ) )
 
 function render.Capture( data )
     dezz.PreScreenGrab()
@@ -8671,12 +8553,6 @@ function dezz.DrawBar(MaxX, MaxY, MinX, MinY, Pos, Current, Max, BarColor, BackC
         surface.DrawTexturedRect(BarX, BarY, FillW, FillH)
     end
 end
-
-local cheaters = {}
-
-cheaters.list = {}
-cheaters.list_temp = {}
-cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/dsadsadadsadasdadsdas/refs/heads/main/asdadsdasdsadsadshjadskhadshdhasdkdas.json"
 
 function cheaters.fetch_on_success(body, length, headers, code)
     local tbl = util.JSONToTable(body)
@@ -9390,12 +9266,6 @@ function dezz.DrawESP()
     surface.SetAlphaMultiplier(1)
 end
 
-dezz.fovColor = Color( 255, 255, 255 )
-dezz.gradFov = false
-
-//dezz.bgmaterial = Material( "a/paws.png", "noclamp smooth" )
-
-
 do
     local lc = Color(125, 255, 64)   
     local blc = Color(255, 64, 125)  
@@ -9933,7 +9803,6 @@ do
             surface.SetFont("HudhintTextLarge")
 
             local plys = player.GetAll()
-            local pLocalPlayer = LocalPlayer()
             local spectators = {}
             
             for i = 1, #plys do
@@ -10560,6 +10429,43 @@ do
             surface.DrawOutlinedRect(x + 10, y + 65, w - 20, 8)
         end
 
+        if dezz.cfg.vars["whol"] then
+            dezz.wholPos = dezz.wholPos or {x = ScrW() / 2 - 100, y = ScrH() * 0.3, dragging = false, dragX = 0, dragY = 0}
+            
+            local mouseX, mouseY = input.GetCursorPos()
+            
+            if input.IsMouseDown(MOUSE_LEFT) then
+                if not dezz.wholPos.dragging then
+                    if mouseX >= dezz.wholPos.x and mouseX <= dezz.wholPos.x + 200 and
+                    mouseY >= dezz.wholPos.y and mouseY <= dezz.wholPos.y + 25 then
+                        dezz.wholPos.dragging = true
+                        dezz.wholPos.dragX = mouseX - dezz.wholPos.x
+                        dezz.wholPos.dragY = mouseY - dezz.wholPos.y
+                    end
+                end
+                
+                if dezz.wholPos.dragging then
+                    dezz.wholPos.x = math.Clamp(mouseX - dezz.wholPos.dragX, 0, ScrW() - 200)
+                    dezz.wholPos.y = math.Clamp(mouseY - dezz.wholPos.dragY, 0, ScrH() - 200)
+                end
+            else
+                dezz.wholPos.dragging = false
+            end
+            
+            local startX = dezz.wholPos.x + 100
+            local startY = dezz.wholPos.y
+            
+            for k, v in pairs(player.GetAll()) do
+                if IsValid(v) and v:Alive() and v:GetEyeTrace().Entity == pLocalPlayer then
+                    local text = v:Nick() .. " смотрит на тебя!"
+                    local x = startX
+                    local y = startY + (k - 1) * 25
+                    
+                    draw.SimpleText(text, "DebugOverlay", x, y, string.ToColor(dezz.cfg.colors["whol"]), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+            end
+        end
+
         if dezz.tpenabled and dezz.cfg.vars["nametr"] then           
             local pos = pLocalPlayer:GetPos() + Vector(0, 0, 80)
             local screenPos = pos:ToScreen()
@@ -10858,254 +10764,254 @@ local weaponparams = {
 }
  
 do
-local f = (1 / 255)
-local glowMaterial = Material("pp/additive")
-local particleCache = {}
-local lastParticleTime = 0
-local cachedPlayers = {}
-local lastPlayerUpdate = 0
+    local f = (1 / 255)
+    local glowMaterial = Material("pp/additive")
+    local particleCache = {}
+    local lastParticleTime = 0
+    local cachedPlayers = {}
+    local lastPlayerUpdate = 0
 
-function dezz.RenderScreenspaceEffects()
-    if dezz.UnSafeFrame then return end
+    function dezz.RenderScreenspaceEffects()
+        if dezz.UnSafeFrame then return end
 
-    if dezz.cfg.vars["rastoman"] then
-        local ply = LocalPlayer()
-        if not IsValid(ply) then return end
+        if dezz.cfg.vars["rastoman"] then
+            local ply = LocalPlayer()
+            if not IsValid(ply) then return end
 
-        local intensity = math.min((CurTime()) / 5, 1)
-        if intensity <= 0 then return end
+            local intensity = math.min((CurTime()) / 5, 1)
+            if intensity <= 0 then return end
 
-        DrawColorModify({
-            ["$pp_colour_addr"] = 0.05 * math.sin(2 * CurTime()) * intensity,
-            ["$pp_colour_addg"] = 0.05 * math.cos(5 * CurTime()) * intensity,
-            ["$pp_colour_addb"] = 0.05 * math.cos(3 * CurTime()) * intensity,
-            ["$pp_colour_brightness"] = 0,
-            ["$pp_colour_contrast"] = 1,
-            ["$pp_colour_colour"] = 3 * math.sin(CurTime()) * intensity,
-            ["$pp_colour_mulr"] = 0.02 * intensity,
-            ["$pp_colour_mulg"] = 0,
-            ["$pp_colour_mulb"] = 0,
-        })
+            DrawColorModify({
+                ["$pp_colour_addr"] = 0.05 * math.sin(2 * CurTime()) * intensity,
+                ["$pp_colour_addg"] = 0.05 * math.cos(5 * CurTime()) * intensity,
+                ["$pp_colour_addb"] = 0.05 * math.cos(3 * CurTime()) * intensity,
+                ["$pp_colour_brightness"] = 0,
+                ["$pp_colour_contrast"] = 1,
+                ["$pp_colour_colour"] = 3 * math.sin(CurTime()) * intensity,
+                ["$pp_colour_mulr"] = 0.02 * intensity,
+                ["$pp_colour_mulg"] = 0,
+                ["$pp_colour_mulb"] = 0,
+            })
 
-        DrawMotionBlur(0.2 * intensity, 0.99, 0.01)
-        util.ScreenShake(ply:GetPos(), 1 * intensity, 60, 0.1, 0)
-    end
+            DrawMotionBlur(0.2 * intensity, 0.99, 0.01)
+            util.ScreenShake(ply:GetPos(), 1 * intensity, 60, 0.1, 0)
+        end
 
-    if dezz.cfg.vars["LGBTW"] then
+        if dezz.cfg.vars["LGBTW"] then
 
-        local hue = (CurTime() * 60) % 360
-        local rainbowColor = HSVToColor(hue, 1, 1)
-        local worldmats = Entity(0):GetMaterials()
+            local hue = (CurTime() * 60) % 360
+            local rainbowColor = HSVToColor(hue, 1, 1)
+            local worldmats = Entity(0):GetMaterials()
+                
+            for i = 1, #worldmats do
+                local mat = Material(worldmats[i])
+                if mat and not mat:IsError() then
+                    mat:SetVector("$color", Vector(rainbowColor.r/255, rainbowColor.g/255, rainbowColor.b/255))
+                    mat:Recompute()
+                end
+            end
+        end
+
+        if dezz.cfg.vars["Color Modify"] then 
+            DrawColorModify({
+                ["$pp_colour_addr"] = dezz.cfg.vars["Color Modify Add Red"],
+                ["$pp_colour_addg"] = dezz.cfg.vars["Color Modify Add Green"],
+                ["$pp_colour_addb"] = dezz.cfg.vars["Color Modify Add Blue"],
+                ["$pp_colour_brightness"] = dezz.cfg.vars["Color Modify Brightness"],
+                ["$pp_colour_contrast"] = dezz.cfg.vars["Color Modify Contrast"],
+                ["$pp_colour_colour"] = dezz.cfg.vars["Color Modify Saturation"],
+                ["$pp_colour_mulr"] = dezz.cfg.vars["Color Modify Mul Red"],
+                ["$pp_colour_mulg"] = dezz.cfg.vars["Color Modify Mul Green"],
+                ["$pp_colour_mulb"] = dezz.cfg.vars["Color Modify Mul Blue"]
+            })
+        end
+
+        local currentTime = CurTime()
+        if currentTime - lastPlayerUpdate > 0.1 then
+            cachedPlayers = {}
+            for _, v in ipairs(player.GetAll()) do
+                if IsValid(v) and v != pLocalPlayer and v:Alive() and not v:IsDormant() then
+                    table.insert(cachedPlayers, v)
+                end
+            end
+            lastPlayerUpdate = currentTime
+        end
+
+        local vm, invm = dezz.cfg.vars["Visible mat"], dezz.cfg.vars["inVisible mat"]
+        local sin = math.floor(math.sin(currentTime * 4) * 45)
+        local blendAlpha = (sin + 100) * f
+
+        local vc = string.ToColor(dezz.cfg.colors["Visible chams"])
+        local invc = string.ToColor(dezz.cfg.colors["inVisible chams"])
+        local sc = string.ToColor(dezz.cfg.colors["Self chams"])
+
+        local vcVec = Vector(vc.r * f, vc.g * f, vc.b * f)
+        local invcVec = Vector(invc.r * f, invc.g * f, invc.b * f)
+        local scVec = Vector(sc.r * f, sc.g * f, sc.b * f)
+
+        if invm == 8 or vm == 8 then
+            dezz.chamMats.invis[6]:SetVector("$envmaptint", invcVec)
+            dezz.chamMats.vis[6]:SetVector("$envmaptint", vcVec)
+        end
+
+        cam.Start3D()
+            local suppressLighting = dezz.cfg.vars["Supress lighting"]
             
-        for i = 1, #worldmats do
-            local mat = Material(worldmats[i])
-            if mat and not mat:IsError() then
-                mat:SetVector("$color", Vector(rainbowColor.r/255, rainbowColor.g/255, rainbowColor.b/255))
-                mat:Recompute()
-            end
-        end
-    end
-
-    if dezz.cfg.vars["Color Modify"] then 
-        DrawColorModify({
-            ["$pp_colour_addr"] = dezz.cfg.vars["Color Modify Add Red"],
-            ["$pp_colour_addg"] = dezz.cfg.vars["Color Modify Add Green"],
-            ["$pp_colour_addb"] = dezz.cfg.vars["Color Modify Add Blue"],
-            ["$pp_colour_brightness"] = dezz.cfg.vars["Color Modify Brightness"],
-            ["$pp_colour_contrast"] = dezz.cfg.vars["Color Modify Contrast"],
-            ["$pp_colour_colour"] = dezz.cfg.vars["Color Modify Saturation"],
-            ["$pp_colour_mulr"] = dezz.cfg.vars["Color Modify Mul Red"],
-            ["$pp_colour_mulg"] = dezz.cfg.vars["Color Modify Mul Green"],
-            ["$pp_colour_mulb"] = dezz.cfg.vars["Color Modify Mul Blue"]
-        })
-    end
-
-    local currentTime = CurTime()
-    if currentTime - lastPlayerUpdate > 0.1 then
-        cachedPlayers = {}
-        for _, v in ipairs(player.GetAll()) do
-            if IsValid(v) and v != pLocalPlayer and v:Alive() and not v:IsDormant() then
-                table.insert(cachedPlayers, v)
-            end
-        end
-        lastPlayerUpdate = currentTime
-    end
-
-    local vm, invm = dezz.cfg.vars["Visible mat"], dezz.cfg.vars["inVisible mat"]
-    local sin = math.floor(math.sin(currentTime * 4) * 45)
-    local blendAlpha = (sin + 100) * f
-
-    local vc = string.ToColor(dezz.cfg.colors["Visible chams"])
-    local invc = string.ToColor(dezz.cfg.colors["inVisible chams"])
-    local sc = string.ToColor(dezz.cfg.colors["Self chams"])
-
-    local vcVec = Vector(vc.r * f, vc.g * f, vc.b * f)
-    local invcVec = Vector(invc.r * f, invc.g * f, invc.b * f)
-    local scVec = Vector(sc.r * f, sc.g * f, sc.b * f)
-
-    if invm == 8 or vm == 8 then
-        dezz.chamMats.invis[6]:SetVector("$envmaptint", invcVec)
-        dezz.chamMats.vis[6]:SetVector("$envmaptint", vcVec)
-    end
-
-    cam.Start3D()
-        local suppressLighting = dezz.cfg.vars["Supress lighting"]
-        
-        for _, v in ipairs(cachedPlayers) do
-            if suppressLighting then
-                render.SuppressEngineLighting(true)
-            end
-
-            if dezz.cfg.vars["inVisible chams"] then
-                if invm == 8 then
-                    local hue = (currentTime * 180) % 360
-                    local rgb = HSVToColor(hue, 1, 1)
-                    local rgbVec = Vector(rgb.r * f, rgb.g * f, rgb.b * f)
-
-                    render.MaterialOverride(Material("models/shiny"))
-                    render.SetColorModulation(rgbVec.x, rgbVec.y, rgbVec.z)
-                    render.SetBlend(0.8)
+            for _, v in ipairs(cachedPlayers) do
+                if suppressLighting then
                     render.SuppressEngineLighting(true)
+                end
 
-                    render.SetModelLighting(0, rgbVec.x, rgbVec.y, rgbVec.z)
-                    render.SetModelLighting(1, rgbVec.x * 1.5, rgbVec.y * 1.5, rgbVec.z * 1.5)
-                    
-                    v:SetRenderMode(1)
-                    v:DrawModel()
+                if dezz.cfg.vars["inVisible chams"] then
+                    if invm == 8 then
+                        local hue = (currentTime * 180) % 360
+                        local rgb = HSVToColor(hue, 1, 1)
+                        local rgbVec = Vector(rgb.r * f, rgb.g * f, rgb.b * f)
 
-                    if currentTime - lastParticleTime > 0.1 then
-                        local pos = v:GetPos() + Vector(0, 0, 60)
-                        local emitter = ParticleEmitter(pos, false)
-                        
-                        if emitter then
-                            for i = 1, 2 do
-                                local particle = emitter:Add("sprites/light_glow02_add", pos + VectorRand() * 15)
-                                if particle then
-                                    particle:SetVelocity(VectorRand() * 10)
-                                    particle:SetDieTime(0.6)
-                                    particle:SetStartAlpha(200)
-                                    particle:SetEndAlpha(0)
-                                    particle:SetStartSize(math.random(2, 4))
-                                    particle:SetEndSize(0)
-                                    particle:SetColor(rgb.r, rgb.g, rgb.b)
-                                    particle:SetAirResistance(100)
-                                end
-                            end
-                            emitter:Finish()
-                        end
-                        lastParticleTime = currentTime
-                    end
-                else
-                    render.MaterialOverride(dezz.chamMats.invis[invm])
-                    render.SetColorModulation(invcVec.x, invcVec.y, invcVec.z)
-
-                    if invm == 7 then
-                        render.SetBlend(blendAlpha)
-                    else
+                        render.MaterialOverride(Material("models/shiny"))
+                        render.SetColorModulation(rgbVec.x, rgbVec.y, rgbVec.z)
                         render.SetBlend(0.8)
+                        render.SuppressEngineLighting(true)
+
+                        render.SetModelLighting(0, rgbVec.x, rgbVec.y, rgbVec.z)
+                        render.SetModelLighting(1, rgbVec.x * 1.5, rgbVec.y * 1.5, rgbVec.z * 1.5)
+                        
+                        v:SetRenderMode(1)
+                        v:DrawModel()
+
+                        if currentTime - lastParticleTime > 0.1 then
+                            local pos = v:GetPos() + Vector(0, 0, 60)
+                            local emitter = ParticleEmitter(pos, false)
+                            
+                            if emitter then
+                                for i = 1, 2 do
+                                    local particle = emitter:Add("sprites/light_glow02_add", pos + VectorRand() * 15)
+                                    if particle then
+                                        particle:SetVelocity(VectorRand() * 10)
+                                        particle:SetDieTime(0.6)
+                                        particle:SetStartAlpha(200)
+                                        particle:SetEndAlpha(0)
+                                        particle:SetStartSize(math.random(2, 4))
+                                        particle:SetEndSize(0)
+                                        particle:SetColor(rgb.r, rgb.g, rgb.b)
+                                        particle:SetAirResistance(100)
+                                    end
+                                end
+                                emitter:Finish()
+                            end
+                            lastParticleTime = currentTime
+                        end
+                    else
+                        render.MaterialOverride(dezz.chamMats.invis[invm])
+                        render.SetColorModulation(invcVec.x, invcVec.y, invcVec.z)
+
+                        if invm == 7 then
+                            render.SetBlend(blendAlpha)
+                        else
+                            render.SetBlend(0.8)
+                        end
+                        
+                        v:SetRenderMode(1)
+                        v:DrawModel()
                     end
-                    
-                    v:SetRenderMode(1)
-                    v:DrawModel()
+
+                    if dezz.cfg.vars["inVisible chams w"] then 
+                        local w = v:GetActiveWeapon()
+                        if IsValid(w) then w:DrawModel() end
+                    end
                 end
 
-                if dezz.cfg.vars["inVisible chams w"] then 
-                    local w = v:GetActiveWeapon()
-                    if IsValid(w) then w:DrawModel() end
+                if dezz.cfg.vars["Visible chams"] then
+                    if vm == 8 then
+                        local hue = (currentTime * 180) % 360
+                        local rgb = HSVToColor(hue, 1, 1)
+                        local rgbVec = Vector(rgb.r * f, rgb.g * f, rgb.b * f)
+                        
+                        render.MaterialOverride(Material("models/shiny"))
+                        render.SetColorModulation(rgbVec.x, rgbVec.y, rgbVec.z)
+                        render.SetBlend(0.9)
+                        render.SuppressEngineLighting(true)
+                        
+                        render.SetModelLighting(0, rgbVec.x, rgbVec.y, rgbVec.z)
+                        render.SetModelLighting(1, rgbVec.x * 1.3, rgbVec.y * 1.3, rgbVec.z * 1.3)
+
+                        v:DrawModel()
+                    else
+                        render.MaterialOverride(dezz.chamMats.vis[vm])
+                        render.SetColorModulation(vcVec.x, vcVec.y, vcVec.z)
+
+                        if vm == 7 then
+                            render.SetBlend(blendAlpha)
+                        else
+                            render.SetBlend(1)
+                        end
+                        
+                        v:DrawModel()
+                    end
+
+                    if dezz.cfg.vars["Visible chams w"] then 
+                        local w = v:GetActiveWeapon()
+                        if IsValid(w) then w:DrawModel() end
+                    end
+                end
+
+                if suppressLighting then
+                    render.SuppressEngineLighting(false)
                 end
             end
 
-            if dezz.cfg.vars["Visible chams"] then
-                if vm == 8 then
+            if dezz.cfg.vars["Self chams"] and IsValid(pLocalPlayer) and pLocalPlayer:Alive() then
+                local suppressSelfLighting = dezz.cfg.vars["Supress self lighting"]
+                
+                if suppressSelfLighting then
+                    render.SuppressEngineLighting(true)
+                end
+
+                if dezz.cfg.vars["Self mat"] == 8 then
                     local hue = (currentTime * 180) % 360
                     local rgb = HSVToColor(hue, 1, 1)
                     local rgbVec = Vector(rgb.r * f, rgb.g * f, rgb.b * f)
                     
                     render.MaterialOverride(Material("models/shiny"))
                     render.SetColorModulation(rgbVec.x, rgbVec.y, rgbVec.z)
-                    render.SetBlend(0.9)
+                    render.SetBlend(0.7)
                     render.SuppressEngineLighting(true)
                     
                     render.SetModelLighting(0, rgbVec.x, rgbVec.y, rgbVec.z)
-                    render.SetModelLighting(1, rgbVec.x * 1.3, rgbVec.y * 1.3, rgbVec.z * 1.3)
+                    render.SetModelLighting(1, rgbVec.x * 1.2, rgbVec.y * 1.2, rgbVec.z * 1.2)
 
-                    v:DrawModel()
+                    pLocalPlayer:SetRenderMode(1)
+                    pLocalPlayer:DrawModel()
                 else
-                    render.MaterialOverride(dezz.chamMats.vis[vm])
-                    render.SetColorModulation(vcVec.x, vcVec.y, vcVec.z)
+                    render.MaterialOverride(dezz.chamMats.vis[dezz.cfg.vars["Self mat"]])
+                    render.SetColorModulation(scVec.x, scVec.y, scVec.z)
 
-                    if vm == 7 then
+                    if dezz.cfg.vars["Self mat"] == 7 then
                         render.SetBlend(blendAlpha)
                     else
-                        render.SetBlend(1)
+                        render.SetBlend(0.7)
                     end
                     
-                    v:DrawModel()
+                    pLocalPlayer:SetRenderMode(1)
+                    pLocalPlayer:DrawModel()
                 end
 
-                if dezz.cfg.vars["Visible chams w"] then 
-                    local w = v:GetActiveWeapon()
+                if dezz.cfg.vars["Self chams w"] then 
+                    local w = pLocalPlayer:GetActiveWeapon()
                     if IsValid(w) then w:DrawModel() end
                 end
-            end
-
-            if suppressLighting then
-                render.SuppressEngineLighting(false)
-            end
-        end
-
-        if dezz.cfg.vars["Self chams"] and IsValid(pLocalPlayer) and pLocalPlayer:Alive() then
-            local suppressSelfLighting = dezz.cfg.vars["Supress self lighting"]
             
-            if suppressSelfLighting then
-                render.SuppressEngineLighting(true)
-            end
-
-            if dezz.cfg.vars["Self mat"] == 8 then
-                local hue = (currentTime * 180) % 360
-                local rgb = HSVToColor(hue, 1, 1)
-                local rgbVec = Vector(rgb.r * f, rgb.g * f, rgb.b * f)
-                
-                render.MaterialOverride(Material("models/shiny"))
-                render.SetColorModulation(rgbVec.x, rgbVec.y, rgbVec.z)
-                render.SetBlend(0.7)
-                render.SuppressEngineLighting(true)
-                
-                render.SetModelLighting(0, rgbVec.x, rgbVec.y, rgbVec.z)
-                render.SetModelLighting(1, rgbVec.x * 1.2, rgbVec.y * 1.2, rgbVec.z * 1.2)
-
-                pLocalPlayer:SetRenderMode(1)
-                pLocalPlayer:DrawModel()
-            else
-                render.MaterialOverride(dezz.chamMats.vis[dezz.cfg.vars["Self mat"]])
-                render.SetColorModulation(scVec.x, scVec.y, scVec.z)
-
-                if dezz.cfg.vars["Self mat"] == 7 then
-                    render.SetBlend(blendAlpha)
-                else
-                    render.SetBlend(0.7)
+                if suppressSelfLighting then
+                    render.SuppressEngineLighting(false)
                 end
-                
-                pLocalPlayer:SetRenderMode(1)
-                pLocalPlayer:DrawModel()
             end
 
-            if dezz.cfg.vars["Self chams w"] then 
-                local w = pLocalPlayer:GetActiveWeapon()
-                if IsValid(w) then w:DrawModel() end
-            end
-          
-            if suppressSelfLighting then
-                render.SuppressEngineLighting(false)
-            end
-        end
+        cam.End3D()
 
-    cam.End3D()
-
-    render.SetColorModulation(1, 1, 1)
-    render.SetBlend(1)
-    render.MaterialOverride()
-    render.SuppressEngineLighting(false)
+        render.SetColorModulation(1, 1, 1)
+        render.SetBlend(1)
+        render.MaterialOverride()
+        render.SuppressEngineLighting(false)
     end
 end
 
@@ -11336,10 +11242,6 @@ end
 
 // Backtracking 
 
-dezz.btrecords = {}
-dezz.predicted = {}
-
-
 function dezz.canBacktrack(ply)
     if not dezz.cfg.vars["Backtrack"] then return false end 
     if not IsValid(ply) then return false end
@@ -11426,26 +11328,6 @@ function dezz.recordBacktrack(ply)
 
     local skeletondata = {}
 
-    /*
-    for i = 0, ply:GetBoneCount() - 1 do
-
-        local parent = ply:GetBoneParent(i)
-
-        if(!parent) then continue end
-
-        local bonepos = ply:GetBonePosition(i)
-
-        if(bonepos == ply:GetPos() ) then continue end
-
-        local parentpos = ply:GetBonePosition(parent)
-
-        if(!bonepos or !parentpos) then continue end
-
-        skeletondata[ 1 ] = bonepos:ToScreen()
-        skeletondata[ 2 ] = parentpos:ToScreen()
-    end
-    */
-
 	records[len + 1] = {
 		simulationtime =    ded.GetSimulationTime(ply:EntIndex()),
 		angles =            Angle(x,y,0),
@@ -11457,8 +11339,6 @@ function dezz.recordBacktrack(ply)
         movex =             ply:GetPoseParameter("move_x"),
         movey =             ply:GetPoseParameter("move_y"),
         bonedata =          bdata,
-        //hitboxdata =        hdata,
-        //skeleton =          skeletondata
     }
 end
 
@@ -11585,8 +11465,6 @@ function dezz.EntityTakeDamage(hurted, dmginfo)
             end
         end
     end
-
-
 end
 
 
@@ -12207,12 +12085,12 @@ local function RunSandboxAnims(ply, velocity, maxseqgroundspeed)
 	end
 end
 
-function GAMEMODE:UpdateAnimation(plr, velocity, maxSeqGroundSpeed)
+/*function GAMEMODE:UpdateAnimation(plr, velocity, maxSeqGroundSpeed)
     local hResult = self.BaseClass.UpdateAnimation(self, plr, velocity, maxSeqGroundSpeed)
 
     RunSandboxAnims(plr, velocity, maxSeqGroundSpeed)
     return hResult;
-end
+end*/
 
 
 
@@ -12220,11 +12098,6 @@ end
 /*
     Libs -> Color
 */
-
-
-
-//function dezz.
-
 
 function dezz.ColorLerp( first, second )
     local FT = FrameTime() * 350
@@ -12988,7 +12861,6 @@ end
 /*
     hooks -> OnImpact ( c++ module )
 */
-dezz.bulletImpacts = {}
 
 function dezz.OnImpact( data )
     local startpos = data.m_vStart 
@@ -13018,9 +12890,6 @@ function dezz.OnImpact( data )
         alpha = 255
     }
 end
-
-
-
 
 /*
     hooks -> PostDrawOpaqueRenderables
@@ -13213,8 +13082,6 @@ end
 
 // Player data tables
 
-dezz.playerCache = {}
-
 function dezz.playerTableUpdate( ply )
     if not dezz.playerCache[ ply ] then
         dezz.playerCache[ ply ] = {}
@@ -13289,8 +13156,6 @@ function dezz.entTableUpdate()
     end
 end
 
-
-
 // Resolver 
 do
     local localData = {}
@@ -13305,7 +13170,6 @@ do
         return localData
     end
 end
-
 
 do
     local missedTicks = 0
@@ -13395,82 +13259,6 @@ do
                     dezz.btrecords[ v ] = {}
                 end
 
-                /*
-                if dezz.cfg.vars["Extrapolation"] and v.simtime_updated and v != pLocalPlayer then
-                    local currentPos = v:GetNetworkOrigin()
-                    local currentTime = ded.GetSimulationTime(v:EntIndex())
-                    
-                    local predTime = math.min(ded.GetLatency(0) + ded.GetLatency(1), 0.2)
-                    
-                    if not v.ult_prev_pos then
-                        v.ult_prev_pos = currentPos
-                        v.ult_prev_time = currentTime
-                        return
-                    end
-
-                    local timeDelta = currentTime - (v.ult_prev_time or currentTime)
-                    if timeDelta <= 0 then return end
-                    
-                    local velocity = (currentPos - v.ult_prev_pos) / timeDelta
-                    local speed = velocity:Length()
-                    
-                    local maxSpeed = 1000
-                    if speed > maxSpeed then
-                        velocity = velocity:GetNormalized() * maxSpeed
-                    end
-
-                    ded.StartSimulation(v:EntIndex())
-                    
-                    local predictedPos = currentPos
-                    local ticks = dezz.TIME_TO_TICKS(predTime)
-
-                    ticks = math.min(ticks, 20)
-                    
-                    for tick = 1, ticks do
-                        ded.SimulateTick()
-                        local data = ded.GetSimulationData()
-
-                        local posChange = (data.m_vecAbsOrigin - predictedPos):Length()
-                        if posChange > 200 then
-                            break
-                        end
-                        
-                        predictedPos = data.m_vecAbsOrigin
-                        debugoverlay.Cross(predictedPos, 6, 0.1, dezz.Colors["Red"], true)
-                    end
-                    
-                    local finalData = ded.GetSimulationData()
-
-                    local totalChange = (finalData.m_vecAbsOrigin - currentPos):Length()
-                    if totalChange > 500 then
-                        predictedPos = currentPos + velocity * predTime
-                    else
-                        predictedPos = finalData.m_vecAbsOrigin
-                    end
-
-                    local blendFactor = math.min(predTime * 2, 1.0)
-                    local smoothedPos = currentPos + (predictedPos - currentPos) * blendFactor
-
-                    v:SetRenderOrigin(smoothedPos)
-
-                    debugoverlay.Box(smoothedPos, v:OBBMins(), v:OBBMaxs(), 0.1, color_white)
-
-                    v.ult_prev_pos = currentPos
-                    v.ult_prev_time = currentTime
-
-                    local boneData = dezz.GetBones(v)
-                    if boneData and boneData[1] then
-                        dezz.predicted[v] = {
-                            pos = boneData[1],
-                            tick = dezz.TIME_TO_TICKS(currentTime + predTime),
-                            confidence = math.max(0, 1 - (predTime * 2))
-                        }
-                    end
-                    
-                    ded.FinishSimulation()
-                end
-                */
-
                 if dezz.cfg.vars["Extrapolation"] and v.break_lc then
                     local predTime = ded.GetLatency(0) + ded.GetLatency(1)
                     ded.StartSimulation(v:EntIndex())
@@ -13501,22 +13289,6 @@ end
 function dezz.PostFrameStageNotify( stage ) 
     if stage == 3 then
         dezz.playerDataUpdate()
-
-        /*local playerlist = player.GetAll()
-
-        for i = 1, #playerlist do
-            local pEntity = playerlist[ i ]
-
-            local iEntIndex = pEntity:EntIndex()
-            local pTable = pEntity:GetTable()
-
-            -- Simulation time 
-            local flSimulationTime = ded.GetSimulationTime( iEntIndex )
-
-            pTable.iChokedCommands = Utility.TimeToTicks( flSimulationTime - pTable.flSimulationTime )
-            pTable.bIsSimulated = flSimulationTime ~= pTable.flSimulationTime
-            pTable.flSimulationTime = flSimulationTime    
-        end*/
     end
 end
 
@@ -13608,11 +13380,6 @@ do
         [2] = true,
         //[4] = true,
     }
-    
-    dezz.cfg.vars["Player outline"] = false
-    dezz.cfg.vars["Entity outline"] = false
-    dezz.cfg.colors["Player outline"] = "45 255 86 255"
-    dezz.cfg.colors["Entity outline"] = "255 86 45 255"
 
     local StoreTexture	= render.GetScreenEffectTexture(0)
     local DrawTexture	= render.GetScreenEffectTexture(1)
@@ -13904,8 +13671,6 @@ end
 /*
     Hooks
 */
-
-dezz.hooks = {}
 
 function dezz.AddHook(event, func)
     if func == nil and dezz[event] == nil then
