@@ -703,6 +703,10 @@ dezz.cfg.vars["Viewmodel chams"]            = false
 dezz.cfg.colors["Viewmodel chams"]          = "255 255 255 255"
 dezz.cfg.vars["Viewmodel chams type"]       = 1
 dezz.cfg.vars["Fullbright viewmodel"]       = false
+dezz.cfg.vars["Hands chams"]                = false
+dezz.cfg.colors["Hands chams"]              = "255 255 255 255"
+dezz.cfg.vars["Hands chams type"]           = 1
+dezz.cfg.vars["Fullbright hands"]           = false
 dezz.cfg.vars["Player outline"]             = false
 dezz.cfg.colors["Player outline"]           = "255 255 255 255"
 dezz.cfg.vars["Outline style"]              = 1
@@ -3880,6 +3884,14 @@ dezz.spfuncs[19] = function()
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Fullbright", "Fullbright viewmodel" )
 end
 
+dezz.spfuncs[2222] = function()
+    dezz.ui.SettingsPan:SetSize(250,256)
+
+    dezz.ui.ComboBox( dezz.ui.SettingsPan, "Material", "Hands chams type", dezz.chamsMaterials)
+    
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "Fullbright", "Fullbright hands" )
+end
+
 dezz.spfuncs[11152] = function()
     dezz.ui.SettingsPan:SetSize(250,256)
 
@@ -4058,13 +4070,14 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Screengrab image", "Screengrab image" )
         dezz.ui.ComboBox( p, "ESP Font", "ESP Font", { "Outlined", "Shadow" } )
         
-        local p = dezz.itemPanel("Colored models",2,150):GetItemPanel()
+        local p = dezz.itemPanel("Colored models",2,170):GetItemPanel()
 
         dezz.ui.CheckBox( p, "Player chams", "Visible chams", false, false, true, dezz.spfuncs[14], false, function(p) dezz.ui.ColorPicker( "inVisible chams", p ) end )
         dezz.ui.CheckBox( p, "Self chams", "Self chams", false, false, true, dezz.spfuncs[15] )
         dezz.ui.CheckBox( p, "Backtrack chams", "Backtrack chams", false, false, true, dezz.spfuncs[16] )
         dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[17], false )
         dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[19], false )
+        dezz.ui.CheckBox( p, "Hands chams", "Hands chams", false, false, true, dezz.spfuncs[2222], false )
 
         local p = dezz.itemPanel("Local Player",2,120):GetItemPanel()
 
@@ -12849,6 +12862,22 @@ do
         return true
     end
 
+    function dezz.PreDrawPlayerHands(hands, viewmodel, ply, weapon_entity)
+        if dezz.cfg.vars["Hands chams"] then
+            local col = string.ToColor( dezz.cfg.colors["Hands chams"] )
+            dezz.chamMats.vis[6]:SetVector( "$envmaptint", Vector( col.r / 255, col.g / 255, col.b / 255 ) )
+            local mat = dezz.chamMats.vis[dezz.cfg.vars["Hands chams type"]] 
+
+            render.SetBlend(col.a/255)
+            render.SetColorModulation(col.r/255,col.g/255,col.b/255)
+            render.MaterialOverride(mat)
+        end
+
+        if dezz.cfg.vars["Fullbright hands"] then
+            render.SuppressEngineLighting( true )
+        end
+    end
+
 end
 
 function dezz.PostDrawViewModel( vm, ply, w )
@@ -13729,6 +13758,7 @@ dezz.AddHook("CreateMove")
 
 -- render
 dezz.AddHook("PreDrawViewModel")
+dezz.AddHook("PreDrawPlayerHands")
 dezz.AddHook("CalcViewModelView")
 dezz.AddHook("PostDrawViewModel")
 dezz.AddHook("CalcView")
