@@ -78,6 +78,8 @@ cheaters.list_temp = {}
 cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/dsadsadadsadasdadsdas/refs/heads/main/asdadsdasdsadsadshjadskhadshdhasdkdas.json"
 --
 
+dezz.tabs = {}
+dezz.spfuncs = {}
 
 dezz.fovColor = Color( 255, 255, 255 )
 dezz.gradFov = false
@@ -115,6 +117,16 @@ dezz.hooks = {}
 dezz.hitmarkers = {}
 dezz.hitnums = {}
 dezz.headshotindicators = {}
+dezz.onScreenLogs = {}
+dezz.firedShots = 0
+dezz.HitLogsWhite = Color( 225, 225, 225 )
+dezz.MissReasons = {
+    [ 1 ] =     { str = "spread", var = "Miss spread" },
+    [ 2 ] =     { str = "occlusion", var = "Miss spread" },
+    [ 3 ] =     { str = "desync", var = "Miss lagcomp" },
+    [ 4 ] =     { str = "lagcomp", var = "Miss lagcomp" },
+    [ 5 ] =     { str = "resolver", var = "Miss fail" },
+}
 
 dezz.norf = {
     ["laserjetpack"] = true,
@@ -1038,23 +1050,6 @@ do
     ded.SetMinShift(dezz.cfg.vars["Shift ticks"])
     ded.EnableTickbaseShifting(dezz.cfg.vars["Tickbase shift"])*/
 end
-
-
-/*
-    Miss / Hit logs
-*/
-
-dezz.onScreenLogs = {}
-dezz.firedShots = 0
-dezz.HitLogsWhite = Color( 225, 225, 225 )
-dezz.MissReasons = {
-    [ 1 ] =     { str = "spread", var = "Miss spread" },
-    [ 2 ] =     { str = "occlusion", var = "Miss spread" },
-    [ 3 ] =     { str = "desync", var = "Miss lagcomp" },
-    [ 4 ] =     { str = "lagcomp", var = "Miss lagcomp" },
-    [ 5 ] =     { str = "resolver", var = "Miss fail" },
-}
-
 
 // Config save / load
 
@@ -3601,15 +3596,11 @@ function dezz.DoDrop(self, panels, bDoDrop, Command, x, y)
         end
     end
 end
-    
-dezz.spfuncs = {}
 
 // PANEL CREATION
 
 dezz.frame = vgui.Create("UFrame")
 dezz.scrollpanel = vgui.Create("UScroll",dezz.frame)
-
-dezz.tabs = {}
 
 ---------------------------
 
@@ -4731,6 +4722,50 @@ function dezz.tabs.Por()
     end)
 end
 
+function dezz.tabs.Upd()
+    dezz.scrollpanel:Clear()
+    
+    local updates = {
+        {version = "v4.3.0 «last»", text = "Добавлено:\nИзменение качества модели(player(self) chams > level. det).\nHeadshot indicator.\nIgnore Z(видеть модель через стену).\nWho look(пишет если на вас кто-то смотрит).\nThird peson name.\nHands chams.\nВкладка Update\n\nИсправления:\nSpectating.\nОптимизация.\nИзменена поисковая система в browser.\n\nНе работающие функции:\nWait for simulation.\nCrossbow prediction.\nPulseriffle.\npSilent.\nFaceStab."},
+    }
+    
+    for i = #updates, 1, -1 do
+        local update = updates[i]
+
+        local panel = vgui.Create("DPanel", dezz.scrollpanel)
+        panel:Dock(TOP)
+        panel:DockMargin(5, 5, 5, 5)
+
+        panel.Paint = function(self, w, h)
+            draw.RoundedBox(4, 0, 0, w, h, Color(45, 30, 30, 180))
+            draw.RoundedBox(4, 1, 1, w - 2, h - 2, Color(35, 20, 20, 200))
+        end
+
+        local versionLabel = vgui.Create("DLabel", panel)
+        versionLabel:SetText(update.version)
+        versionLabel:SetFont("2121DermaSmall2121")
+        versionLabel:SetTextColor(Color(200, 200, 100))
+        versionLabel:SizeToContents()
+        versionLabel:Dock(TOP)
+        versionLabel:DockMargin(5, 5, 0, 0)
+
+        local textLabel = vgui.Create("DLabel", panel)
+        textLabel:SetFont("2121DermaSmall2121")
+        textLabel:SetTextColor(Color(200, 200, 200))
+        textLabel:SetWrap(true)
+        textLabel:SetText(update.text)
+        textLabel:SetPos(10, 28)
+
+        function panel:PerformLayout()
+            if not IsValid(textLabel) then return end
+
+            textLabel:SetWide(self:GetWide() - 20)
+            textLabel:SizeToContentsY()
+            self:SetTall(28 + textLabel:GetTall() + 10)
+        end
+    end
+end
+
 function dezz.tabs.LuaExecutor()
 
     local function scanFiles()
@@ -4924,6 +4959,7 @@ dezz.ttable["Players"]  = dezz.tabs.Players
 dezz.ttable["Entities"]  = dezz.tabs.Entities
 dezz.ttable["Lua executor"]  = dezz.tabs.LuaExecutor
 dezz.ttable["Browser"]  = dezz.tabs.Por
+dezz.ttable["Update"]  = dezz.tabs.Upd
 
 function dezz.initTab(tab)
     if dezz.scrollpanel != nil then dezz.scrollpanel:Remove() end
@@ -4983,6 +5019,7 @@ dezz.tabButton( "Players",       dezz.frame:GetTopPanel() )
 dezz.tabButton( "Entities",        dezz.frame:GetTopPanel() ) 
 dezz.tabButton( "Lua executor",       dezz.frame:GetTopPanel() ) 
 dezz.tabButton( "Browser",       dezz.frame:GetTopPanel() ) 
+dezz.tabButton( "Update",       dezz.frame:GetTopPanel() ) 
 dezz.ttable["Aimbot"]()
 
 // Input 
