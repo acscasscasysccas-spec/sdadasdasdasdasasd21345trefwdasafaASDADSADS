@@ -253,6 +253,7 @@ dezz.bulletImpacts = {}
 
 dezz.ttable = {}
 
+// mats
 dezz.Materials = {}
 
 dezz.Materials["Gradient"] = Material("gui/gradient_up", "noclamp smooth")
@@ -270,6 +271,7 @@ dezz.chamMats = {
         Material("!metallic"), -- metallic
         Material("effects/nightvision"), -- _rt_fullframefb
         Material("effects/flashbang"), -- _rt_fullframefb
+        null,
     },
     invis = {
         Material("!flat_z"), -- flat
@@ -279,8 +281,108 @@ dezz.chamMats = {
         Material("!metallic_z"), -- metallic
         Material("effects/nightvision"), -- _rt_fullframefb
         Material("effects/flashbang"), -- _rt_fullframefb
+        null,
     }
 }
+
+CreateMaterial("flat", "VertexLitGeneric") 
+CreateMaterial("flat_z", "VertexLitGeneric", {
+    ["$ignorez"] = 1
+} )
+
+CreateMaterial( "selfillum", "VertexLitGeneric", {
+    ["$bumpmap"] = "vgui/white_additive",
+    ["$basetexture"] = "vgui/white_additive",
+    ["$model"] = "1",
+    ["$nocull"] = "0",
+    ["$selfillum"] = 1,
+    ["$selfIllumFresnel"] = 1,
+    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
+    ["$selfillumtint"] = "[0 0 0]",
+    ["$nolight"] = 1,
+    ["$nodecal"] = 1,
+    ["$nomip"] = 1,
+} )
+
+CreateMaterial( "selfillum_z", "VertexLitGeneric", {
+    ["$bumpmap"] = "vgui/white_additive",
+    ["$basetexture"] = "vgui/white_additive",
+    ["$model"] = "1",
+    ["$nocull"] = "0",
+    ["$selfillum"] = 1,
+    ["$selfIllumFresnel"] = 1,
+    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
+    ["$selfillumtint"] = "[0 0 0]",
+    ["$ignorez"] = 1,
+    ["$nolight"] = 1,
+    ["$nodecal"] = 1,
+    ["$nomip"] = 1,
+} )
+
+CreateMaterial( "selfillum_a", "VertexLitGeneric", {
+    ["$bumpmap"] = "vgui/white_additive",
+    ["$basetexture"] = "vgui/white_additive",
+    ["$model"] = "1",
+    ["$nocull"] = "1",
+    ["$nodecal"] = "1",
+    ["$additive"] = "1",
+    ["$selfillum"] = 1,
+    ["$selfIllumFresnel"] = 1,
+    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
+    ["$selfillumtint"] = "[0 0 0]",
+    ["$nolight"] = 1, 
+    ["$nomip"] = 1, 
+} )
+
+CreateMaterial( "selfillum_a_z", "VertexLitGeneric", {
+    ["$basetexture"] = "vgui/white_additive",
+    ["$model"] = "1",
+    ["$nocull"] = "1",
+    ["$nodecal"] = "1",
+    ["$additive"] = "1",
+    ["$selfillum"] = 1,
+    ["$selfIllumFresnel"] = 1,
+    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
+    ["$selfillumtint"] = "[0 0 0]",
+    ["$ignorez"] = 1,
+    ["$nolight"] = 1,
+    ["$nomip"] = 1,
+} )
+
+CreateMaterial("wireframe", "VertexLitGeneric", {
+	["$wireframe"] = 1,
+})
+CreateMaterial("wireframe_z", "VertexLitGeneric", {
+	["$wireframe"] = 1,
+    ["$ignorez"] = 1,
+})
+
+CreateMaterial("metallic", "VertexLitGeneric", {
+	["$envmap"] = "env_cubemap",
+    ["$envmaptint"] = "[ 0 1 1 ]",
+    ["$envmapfresnel"] = "1",
+    ["$alpha"] = "0.5",
+})
+
+CreateMaterial("metallic_z", "VertexLitGeneric", {
+    ["$envmap"] = "env_cubemap",
+    ["$envmaptint"] = "[ 0 1 1 ]",
+    ["$envmapfresnel"] = "1",
+    ["$alpha"] = "0.5",
+    ["$ignorez"] = 1,
+})
+
+local weaponparams = {
+    ["$basetexture"] = "sprites/glow01",
+    ["$additive"] = 0,
+    Proxies = {
+        TextureScroll = {
+            texturescrollvar = "$basetexturetransform",
+        }
+    }
+}
+
+//
 
 // cm stuff
 dezz.target             = false  
@@ -689,6 +791,7 @@ dezz.cfg.vars["inVisible chams w"]          = false
 dezz.cfg.vars["inVisible mat"]              = 1
 dezz.cfg.colors["inVisible chams"]          = "255 255 255 255"
 dezz.cfg.vars["Supress lighting"]           = false
+dezz.cfg.vars["ignoreZ"]                   = false
 dezz.cfg.vars["Self chams"]                 = false
 dezz.cfg.vars["Self chams w"]               = false
 dezz.cfg.vars["Self mat"]                   = 1
@@ -710,6 +813,10 @@ dezz.cfg.vars["Fullbright hands"]           = false
 dezz.cfg.vars["Player outline"]             = false
 dezz.cfg.colors["Player outline"]           = "255 255 255 255"
 dezz.cfg.vars["Outline style"]              = 1
+dezz.cfg.vars[" Override model LOD"]        = -1
+dezz.cfg.vars[" Override model render"]     = false
+dezz.cfg.vars[" Override model pLOD"]       = -1
+dezz.cfg.vars[" Override pmodel render"]    = false
 
 // World visuals
 dezz.cfg.vars["Custom sky"]                 = GetConVar("sv_skyname"):GetString()
@@ -3325,9 +3432,6 @@ function dezz.ui.MultiCombo( pan, str, choices )
                 if self.selected then
                     local checkCol = dezz.Colors[165] or Color(165, 165, 165)
                     surface.SetTextColor(checkCol.r, checkCol.g, checkCol.b, self.alpha or 0)
-                    surface.SetTextPos(8, h / 2 - 7)
-                    surface.SetFont("2121DermaSmall2121")
-                    surface.DrawText("✓")
                 end
                 
                 local textCol = dezz.Colors[165] or Color(165, 165, 165)
@@ -3811,7 +3915,7 @@ dezz.spfuncs[254] = function()
 end
 
 dezz.spfuncs[14] = function()
-    dezz.ui.SettingsPan:SetSize(250,256)
+    dezz.ui.SettingsPan:SetSize(250,270)
     
     dezz.ui.ComboBox( dezz.ui.SettingsPan, "Visible material", "Visible mat", dezz.chamsMaterials)
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Weapon chams", "Visible chams w" )
@@ -3821,6 +3925,9 @@ dezz.spfuncs[14] = function()
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Weapon chams", "inVisible chams w" )
 
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Fullbright", "Supress lighting" )
+
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "level det.", " Override model render" )
+    dezz.ui.Slider( dezz.ui.SettingsPan, "level", " Override model LOD", -1, 8, 0 )
 end
 
 dezz.spfuncs[229] = function()
@@ -3850,6 +3957,8 @@ dezz.spfuncs[15] = function()
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Weapon chams", "Self chams w" )
 
     dezz.ui.CheckBox( dezz.ui.SettingsPan, "Fullbright", "Supress self lighting" )
+    dezz.ui.CheckBox( dezz.ui.SettingsPan, "level det.", " Override pmodel render" )
+    dezz.ui.Slider( dezz.ui.SettingsPan, "level", " Override model pLOD", -1, 8, 0 )
 end
 
 dezz.spfuncs[16] = function()
@@ -4070,7 +4179,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Screengrab image", "Screengrab image" )
         dezz.ui.ComboBox( p, "ESP Font", "ESP Font", { "Outlined", "Shadow" } )
         
-        local p = dezz.itemPanel("Colored models",2,170):GetItemPanel()
+        local p = dezz.itemPanel("Colored models",2,185):GetItemPanel()
 
         dezz.ui.CheckBox( p, "Player chams", "Visible chams", false, false, true, dezz.spfuncs[14], false, function(p) dezz.ui.ColorPicker( "inVisible chams", p ) end )
         dezz.ui.CheckBox( p, "Self chams", "Self chams", false, false, true, dezz.spfuncs[15] )
@@ -4078,6 +4187,7 @@ function dezz.tabs.Visuals()
         dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[17], false )
         dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[19], false )
         dezz.ui.CheckBox( p, "Hands chams", "Hands chams", false, false, true, dezz.spfuncs[2222], false )
+        dezz.ui.CheckBox( p, "Ignore Z", "ignoreZ", "displaying model by the walls" )
 
         local p = dezz.itemPanel("Local Player",2,120):GetItemPanel()
 
@@ -10678,103 +10788,6 @@ do
 end
 
 // Chams
-
-CreateMaterial("flat", "VertexLitGeneric") 
-CreateMaterial("flat_z", "VertexLitGeneric", {
-    ["$ignorez"] = 1
-} )
-
-CreateMaterial( "selfillum", "VertexLitGeneric", {
-    ["$bumpmap"] = "vgui/white_additive",
-    ["$basetexture"] = "vgui/white_additive",
-    ["$model"] = "1",
-    ["$nocull"] = "0",
-    ["$selfillum"] = 1,
-    ["$selfIllumFresnel"] = 1,
-    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
-    ["$selfillumtint"] = "[0 0 0]",
-    ["$nolight"] = 1,
-    ["$nodecal"] = 1,
-    ["$nomip"] = 1,
-} )
-
-CreateMaterial( "selfillum_z", "VertexLitGeneric", {
-    ["$bumpmap"] = "vgui/white_additive",
-    ["$basetexture"] = "vgui/white_additive",
-    ["$model"] = "1",
-    ["$nocull"] = "0",
-    ["$selfillum"] = 1,
-    ["$selfIllumFresnel"] = 1,
-    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
-    ["$selfillumtint"] = "[0 0 0]",
-    ["$ignorez"] = 1,
-    ["$nolight"] = 1,
-    ["$nodecal"] = 1,
-    ["$nomip"] = 1,
-} )
-
-CreateMaterial( "selfillum_a", "VertexLitGeneric", {
-    ["$bumpmap"] = "vgui/white_additive",
-    ["$basetexture"] = "vgui/white_additive",
-    ["$model"] = "1",
-    ["$nocull"] = "1",
-    ["$nodecal"] = "1",
-    ["$additive"] = "1",
-    ["$selfillum"] = 1,
-    ["$selfIllumFresnel"] = 1,
-    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
-    ["$selfillumtint"] = "[0 0 0]",
-    ["$nolight"] = 1, 
-    ["$nomip"] = 1, 
-} )
-
-CreateMaterial( "selfillum_a_z", "VertexLitGeneric", {
-    ["$basetexture"] = "vgui/white_additive",
-    ["$model"] = "1",
-    ["$nocull"] = "1",
-    ["$nodecal"] = "1",
-    ["$additive"] = "1",
-    ["$selfillum"] = 1,
-    ["$selfIllumFresnel"] = 1,
-    ["$selfIllumFresnelMinMaxExp"] = "[0.0 0.3 0.6]",
-    ["$selfillumtint"] = "[0 0 0]",
-    ["$ignorez"] = 1,
-    ["$nolight"] = 1,
-    ["$nomip"] = 1,
-} )
-
-CreateMaterial("wireframe", "VertexLitGeneric", {
-	["$wireframe"] = 1,
-})
-CreateMaterial("wireframe_z", "VertexLitGeneric", {
-	["$wireframe"] = 1,
-    ["$ignorez"] = 1,
-})
-
-CreateMaterial("metallic", "VertexLitGeneric", {
-	["$envmap"] = "env_cubemap",
-    ["$envmaptint"] = "[ 0 1 1 ]",
-    ["$envmapfresnel"] = "1",
-    ["$alpha"] = "0.5",
-})
-
-CreateMaterial("metallic_z", "VertexLitGeneric", {
-    ["$envmap"] = "env_cubemap",
-    ["$envmaptint"] = "[ 0 1 1 ]",
-    ["$envmapfresnel"] = "1",
-    ["$alpha"] = "0.5",
-    ["$ignorez"] = 1,
-})
-
-local weaponparams = {
-    ["$basetexture"] = "sprites/glow01",
-    ["$additive"] = 0,
-    Proxies = {
-        TextureScroll = {
-            texturescrollvar = "$basetexturetransform",
-        }
-    }
-}
  
 do
     local f = (1 / 255)
@@ -10848,6 +10861,24 @@ do
                 end
             end
             lastPlayerUpdate = currentTime
+        end
+
+        for k, entity in pairs(player.GetAll()) do
+            if IsValid(entity) and entity ~= pLocalPlayer then
+                if dezz.cfg.vars[" Override model render"] then
+                    entity:SetLOD(dezz.cfg.vars[" Override model LOD"])
+                else
+                    entity:SetLOD(-1)
+                end
+            end
+        end
+
+        if IsValid(pLocalPlayer) then
+            if dezz.cfg.vars[" Override pmodel render"] then
+                pLocalPlayer:SetLOD(dezz.cfg.vars[" Override model pLOD"])
+            else 
+                pLocalPlayer:SetLOD(-1)
+            end
         end
 
         local vm, invm = dezz.cfg.vars["Visible mat"], dezz.cfg.vars["inVisible mat"]
@@ -12863,6 +12894,7 @@ do
     end
 
     function dezz.PreDrawPlayerHands(hands, viewmodel, ply, weapon_entity)
+
         if dezz.cfg.vars["Hands chams"] then
             local col = string.ToColor( dezz.cfg.colors["Hands chams"] )
             dezz.chamMats.vis[6]:SetVector( "$envmaptint", Vector( col.r / 255, col.g / 255, col.b / 255 ) )
@@ -12885,6 +12917,18 @@ function dezz.PostDrawViewModel( vm, ply, w )
     render.MaterialOverride()
     render.SetBlend(1)
     render.SuppressEngineLighting(false)
+end
+
+function dezz.PreDrawOpaqueRenderables()
+    if dezz.cfg.vars["ignoreZ"] then
+        for _, ply in pairs(player.GetAll()) do
+            if IsValid(ply) then
+                render.DepthRange(0, 0)
+                ply:DrawModel()
+                render.DepthRange(0, 1)
+            end
+        end
+    end
 end
 
 /*
@@ -13728,6 +13772,10 @@ function dezz.Unload()
         dezz.frame:Remove()
     end
 
+    for k,entity in pairs(player.GetAll()) do
+        entity:SetLOD(-1)
+    end
+
     if ded then
         ded.SetBSendPacket(true)
         ded.SetInterpolation(true)
@@ -13766,6 +13814,7 @@ dezz.AddHook("SetupWorldFog")
 dezz.AddHook("SetupSkyboxFog")
 dezz.AddHook("RenderScene")
 dezz.AddHook("PostDrawOpaqueRenderables")
+dezz.AddHook("PreDrawOpaqueRenderables")
 dezz.AddHook("PostDrawTranslucentRenderables")
 dezz.AddHook("PostDraw2DSkyBox")
 dezz.AddHook("PostDrawEffects")
