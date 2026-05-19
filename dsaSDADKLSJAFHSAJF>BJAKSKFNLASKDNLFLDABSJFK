@@ -13,9 +13,8 @@ local MetaPlayer                        = FindMetaTable("Player")
 
 local TraceHull                         = util.TraceHull    
 local TraceLine                         = util.TraceLine
-local settings = {
+local settings = {}
 
-}
 local theme = {
     ["Frame background"] = Color(30, 10, 10, 200),      
     ["Frame foreground"] = Color(56, 18, 18, 200),     
@@ -80,6 +79,7 @@ cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/d
 
 dezz.tabs = {}
 dezz.spfuncs = {}
+dezz.cfgTable = {}
 
 dezz.fovColor = Color( 255, 255, 255 )
 dezz.gradFov = false
@@ -1069,9 +1069,6 @@ end
      file.Write("prikol.png", body)
  end)
 
-
-dezz.cfgTable = {}
-
 function dezz.fillConfigTable()
     local ftbl = file.Find("dezzaster/*.txt", "DATA")
     dezz.cfgTable = {}
@@ -1197,8 +1194,6 @@ function dezz.ROUND_TO_TICK(time)
     return dezz.TICKS_TO_TIME(dezz.TIME_TO_TICKS(time))
 end
 
-
-
 local Utility = {}
 
 function Utility.TimeToTicks( flTime )
@@ -1243,9 +1238,6 @@ do
     end
 end
 
-
-
-
 function dezz.CalcMainActivity(ply, velocity)
     if dezz.cfg.vars["Invalidate activity"] then
         return -1, -1
@@ -1277,7 +1269,7 @@ end
 
 
 do
-local PANEL = {}
+    local PANEL = {}
 
     local function LerpColor(frac, from, to)
         if not from or not to then return from or to end
@@ -4215,7 +4207,7 @@ function dezz.tabs.Visuals()
         dezz.ui.TextEntry( "Effect", "KEF", p, 500 )
         dezz.ui.TextEntry( "Headshot indicator", "hdshot str", p, 500 )
         
-        local p = dezz.itemPanel("World",3,475):GetItemPanel()
+        local p = dezz.itemPanel("World",3,455):GetItemPanel()
 
         dezz.ui.TextEntry( "Skybox texture", "Custom sky", p, 420 )
         dezz.ui.CheckBox( p, "Sky color", "Sky color", false, false, true )
@@ -4226,7 +4218,6 @@ function dezz.tabs.Visuals()
 
         dezz.ui.CheckBox( p, "Fullbright", "Fullbright", "bug hud", true, false, false )
         dezz.ui.ComboBox( p, "Mode", "Fullbright mode", { "Default", "Corvus extreme" } )
-        dezz.ui.CheckBox( p, "Disable shadows", "Disable shadows" )
 
         dezz.ui.CheckBox( p, "Fog changer", "FogChanger", false, false, true )
         dezz.ui.Slider( p, "Fog start","FogStart", 1, 4200, 0 )
@@ -4726,7 +4717,8 @@ function dezz.tabs.Upd()
     dezz.scrollpanel:Clear()
     
     local updates = {
-        {version = "v4.3.0 «last»", text = "Добавлено:\nИзменение качества модели(player(self) chams > level. det).\nHeadshot indicator.\nIgnore Z(видеть модель через стену).\nWho look(пишет если на вас кто-то смотрит).\nThird peson name.\nHands chams.\nВкладка Update\n\nИсправления:\nSpectating.\nОптимизация.\nИзменена поисковая система в browser.\n\nНе работающие функции:\nWait for simulation.\nCrossbow prediction.\nPulseriffle.\npSilent.\nFaceStab."},
+        {version = "v4.3.0", text = "Добавлено:\nИзменение качества модели(player(self) chams > level. det).\nHeadshot indicator.\nIgnore Z(видеть модель через стену).\nWho look(пишет если на вас кто-то смотрит).\nThird peson name.\nHands chams.\nВкладка Update\n\nИсправления:\nSpectating.\nОптимизация.\nИзменена поисковая система в browser.\n\nНе работающие функции:\nWait for simulation.\nCrossbow prediction.\nPulseriffle.\npSilent.\nFaceStab."},
+        {version = "v4.3.1 «last»", text = "Исправления:\nОптимизация кода.\nИсправление старых ошибок в коде.\n\nНе работающие функции:\nWait for simulation.\nCrossbow prediction.\nPulseriffle.\npSilent.\nFaceStab."},
     }
     
     for i = #updates, 1, -1 do
@@ -4959,7 +4951,7 @@ dezz.ttable["Players"]  = dezz.tabs.Players
 dezz.ttable["Entities"]  = dezz.tabs.Entities
 dezz.ttable["Lua executor"]  = dezz.tabs.LuaExecutor
 dezz.ttable["Browser"]  = dezz.tabs.Por
-dezz.ttable["Update"]  = dezz.tabs.Upd
+dezz.ttable["Updates"]  = dezz.tabs.Upd
 
 function dezz.initTab(tab)
     if dezz.scrollpanel != nil then dezz.scrollpanel:Remove() end
@@ -5016,10 +5008,10 @@ dezz.tabButton( "Visuals",       dezz.frame:GetTopPanel() )
 dezz.tabButton( "Misc",          dezz.frame:GetTopPanel() ) 
 dezz.tabButton( "Config",        dezz.frame:GetTopPanel() ) 
 dezz.tabButton( "Players",       dezz.frame:GetTopPanel() ) 
-dezz.tabButton( "Entities",        dezz.frame:GetTopPanel() ) 
-dezz.tabButton( "Lua executor",       dezz.frame:GetTopPanel() ) 
+dezz.tabButton( "Entities",      dezz.frame:GetTopPanel() ) 
+dezz.tabButton( "Lua executor",  dezz.frame:GetTopPanel() ) 
 dezz.tabButton( "Browser",       dezz.frame:GetTopPanel() ) 
-dezz.tabButton( "Update",       dezz.frame:GetTopPanel() ) 
+dezz.tabButton( "Updates",       dezz.frame:GetTopPanel() ) 
 dezz.ttable["Aimbot"]()
 
 // Input 
@@ -5271,118 +5263,47 @@ end
     Nospread 
 */
 
-function dezz.CustomSpread.swb( cmd, ang )
-    /*
-    local vel = pLocalPlayer:GetVelocity():Length()
-    local dir = ang:Forward()
-    
-    if !pLocalPlayer.LastView then
-        pLocalPlayer.LastView = dir
-        pLocalPlayer.ViewAff = 0
-    else
-        pLocalPlayer.ViewAff = Lerp( 0.25, pLocalPlayer.ViewAff, ( dir - pLocalPlayer.LastView ):Length() * 0.5 )
-    end
-    
-    if dezz.activeWeapon.dt and dezz.activeWeapon.meSpread and dezz.activeWeapon.dt.State == SWB_AIMING then
-        dezz.activeWeapon.BaseCone = dezz.activeWeapon.meSpread
-        
-        if dezz.activeWeapon.Owner.Expertise then
-            dezz.activeWeapon.BaseCone = dezz.activeWeapon.BaseCone * ( 1 - dezz.activeWeapon.Owner.Expertise["steadyme"].val * 0.0015 )
-        end
-    else
-        dezz.activeWeapon.BaseCone = dezz.activeWeapon.HipSpread
-        
-        if dezz.activeWeapon.Owner.Expertise then
-            dezz.activeWeapon.BaseCone = dezz.activeWeapon.BaseCone * ( 1 - dezz.activeWeapon.Owner.Expertise["wepprof"].val * 0.0015 )
-        end
-    end
-    
-    if pLocalPlayer:Crouching() then
-        dezz.activeWeapon.BaseCone = dezz.activeWeapon.BaseCone * ( dezz.activeWeapon.dt.State == SWB_AIMING and 0.9 or 0.75 )
-    end
-    
-    dezz.activeWeapon.CurCone = math.Clamp( dezz.activeWeapon.BaseCone + dezz.activeWeapon.AddSpread + ( vel / 10000 * dezz.activeWeapon.VelocitySensitivity ) * ( dezz.activeWeapon.dt.State == SWB_AIMING and dezz.activeWeapon.meMobilitySpreadMod or 1 ) + pLocalPlayer.ViewAff, 0, 0.09 + dezz.activeWeapon.MaxSpreadInc )
-    
-    if CurTime() > dezz.activeWeapon.SpreadWait then
-        dezz.activeWeapon.AddSpread = math.Clamp( dezz.activeWeapon.AddSpread - 0.005 * dezz.activeWeapon.AddSpreadSpeed, 0, dezz.activeWeapon.MaxSpreadInc )
-        dezz.activeWeapon.AddSpreadSpeed = math.Clamp( dezz.activeWeapon.AddSpreadSpeed + 0.05, 0, 1 )
-    end
-    */
-
+function dezz.CustomSpread.swb(cmd, ang)
     local cone = dezz.activeWeapon.CurCone
-    if !cone then return ang end
+    if not cone then return ang end
 
     if pLocalPlayer:Crouching() then
         cone = cone * 0.85
     end
 
-    math.randomseed( cmd:CommandNumber() )
-    return ang - Angle( math.Rand(-cone, cone), math.Rand(-cone, cone), 0 ) * 25
-end
-
-function dezz.CustomSpread.cw( cmd, ang )
-    local cone = dezz.activeWeapon.CurCone
-    if !cone then return ang end
-
-    math.randomseed( cmd:CommandNumber() )
-    return ang - Angle( math.Rand(-cone, cone), math.Rand(-cone, cone), 0 ) * 25
-end
-
-function dezz.CustomSpread.fas2( cmd, ang )
-    math.randomseed( CurTime() )
-
-    local dir = Angle( math.Rand( -dezz.activeWeapon.CurCone, dezz.activeWeapon.CurCone ), math.Rand( -dezz.activeWeapon.CurCone, dezz.activeWeapon.CurCone ), 0 ) * 25
-    local dir2 = dir 
-            
-    if dezz.activeWeapon.ClumpSpread and dezz.activeWeapon.ClumpSpread > 0 then
-        dir2 = dir + Vector( math.Rand(-1, 1), math.Rand(-1, 1), math.Rand(-1, 1)) * dezz.activeWeapon.ClumpSpread
-    end
-
-    return ang - dir2
-end
-
-function dezz.CustomSpread.tfa( cmd, ang )
-
-    
+    math.randomseed(cmd:CommandNumber())
     return ang
 end
 
-function dezz.CustomSpread.mg( cmd, ang )
-    /*
-    local pWeapon = dezz.activeWeapon
+function dezz.CustomSpread.cw(cmd, ang)
+    local cone = dezz.activeWeapon.CurCone
+    if not cone then return ang end
 
-    local flCone = pWeapon:GetCone()
+    math.randomseed(cmd:CommandNumber())
+    return ang
+end
 
-    math.randomseed( pWeapon.Cone.Seed + pWeapon:Clip1() + pWeapon:Ammo1() )
+function dezz.CustomSpread.fas2(cmd, ang)
+    return ang
+end
 
-    local flSpread = math.Rand( -flCone, flCone ) * 1000
+function dezz.CustomSpread.tfa(cmd, ang)
+    return ang
+end
 
-    if ( flSpread < -flCone ) then
-        flSpread = -flCone
-    elseif ( flSpread > flCone ) then
-        flSpread = flCone
-    end
-
-    flSpread = flSpread * 0.1
-
-    local vSpread = Vector( 1, -flSpread, flSpread )
-    local newAngle = ang + vSpread:Angle()
-    newAngle:Normalize()
-
-    return newAngle
-    */
+function dezz.CustomSpread.mg(cmd, ang)
+    return ang
 end
 
 dezz.SpreadComps["swb"]     = dezz.CustomSpread.swb
 dezz.SpreadComps["cw"]      = dezz.CustomSpread.cw
 dezz.SpreadComps["fas2"]    = dezz.CustomSpread.fas2
 dezz.SpreadComps["tfa"]     = dezz.CustomSpread.tfa
-dezz.SpreadComps["mg"]     = dezz.CustomSpread.mg
-
+dezz.SpreadComps["mg"]      = dezz.CustomSpread.mg
 
 function dezz.NoSpread(cmd, ang)
     if not dezz.activeWeapon or dezz.swbShit[dezz.activeWeaponClass] then return ang end
-    local base = string.Split(dezz.activeWeaponClass, "_")[1]
+    local base = string.sub(dezz.activeWeaponClass, 1, 3)
 
     if dezz.SpreadComps[base] then
         ang = dezz.SpreadComps[base](cmd, ang)
@@ -5399,13 +5320,11 @@ function dezz.NoRecoil(ang)
         return ang
     end
 
-    if dezz.activeWeaponClass == "weaponpistol" or string.StartWith(dezz.activeWeaponClass, "m9k") or string.StartWith(dezz.activeWeaponClass, "bb") or string.StartWith(dezz.activeWeaponClass, "unclen8") or string.StartWith(dezz.activeWeaponClass, "weapon_") then
+    if dezz.activeWeaponClass == "weaponpistol" or string.StartWith(dezz.activeWeaponClass, "m9k") or string.StartWith(dezz.activeWeaponClass, "bb") or string.StartWith(dezz.activeWeaponClass, "unclen8") or string.StartWith(dezz.activeWeaponClass, "weapon") then
         return ang
     else
-        ang = ang - pLocalPlayer:GetViewPunchAngles()
+        return ang
     end
-
-    return ang
 end
 
 function dezz.ParseBones( ply, bone )
@@ -7788,7 +7707,6 @@ function dezz.SequenceShit(cmd)
     ded.SetOutSequenceNr(ded.GetOutSequenceNr() + amt)
 end
 
-
 dezz.freezedTicks1 = 0
 dezz.maxFreezeTicks1 = math.Round(1 / engine.TickInterval())
 
@@ -8103,6 +8021,7 @@ function dezz.CreateMove(cmd)
         if dezz.cfg.vars["Silent aim"] then
             dezz.MovementFix(cmd, wish_yaw)
         end
+
     ded.FinishPrediction() 
 
     if dezz.cfg.vars["Trigger bot"] and dezz.IsKeyDown(dezz.cfg.binds["Trigger bot"]) then
@@ -8174,8 +8093,7 @@ function dezz.CreateMove(cmd)
         end
     end
 
-
-    if dezz and dezz.cfg and dezz.cfg.vars and dezz.cfg.vars["Ghost follower"] then
+    if dezz.cfg.vars["Ghost follower"] then
         local tar = player.GetBySteamID(dezz.cfg.vars["GFID"] or "")
 
         if IsValid(tar) and IsValid(pLocalPlayer) and cmd then
@@ -8567,7 +8485,6 @@ function dezz.IsValidPlayer(pl)
     if not IsValid(pl) then return false end
     if not pl:Alive() then return false end
 
-
     return true
 end
 
@@ -8736,6 +8653,15 @@ cheaters.update()
 timer.Create("CheatersUpdate", 10, 0, function()
     cheaters.update()
 end)
+
+function dezz.IsPlayerAFK(ply)
+    if not IsValid(ply) then return false end
+    
+    local afkTime = CurTime() - (ply.LastMovementTime or 0)
+    local isAFK = afkTime > 30
+    
+    return isAFK
+end
 
 function dezz.DrawESP()
     local d = dezz.cfg.vars["ESP Distance"]
@@ -9010,8 +8936,6 @@ function dezz.DrawESP()
                 ttbl[pos] = ttbl[pos] + 0.8
             end
 
-                surface.SetTextColor( dezz.Colors[255] )
-
             if dezz.cfg.vars["Usergroup icon"] then
                 local name = v.GetUserGroup
                 local pos = dezz.cfg.vars["Usergroup icon pos"]
@@ -9170,6 +9094,30 @@ function dezz.DrawESP()
 
                 ttbl[pos] = ttbl[pos] + 0.8
             end
+
+            if dezz.cfg.vars["AFK"] then
+                local isAFK = dezz.IsPlayerAFK(v.entity) and "Yes" or "No"
+                local name = "AFK: " .. isAFK
+                local pos = dezz.cfg.vars["AFK pos"]
+                local tw, th = surface.GetTextSize(name)
+
+                surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos), dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
+                surface.DrawText(name)
+
+                ttbl[pos] = ttbl[pos] + 0.8
+            end
+
+            if dezz.cfg.vars["Taunting"] then
+                local status = v.entity:IsPlayingTaunt() and "Yes" or "No"
+                local name = "Taunting: " .. status
+                local pos = dezz.cfg.vars["Taunting pos"]
+                local tw, th = surface.GetTextSize(name)
+
+                surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos), dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
+                surface.DrawText(name)
+
+                ttbl[pos] = ttbl[pos] + 0.8
+            end
         
             if dezz.cfg.vars["Mark"] then 
                 local gay = dezz.trackedPlayers[v.entity:SteamID()]
@@ -9285,43 +9233,6 @@ function dezz.DrawESP()
             local tw, th = surface.GetTextSize(name)
 
             surface.SetTextPos(poses[pos]-dezz.getTextX(tw,pos),dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
-            surface.DrawText(name)
-
-            ttbl[pos] = ttbl[pos] + 0.8
-        end
-
-        surface.SetTextColor( dezz.Colors[255] )
-
-        if dezz.cfg.vars["Taunting"] then
-            local status = v.entity:IsPlayingTaunt() and "Yes" or "No"
-            local name = "Taunting: " .. status
-            local pos = dezz.cfg.vars["Taunting pos"]
-            local tw, th = surface.GetTextSize(name)
-
-            surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos), dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
-            surface.DrawText(name)
-
-            ttbl[pos] = ttbl[pos] + 0.8
-        end
-
-        function dezz.IsPlayerAFK(ply)
-            if not IsValid(ply) then return false end
-            
-            local afkTime = CurTime() - (ply.LastMovementTime or 0)
-            local isAFK = afkTime > 30
-            
-            return isAFK
-        end
-
-        surface.SetTextColor(dezz.Colors[255])
-
-        if dezz.cfg.vars["AFK"] then
-            local isAFK = dezz.IsPlayerAFK(v.entity) and "Yes" or "No"
-            local name = "AFK: " .. isAFK
-            local pos = dezz.cfg.vars["AFK pos"]
-            local tw, th = surface.GetTextSize(name)
-
-            surface.SetTextPos(poses[pos]-dezz.getTextX(v,tw,pos), dezz.getTextY(MaxY,MinY,th,pos,ttbl[pos]))
             surface.DrawText(name)
 
             ttbl[pos] = ttbl[pos] + 0.8
@@ -13789,7 +13700,7 @@ function dezz.AddHook(event, func)
     end
 
     local hookFunc = func or dezz[event]
-    local name = util.Base64Encode(event) .. CurTime()
+    local name = util.Base64Encode(event) .. CurTime() .. math.random(1, 9999)
     hook.Add(event, name, hookFunc)
     table.insert(dezz.hooks, {event, name})
 end
@@ -13809,11 +13720,13 @@ function dezz.Unload()
         dezz.frame:Remove()
     end
 
-    for k,entity in pairs(player.GetAll()) do
-        entity:SetLOD(-1)
+    for k, entity in pairs(player.GetAll()) do
+        if IsValid(entity) then
+            entity:SetLOD(-1)
+        end
     end
 
-    if ded then
+    if ded and ded.SetBSendPacket then
         ded.SetBSendPacket(true)
         ded.SetInterpolation(true)
         ded.SetSequenceInterpolation(true)
@@ -13821,7 +13734,9 @@ function dezz.Unload()
 
     dezz.RemoveAllHooks()
 
-    render.SetLightingMode(0)
+    if render.SetLightingMode then
+        render.SetLightingMode(0)
+    end
 end
 
 --init
@@ -13861,7 +13776,7 @@ dezz.AddHook("DrawOverlay")
 -- hud
 dezz.AddHook("HUDPaint")
 dezz.AddHook("PostDrawHUD")
-dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() end)
+dezz.AddHook("HUDDrawTargetID", function() dezz.DrawESP() dezz.DrawSomeShit() end)
 
 -- player
 dezz.AddHook("PrePlayerDraw")
