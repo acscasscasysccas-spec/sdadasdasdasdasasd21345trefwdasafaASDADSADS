@@ -4,7 +4,7 @@ ded.Write                               = nil
                                         -- 🤍"Ultimate" for GAYS!🤍
 ded.Read                                = nil
 
-local dezz          /*🤍🤍🤍🤍*/        = {}
+local dezz          /*🤍🤍🤍🤍*/      = {}
 
 local cheaters                          = {}
 
@@ -64,6 +64,10 @@ dezz.trackedPlayers = {["STEAM_0:1:436828002"] = true,["STEAM_0:0:527475945"] = 
 cheaters.list = {}
 cheaters.list_temp = {}
 cheaters.fetch_link = "https://raw.githubusercontent.com/acscasscasysccas-spec/dsadsadadsadasdadsdas/refs/heads/main/asdadsdasdsadsadshjadskhadshdhasdkdas.json"
+--
+
+--chatmsg
+dezz.chatmsg={[1]={"American boy","Russian girls","My baby","American American booyyyyy","❤Combination❤","Суп с котом? ХВАТИ!","До дома провожал","А потом. ЧТО ПОТОМ?","GIVE ME ONLY LOVE❤","Russian, russian girls, my baby","You take my soul.","You give me love!!","Американ бой, американ джой!","Уеду с тобой, Москва прощай!","Приезжай поскорей за мной, я здесь!","Бухгалтер, милый мой бухгалтер.","Зато родной, зато весь мой.","Мне надоело петь про эту заграницу.","❤Милый милый мой бухгалтер❤"},[2]={"Петля, не отбирайте у меня мою петлю","Я взгляд, я вижу всё, но бесполезно говорить","Столбы и перекладины, на них тела висят","Заря, никто не может перекрасить вновь зарю","Чины, они любимые подонки у судьбы","Назад, в небытие, но каждый очень хочет жить","Нога, ходить я в ногу отказался наотрез","Гореть, мы будем все гореть в аду, зато тепло","Жалеть, зачем жалеть всё то, что время унесло?","Петля, меня раскачивает вверх и вниз петля...","Сопля, повисла, сволочь, на моём носу сопля","Цветы, завяли все позавчера мои цветы(","А ты чего орёшь, дурёха, среди пустоты?","Ты жди, петля порвётся и к тебе я упаду","Давно смеялся б я над выражением лица...","На на на най на на","Она прорыдала: «Жизнь не удалась»","Среди голых стен на холодном полу","Как два партизана во вражьем тылу","❤Прижавшись друг к другу, хранили тепло❤","Мы были вдвоём несмотря ни на что❤❤❤","Она убила эту зиму своей наготой","Она вдохнула ветер жизни и вернула покой","Она была со мной, она была моя...","Не проходило дня, когда о ней не думал я","Для нас начинался уже новый день","Что лучше касания губ и руки?","Из-за моей глупости средь бела дня","Зима пролетела, не стало её...","А мы, как и прежде, остались вдвоём…","Обосранный герой, твой дом из тростника сгорел еще вчера","Обосранный герой!","Жизнь вокруг меня — точная копия меня самого...","...но мне от этого не лучше...","Всю жизнь мечтал купить я пулемёт","Когда-нибудь ты не вернёшься в дом","С песней весело шагать на расстрел","Я решился взять себе выходной","А пока что посмотри с высоты","Плюнь в лицо тому, кто существовал","Песню жизни напевать надо всем","На ногах её звенят кандалы","А глаза её спокойны, чисты","Но сегодня запевать будешь ты","Концлагерь кричит «Банзай!»","Каждой СОБАКЕ собачья смерть!","На небе солнце светит, никто его не видит(","А на высокой крыше стоит самоубийца","Замученный котёнок валялся на асфальте","Что толку быть живым, пуская нежно слюни"},[3]={"Твоя мама шлюха которая трахается за пачку ржаных %s","Твоя мама жалеет что не сделала аборт %s","Тебя ебали в детстве и теперь ты ебешься в играх %s","Твой отец сдох бы от стыда если бы увидел тебя %s","У тебя хуй на плечах вместо головы %s","Ты ебешься как последнее говно %s","Иди нахуй со своим кривым аимом %s","Твои читы ебут тебя в сраку %s","Ты играешь как еблан с похмелья %s","У тебя руки из жопы и мозги из говна %s","Твоя мамка сосет у всего сервера %s","Тебя в детстве ебал сосед и теперь ты еблан %s","Твой скрипт ебут твою мамашу %s","Иди выеби себя сам сука %s","Твоя жизнь - ебаное дерьмо %s","Ты еблан который не умеет даже читать %s","У тебя ебаное рыло которое хочется разбить %s","Твоя мамка ебется за донат на твои читы %s","Тебя ебут в очко и ты плачешь %s","Твой отец ебал козу и родился ты %s","Иди нахуй со своим ебаным трегером %s","Твоя мамка шлюха которая сосет за 50 рублей %s","Тебя ебут в жопу и ты орешь как сука %s","Твой ник - ебаное говно %s","У тебя ебаная морда кирпича %s","Твои читы ебут тебя в сраку каждый день %s","Иди выеби свою ебаную мамашу %s","Тебя ебут в очко и ты плачешь как сука %s","Твой скрипт ебет твою мертвую бабушку %s","У тебя ебаные руки из жопы %s","Твоя мамка ебется с собакой %s","Тебя ебут в жопу и ты любишь это %s","Иди нахуй со своим ебаным валом %s","Твой отец ебал свинью и родился ты %s","Твоя мамка шлюха которая трахается за чипсы %s","Тебя ебут в очко и ты просишь еще %s","У тебя ебаная рожа которую хочется разъебать %s","Твои читы ебут тебя в сраку каждую ночь %s","Иди выеби свою ебаную сестру %s","Тебя ебут в жопу и ты кончаешь %s","Твой скрипт ебет твою мертвую мамашу %s","У тебя ебаные мозги из говна %s","Твоя мамка ебется с табуреткой %s","Тебя ебут в очко и ты плачешь от счастья %s","Иди нахуй со своим ебаным читерством %s","Твой отец ебал осла и родился ты %s","Твоя мамка шлюха которая сосет за сигарету %s","Тебя ебут в жопу и ты орешь как шакал %s","У тебя ебаная физиономия урода %s","Твои читы ебут тебя в сраку без смазки %s"},[4]={"EZZZZZZ","11111111111","Ну не плачь(((","Вытерай слезки щас тебя ебать будем","ezzzzzzzzzzz","Легкоооооо","Чел у тебя читы за 5 копеек?","Мдэ ну ты и слабак","(БОЖЕЕЕ КТО ЕМУ ЧИТЫ ДАЛ)","loooosssssserrrr","ЛИВАЙ ПОКА Я ТЕБЯ НЕ ОБОССАЛ","Маме привет передай)","Кстати твоя мать шлюха)","ММ как хорошо твоя мать сосет","Иди попей водички говорят помогает от слез","1234? NO, 111111? YEAH.","Говорят у тебя дома кого то обоссали","))))))))","❤ez tvoya mat shlyha❤","Удаляй свою ГПТ пасту","Удаляй читы гадские","1mur1mur1","Когда выйдешь чтобы написать RQ?"},[5]={"☆〜（ゝ。∂）ты проиграл мне, няша〜☆","（◕‿◕✿）kawaii desu ne? а ты мертв（✿◠‿◠）","＊*♡(◡‿◡✿) твой скилл - нулевой, как моя любовь к тебе ♡✿*＊","（ﾉ´д｀）ﾉ твоя смерть такая же милая, как ты кринжовый","（╯°□°）╯︵ ┻━┻ ФЛИП ТЕЙБЛ!!! ты опять умер!","（。・ω・。）nya~ ты играешь как котенок с мячиком","（≧◡≦）читеришь? мииило! но бесполезно ♪","（´• ω •｀）☆ твой аим - мое сердце: промах","（´∀｀）♡ ты пытаешься! мило смотреть ♡","（´｡• ω •｡｀）у тебя лапки вместо рук? умииительно!","（⁀ᗢ⁀）мур-мур~ тебя убили опять! как мило!","（＾• ω •＾）nya~ хочешь печеньку? а нет, ты мертв","（◕‿◕）♡ твой геймплей заставляет меня улыбаться! такой смешной!","（´･ω･｀）твоя тактика: бежать и умирать? оригинально!","（＾ｖ＾）ты как аниме герой: всегда проигрываешь!","（⌒▽⌒）☆ твоя смерть - искусство! такое комедийное!","（●´ω｀●）у тебя есть талант! к проигрышам ♪","（´｡• ᵕ •｡｀）♡ ты специально так играешь? чтобы меня рассмешить?","（￣ω￣）твой скрипт плачет от стыда! как мило!","（＾ｖ＾）ты как котенок: милый но беспомощный!","（´• ω •）ﾉ☆ твои попытки - моё развлечение!","（◡ ω ◡）ты проиграл! на тебе бантик! ♡","（＾• ω •＾）у тебя лапки! такие неуклюжие!","（´｡• ᵕ •｡｀）твоя смерть сделала мой день лучше!","（⁀ᗢ⁀）мур-мур~ хочешь молочка? а нет, ты умер","（◕‿◕✿）ты как цветочек: быстро вянешь!","（＾ｖ＾）ты пытаешься! это так мило смотреть!","（⌒‿⌒）☆ твои рефлексы как у сонной панды!","（●´ω｀●）у тебя есть будущее! в гробу!","（´･ω･｀）твоя мама бы гордилась! если бы не видела это","（＾• ω •＾）nya~ ты как бабочка: красиво умираешь!","（￣ω￣）ты звезда! падающая звезда!","（◕‿◕）✧ твои движения завораживают! своей беспомощностью!","（＾ｖ＾）ты как мышка: бегаешь и пищишь!","（⌒▽⌒）☆ твоя смерть - лучший момент матча!","（●´ω｀●）у тебя есть стиль! стиль лузера!","（´∀｀）♡ ты делаешь мир веселее! своими проигрышами!","（◡ ω ◡）ты как конфетка: сладенький но быстро съедаешься!","（＾• ω •＾）nya~ твой аимбот уснул от скуки!","（￣ω￣）ты как открытка: не нужная и бесполезная!"},[6]={"EZ CLAP","GET GOOD","SKILL ISSUE","CRY ABOUT IT","MAD CAUSE BAD","RATIO + L + BOZO","COPIUM OVERDOSE","SEETHING MALDING","CRINGE + TOUCH GRASS","YOU DIED","WASTED","FATALITY","FLAWLESS VICTORY","PERFECT!","ULTRA COMBO!","K.O.!","FIGHTING GOLD","MISSION FAILED","GAME OVER","CONTINUE?","INSERT COIN","LEVEL UP!","NEW HIGH SCORE!","ACHIEVEMENT UNLOCKED","PRO GAMER MOVE","POGGERS","KEKW","LULW","OMEGALUL","FORSENBAJ","MONKAW","PEPELAUGH","HACKERMAN","BIG PLAYS","OUTPLAYED","READ LIKE A BOOK","PREDICTABLE","TOO EASY","NO CHALLENGE","BOT GAP","DIFF GAP","GAP DIFF","NICE TRY","BETTER LUCK NEXT TIME","ALMOST HAD IT","SO CLOSE YET SO FAR"},[7]={"❤mur❤mur❤","mur mur❤","mur mur❤❤❤","❤mur mur❤","mur❤mur","mur mur❤❤","mur mur","❤mur mur","murmur","❤murmur❤","murmur❤","murmur❤❤❤"},[8]={"gtfo","shut up","get out","you talking to me","what is the point","this is bad","!good","stop looking at me","and if you see dr. breen tell him i said fuck you","and if you see dr. breen tell him i said fuck you","and if you see dr. breen tell him i said fuck you","bullshit","bullshit","you never know","you never know ","hax","hax","haxx","hacks","figures","he's dead","he's dead","he's dead","it cant be","it cant be","take this medkit","take this medkit","take this medkit","cut it","get down","come!","heads up","got one","take cover","this is bad","same here","you talking to me","fantastic"},[9]={"Жди... докс","Жди... сват","Жди... деанон","Жди... ОМОН","Жди... ФБР","Жди... ФСБ","Жди... снайперов","Жди... вагнеров","Жди... офицеров","Жди... редановцев","Жди... вайперов","Жди... фурри в памперсах","Жди... танкистов","Жди... спецназ","Жди... ГРУ","Жди... спортсменов","Жди... чеченских боевиков","Жди... СС","Жди... ФБИ","Жди... ВСРФ","Жди... КГБ","Жди... накаченных таджиков с автоматами","Жди... милиционеров","Жди... разведчиков","Жди... диверсантов","Жди... кибершпионов","Жди... пограничников","Жди... парашютистов","Жди... морпехов","Жди... артиллеристов","Жди... инженеров-саперов","Жди... контрразведчиков","Жди... наемников","Жди... десантников","Жди... радистов","Жди... военных врачей","Жди... пилотов","Жди... штурманов","Жди... космонавтов","Жди... геодезистов","Жди... инструкторов по выживанию","Жди... пожарных","Жди... сантехников","Жди... электриков","Жди... водителей бронетехники","Жди... грузчиков","Жди... строителей укреплений","Жди... психологов","Жди... логистов","Жди... переводчиков","Жди... судей","Жди... следователей","Жди... прокуроров","Жди... адвокатов","Жди... учителей военной подготовки","Жди... журналистов военной тематики","Жди... инженеров-строителей","Жди... ветеринаров","Жди... физиотерапевтов","Жди... психотерапевтов","Жди... историков","Жди... философов","Жди... лингвистов","Жди... педагогов","Жди... социологов","Жди... экономистов","Жди... юристов","Жди... политологов","Жди... психологов","Жди... астрономов","Жди... генетиков","Жди... нейробиологов","Жди... робототехников","Жди... нанотехнологов","Жди... энергетиков","Жди... транспортников","Жди... связистов","Жди... геодезистов","Жди... гидротехников","Жди... мелиораторов","Жди... лесоводов","Жди... охотоведов","Жди... рыбоводов","Жди... виноделов","Жди... пивоваров","Жди... кондитеров","Жди... поваров","Жди... шеф-поваров","Жdi... барменов","Жди... официантов","Жди... гостиничников","Жди... туристов","Жди... гидов","Жди... экскурсоводов","Жди... спортсменов-профессионалов","Жди... любителей спорта","Жди... фитнес-тренеров","Жди... йогов","Жди... массажистов","Жди... астрологов","Жди... гадалок","Жди... психологов-консультантов","Жди... психотерапевтов-психоаналитиков","Жди... гипнотерапевтов","Жди... нутрициологов","Жди... диетологов","Жди... фитотерапевтов","Жди... гомеопатов","Жди... акупунктуристов","Жди... мануальных терапевтов","Жди... реабилитологов","Жди... ортопедов","Жди... травматологов","Жди... стоматологов-ортодонтов","Жди... стоматологов-хирургов","Жди... стоматологов-педиатров","Жди... оптометристов"},[10]={"Smokin Woo Lotti Smokin Woo Lotti Smokin Woo Lotti","курю Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz","курю Dubsk Dubsk Dubsk Dubsk Dubsk Dubsk Dubsk","курю Dell Dell Dell Dell Dell Dell Dell Dell","Smokin,Blay Smokin,Blay Smokin,Blay","Smokin Doowop Smokin Doowop Smokin Doowop","Smokin Jacob Smokin Jacob Smokin Jacob","Smokin Lenny Smokin Lenny Smokin Lenny","Smokin Tank Smokin Tank Smokin Tank","Smokin C-easy Smokin C-easy Smokin C-easy","Smokin Woo Lott Smokin Woo Lott Smokin Woo Lott","курю Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz","Smokin Chiii Smokin Chiii Smokin Chiii","Smokin Nazzy Smokin Nazzy Smokin Nazzy","Smokin Jayripk Smokin Jayripk Smokin Jayripk","Nigga, what? Come here","Where the fuck is he goin'?","Notti died and they thought that was funny? Lotti got packed the start of 2020","Notti died and they thought that was funny? Lotti got packed the start of 2020??","Notti died and they thought that was funny? Lotti got packed the start of 2020???","I pray to God that we don't get indicted Free the bros that got caught for the— ah","Thirteen, I was smokin' on Fries","Fourteen, I was smokin' on Nazzy","I spin two deep, me and G, you gon' die))","I spin two deep, me and G, you gon' die","Follow BLOODIE, DudeyLo, DD O…)","Follow BLOODIE, DudeyLo, DD O…","Smokin,Blay Smokin,Blay Smokin,Blay","Smokin Doowop Smokin Doowop Smokin Doowop","Smokin Jacob Smokin Jacob Smokin Jacob","Smokin JB Smokin JB Smokin JB"}}
 --
 
 dezz.tabs = {}
@@ -143,6 +147,7 @@ dezz.slams = {}
 
 dezz.freezedTicks = 0
 dezz.maxFreezeTicks = math.Round( 1 / flTickInterval ) 
+dezz.seqshit = false
 
 dezz.fakeLagTicks = 0
 dezz.fakeLagfactor = 0
@@ -150,6 +155,7 @@ dezz.chokedTicks = 0
 
 ded.GetSimulationTime = function()return 0 end
 ded.GetServerTime = function()return 0 end
+
 ded.ConVarSetFlags( "mat_fullbright", 0 )
 ded.ConVarSetFlags( "r_aspectratio", 0 )
 ded.ConVarSetFlags( "cl_showhitboxes", 0 )
@@ -163,7 +169,7 @@ dezz.startedPeeking = false
 dezz.needToMoveBack = false
 dezz.startPeekPosition = Vector(0,0,0)
 
-dezz.realAngle = IsValid(pLocalPlayer) and pLocalPlayer:EyeAngles() or Angle(0, 0, 0)
+dezz.realAngle = IsValid(pLocalPlayer) && pLocalPlayer:EyeAngles() or Angle(0, 0, 0)
 dezz.inverted = false
 dezz.oldYaw = 0
 dezz.SwaySide = 1
@@ -188,6 +194,8 @@ dezz.fcvector = pLocalPlayer:EyePos()
 dezz.fcangles = pLocalPlayer:EyeAngles()
 dezz.fcenabled = false
 dezz.fctoggled = false
+
+dezz.flServerTime = 0
 
 dezz.FCVAR = {
     str = {
@@ -975,7 +983,9 @@ dezz.cfg.vars["Player_modelchanger_agent"]  = 1
 // Spam & Misc
 dezz.cfg.vars["Use spam"]                   = false
 dezz.cfg.vars["Flashlight spam"]            = false
+dezz.cfg.binds["fon"]                       = 0
 dezz.cfg.vars["Impulse spam"]               = false
+dezz.cfg.binds["imp"]                       = 0
 dezz.cfg.vars["Camera spam"]                = false
 dezz.cfg.vars["gravity"]                    = false
 dezz.cfg.vars["Fast lockpick"]              = false
@@ -1139,15 +1149,15 @@ function dezz.LoadConfig()
     local ConfigName = dezz.cfg.vars["Config name"]
     local SelectedConfig = dezz.cfg.vars["Selected config"]
 
-    dezz.cfg = dezz.cfg or {}
+    dezz.cfg = dezz.cfg
 
-    dezz.cfg.friends = dezz.cfg.friends or {}
-    dezz.cfg.ents = dezz.cfg.ents or {}
-    dezz.cfg.binds = dezz.cfg.binds or {}
-    dezz.cfg.priorityList = dezz.cfg.priorityList or {}
-    dezz.cfg.admins = dezz.cfg.admins or {}
+    dezz.cfg.friends = dezz.cfg.friends
+    dezz.cfg.ents = dezz.cfg.ents
+    dezz.cfg.binds = dezz.cfg.binds
+    dezz.cfg.priorityList = dezz.cfg.priorityList
+    dezz.cfg.admins = dezz.cfg.admins
 
-    if type(totbl) ~= "table" then return end
+    if type(totbl) != "table" then return end
 
     for category, data in pairs(totbl) do
         if type(data) == "table" then
@@ -1235,7 +1245,7 @@ do
 
     function PLAYER:Name()
 
-        if dezz.cfg.vars["Hide name"] and self == pLocalPlayer then
+        if dezz.cfg.vars["Hide name"] && self == pLocalPlayer then
             return dezz.cfg.vars["Custom name"]
         end
 
@@ -1244,7 +1254,7 @@ do
 
     function PLAYER:Nick()
 
-        if dezz.cfg.vars["Hide name"] and self == pLocalPlayer then
+        if dezz.cfg.vars["Hide name"] && self == pLocalPlayer then
             return dezz.cfg.vars["Custom name"]
         end
 
@@ -1253,7 +1263,7 @@ do
 
     function PLAYER:GetName()
 
-        if dezz.cfg.vars["Hide name"] and self == pLocalPlayer then
+        if dezz.cfg.vars["Hide name"] && self == pLocalPlayer then
             return dezz.cfg.vars["Custom name"]
         end
 
@@ -1402,7 +1412,7 @@ do
         end
         
         http.Fetch(url, function(body)
-            if body and #body > 100 then
+            if body && #body > 100 then
                 file.Write(fileName, body)
                 self.backgroundMaterials[i] = Material("data/" .. fileName)
             end
@@ -1445,7 +1455,7 @@ do
                     self.nextBackground = 1
                 end
                 
-                while !self.backgroundMaterials[self.nextBackground] and self.nextBackground <= #self.backgroundImages do
+                while !self.backgroundMaterials[self.nextBackground] && self.nextBackground <= #self.backgroundImages do
                     self.nextBackground = self.nextBackground + 1
                     if self.nextBackground > #self.backgroundImages then
                         self.nextBackground = 1
@@ -1479,19 +1489,19 @@ do
             elseif self.ResizeDirection == "bl" then
                 newW = math.max(self.MinWidth, self.ResizeStartW - deltaX)
                 newH = math.max(self.MinHeight, self.ResizeStartH + deltaY)
-                if newW ~= self:GetWide() then
+                if newW != self:GetWide() then
                     self:SetPos(self.ResizeStartX + deltaX, self.y)
                 end
             elseif self.ResizeDirection == "tr" then
                 newW = math.max(self.MinWidth, self.ResizeStartW + deltaX)
                 newH = math.max(self.MinHeight, self.ResizeStartH - deltaY)
-                if newH ~= self:GetTall() then
+                if newH != self:GetTall() then
                     self:SetPos(self.x, self.ResizeStartY + deltaY)
                 end
             elseif self.ResizeDirection == "tl" then
                 newW = math.max(self.MinWidth, self.ResizeStartW - deltaX)
                 newH = math.max(self.MinHeight, self.ResizeStartH - deltaY)
-                if newW ~= self:GetWide() or newH ~= self:GetTall() then
+                if newW != self:GetWide() or newH != self:GetTall() then
                     self:SetPos(self.ResizeStartX + deltaX, self.ResizeStartY + deltaY)
                 end
             end
@@ -1533,10 +1543,10 @@ do
         local top = screenY
         local bottom = screenY + h
         
-        return (x >= right - self.ResizeMargin and x <= right and y >= bottom - self.ResizeMargin and y <= bottom) or
-               (x >= left and x <= left + self.ResizeMargin and y >= bottom - self.ResizeMargin and y <= bottom) or
-               (x >= right - self.ResizeMargin and x <= right and y >= top and y <= top + self.ResizeMargin) or
-               (x >= left and x <= left + self.ResizeMargin and y >= top and y <= top + self.ResizeMargin)
+        return (x >= right - self.ResizeMargin && x <= right && y >= bottom - self.ResizeMargin && y <= bottom) or
+               (x >= left && x <= left + self.ResizeMargin && y >= bottom - self.ResizeMargin && y <= bottom) or
+               (x >= right - self.ResizeMargin && x <= right && y >= top && y <= top + self.ResizeMargin) or
+               (x >= left && x <= left + self.ResizeMargin && y >= top && y <= top + self.ResizeMargin)
     end
 
     function PANEL:GetResizeArea(x, y)
@@ -1548,13 +1558,13 @@ do
         local top = screenY
         local bottom = screenY + h
         
-        if x >= right - self.ResizeMargin and x <= right and y >= bottom - self.ResizeMargin and y <= bottom then
+        if x >= right - self.ResizeMargin && x <= right && y >= bottom - self.ResizeMargin && y <= bottom then
             return "br"
-        elseif x >= left and x <= left + self.ResizeMargin and y >= bottom - self.ResizeMargin and y <= bottom then
+        elseif x >= left && x <= left + self.ResizeMargin && y >= bottom - self.ResizeMargin && y <= bottom then
             return "bl"
-        elseif x >= right - self.ResizeMargin and x <= right and y >= top and y <= top + self.ResizeMargin then
+        elseif x >= right - self.ResizeMargin && x <= right && y >= top && y <= top + self.ResizeMargin then
             return "tr"
-        elseif x >= left and x <= left + self.ResizeMargin and y >= top and y <= top + self.ResizeMargin then
+        elseif x >= left && x <= left + self.ResizeMargin && y >= top && y <= top + self.ResizeMargin then
             return "tl"
         end
         
@@ -1676,7 +1686,7 @@ do
         vbar.btnDown.Paint = nil
     
         function vbar.btnGrip:Paint( w, h ) 
-            local target_color = self:IsHovered() and dezz.Colors[255] or dezz.Colors[54]
+            local target_color = self:IsHovered() && dezz.Colors[255] or dezz.Colors[54]
             if !self.current_color then self.current_color = target_color end
             
             if self.current_color != target_color then
@@ -1691,13 +1701,13 @@ do
     end       
 
     function PANEL:OnMousePressed()
-        if dezz.frame and dezz.frame.OnMousePressed then
+        if dezz.frame && dezz.frame.OnMousePressed then
             dezz.frame:OnMousePressed()
         end
     end
 
     function PANEL:OnMouseReleased()
-        if dezz.frame and dezz.frame.OnMouseReleased then
+        if dezz.frame && dezz.frame.OnMouseReleased then
             dezz.frame:OnMouseReleased()
         end
     end
@@ -1718,7 +1728,7 @@ do
         self.ItemPanel.wave = 0
         
         function self.ItemPanel:Think()
-            local target = self:IsHovered() and 1 or 0
+            local target = self:IsHovered() && 1 or 0
             self.hover_progress = Lerp(FrameTime() * 8, self.hover_progress or 0, target)
             
             if self:IsHovered() then
@@ -1735,7 +1745,7 @@ do
                 surface.SetDrawColor(col.r, col.g, col.b, 50 * self.hover_progress)
                 surface.DrawRect(0, 0, w, h)
 
-                if self.wave > 0 and self.wave < 1 then
+                if self.wave > 0 && self.wave < 1 then
                     local waveHeight = h * 0.1
                     local waveY = h * self.wave
                     surface.SetDrawColor(col.r + 40, col.g + 40, col.b + 40, 80 * (1 - self.wave))
@@ -1768,13 +1778,13 @@ do
     end
 
     function PANEL:OnMousePressed()
-        if dezz.frame and dezz.frame.OnMousePressed then
+        if dezz.frame && dezz.frame.OnMousePressed then
             dezz.frame:OnMousePressed()
         end
     end
 
     function PANEL:OnMouseReleased()
-        if dezz.frame and dezz.frame.OnMouseReleased then
+        if dezz.frame && dezz.frame.OnMouseReleased then
             dezz.frame:OnMouseReleased()
         end
     end
@@ -1828,7 +1838,7 @@ do
             surface.SetDrawColor(dezz.Colors[54])
             surface.DrawOutlinedRect(0, 0, w, h, 1)
 
-            if !v and !self:IsHovered() then return end
+            if !v && !self:IsHovered() then return end
 
             if v then
                 if dezz.cfg.vars["menu1 color"] then
@@ -2008,10 +2018,10 @@ do
         self.textColor = dezz.Colors[165] or Color(200, 200, 200)
         
         function self:Think()
-            local clickTarget = self:IsDown() and 1 or 0
+            local clickTarget = self:IsDown() && 1 or 0
             self.click_progress = Lerp(FrameTime() * 15, self.click_progress or 0, clickTarget)
             
-            local hoverTarget = self:IsHovered() and 1 or 0
+            local hoverTarget = self:IsHovered() && 1 or 0
             self.hover_progress = Lerp(FrameTime() * 6, self.hover_progress or 0, hoverTarget)
             
             if self:IsDown() then
@@ -2078,11 +2088,11 @@ do
         self.item_appear_speed = 0.15
         
         function self:Think()
-            local target = self:IsMenuOpen() and 1 or 0
+            local target = self:IsMenuOpen() && 1 or 0
             self.open_progress = Lerp(FrameTime() * 10, self.open_progress or 0, target)
             
             if IsValid(self.Menu) then
-                local target_alpha = self:IsMenuOpen() and 255 or 0
+                local target_alpha = self:IsMenuOpen() && 255 or 0
                 self.menu_alpha = Lerp(FrameTime() * 15, self.menu_alpha or 0, target_alpha)
                 self.Menu:SetAlpha(self.menu_alpha or 0)
                 
@@ -2090,7 +2100,7 @@ do
                     self.item_appear_timer = (self.item_appear_timer or 0) + FrameTime()
                     
                     for k, item in ipairs(self.item_appear_order) do
-                        if item and IsValid(item) then
+                        if item && IsValid(item) then
                             local delay = (k - 1) * 0.08
                             local progress = math.Clamp((self.item_appear_timer - delay) / self.item_appear_speed, 0, 1)
                             item.alpha = progress * 255
@@ -2100,8 +2110,8 @@ do
                 end
             end
             
-            local hasText = (self:GetText() or "") ~= ""
-            self.text_alpha = Lerp(FrameTime() * 8, self.text_alpha or 0, hasText and 255 or 0)
+            local hasText = (self:GetText() or "") != ""
+            self.text_alpha = Lerp(FrameTime() * 8, self.text_alpha or 0, hasText && 255 or 0)
         end
     end
 
@@ -2114,14 +2124,14 @@ do
         surface.SetTextColor(arrowCol.r, arrowCol.g, arrowCol.b, 255)
         surface.SetTextPos(w - 22, h / 2 - 7)
         surface.SetFont("2121DermaSmall2121")
-        surface.DrawText((self.open_progress or 0) > 0.5 and "▲" or "▼")
+        surface.DrawText((self.open_progress or 0) > 0.5 && "▲" or "▼")
 
         local borderCol = dezz.Colors[54] or Color(54, 54, 54)
         surface.SetDrawColor(borderCol.r, borderCol.g, borderCol.b, 255)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
 
         local text = self:GetText() or ""
-        if text ~= "" and (self.text_alpha or 0) > 0 then
+        if text != "" && (self.text_alpha or 0) > 0 then
             local textCol = dezz.Colors[165] or Color(165, 165, 165)
             surface.SetTextColor(textCol.r, textCol.g, textCol.b, self.text_alpha or 0)
             surface.SetFont("2121DermaSmall2121")
@@ -2131,7 +2141,7 @@ do
     end
 
     function PANEL:OpenMenu(pControlOpener)
-        if pControlOpener and pControlOpener == self.TextEntry then return end
+        if pControlOpener && pControlOpener == self.TextEntry then return end
         if #self.Choices == 0 then return end
     
         if IsValid(self.Menu) then
@@ -2140,7 +2150,7 @@ do
         end
     
         local parent = self
-        while IsValid(parent) and !parent:IsModal() do
+        while IsValid(parent) && !parent:IsModal() do
             parent = parent:GetParent()
         end
         if !IsValid(parent) then parent = self end
@@ -2185,7 +2195,7 @@ do
                 surface.DrawText(self.txt or "")
             end
 
-            if self.Spacers and self.Spacers[k] then
+            if self.Spacers && self.Spacers[k] then
                 self.Menu:AddSpacer()
             end
         end
@@ -2256,7 +2266,7 @@ do
         surface.SetDrawColor(borderCol.r, borderCol.g, borderCol.b, 255)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
         
-        if self:IsHovered() and !self.Trapping then
+        if self:IsHovered() && !self.Trapping then
             local hoverCol = Color(60, 30, 30)
             surface.SetDrawColor(hoverCol.r, hoverCol.g, hoverCol.b, 0)
             surface.DrawRect(1, 1, w - 2, h - 2)
@@ -2290,7 +2300,7 @@ do
     end
 
     function PANEL:Think()
-        if input.IsKeyTrapping() and self.Trapping then
+        if input.IsKeyTrapping() && self.Trapping then
             local code = input.CheckKeyTrapping()
             if code then
                 if code == KEY_ESCAPE then
@@ -2367,7 +2377,7 @@ do
     function PANEL:Think()
         if self.lifeTime < 15 then self.lifeTime = self.lifeTime + 1 end
 
-        if !self:HasFocus() and self.lifeTime >= 14 then
+        if !self:HasFocus() && self.lifeTime >= 14 then
             self:Remove()
         end
     end
@@ -2708,7 +2718,7 @@ do
         self:InvalidateLayout()
 
         local Line = vgui.Create( "DListView_Line", self.pnlCanvas )
-        local c = self.Cur and 48 or 32
+        local c = self.Cur && 48 or 32
 
         function Line:Paint( w, h )
             
@@ -3014,13 +3024,13 @@ do
         self.ActiveTab = "NIL"
 
         function self.ItemPanel:OnMousePressed()
-            if dezz.frame and dezz.frame.OnMousePressed then
+            if dezz.frame && dezz.frame.OnMousePressed then
                 dezz.frame:OnMousePressed()
             end
         end
     
         function self.ItemPanel:OnMouseReleased()
-            if dezz.frame and dezz.frame.OnMouseReleased then
+            if dezz.frame && dezz.frame.OnMouseReleased then
                 dezz.frame:OnMouseReleased()
             end
         end
@@ -3041,13 +3051,13 @@ do
     end
 
     function PANEL:OnMousePressed()
-        if dezz.frame and dezz.frame.OnMousePressed then
+        if dezz.frame && dezz.frame.OnMousePressed then
             dezz.frame:OnMousePressed()
         end
     end
 
     function PANEL:OnMouseReleased()
-        if dezz.frame and dezz.frame.OnMouseReleased then
+        if dezz.frame && dezz.frame.OnMouseReleased then
             dezz.frame:OnMouseReleased()
         end
     end
@@ -3091,7 +3101,6 @@ function dezz.ui.Binder( cfg, par )
 end
 
 function dezz.ui.ColorPicker(cfg, par, onChange)
-    if !dezz or !dezz.cfg or !dezz.cfg.colors then return end
     if !dezz.cfg.colors[cfg] then 
         dezz.cfg.colors[cfg] = "255 255 255 255"
     end
@@ -3130,11 +3139,11 @@ function dezz.ui.ColorPicker(cfg, par, onChange)
             c:SetColor(b.Color)
         end
         
-        if c.HSV and c.HSV.Knob and IsValid(c.HSV.Knob) then
+        if c.HSV && c.HSV.Knob && IsValid(c.HSV.Knob) then
             c.HSV.Knob:SetSize(5, 5)
             
             function c.HSV.Knob:Paint(w, h)
-                if b and b.Color then
+                if b && b.Color then
                     surface.SetDrawColor(b.Color.r, b.Color.g, b.Color.b, 255)
                     surface.DrawRect(0, 0, w, h)
                 end
@@ -3168,7 +3177,7 @@ function dezz.ui.ColorPicker(cfg, par, onChange)
     b:SetColor(b.Color)
     
     function b:Paint(w, h)
-        if self and self.Color then
+        if self && self.Color then
             surface.SetDrawColor(self.Color.r, self.Color.g, self.Color.b, self.Color.a)
             surface.DrawRect(1, 1, w - 2, h - 2)
         end
@@ -3320,7 +3329,7 @@ function dezz.ui.TextEntry( str, cfg, pan, chars, postCreate )
     txt:SetPaintBackground(false)
     txt:SetTextColor(dezz.Colors[165])
 
-	if dezz.cfg.vars[cfg] ~= nil and dezz.cfg.vars[cfg] ~= "" then
+	if dezz.cfg.vars[cfg] != nil && dezz.cfg.vars[cfg] != "" then
 		txt:SetValue(dezz.cfg.vars[cfg])
 	end
 
@@ -3397,7 +3406,7 @@ function dezz.ui.MultiCombo(pan, str, choices)
         local preview = table.concat(d.preview, ", ")
         surface.SetDrawColor(dezz.Colors[25])
         surface.DrawRect(0, 0, w, h)
-        if preview ~= "" then
+        if preview != "" then
             surface.SetTextColor(dezz.Colors[165])
             surface.SetTextPos(8, h/2-7)
             surface.SetFont("2121DermaSmall2121")
@@ -3407,7 +3416,7 @@ function dezz.ui.MultiCombo(pan, str, choices)
         surface.DrawRect(w-25, 0, 25, 25)
         surface.SetTextColor(dezz.Colors[165])
         surface.SetTextPos(w-20, h/2-7)
-        surface.DrawText((d.open_progress or 0) > 0.5 and "▲" or "▼")
+        surface.DrawText((d.open_progress or 0) > 0.5 && "▲" or "▼")
         surface.SetDrawColor(dezz.Colors[54])
         surface.DrawOutlinedRect(0, 0, w, h)
     end
@@ -3848,7 +3857,7 @@ dezz.spfuncs[24] = function(p)
     mdl:SetCursor("hand")
 
     for i = 1, 4 do
-        if dezz.esppans[i] and dezz.esppans[i].panel and IsValid(dezz.esppans[i].panel) then
+        if dezz.esppans[i] && dezz.esppans[i].panel && IsValid(dezz.esppans[i].panel) then
             dezz.esppans[i].panel:Remove()
         end
     end
@@ -3872,10 +3881,10 @@ dezz.spfuncs[24] = function(p)
         local cfgstr = dezz.espelements[i]
         local enabledVar = cfgstr:gsub(" pos", "")
 
-        if dezz.cfg and dezz.cfg.vars and dezz.cfg.vars[enabledVar] == true then
+        if dezz.cfg.vars[enabledVar] == true then
             local panelIndex = dezz.cfg.vars[cfgstr] or 1
             
-            if panelIndex >= 1 and panelIndex <= 4 and dezz.esppans[panelIndex] and dezz.esppans[panelIndex].panel then
+            if panelIndex >= 1 && panelIndex <= 4 && dezz.esppans[panelIndex] && dezz.esppans[panelIndex].panel then
                 local panel = dezz.esppans[panelIndex].panel
                 
                 local b = vgui.Create("DButton", panel)
@@ -4099,7 +4108,7 @@ function dezz.tabs.Rage()
     local p = dezz.itemPanel( "Visualisation", 2,120 ):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Fake angle chams", "Anti aim chams", false, false, false, dezz.spfuncs[25], false, function( p ) dezz.ui.ColorPicker( "Real chams", p ) end ) 
-    dezz.ui.CheckBox( p, "Angle arrows", "Angle arrows", "crash" )
+    dezz.ui.CheckBox( p, "Angle arrows", "Angle arrows" )
     dezz.ui.CheckBox( p, "Hitbox", "Hitbox",false,false,true,false,false, function(p) dezz.ui.ColorPicker( "HitboxLocal", p ) end )
     dezz.ui.CheckBox( p, "Indicators", "indicators" )
 
@@ -4189,7 +4198,31 @@ function dezz.tabs.Visuals()
 
     dezz.itemPanelB( "Players",1, 535, func )
 
-    local p = dezz.itemPanel( "Indicators", 1, 570 ):GetItemPanel()
+    local p = dezz.itemPanel("Outlines",1,120):GetItemPanel()
+
+    dezz.ui.CheckBox( p, "Player outline", "Player outline", false, false, true )
+    dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
+    dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
+
+    local p = dezz.itemPanel("Entity",1,135):GetItemPanel()
+
+    dezz.ui.CheckBox( p, "Box", "Ent box", false, false, false, dezz.spfuncs[22] )
+    dezz.ui.CheckBox( p, "Class", "Ent class" )
+    dezz.ui.Slider( p, "Max distance","Ent ESP Distance",0, 20000,0 )
+    dezz.ui.Label( p, "Add entity key", function( p ) dezz.ui.Binder( "Ent add", p ) end )
+    
+    local p = dezz.itemPanel("Colored models",2,185):GetItemPanel()
+
+    dezz.ui.CheckBox( p, "Player chams", "Visible chams", false, false, true, dezz.spfuncs[6], false, function(p) dezz.ui.ColorPicker( "inVisible chams", p ) end )
+    dezz.ui.CheckBox( p, "Self chams", "Self chams", false, false, true, dezz.spfuncs[7] )
+    dezz.ui.CheckBox( p, "Backtrack chams", "Backtrack chams", false, false, true, dezz.spfuncs[8] )
+    dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[9], false )
+    dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[11], false )
+    dezz.ui.CheckBox( p, "Hands chams", "Hands chams", false, false, true, dezz.spfuncs[29], false )
+    dezz.ui.CheckBox( p, "Ignore Z", "ignoreZ", "displaying model by the walls" )
+
+    local p = dezz.itemPanel( "Indicators", 2, 570 ):GetItemPanel()
+
     dezz.ui.CheckBox( p, "Crosshair", "Crosshair", false, false, false, dezz.spfuncs[26])
     dezz.ui.ComboBox( p, "Crosshair type", "Crosshair type", {"csgo","csgo2","Свастика","csgo3", "csgo4"})
     dezz.ui.CheckBox( p, "Hitmarker", "Hitmarker", false, false, true )
@@ -4210,37 +4243,6 @@ function dezz.tabs.Visuals()
     dezz.ui.ComboBox( p, "WaterMark mode", "water mode", { "1", "2" })    
     dezz.ui.TextEntry( "Effect", "KEF", p, 500 )
     dezz.ui.TextEntry( "Headshot indicator", "hdshot str", p, 500 )
-    
-    local p = dezz.itemPanel("Colored models",2,185):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Player chams", "Visible chams", false, false, true, dezz.spfuncs[6], false, function(p) dezz.ui.ColorPicker( "inVisible chams", p ) end )
-    dezz.ui.CheckBox( p, "Self chams", "Self chams", false, false, true, dezz.spfuncs[7] )
-    dezz.ui.CheckBox( p, "Backtrack chams", "Backtrack chams", false, false, true, dezz.spfuncs[8] )
-    dezz.ui.CheckBox( p, "Entity chams", "Entity chams", false, false, true, dezz.spfuncs[9], false )
-    dezz.ui.CheckBox( p, "Viewmodel chams", "Viewmodel chams", false, false, true, dezz.spfuncs[11], false )
-    dezz.ui.CheckBox( p, "Hands chams", "Hands chams", false, false, true, dezz.spfuncs[29], false )
-    dezz.ui.CheckBox( p, "Ignore Z", "ignoreZ", "displaying model by the walls" )
-
-    local p = dezz.itemPanel("Outlines",2,120):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Player outline", "Player outline", false, false, true )
-    dezz.ui.CheckBox( p, "Entity outline", "Entity outline", false, false, true )
-    dezz.ui.ComboBox( p, "Style", "Outline style", { "Default", "Subtractive", "Additive" } )
-
-    local p = dezz.itemPanel("Entity",2,135):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Box", "Ent box", false, false, false, dezz.spfuncs[22] )
-    dezz.ui.CheckBox( p, "Class", "Ent class" )
-    dezz.ui.Slider( p, "Max distance","Ent ESP Distance",0, 20000,0 )
-    dezz.ui.Label( p, "Add entity key", function( p ) dezz.ui.Binder( "Ent add", p ) end )
-    
-    local p = dezz.itemPanel( "Misc", 2, 190 ):GetItemPanel()
-
-    dezz.ui.CheckBox( p, "Hide name", "Hide name" )
-    dezz.ui.TextEntry( "Custom name", "Custom name", p, 999 )
-    dezz.ui.CheckBox( p, "Disable sensivity adjustment", "Disable sensivity adjustment" )
-    dezz.ui.CheckBox( p, "Screengrab image", "Screengrab image" )
-    dezz.ui.ComboBox( p, "ESP Font", "ESP Font", { "Outlined", "Shadow" } )
     
     local p = dezz.itemPanel("World",3,470):GetItemPanel()
 
@@ -4278,6 +4280,13 @@ function dezz.tabs.Visuals()
     dezz.ui.Slider( p, "Aspect ratio","Aspect ratio",0,2,3,function(val) RunConsoleCommand("r_aspectratio",val) end )
     dezz.ui.CheckBox( p, "Viewmodel manip","Viewmodel manip", false, false, false, dezz.spfuncs[27] )
 
+    local p = dezz.itemPanel( "Misc", 3, 190 ):GetItemPanel()
+
+    dezz.ui.CheckBox( p, "Hide name", "Hide name" )
+    dezz.ui.TextEntry( "Custom name", "Custom name", p, 999 )
+    dezz.ui.CheckBox( p, "Disable sensivity adjustment", "Disable sensivity adjustment" )
+    dezz.ui.CheckBox( p, "Screengrab image", "Screengrab image" )
+    dezz.ui.ComboBox( p, "ESP Font", "ESP Font", { "Outlined", "Shadow" } )
 end
 
 // Misc
@@ -4310,8 +4319,8 @@ function dezz.tabs.Misc()
     local p = dezz.itemPanel("Key spam",1,190):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Use spam", "Use spam" )
-    dezz.ui.CheckBox( p, "Flashlight spam", "Flashlight spam", "F for use" )
-    dezz.ui.CheckBox( p, "Impulse spam ", "Impulse spam" )
+    dezz.ui.CheckBox( p, "Flashlight spam", "Flashlight spam", false, false, false, false, false, function(p) dezz.ui.Binder("fon", p) end )
+    dezz.ui.CheckBox( p, "Impulse spam ", "Impulse spam", false, false, false, false, false, function(p) dezz.ui.Binder("imp", p) end )
     dezz.ui.CheckBox( p, "Camera spam", "camera", "No work" )
     dezz.ui.CheckBox( p, "Gravity gun spam", "gravity", "Spam gravity gun, for use take gravity gun" )
     dezz.ui.CheckBox( p, "Vape spam", "Vape spam" )
@@ -4441,7 +4450,7 @@ function dezz.tabs.Players()
         if !IsValid(pEntity) then continue end
 
         local playerName = pEntity:Name():lower()
-        if dezz.playerSearchText and dezz.playerSearchText ~= "" and !playerName:find(dezz.playerSearchText, 1, true) then
+        if dezz.playerSearchText && dezz.playerSearchText != "" && !playerName:find(dezz.playerSearchText, 1, true) then
             continue
         end
 
@@ -4453,10 +4462,10 @@ function dezz.tabs.Players()
             if !IsValid(pEntity) then self:Remove() return end
             local steamId = pEntity:SteamID()
             
-            local isInDatabase = dezz.trackedPlayers and dezz.trackedPlayers[steamId]
-            local isPriority = dezz.cfg.priorityList and dezz.cfg.priorityList[steamId]
-            local isFriend = dezz.cfg.friends and dezz.cfg.friends[steamId]
-            local isAdmins = dezz.cfg.admins and dezz.cfg.admins[steamId]
+            local isInDatabase = dezz.trackedPlayers && dezz.trackedPlayers[steamId]
+            local isPriority = dezz.cfg.priorityList && dezz.cfg.priorityList[steamId]
+            local isFriend = dezz.cfg.friends && dezz.cfg.friends[steamId]
+            local isAdmins = dezz.cfg.admins && dezz.cfg.admins[steamId]
             
             if isInDatabase or isPriority then
                 surface.SetDrawColor(50, 0, 0, 100) 
@@ -4496,7 +4505,7 @@ function dezz.tabs.Players()
                 indicatorX = indicatorX + surface.GetTextSize("[Cheat]") + 3
             end
 
-            if isPriority and !isInDatabase then
+            if isPriority && !isInDatabase then
                 surface.SetTextColor(255, 0, 0)
                 surface.SetTextPos(indicatorX, 5)
                 surface.DrawText("[Target]")
@@ -4609,7 +4618,7 @@ function dezz.tabs.Entities()
     end
 
     for _, class in ipairs(classList) do
-        if dezz.entitySearchText and dezz.entitySearchText ~= "" and !class:lower():find(dezz.entitySearchText:lower(), 1, true) then
+        if dezz.entitySearchText && dezz.entitySearchText != "" && !class:lower():find(dezz.entitySearchText:lower(), 1, true) then
             continue
         end
 
@@ -4661,7 +4670,7 @@ function dezz.tabs.Por()
     end
 
     timer.Simple(0.1, function()
-        if IsValid(googlePanel) and IsValid(browser) then
+        if IsValid(googlePanel) && IsValid(browser) then
             browser:SetSize(googlePanel:GetWide(), googlePanel:GetTall())
         end
     end)
@@ -4675,9 +4684,9 @@ function dezz.tabs.Upd()
         {version = "v4.3.1", text = "Исправления:\nОптимизация кода.\nИсправление старых ошибок в коде.\n\nНе работающие функции:\nWait for simulation.\nCrossbow prediction.\nPulseriffle.\npSilent.\nFaceStab."},
         {version = "v4.3.2", text = "Исправления:\nОптимизация кода.\n\nУбрано:\nРаздел Predictions, во вкладке Aim.\nModelchanger во вкладке Visuals.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab."},
         {version = "v4.3.3", text = "Добавлено:\nNo 3d sky.\nNo predraw sky.\n\nИсправления:\nБаги в Fullbright.\nБаги в Wall color.\nБаги в Skybox color.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab."},
-        {version = "v4.3.4", text = "Добавлено:\nMenu color в configs.\nButton color and slider color в conffgs.\nTitle в configs\nНовые indicators в rage\nНовый keybind list.\nВозможность копировать steam(в players навестисть на игрока и прокрутить колесеко вниз либо вверх)\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
+        {version = "v4.3.4", text = "Добавлено:\nMenu color в configs.\nButton color && slider color в conffgs.\nTitle в configs\nНовые indicators в rage\nНовый keybind list.\nВозможность копировать steam(в players навестисть на игрока и прокрутить колесеко вниз либо вверх)\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
         {version = "v4.3.5", text = "Добавлено:\nFall predict в local player(visuals).\nTtable color в configs.\nРаздел menu settings в configs.\n2 варианта для player hat в local player(Visuals).\n\nИсправления:\nTextentry ошибки.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
-        {version = "v4.3.6 «last»", text = "Добавлено:\nLocal skeleton.\nВозвращение угла на обычный если была нажата кнопка Panic key.\nOpen key в configs.\nПеренесена вкладка local player в players(visuals).\n\nИсправления:\nОшибки кода.\nПерестановка в players.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
+        {version = "v4.3.6 «last»", text = "Добавлено:\nLocal skeleton.\nВозвращение угла на обычный если была нажата кнопка Panic key.\nOpen key в configs.\nПеренесена вкладка local player в players(visuals).\n\nИсправления:\nОшибки кода.\nПерестановка в visuals.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
     }
     
     for i = #updates, 1, -1 do
@@ -4822,7 +4831,7 @@ function dezz.tabs.LuaExecutor()
                 
                 for i = 1, lineCount do
                     local yPos = startY + (i-1)*lineHeight
-                    if yPos < h and yPos > -lineHeight then
+                    if yPos < h && yPos > -lineHeight then
                         surface.SetTextColor(cols.line_numbers_text)
                         surface.SetTextPos(5, yPos)
                         surface.DrawText(tostring(i))
@@ -4849,11 +4858,11 @@ function dezz.tabs.LuaExecutor()
         exec:SetTextColor(white)
         exec:SetFont("DermaDefaultBold")
         exec.Paint = function(s, w, h)
-            draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() and cols.execute_hover or cols.execute)
+            draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() && cols.execute_hover or cols.execute)
         end
         exec.DoClick = function()
             local script = txt:GetText()
-            if script ~= "" then pcall(function() RunString(script, "CustomScript", false) end) end
+            if script != "" then pcall(function() RunString(script, "CustomScript", false) end) end
         end
 
         local clr = vgui.Create("DButton", fr)
@@ -4862,7 +4871,7 @@ function dezz.tabs.LuaExecutor()
         clr:SetText("Clear")
         clr:SetTextColor(cols.text)
         clr.Paint = function(s, w, h)
-            draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() and cols.clear_hover or cols.clear)
+            draw.RoundedBox(4, 0, 0, w, h, s:IsHovered() && cols.clear_hover or cols.clear)
         end
         clr.DoClick = function() 
             txt:SetText("") 
@@ -4876,7 +4885,7 @@ function dezz.tabs.LuaExecutor()
         cls:SetTextColor(cols.text)
         cls:SetFont("DermaDefaultBold")
         cls.Paint = function(s, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, s:IsHovered() and cols.close_hover or cols.close)
+            draw.RoundedBox(0, 0, 0, w, h, s:IsHovered() && cols.close_hover or cols.close)
         end
         cls.DoClick = function() fr:Close() end
 
@@ -5042,10 +5051,10 @@ function dezz.AutoWall( dir, plyTarget )
 
 		local tr = TraceLine( dezz.traceStruct )
 		
-		if tr.Hit and !tr.HitSky then
+		if tr.Hit && !tr.HitSky then
 			local dot = -dir:Dot(tr.HitNormal)
 			
-			if dezz.activeWeapon.CanPenetrate and dot > 0.26 then
+			if dezz.activeWeapon.CanPenetrate && dot > 0.26 then
 				dezz.traceStruct.start = tr.HitPos
 				dezz.traceStruct.endpos = tr.HitPos + dir * dezz.activeWeapon.PenStr * ( dezz.swbPen[tr.MatType] or 1 ) * dezz.activeWeapon.PenMod
 				dezz.traceStruct.filter = pLocalPlayer
@@ -5070,7 +5079,7 @@ function dezz.AutoWall( dir, plyTarget )
 				tr = TraceLine( dezz.traceStruct )
 				
 				if dezz.cfg.vars["Ignores-Head unhitable"] then
-					return tr.Entity == plyTarget and tr.HitGroup == 1
+					return tr.Entity == plyTarget && tr.HitGroup == 1
 				else
 					return tr.Entity == plyTarget
 				end
@@ -5082,7 +5091,7 @@ function dezz.AutoWall( dir, plyTarget )
 	
 	local function M9KAutowall()
 		local penetrate_cvar = GetConVar( "M9KDisablePenetration" )
-		if IsValid(penetrate_cvar) and penetrate_cvar:GetBool() then
+		if IsValid(penetrate_cvar) && penetrate_cvar:GetBool() then
 			return false 
 		end
 
@@ -5111,7 +5120,7 @@ function dezz.AutoWall( dir, plyTarget )
 				isRicochet = dezz.m9kMaxRicochet[ dezz.activeWeapon.Primary.Ammo ]
 			end
 
-			if tr.MatType == MAT_METAL and isRicochet and dezz.activeWeapon.Primary.Ammo ~= "SniperPenetratedRound" then
+			if tr.MatType == MAT_METAL && isRicochet && dezz.activeWeapon.Primary.Ammo != "SniperPenetratedRound" then
 				return false
 			end
 
@@ -5148,7 +5157,7 @@ function dezz.AutoWall( dir, plyTarget )
 			local penTrace = TraceLine( dezz.traceStruct )
 
 			if dezz.cfg.vars["Ignores-Head unhitable"] then
-				return penTrace.Entity == plyTarget and penTrace.HitGroup == 1
+				return penTrace.Entity == plyTarget && penTrace.HitGroup == 1
 			else
 				return penTrace.Entity == plyTarget
 			end
@@ -5204,21 +5213,20 @@ function dezz.VisibleCheck( who, where, predticks, awalldir )
 
     local canhit = tr.Entity == who or tr.Fraction == 1
 
-    if !canhit and awalldir and dezz.cfg.vars["Wallz"] then 
+    if !canhit && awalldir && dezz.cfg.vars["Wallz"] then 
         return dezz.AutoWall( awalldir, who )
     end
 
-    if dezz.cfg.vars["Ignores-Head unhitable"] and tr.HitGroup != 1 then return false end
+    if dezz.cfg.vars["Ignores-Head unhitable"] && tr.HitGroup != 1 then return false end
 
     return canhit
 end
 
-dezz.flServerTime = 0
 function dezz.CanShoot( cmd )
 	if !dezz.activeWeapon then return false end
 	local seq = dezz.activeWeapon:GetSequence()
 
-    if dezz.cfg.binds["Aim on key"] != 0 and !dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) then
+    if dezz.cfg.binds["Aim on key"] != 0 && !dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) then
         return false
     end
 
@@ -5230,21 +5238,21 @@ function dezz.CanShoot( cmd )
         return false
     end
 
-    if dezz.cfg.vars["Auto fire"] and cmd:KeyDown(IN_ATTACK) then
+    if dezz.cfg.vars["Auto fire"] && cmd:KeyDown(IN_ATTACK) then
         return false
     end
 
-    if dezz.cfg.vars["Bullet time"] and IsValid(dezz.activeWeapon) then
+    if dezz.cfg.vars["Bullet time"] && IsValid(dezz.activeWeapon) then
         if dezz.activeWeapon:GetNextPrimaryFire() > CurTime() - (dezz.cfg.vars["Time"]) then
             return false
         end
     end
 
-    if dezz.cfg.vars["Wait for seed"] and ded.GetRandomSeed( cmd ) != 134 then
+    if dezz.cfg.vars["Wait for seed"] && ded.GetRandomSeed( cmd ) != 134 then
         return false 
     end
 
-	return dezz.activeWeapon:Clip1() != 0 and !dezz.badSeqs[ seq ] 
+	return dezz.activeWeapon:Clip1() != 0 && !dezz.badSeqs[ seq ] 
 end 
 
 function dezz.Spread( cmd, ang, spread )
@@ -5314,7 +5322,7 @@ function dezz.NoSpread(cmd, ang)
 end
 
 function dezz.NoRecoil(ang)
-    if type(dezz.activeWeaponClass) ~= "string" then
+    if type(dezz.activeWeaponClass) != "string" then
         return ang
     end
 
@@ -5328,7 +5336,7 @@ end
 function dezz.ParseBones( ply, bone )
     local mdl = ply:GetModel()
 
-    if dezz.parsedbones[ mdl ] and dezz.parsedbones[ mdl ][ bone ] then 
+    if dezz.parsedbones[ mdl ] && dezz.parsedbones[ mdl ][ bone ] then 
         return dezz.parsedbones[ mdl ][ bone ]
     end
 
@@ -5356,7 +5364,7 @@ function dezz.ParseBones( ply, bone )
 
         if group == nil then continue end
 
-        if bone > 1 and group == 0 then
+        if bone > 1 && group == 0 then
             dezz.parsedbones[ mdl ][ bone ] = i
 
             return i
@@ -5367,12 +5375,12 @@ function dezz.ParseBones( ply, bone )
 end
 
 function dezz.MultipointGroupCheck( group )
-    if group == 1 and !dezz.cfg.vars["Multipoint groups-Head"] then return false end
-    if group == 2 and !dezz.cfg.vars["Multipoint groups-Chest"] then return false end
-    if group == 3 and !dezz.cfg.vars["Multipoint groups-Stomach"] then return false end
-    if group == 4 or group == 5 and !dezz.cfg.vars["Multipoint groups-Arms"] then return false end
-    if group == 6 or group == 7 and !dezz.cfg.vars["Multipoint groups-Legs"] then return false end
-    if group == 0 and !dezz.cfg.vars["Multipoint groups-Generic"] then return false end
+    if group == 1 && !dezz.cfg.vars["Multipoint groups-Head"] then return false end
+    if group == 2 && !dezz.cfg.vars["Multipoint groups-Chest"] then return false end
+    if group == 3 && !dezz.cfg.vars["Multipoint groups-Stomach"] then return false end
+    if group == 4 or group == 5 && !dezz.cfg.vars["Multipoint groups-Arms"] then return false end
+    if group == 6 or group == 7 && !dezz.cfg.vars["Multipoint groups-Legs"] then return false end
+    if group == 0 && !dezz.cfg.vars["Multipoint groups-Generic"] then return false end
 
     return true 
 end
@@ -5391,12 +5399,12 @@ function dezz.GetBones(ply)
             local group = ply:GetHitBoxHitGroup(i, set)
             if group == nil then continue end
 
-            if (group == 1 and !dezz.cfg.vars["Hitscan groups-Head"]) or
-               (group == 2 and !dezz.cfg.vars["Hitscan groups-Chest"]) or
-               (group == 3 and !dezz.cfg.vars["Hitscan groups-Stomach"]) or
-               ((group == 4 or group == 5) and !dezz.cfg.vars["Hitscan groups-Arms"]) or
-               ((group == 6 or group == 7) and !dezz.cfg.vars["Hitscan groups-Legs"]) or
-               (group == 0 and !dezz.cfg.vars["Hitscan groups-Generic"]) then
+            if (group == 1 && !dezz.cfg.vars["Hitscan groups-Head"]) or
+               (group == 2 && !dezz.cfg.vars["Hitscan groups-Chest"]) or
+               (group == 3 && !dezz.cfg.vars["Hitscan groups-Stomach"]) or
+               ((group == 4 or group == 5) && !dezz.cfg.vars["Hitscan groups-Arms"]) or
+               ((group == 6 or group == 7) && !dezz.cfg.vars["Hitscan groups-Legs"]) or
+               (group == 0 && !dezz.cfg.vars["Hitscan groups-Generic"]) then
                 continue
             end
 
@@ -5418,7 +5426,7 @@ function dezz.GetBones(ply)
             local bonepos, ang = ply:GetBonePosition(hitboxbone)
             if !bonepos or !ang then continue end
 
-            if dezz.cfg.vars["Multipoint"] and dezz.MultipointGroupCheck(v.hitgroup) then
+            if dezz.cfg.vars["Multipoint"] && dezz.MultipointGroupCheck(v.hitgroup) then
                 local points = {
                     (mins + maxs) * 0.5,
                     Vector(mins.x, mins.y, mins.z),
@@ -5435,7 +5443,7 @@ function dezz.GetBones(ply)
                     points[j]:Rotate(ang)
                     points[j] = points[j] + bonepos
 
-                    if j ~= 1 then
+                    if j != 1 then
                         points[j] = ((points[j] - points[1]) * scale) + points[1]
                     end
 
@@ -5489,7 +5497,7 @@ function dezz.GetBones(ply)
                 points[i]:Rotate(ang)
                 points[i] = points[i] + bonepos
 
-                if i ~= 1 then
+                if i != 1 then
                     points[i] = ((points[i] - points[1]) * scale) + points[1]
                 end
             end
@@ -5527,23 +5535,23 @@ function dezz.GetSortedPlayers( mode, selfpred, plypred, vischeck )
             continue 
         end
 
-        if dezz.cfg.vars["Ignores-Bots"] and v:IsBot() then continue end 
-        if dezz.cfg.vars["Ignores-Friends"] and dezz.cfg.friends[v:SteamID()] then continue end 
-        if dezz.cfg.vars["Ignores-Steam friends"] and v:GetFriendStatus() == "friend" then continue end 
-        if dezz.cfg.vars["Ignores-Admins"] and dezz.cfg.admins[v:SteamID()] or v:IsAdmin() then continue end 
-        if dezz.cfg.vars["Ignores-Frozen"] and v:IsFlagSet( FL_FROZEN ) then continue end 
-        if dezz.cfg.vars["Ignores-Nodraw"] and v:IsEffectActive( EF_NODRAW ) then continue end 
-        if dezz.cfg.vars["Ignores-God time"] and v:GetColor().a < 255 then continue end 
-        if dezz.cfg.vars["Ignores-Driver"] and v:InVehicle() then continue end 
-        if dezz.cfg.vars["Target-Priority-Only"] and !dezz.cfg.priorityList[v:SteamID()] then continue end
+        if dezz.cfg.vars["Ignores-Bots"] && v:IsBot() then continue end 
+        if dezz.cfg.vars["Ignores-Friends"] && dezz.cfg.friends[v:SteamID()] then continue end 
+        if dezz.cfg.vars["Ignores-Steam friends"] && v:GetFriendStatus() == "friend" then continue end 
+        if dezz.cfg.vars["Ignores-Admins"] && dezz.cfg.admins[v:SteamID()] or v:IsAdmin() then continue end 
+        if dezz.cfg.vars["Ignores-Frozen"] && v:IsFlagSet( FL_FROZEN ) then continue end 
+        if dezz.cfg.vars["Ignores-Nodraw"] && v:IsEffectActive( EF_NODRAW ) then continue end 
+        if dezz.cfg.vars["Ignores-God time"] && v:GetColor().a < 255 then continue end 
+        if dezz.cfg.vars["Ignores-Driver"] && v:InVehicle() then continue end 
+        if dezz.cfg.vars["Target-Priority-Only"] && !dezz.cfg.priorityList[v:SteamID()] then continue end
 
         local iTeamEnemy = dezz.GetTeam( v )
 
-        if st == TEAM_SPECTATOR or dezz.cfg.vars["Ignores-Teammates"] and iTeamLocal == iTeamEnemy then 
+        if st == TEAM_SPECTATOR or dezz.cfg.vars["Ignores-Teammates"] && iTeamLocal == iTeamEnemy then 
             continue 
         end 
 
-        if dezz.cfg.vars["Ignores-Nocliping"] and v:GetMoveType() == MOVETYPE_NOCLIP then 
+        if dezz.cfg.vars["Ignores-Nocliping"] && v:GetMoveType() == MOVETYPE_NOCLIP then 
             continue 
         end 
 
@@ -5639,7 +5647,7 @@ do
         local mypos = pLocalPlayer:EyePos()
         local records = dezz.btrecords[ply]
         local firstticks = dezz.FindFirstHittableTicks(ply, cmd)
-        local tickcount = records and #records or 0
+        local tickcount = records && #records or 0
 
         if tickcount == 0 or !firstticks then return 1 end
 
@@ -5649,7 +5657,7 @@ do
         for i = 1, tickcount - firstticks do
             local mt = i + firstticks
 
-            if records[mt] and records[mt].aimpos then
+            if records[mt] && records[mt].aimpos then
                 local dist = records[mt].aimpos:DistToSqr(mypos)
                 if dist < lastdist then
                     lastdist = dist
@@ -5694,7 +5702,7 @@ function dezz.SelectTarget(cmd)
     local maxplys = dezz.cfg.vars["Max targets"]
     local curplys = #plys
 
-    if maxplys ~= 0 and curplys > maxplys then
+    if maxplys != 0 && curplys > maxplys then
         curplys = maxplys
     end
 
@@ -5710,7 +5718,7 @@ function dezz.SelectTarget(cmd)
             local iMaxDistance = dezz.cfg.vars["Max distance"]
             local iDistance = vEyePos:DistToSqr(ply:EyePos())
 
-            if iMaxDistance ~= 0 and iDistance > (iMaxDistance * iMaxDistance) then
+            if iMaxDistance != 0 && iDistance > (iMaxDistance * iMaxDistance) then
                 continue
             end
 
@@ -5733,7 +5741,7 @@ function dezz.SelectTarget(cmd)
                         end
                     end
                 end
-            elseif dezz.cfg.vars["Backtrack"] and dezz.btrecords[ply] and !ply.breaklc then
+            elseif dezz.cfg.vars["Backtrack"] && dezz.btrecords[ply] && !ply.breaklc then
                 local ticks = dezz.FindBacktrack(cmd, ply)
                 for p = 1, #ticks do
                     if !dezz.btrecords[ply][p] then continue end
@@ -5776,7 +5784,7 @@ function dezz.SelectTarget(cmd)
             local iMaxDistance = dezz.cfg.vars["Max distance"]
             local iDistance = vEyePos:DistToSqr(ply:EyePos())
 
-            if iMaxDistance ~= 0 and iDistance > (iMaxDistance * iMaxDistance) then
+            if iMaxDistance != 0 && iDistance > (iMaxDistance * iMaxDistance) then
                 continue
             end
 
@@ -5793,7 +5801,7 @@ function dezz.SelectTarget(cmd)
                     end
                 end
 
-            elseif dezz.cfg.vars["Extrapolation"] and dezz.predicted[ply] then
+            elseif dezz.cfg.vars["Extrapolation"] && dezz.predicted[ply] then
                 if !dezz.predicted[ply].pos then return end
 
                 local aimAng = (dezz.predicted[ply].pos - vEyePos):Angle()
@@ -5814,7 +5822,7 @@ function dezz.SelectTarget(cmd)
             if dezz.cfg.vars["Backtrack"] then
                 local ticks = dezz.FindBacktrack(cmd, ply)
 
-                if dezz.btrecords[ply] and !ply.breaklc then
+                if dezz.btrecords[ply] && !ply.breaklc then
                     local ts = 0
 
                     if dezz.cfg.vars["Backtrack mode"] == 3 then
@@ -5915,13 +5923,13 @@ function dezz.DoSilentAngleUpdate( UserCmd )
     local pWeapon = pLocalPlayer:GetActiveWeapon()
 
     if ( IsValid( pWeapon ) ) then
-        if ( pWeapon.FreezeMovement and pWeapon:FreezeMovement() ) then 
+        if ( pWeapon.FreezeMovement && pWeapon:FreezeMovement() ) then 
             return 
         end
 
         local bIsInUse = UserCmd:KeyDown( IN_USE ) or pLocalPlayer:KeyDown(IN_USE)
 
-        if ( pWeapon:GetClass() == "weapon_physgun" and IsValid( pWeapon:GetInternalVariable( "m_hGrabbedEntity" ) ) and bIsInUse ) then 
+        if ( pWeapon:GetClass() == "weapon_physgun" && IsValid( pWeapon:GetInternalVariable( "m_hGrabbedEntity" ) ) && bIsInUse ) then 
             return 
         end
     end
@@ -6104,22 +6112,22 @@ function dezz.CanStab(ent, pos, health)
 
     if !canuse then return false, false end
 
-    if dezz.canBacktrack and dezz.btrecords and dezz.backtracktick then
-        if dezz.canBacktrack(ent) and dezz.btrecords[ent] and dezz.btrecords[ent][dezz.backtracktick] then
+    if dezz.canBacktrack && dezz.btrecords && dezz.backtracktick then
+        if dezz.canBacktrack(ent) && dezz.btrecords[ent] && dezz.btrecords[ent][dezz.backtracktick] then
             pos = dezz.btrecords[ent][dezz.backtracktick].aimpos or pos
         end
     end
 
-    local backstab = tbl.canbackstab and dezz:EntityFaceBack(ent)
+    local backstab = tbl.canbackstab && dezz:EntityFaceBack(ent)
     local dist = mypos:DistToSqr(pos)
     local mode = dezz.cfg.vars["Knifebot mode"]
 
     if mode == 1 then
-        if backstab and dist < tbl.rightdist then
+        if backstab && dist < tbl.rightdist then
             return true, true
-        elseif dist < tbl.leftdist and ((backstab and health - tbl.leftdmgb <= 0) or (health - tbl.leftdmg <= 0)) then
+        elseif dist < tbl.leftdist && ((backstab && health - tbl.leftdmgb <= 0) or (health - tbl.leftdmg <= 0)) then
             return true, false
-        elseif dist < tbl.rightdist or (dist < tbl.rightdist and health - tbl.leftdmg > 0) then
+        elseif dist < tbl.rightdist or (dist < tbl.rightdist && health - tbl.leftdmg > 0) then
             return true, true
         end
     elseif mode == 2 then
@@ -6129,9 +6137,9 @@ function dezz.CanStab(ent, pos, health)
             return true, false
         end
     elseif mode == 3 then
-        if dist < tbl.leftdist and ((backstab and health - tbl.leftdmgb <= 0) or (health - tbl.leftdmg <= 0)) then
+        if dist < tbl.leftdist && ((backstab && health - tbl.leftdmgb <= 0) or (health - tbl.leftdmg <= 0)) then
             return true, false
-        elseif dist < tbl.rightdist and ((backstab and health - tbl.rightdmgb <= 0) or (health - tbl.rightdmg <= 0)) then
+        elseif dist < tbl.rightdist && ((backstab && health - tbl.rightdmgb <= 0) or (health - tbl.rightdmg <= 0)) then
             return true, true
         end
     end
@@ -6201,7 +6209,7 @@ function dezz.Aim(cmd)
             end
 
             local data = ded.GetSimulationData()
-            if data and data.m_vecAbsOrigin then
+            if data && data.m_vecAbsOrigin then
                 v:SetRenderOrigin(data.m_vecAbsOrigin)
                 v:SetNetworkOrigin(data.m_vecAbsOrigin)
                 v:InvalidateBoneCache()
@@ -6222,7 +6230,7 @@ function dezz.Aim(cmd)
 
     if !dezz.cfg.vars["Enable aimbot"] or !ply then return end
 
-    if dezz.cfg.vars["Forward"] and dezz.cfg.vars["Forwardtrack time"] > 0 then
+    if dezz.cfg.vars["Forward"] && dezz.cfg.vars["Forwardtrack time"] > 0 then
         local targetVel = ply:GetVelocity()
         if targetVel then
             local predictionTime = dezz.cfg.vars["Forwardtrack time"] / 1000
@@ -6242,13 +6250,13 @@ function dezz.Aim(cmd)
     local serverArriveTick = ded.GetServerTime(cmd) + ded.GetLatency(0) + ded.GetLatency(1)
     local diff = serverArriveTick - targetTime
 
-    if diff > 1 and dezz.cfg.vars["Adjust tickcount"] then return end
+    if diff > 1 && dezz.cfg.vars["Adjust tickcount"] then return end
 
-    if dezz.cfg.vars["Always backtrack"] and !backtracking then return end
+    if dezz.cfg.vars["Always backtrack"] && !backtracking then return end
 
     if dezz.cfg.vars["Fov limit"] then
         local fov = dezz.cfg.vars["Aimbot FOV"]
-        local view = dezz.cfg.vars["Silent aim"] and dezz.SilentAngle or cmd:GetViewAngles()
+        local view = dezz.cfg.vars["Silent aim"] && dezz.SilentAngle or cmd:GetViewAngles()
         local angDiff = aimang - view
 
         angDiff:Normalize()
@@ -6264,21 +6272,21 @@ function dezz.Aim(cmd)
     if !dezz.CanShoot(cmd) then return end
 
     --no work
-    if dezz.cfg.vars["Wait for simulation"] and ply:GetVelocity():Length() ~= 0 and ded.GetSimulationTime(ply) == 0 then
+    if dezz.cfg.vars["Wait for simulation"] && ply:GetVelocity():Length() != 0 && ded.GetSimulationTime(ply) == 0 then
         return 
     end
     --
 
-    if !dezz.cfg.vars["Aimbot smoothing"] and dezz.SkipCommand then return end
+    if !dezz.cfg.vars["Aimbot smoothing"] && dezz.SkipCommand then return end
 
     dezz.aimingrn = true
 
     local altfire = false
     local canstab, rightstab = dezz.CanStab(ply, bone, ply:Health())
 
-    if dezz.cfg.vars["Knifebot"] and canstab then
+    if dezz.cfg.vars["Knifebot"] && canstab then
         altfire = rightstab
-    elseif dezz.cfg.vars["Knifebot"] and !canstab then
+    elseif dezz.cfg.vars["Knifebot"] && !canstab then
         return
     end
 
@@ -6298,7 +6306,7 @@ function dezz.Aim(cmd)
     end
 
     if dezz.cfg.vars["Try Predict"] then
-        if dezz.targetVector and IsValid(ply) then
+        if dezz.targetVector && IsValid(ply) then
             local localPlayer = pLocalPlayer
             local localPos = localPlayer:GetShootPos()
             local targetPos = dezz.targetVector
@@ -6386,7 +6394,7 @@ function dezz.Aim(cmd)
             local tick = dezz.TIME_TO_TICKS(dezz.flServerTime)
             ded.SetCommandTick(cmd, tick - 1)
         end
-    elseif dezz.cfg.vars["Adjust tickcount"] and ply.simtime_updated then
+    elseif dezz.cfg.vars["Adjust tickcount"] && ply.simtime_updated then
         local flSimulationTime = ded.GetSimulationTime(ply:EntIndex())
         local iTickCount = dezz.TIME_TO_TICKS(flSimulationTime)
 
@@ -6418,10 +6426,10 @@ function dezz.Aim(cmd)
             end
         end
 
-        if altfire or (dezz.cfg.vars["Alt Rapid fire"] and cmd:CommandNumber() % 2 == 0) then
+        if altfire or (dezz.cfg.vars["Alt Rapid fire"] && cmd:CommandNumber() % 2 == 0) then
             cmd:AddKey(IN_ATTACK2)
         else
-            if isAutomatic or (dezz.cfg.vars["Rapid fire"] and cmd:CommandNumber() % 2 == 0) then
+            if isAutomatic or (dezz.cfg.vars["Rapid fire"] && cmd:CommandNumber() % 2 == 0) then
                 cmd:AddKey(IN_ATTACK)
             end
         end
@@ -6440,7 +6448,7 @@ function dezz.autoReload(cmd)
     if !IsValid(wep) then return end
 
     if wep.Primary then
-        if wep:Clip1() == 0 and wep:GetMaxClip1() > 0 and pLocalPlayer:GetAmmoCount(wep:GetPrimaryAmmoType()) > 0 then
+        if wep:Clip1() == 0 && wep:GetMaxClip1() > 0 && pLocalPlayer:GetAmmoCount(wep:GetPrimaryAmmoType()) > 0 then
             cmd:AddKey(IN_RELOAD)
         end
     end
@@ -6457,12 +6465,12 @@ function dezz.PredictVelocity(velocity, viewangles, dir, maxspeed, accel)
 	right:Normalize()
 
 	local fmove = 0
-	local smove = (dir == 1) and -10000 or 10000
+	local smove = (dir == 1) && -10000 or 10000
 
 	local wishdir = Vector(forward.x * fmove + right.x * smove, forward.y * fmove + right.y * smove, 0)
 	local wishspeed = wishdir:Length()
 
-	if wishspeed ~= 0 then
+	if wishspeed != 0 then
 		wishdir:Normalize()
 	end
 
@@ -6520,11 +6528,11 @@ function dezz.PredictMovement(viewangles, dir, angle)
 			mask = MASK_PLAYERSOLID
 		})
 
-		if (pm.Fraction ~= 1 and pm.HitNormal.z <= 0.9) or pm.AllSolid or pm.StartSolid then
+		if (pm.Fraction != 1 && pm.HitNormal.z <= 0.9) or pm.AllSolid or pm.StartSolid then
 			return false
 		end
 
-		if pm.Fraction ~= 1 then
+		if pm.Fraction != 1 then
 			local time_left = flTickInterval
 			for j = 1, 2 do
 				time_left = time_left * (1 - pm.Fraction)
@@ -6567,7 +6575,7 @@ function dezz.PredictMovement(viewangles, dir, angle)
 			mask = MASK_PLAYERSOLID
 		})
 
-		on_ground = (pm.Fraction < 1 or pm.AllSolid or pm.StartSolid) and pm.HitNormal.z >= 0.7
+		on_ground = (pm.Fraction < 1 or pm.AllSolid or pm.StartSolid) && pm.HitNormal.z >= 0.7
 
 		if on_ground then
 			velocity.z = 0
@@ -6585,11 +6593,11 @@ function dezz.CircleStrafe(cmd)
 	while dezz.cstrafe_dir < 2 do
 		angle = 0
 		local path_found = false
-		local step = (dezz.cstrafe_dir == 1) and math.Round(dezz.cfg.vars["CStrafe angle step"]) or -math.Round(dezz.cfg.vars["CStrafe angle step"])
+		local step = (dezz.cstrafe_dir == 1) && math.Round(dezz.cfg.vars["CStrafe angle step"]) or -math.Round(dezz.cfg.vars["CStrafe angle step"])
 
 		while true do
-			if (dezz.cstrafe_dir == 1 and angle > math.Round(dezz.cfg.vars["CStrafe angle max step"])) or
-				(dezz.cstrafe_dir ~= 1 and angle < -math.Round(dezz.cfg.vars["CStrafe angle max step"])) then
+			if (dezz.cstrafe_dir == 1 && angle > math.Round(dezz.cfg.vars["CStrafe angle max step"])) or
+				(dezz.cstrafe_dir != 1 && angle < -math.Round(dezz.cfg.vars["CStrafe angle max step"])) then
 				break
 			end
 
@@ -6611,7 +6619,7 @@ function dezz.CircleStrafe(cmd)
 		local viewangles = cmd:GetViewAngles()
 		viewangles.y = math.NormalizeAngle(math.deg(math.atan2(velocity.y, velocity.x)) + angle)
 		cmd:SetViewAngles(viewangles)
-		cmd:SetSideMove((dezz.cstrafe_dir == 1) and -10000 or 10000)
+		cmd:SetSideMove((dezz.cstrafe_dir == 1) && -10000 or 10000)
 	else
 		dezz.cstrafe_dir = 0
 	end
@@ -6625,15 +6633,15 @@ do
     function dezz.AutoStrafe(cmd)
         ztick = ztick + 1
 
-        if (dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) and dezz.cfg.vars["Circle strafe"]) then
+        if (dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) && dezz.cfg.vars["Circle strafe"]) then
             dezz.CircleStrafe(cmd)
 
-        elseif (dezz.IsKeyDown(dezz.cfg.binds["Z Hop"]) and dezz.cfg.vars["Z Hop"]) then
+        elseif (dezz.IsKeyDown(dezz.cfg.binds["Z Hop"]) && dezz.cfg.vars["Z Hop"]) then
             local handler = ztick / 3.14
 
             cmd:SetSideMove(5000 * math.sin(handler))
 
-        elseif dezz.cfg.vars["Air strafer"] and dezz.cfg.vars["Strafe mode"] == 3 then
+        elseif dezz.cfg.vars["Air strafer"] && dezz.cfg.vars["Strafe mode"] == 3 then
             if !IsValid(pLocalPlayer) then return end
 
             local get_velocity_degree = function(velocity)
@@ -6660,22 +6668,22 @@ do
                 return
             end
 
-            if (velocity:Length2D() <= 15.0 and (forwardmove == 0 and sidemove == 0)) then
+            if (velocity:Length2D() <= 15.0 && (forwardmove == 0 && sidemove == 0)) then
                 return
             end
 
             local flip = cmd:TickCount() % 2 == 0
 
-            local turn_direction_modifier = flip and 1.0 or -1.0
+            local turn_direction_modifier = flip && 1.0 or -1.0
             local viewangles = Angle(dezz.SilentAngle.x, dezz.SilentAngle.y, dezz.SilentAngle.z)
 
-            if (forwardmove ~= 0 or sidemove ~= 0) then
+            if (forwardmove != 0 or sidemove != 0) then
                 cmd:SetForwardMove(0)
                 cmd:SetSideMove(0)
 
                 local turn_angle = math.atan2(-sidemove, forwardmove)
                 viewangles.y = viewangles.y + (turn_angle * M_RADPI)
-            elseif (forwardmove ~= 0) then
+            elseif (forwardmove != 0) then
                 cmd:SetForwardMove(0)
             end
 
@@ -6732,7 +6740,7 @@ do
 
             local yaw = math.rad(normalized_y - viewangles.y + angles_move.y)
 
-            if (normalized_x >= 90 or normalized_x <= -90 or (dezz.SilentAngle.x >= 90 and dezz.SilentAngle.x <= 200) or (dezz.SilentAngle.x <= -90 and dezz.SilentAngle.x >= -200)) then
+            if (normalized_x >= 90 or normalized_x <= -90 or (dezz.SilentAngle.x >= 90 && dezz.SilentAngle.x <= 200) or (dezz.SilentAngle.x <= -90 && dezz.SilentAngle.x >= -200)) then
                 cmd:SetForwardMove(-math.cos(yaw) * speed)
             else
                 cmd:SetForwardMove(math.cos(yaw) * speed)
@@ -6740,7 +6748,7 @@ do
 
             cmd:SetSideMove(math.sin(yaw) * speed)
 
-        elseif dezz.cfg.vars["Air strafer"] and dezz.cfg.vars["Strafe mode"] == 2 then
+        elseif dezz.cfg.vars["Air strafer"] && dezz.cfg.vars["Strafe mode"] == 2 then
             if !IsValid(pLocalPlayer) then return end
 
             cmd:SetForwardMove(0)
@@ -6751,7 +6759,7 @@ do
                 local velocityLen = pLocalPlayer:GetVelocity():Length2D()
                 if velocityLen == 0 then velocityLen = 1 end
                 cmd:SetForwardMove(5850 / velocityLen)
-                cmd:SetSideMove((cmd:CommandNumber() % 2 == 0) and -400 or 400)
+                cmd:SetSideMove((cmd:CommandNumber() % 2 == 0) && -400 or 400)
             end
             
         end
@@ -6774,8 +6782,8 @@ do
     end
 
     function dezz.GetBaseYaw()
-        if !IsValid(dezz.aatarget) or dezz.cfg.vars["Yaw base"] ~= 2 then
-            return dezz.SilentAngle and dezz.SilentAngle.y or 0
+        if !IsValid(dezz.aatarget) or dezz.cfg.vars["Yaw base"] != 2 then
+            return dezz.SilentAngle && dezz.SilentAngle.y or 0
         end
 
         local targetPos = dezz.PredictedPos(dezz.aatarget)
@@ -6811,7 +6819,7 @@ do
                 filter = dezz.aatarget
             })
 
-            return tr.Fraction < 1 and tr.Entity ~= pLocalPlayer
+            return tr.Fraction < 1 && tr.Entity != pLocalPlayer
         end
 
         local function Normalize(ang) 
@@ -6826,7 +6834,7 @@ do
             left, right = right, left
         end
 
-        if leftcheck and rightcheck then
+        if leftcheck && rightcheck then
             return false
         elseif leftcheck then
             return true, left, right
@@ -6845,59 +6853,59 @@ do
         end,
         
         [2] = function(cmd)
-            return dezz.SendPacket and baseyaw or baseyaw + 178 
+            return dezz.SendPacket && baseyaw or baseyaw + 178 
         end,
         
         [3] = function(cmd)     
-            return dezz.SendPacket and baseyaw or baseyaw + (dezz.inverted and 43 or -43)
+            return dezz.SendPacket && baseyaw or baseyaw + (dezz.inverted && 43 or -43)
         end,
         
         [4] = function(cmd)     
-            local delta = dezz.inverted and 89 or -89
-            return baseyaw - (dezz.SendPacket and delta or -delta) 
+            local delta = dezz.inverted && 89 or -89
+            return baseyaw - (dezz.SendPacket && delta or -delta) 
         end,
         
         [5] = function(cmd)     
-            local delta = dezz.inverted and 89 or -89
-            return baseyaw - (dezz.SendPacket and delta or 178) 
+            local delta = dezz.inverted && 89 or -89
+            return baseyaw - (dezz.SendPacket && delta or 178) 
         end,
         
         [6] = function(cmd)     
             local add = math.NormalizeAngle(CurTime() * (dezz.cfg.vars["Spin speed"] or 1) * 10)
-            return dezz.SendPacket and (dezz.inverted and (baseyaw - 178) or add) or (dezz.inverted and add or (baseyaw - 178))
+            return dezz.SendPacket && (dezz.inverted && (baseyaw - 178) or add) or (dezz.inverted && add or (baseyaw - 178))
         end,
         
         [7] = function(cmd)
             if !ded or !ded.GetCurrentLowerBodyYaw then 
-                return dezz.SendPacket and baseyaw or baseyaw + 178
+                return dezz.SendPacket && baseyaw or baseyaw + 178
             end
             
             local lby = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
             if !lby then
-                return dezz.SendPacket and baseyaw or baseyaw + 178
+                return dezz.SendPacket && baseyaw or baseyaw + 178
             end
             
-            return lby + (dezz.SendPacket and 180 or 0)
+            return lby + (dezz.SendPacket && 180 or 0)
         end,
         
         [8] = function(cmd)
             local yaw = baseyaw - 178
 
             if pLocalPlayer:GetVelocity():Length2D() > 1 then
-                if ded and ded.GetCurrentLowerBodyYaw then
+                if ded && ded.GetCurrentLowerBodyYaw then
                     local lby = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
                     if lby then
-                        yaw = lby + (dezz.SendPacket and 180 or 0)
+                        yaw = lby + (dezz.SendPacket && 180 or 0)
                     end
                 end
             elseif !dezz.SendPacket then
-                local side = dezz.inverted and -1 or 1
+                local side = dezz.inverted && -1 or 1
                 
-                if ded and ded.GetTargetLowerBodyYaw and ded.GetCurrentLowerBodyYaw then
+                if ded && ded.GetTargetLowerBodyYaw && ded.GetCurrentLowerBodyYaw then
                     local lbyTarget = ded.GetTargetLowerBodyYaw(pLocalPlayer:EntIndex())
                     local currentLBY = ded.GetCurrentLowerBodyYaw(pLocalPlayer:EntIndex())
                     
-                    if lbyTarget and currentLBY then
+                    if lbyTarget && currentLBY then
                         if math.abs(math.NormalizeAngle(lbyTarget - dezz.oldYaw)) < (dezz.cfg.vars["LBY min delta"] or 35) then
                             yaw = math.NormalizeAngle(dezz.oldYaw + (dezz.cfg.vars["LBY break delta"] or 60) * side)
                         else
@@ -6913,7 +6921,7 @@ do
         [9] = function(cmd)     
             local add = dezz.cfg.vars["Sin add"] or 0
             local sin = math.sin(CurTime()) * (dezz.cfg.vars["Sin delta"] or 30)
-            return dezz.SendPacket and baseyaw + sin + add or baseyaw - sin - add
+            return dezz.SendPacket && baseyaw + sin + add or baseyaw - sin - add
         end,
         
         [10] = function(cmd)
@@ -6928,7 +6936,7 @@ do
             local x2 = x1 + ct1 * math.sin(ct2)
             local y2 = y1 - ct1 * math.cos(ct2)
 
-            local sin = dezz.SendPacket and x2 * delta or y2 * delta
+            local sin = dezz.SendPacket && x2 * delta or y2 * delta
             return baseyaw + sin
         end,
         
@@ -6942,36 +6950,36 @@ do
         [12] = function(cmd)     
             local delta = dezz.cfg.vars["Jitter delta"] or 25
             
-            local a = dezz.SendPacket and baseyaw - 178 or baseyaw - 178 + math.random(-delta, delta)
-            local b = dezz.SendPacket and baseyaw - 178 + math.random(-delta, delta) or baseyaw - 178
+            local a = dezz.SendPacket && baseyaw - 178 or baseyaw - 178 + math.random(-delta, delta)
+            local b = dezz.SendPacket && baseyaw - 178 + math.random(-delta, delta) or baseyaw - 178
 
-            return dezz.inverted and a or b
+            return dezz.inverted && a or b
         end,
         
         [13] = function(cmd)    
             local delta = dezz.cfg.vars["Jitter delta"] or 25
 
-            local a = dezz.SendPacket and baseyaw - 178 or baseyaw + (delta * dezz.SwaySide)
-            local b = dezz.SendPacket and baseyaw + (delta * dezz.SwaySide) or baseyaw - 178
+            local a = dezz.SendPacket && baseyaw - 178 or baseyaw + (delta * dezz.SwaySide)
+            local b = dezz.SendPacket && baseyaw + (delta * dezz.SwaySide) or baseyaw - 178
 
-            return dezz.inverted and a or b
+            return dezz.inverted && a or b
         end,
         
         [14] = function(cmd)   
             local ctjit = math.sin(CurTime() * 30) * 25
 
-            return ctjit + (dezz.SendPacket and baseyaw - 160 * dezz.SwaySide or baseyaw - 160 * -dezz.SwaySide)
+            return ctjit + (dezz.SendPacket && baseyaw - 160 * dezz.SwaySide or baseyaw - 160 * -dezz.SwaySide)
         end,
         
         [15] = function(cmd) 
-            local side = dezz.inverted and 1 or -1
+            local side = dezz.inverted && 1 or -1
             local satanicvalue = math.sin(CurTime() * 666) * 666
 
-            return math.NormalizeAngle(dezz.SendPacket and satanicvalue * side or satanicvalue * -side)
+            return math.NormalizeAngle(dezz.SendPacket && satanicvalue * side or satanicvalue * -side)
         end,
         
         [16] = function(cmd)   
-            return dezz.SendPacket and baseyaw + (dezz.cfg.vars["Custom real"] or 0) or baseyaw + (dezz.cfg.vars["Custom fake"] or 0)
+            return dezz.SendPacket && baseyaw + (dezz.cfg.vars["Custom real"] or 0) or baseyaw + (dezz.cfg.vars["Custom fake"] or 0)
         end,
         
         [17] = function(cmd)
@@ -6983,9 +6991,9 @@ do
             local dynamic_delta = math.sin(CurTime() * 2) * (delta / 2)
             
             if dezz.SendPacket then
-                return baseyaw - (dezz.inverted and -delta or delta) + dynamic_delta
+                return baseyaw - (dezz.inverted && -delta or delta) + dynamic_delta
             else
-                return baseyaw + (dezz.inverted and -delta or delta) - dynamic_delta
+                return baseyaw + (dezz.inverted && -delta or delta) - dynamic_delta
             end
         end,
         
@@ -6996,21 +7004,21 @@ do
             local jitterRange = dezz.cfg.vars["Jitter delta"] or 35
             local jitter = math.random(-jitterRange, jitterRange)
 
-            local realYaw = baseyaw + (inverter and -(dezz.cfg.vars["Custom real"] or 0) or (dezz.cfg.vars["Custom real"] or 0))
-            local fakeYaw = baseyaw + (inverter and (dezz.cfg.vars["Custom fake"] or 0) or -(dezz.cfg.vars["Custom fake"] or 0)) + jitter
+            local realYaw = baseyaw + (inverter && -(dezz.cfg.vars["Custom real"] or 0) or (dezz.cfg.vars["Custom real"] or 0))
+            local fakeYaw = baseyaw + (inverter && (dezz.cfg.vars["Custom fake"] or 0) or -(dezz.cfg.vars["Custom fake"] or 0)) + jitter
 
             local timeSwitch = (CurTime() * 3) % 2 > 1
             if timeSwitch then fakeYaw = fakeYaw + math.random(-20, 20) end
 
-            return dezz.SendPacket and realYaw or fakeYaw
+            return dezz.SendPacket && realYaw or fakeYaw
         end,
         
         [20] = function(cmd)
             local tankaarad = 87
-            local a = dezz.SendPacket and baseyaw - 178 or baseyaw + (tankaarad * dezz.SwaySide)
-            local b = dezz.SendPacket and baseyaw + (tankaarad * dezz.SwaySide) or baseyaw - 178
+            local a = dezz.SendPacket && baseyaw - 178 or baseyaw + (tankaarad * dezz.SwaySide)
+            local b = dezz.SendPacket && baseyaw + (tankaarad * dezz.SwaySide) or baseyaw - 178
         
-            return dezz.inverted and a or b
+            return dezz.inverted && a or b
         end
     }
 
@@ -7028,21 +7036,21 @@ do
         end
         
         if cfg == 6 then
-            x = pitchflip and 180 or -180
+            x = pitchflip && 180 or -180
         elseif cfg == 7 then
-            x = pitchflip and -180 or 271
+            x = pitchflip && -180 or 271
         elseif cfg == 8 then
-            x = math.random() > 0.5 and math.random(-180, 95) or math.random(177, 180)
+            x = math.random() > 0.5 && math.random(-180, 95) or math.random(177, 180)
         elseif cfg == 9 then
-            x = math.random() > 0.5 and math.random(-180, -55) or math.random(55, 180)
+            x = math.random() > 0.5 && math.random(-180, -55) or math.random(55, 180)
         elseif cfg == 10 then
-            x = math.random() > 0.5 and math.random(180, 95) or math.random(-180, -95)
+            x = math.random() > 0.5 && math.random(180, 95) or math.random(-180, -95)
         elseif cfg == 11 then
-            x = math.random() > 0.5 and math.random(-180, -95) or math.random(166, 181)
+            x = math.random() > 0.5 && math.random(-180, -95) or math.random(166, 181)
         elseif cfg == 12 then
-            x = math.random() > 0.5 and math.random(-180, -115) or math.random(177, 181)
+            x = math.random() > 0.5 && math.random(-180, -115) or math.random(177, 181)
         elseif cfg == 13 then
-            x = pitchflip and -180 or 271
+            x = pitchflip && -180 or 271
         elseif cfg == 14 then    
             x = dezz.cfg.vars["Custom pitch"] or 0
         end
@@ -7056,7 +7064,7 @@ do
         if !pLocalPlayer:IsOnGround() then return end
         if cmd:KeyDown(IN_BACK) or cmd:KeyDown(IN_FORWARD) or cmd:KeyDown(IN_MOVELEFT) or cmd:KeyDown(IN_MOVERIGHT) then return end
 
-        cmd:SetSideMove(mm_side and -15.0 or 15.0)
+        cmd:SetSideMove(mm_side && -15.0 or 15.0)
         mm_side = !mm_side
     end
 
@@ -7067,7 +7075,7 @@ do
         if dezz.moveType == MOVETYPE_LADDER then return false end
         if dezz.moveType == MOVETYPE_NOCLIP then return false end
 
-        if dezz.cfg.binds["Anti aim"] ~= 0 and !dezz.IsKeyDown(dezz.cfg.binds["Anti aim"]) then
+        if dezz.cfg.binds["Anti aim"] != 0 && !dezz.IsKeyDown(dezz.cfg.binds["Anti aim"]) then
             return false
         end
 
@@ -7107,7 +7115,7 @@ do
         end 
 
         if freestandsucc then
-            yaw = dezz.SendPacket and freestandunsafe or freestandsafe
+            yaw = dezz.SendPacket && freestandunsafe or freestandsafe
         end
 
         if aacheck(cmd) then
@@ -7152,7 +7160,7 @@ function dezz.CheckPeeking()
 		if plys then break end
 	end
 
-	if plys and !dezz.peeking and !dezz.peeked then
+	if plys && !dezz.peeking && !dezz.peeked then
 		dezz.peeking = true
 		dezz.peeked = false
 	elseif !plys then
@@ -7160,8 +7168,8 @@ function dezz.CheckPeeking()
 		dezz.peeked = false
 	end
 
-	if dezz.peeking and !dezz.peeked then
-		if !ded.GetIsShifting() and ded.GetCurrentCharge() >= dezz.cfg.vars["Shift ticks"] and dezz.cfg.vars["Warp on peek"] then
+	if dezz.peeking && !dezz.peeked then
+		if !ded.GetIsShifting() && ded.GetCurrentCharge() >= dezz.cfg.vars["Shift ticks"] && dezz.cfg.vars["Warp on peek"] then
 			dezz.WarpOnPeek()
         elseif dezz.cfg.vars["Freeze on peek"] then
             ded.SetOutSequenceNr( ded.GetOutSequenceNr() + dezz.maxFreezeTicks - 1 ) 
@@ -7174,11 +7182,11 @@ do
     local function shouldlag(cmd)
         if !dezz.cfg.vars["Fake lag"] then return false end
         if !pLocalPlayer:Alive() then return false end
-        if dezz.cfg.vars["Fakelag comp"] == 1 and ded.GetCurrentCharge() > 0 then return false end
-        if dezz.cfg.vars["Fake lag options-Disable on ladder"] and dezz.moveType == MOVETYPE_LADDER then return false end
-        if dezz.cfg.vars["Fake lag options-Disable in attack"] and cmd:KeyDown(IN_ATTACK) then return false end
+        if dezz.cfg.vars["Fakelag comp"] == 1 && ded.GetCurrentCharge() > 0 then return false end
+        if dezz.cfg.vars["Fake lag options-Disable on ladder"] && dezz.moveType == MOVETYPE_LADDER then return false end
+        if dezz.cfg.vars["Fake lag options-Disable in attack"] && cmd:KeyDown(IN_ATTACK) then return false end
 
-        if dezz.cfg.vars["Allah fly"] and !pLocalPlayer:IsFlagSet( FL_ONGROUND ) then
+        if dezz.cfg.vars["Allah fly"] && !pLocalPlayer:IsFlagSet( FL_ONGROUND ) then
             return false
         end
 
@@ -7202,7 +7210,7 @@ do
             dezz.fakeLagfactor = adaptive_factor
         end
 
-        if dezz.cfg.vars["Allah walk"] and pLocalPlayer:IsFlagSet( FL_ONGROUND ) and dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
+        if dezz.cfg.vars["Allah walk"] && pLocalPlayer:IsFlagSet( FL_ONGROUND ) && dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
             dezz.fakeLagfactor = 21
         end
 
@@ -7261,11 +7269,11 @@ function dezz.FastWalk( cmd )
 
     if waterLevel >= 2 then return end
     
-	cmd:SetSideMove(cmd:CommandNumber() % 2 == 0 and -5250 or 5250)
+	cmd:SetSideMove(cmd:CommandNumber() % 2 == 0 && -5250 or 5250)
 end
 
 function dezz.validMoveType()
-    return dezz.moveType != MOVETYPE_LADDER and dezz.moveType != MOVETYPE_NOCLIP and dezz.moveType != MOVETYPE_OBSERVER 
+    return dezz.moveType != MOVETYPE_LADDER && dezz.moveType != MOVETYPE_NOCLIP && dezz.moveType != MOVETYPE_OBSERVER 
 end
 
 function dezz.isMoving(cmd)
@@ -7273,11 +7281,11 @@ function dezz.isMoving(cmd)
         return false
     end
 
-    return dezz.hoppin or cmd:KeyDown(IN_MOVELEFT) or cmd:KeyDown(IN_MOVERIGHT) or cmd:KeyDown(IN_FORWARD) or cmd:KeyDown(IN_BACK) and !cmd:KeyDown(IN_JUMP)
+    return dezz.hoppin or cmd:KeyDown(IN_MOVELEFT) or cmd:KeyDown(IN_MOVERIGHT) or cmd:KeyDown(IN_FORWARD) or cmd:KeyDown(IN_BACK) && !cmd:KeyDown(IN_JUMP)
 end
 
 function dezz.Stop(cmd)
-    if dezz.validMoveType() and pLocalPlayer:IsFlagSet( FL_ONGROUND ) then
+    if dezz.validMoveType() && pLocalPlayer:IsFlagSet( FL_ONGROUND ) then
 
         local moving = dezz.isMoving(cmd)
 
@@ -7312,9 +7320,9 @@ function dezz.MoveTo( cmd, pos )
 end
 
 function dezz.checkAutopeak( cmd )
-    if dezz.startedPeeking and cmd:KeyDown(IN_ATTACK) then 
+    if dezz.startedPeeking && cmd:KeyDown(IN_ATTACK) then 
         dezz.needToMoveBack = true
-    elseif !dezz.startedPeeking and !cmd:KeyDown(IN_ATTACK) then
+    elseif !dezz.startedPeeking && !cmd:KeyDown(IN_ATTACK) then
         dezz.needToMoveBack = false
     end  
 end
@@ -7328,7 +7336,7 @@ do
     local nullangle = Angle(0,0,0)
 
     function dezz.drawAutopeak()
-        local col = dezz.needToMoveBack and colorA or colorB
+        local col = dezz.needToMoveBack && colorA or colorB
     
         cam.Start3D2D( dezz.startPeekPosition, nullangle, 0.5 )
             cam.IgnoreZ( true )
@@ -7370,7 +7378,6 @@ function dezz.AnimationFreezer()
     end
 end
 
-dezz.seqshit = false
 function dezz.SequenceShit(cmd)
     if !dezz.cfg.vars["Sequence manip"] or !dezz.IsKeyDown(dezz.cfg.binds["Sequence manip"]) then
         
@@ -7381,22 +7388,19 @@ function dezz.SequenceShit(cmd)
         return 
     end
 
-    local amt = dezz.cfg.vars["Sequence min random"] and math.random(dezz.cfg.vars["Sequence min"],dezz.cfg.vars["OutSequence"]) or dezz.cfg.vars["OutSequence"] 
+    local amt = dezz.cfg.vars["Sequence min random"] && math.random(dezz.cfg.vars["Sequence min"],dezz.cfg.vars["OutSequence"]) or dezz.cfg.vars["OutSequence"] 
 
     dezz.seqshit = true
     dezz.SendPacket = true
     ded.SetOutSequenceNr(ded.GetOutSequenceNr() + amt)
 end
 
-dezz.freezedTicks1 = 0
-dezz.maxFreezeTicks1 = math.Round(1 / flTickInterval)
-
 if dezz.cfg.vars["Gay"] then 
-    if dezz.freezedTicks1 < dezz.maxFreezeTicks1 then
-        ded.SetOutSequenceNr(ded.GetOutSequenceNr() + dezz.maxFreezeTicks1 - 1)
-        dezz.freezedTicks1 = dezz.freezedTicks1 + 1
+    if dezz.freezedTicks < dezz.maxFreezeTicks then
+        ded.SetOutSequenceNr(ded.GetOutSequenceNr() + dezz.maxFreezeTicks - 1)
+        dezz.freezedTicks = dezz.freezedTicks + 1
     else
-        dezz.freezedTicks1 = 0
+        dezz.freezedTicks = 0
     end
 
     -- Sequence manipulation
@@ -7425,7 +7429,7 @@ end
 dezz.maxvape = dezz.TIME_TO_TICKS(5)
 
 function dezz.OnEntityCreated(ent)
-    if ent:GetClass() == "npc_satchel" and ent:GetOwner() == pLocalPlayer then 
+    if ent:GetClass() == "npc_satchel" && ent:GetOwner() == pLocalPlayer then 
         dezz.slams[ #dezz.slams + 1 ] = ent
     end
 
@@ -7451,25 +7455,25 @@ function dezz.CreateMove(cmd)
     dezz.flServerTime = ded.GetServerTime(cmd)
 
     local w = pLocalPlayer:GetActiveWeapon()
-    dezz.activeWeapon = IsValid(w) and w or false
-    dezz.activeWeaponClass = IsValid(w) and w:GetClass() or false 
+    dezz.activeWeapon = IsValid(w) && w or false
+    dezz.activeWeaponClass = IsValid(w) && w:GetClass() or false 
     dezz.moveType = pLocalPlayer:GetMoveType() 
 
     if dezz.cfg.vars["Silent aim"] then 
         cmd:SetViewAngles(dezz.SilentAngle) 
     end
 
-    if dezz.cfg.vars["Flashlight spam"] and input.IsKeyDown(KEY_F) then
+    if dezz.cfg.vars["Flashlight spam"] && dezz.cfg.binds["fon"] == 0 or dezz.IsKeyDown( dezz.cfg.binds["fon"] ) then
         cmd:SetImpulse(100)
     end
 
-    if dezz.cfg.vars["Impulse spam"] then
+    if dezz.cfg.vars["Impulse spam"] && dezz.cfg.binds["imp"] == 0 or dezz.IsKeyDown( dezz.cfg.binds["imp"] ) then
         cmd:SetImpulse(50)
     end
 
     if dezz.cfg.vars["gravity"] then
         local weapon = pLocalPlayer:GetActiveWeapon()
-        if IsValid(weapon) and string.StartWith(dezz.activeWeaponClass, "weapon_physcannon") then
+        if IsValid(weapon) && string.StartWith(dezz.activeWeaponClass, "weapon_physcannon") then
             if FrameNumber() % 4 == 0 then
                 cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_ATTACK, IN_ATTACK2))
             else
@@ -7503,7 +7507,7 @@ function dezz.CreateMove(cmd)
     if dezz.vapecd then 
         dezz.vapecd = false 
         cmd:RemoveKey(IN_ATTACK2) 
-    elseif dezz.cfg.vars["Vape spam"] and dezz.activeWeapon and !dezz.vapecd and string.StartWith(dezz.activeWeaponClass, "weapon_vape") then
+    elseif dezz.cfg.vars["Vape spam"] && dezz.activeWeapon && !dezz.vapecd && string.StartWith(dezz.activeWeaponClass, "weapon_vape") then
         cmd:AddKey(IN_ATTACK2)
         dezz.vapecd = true
     end   
@@ -7528,8 +7532,8 @@ function dezz.CreateMove(cmd)
     if !dezz.seqshit then
         dezz.FakeLag(cmd)
 
-        if dezz.cfg.vars["Allah walk"] and pLocalPlayer:IsFlagSet(FL_ONGROUND) and dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
-            if dezz.fakeLagTicks ~= 20 then
+        if dezz.cfg.vars["Allah walk"] && pLocalPlayer:IsFlagSet(FL_ONGROUND) && dezz.IsKeyDown(dezz.cfg.binds["allahwalk"]) then
+            if dezz.fakeLagTicks != 20 then
                 dezz.ClampMovementSpeed(cmd, 0)
             else
                 dezz.ClampMovementSpeed(cmd, pLocalPlayer:GetWalkSpeed())
@@ -7541,7 +7545,7 @@ function dezz.CreateMove(cmd)
         dezz.CheckPeeking()
     end
 
-    if dezz.cfg.vars["Desync1"] and !pLocalPlayer:IsFlagSet(FL_ONGROUND) then
+    if dezz.cfg.vars["Desync1"] && !pLocalPlayer:IsFlagSet(FL_ONGROUND) then
         ded.SetBSendPacket(bSendPacket)
         local tickrate = math.floor(1 / flTickInterval)
         local seqshift = tickrate - 2
@@ -7562,15 +7566,15 @@ function dezz.CreateMove(cmd)
 
     dezz.FastWalk(cmd)
 
-    if dezz.cfg.vars["Sprint"] and !cmd:KeyDown(IN_ATTACK) and !(dezz.IsKeyDown(dezz.cfg.binds["Aim on key"]) and dezz.target) then cmd:AddKey(IN_SPEED) end
-    if dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) and pLocalPlayer:Alive() and dezz.target and !dezz.cfg.vars["Knifebot"] then cmd:RemoveKey(IN_SPEED) end
+    if dezz.cfg.vars["Sprint"] && !cmd:KeyDown(IN_ATTACK) && !(dezz.IsKeyDown(dezz.cfg.binds["Aim on key"]) && dezz.target) then cmd:AddKey(IN_SPEED) end
+    if dezz.IsKeyDown( dezz.cfg.binds["Aim on key"] ) && pLocalPlayer:Alive() && dezz.target && !dezz.cfg.vars["Knifebot"] then cmd:RemoveKey(IN_SPEED) end
 
     if dezz.cfg.vars["edge"] then
         local on_ground = pLocalPlayer:IsFlagSet(FL_ONGROUND)
         local velocity = pLocalPlayer:GetVelocity()
         local speed = velocity:Length2D()
 
-        if on_ground and speed > 50 then
+        if on_ground && speed > 50 then
             local trace = util.TraceLine({
                 start = pLocalPlayer:GetPos(),
                 endpos = pLocalPlayer:GetPos() + Vector(0, 0, -50),
@@ -7586,7 +7590,7 @@ function dezz.CreateMove(cmd)
 
     dezz.hoppin = false
 
-    if dezz.moveType ~= MOVETYPE_NOCLIP and dezz.moveType ~= MOVETYPE_LADDER and dezz.moveType ~= MOVETYPE_OBSERVER and pLocalPlayer:WaterLevel() == 0 and dezz.cfg.vars["Bhop"] then
+    if dezz.moveType != MOVETYPE_NOCLIP && dezz.moveType != MOVETYPE_LADDER && dezz.moveType != MOVETYPE_OBSERVER && pLocalPlayer:WaterLevel() == 0 && dezz.cfg.vars["Bhop"] then
         if cmd:KeyDown(IN_JUMP) then
             local bIsOnGround = pLocalPlayer:IsFlagSet(FL_ONGROUND)
             
@@ -7645,7 +7649,7 @@ function dezz.CreateMove(cmd)
         dezz.Stop(cmd)
     end
 
-    if dezz.cfg.binds["Sloww"] ~= 0 and dezz.IsKeyDown(dezz.cfg.binds["Sloww"]) then
+    if dezz.cfg.binds["Sloww"] != 0 && dezz.IsKeyDown(dezz.cfg.binds["Sloww"]) then
         if input.IsKeyDown(KEY_A) then
             cmd:SetSideMove(-dezz.cfg.vars["Slows"])
         end
@@ -7660,13 +7664,13 @@ function dezz.CreateMove(cmd)
         end
     end
 
-    if dezz.cfg.vars["Water jump"] and pLocalPlayer:WaterLevel() > 1 then
+    if dezz.cfg.vars["Water jump"] && pLocalPlayer:WaterLevel() > 1 then
         cmd:AddKey(IN_JUMP)
-    elseif dezz.cfg.vars["Jesus lag"] and dezz.SendPacket and pLocalPlayer:WaterLevel() == 1 then
+    elseif dezz.cfg.vars["Jesus lag"] && dezz.SendPacket && pLocalPlayer:WaterLevel() == 1 then
         cmd:AddKey(IN_DUCK)
     end
 
-    if dezz.cfg.vars["Fake duck"] and dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
+    if dezz.cfg.vars["Fake duck"] && dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
         if dezz.fakeLagTicks > (dezz.fakeLagfactor / 2) then
             cmd:AddKey(IN_DUCK)
         else
@@ -7679,11 +7683,11 @@ function dezz.CreateMove(cmd)
     ded.StartPrediction(cmd)
         local wish_yaw = dezz.SilentAngle.y 
 
-        if dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) and dezz.cfg.vars["Circle strafe"] then
+        if dezz.IsKeyDown(dezz.cfg.binds["Circle strafe"]) && dezz.cfg.vars["Circle strafe"] then
             wish_yaw = cmd:GetViewAngles().y
         end
 
-        if !dezz.Aim(cmd) and cmd:KeyDown(IN_ATTACK) then
+        if !dezz.Aim(cmd) && cmd:KeyDown(IN_ATTACK) then
             local va = Angle(dezz.SilentAngle.p, dezz.SilentAngle.y, 0)
 
             if dezz.cfg.vars["Norecoil"] then
@@ -7694,7 +7698,7 @@ function dezz.CreateMove(cmd)
                 va = dezz.NoSpread(cmd, va)
             end
 
-            ded.SetViewAngles(va)
+            cmd:SetViewAngles(va)
         end
         
         if dezz.cfg.vars["Silent aim"] then
@@ -7703,19 +7707,19 @@ function dezz.CreateMove(cmd)
 
     ded.FinishPrediction() 
 
-    if dezz.cfg.vars["Trigger bot"] and dezz.IsKeyDown(dezz.cfg.binds["Trigger bot"]) then
+    if dezz.cfg.vars["Trigger bot"] && dezz.IsKeyDown(dezz.cfg.binds["Trigger bot"]) then
         local tr = pLocalPlayer:GetEyeTrace().Entity 
         
-        if tr and tr:IsPlayer() then
+        if tr && tr:IsPlayer() then
             cmd:AddKey(IN_ATTACK)
         end
     end
 
-    if dezz.cfg.vars["Double tap"] and dezz.cfg.vars["Tickbase shift"] and cmd:KeyDown(IN_ATTACK) then
+    if dezz.cfg.vars["Double tap"] && dezz.cfg.vars["Tickbase shift"] && cmd:KeyDown(IN_ATTACK) then
         ded.StartShifting(true)
     end
 
-    if dezz.cfg.vars["Auto detonator"] and #dezz.slams > 0 then
+    if dezz.cfg.vars["Auto detonator"] && #dezz.slams > 0 then
         local d = dezz.cfg.vars["AutoD distance"]
         d = d * d 
 
@@ -7745,7 +7749,7 @@ function dezz.CreateMove(cmd)
         local ppos = dezz.startPeekPosition
         local pposd = pLocalPlayer:GetPos():DistToSqr(ppos)
 
-        if dezz.needToMoveBack and pposd < 1024 then //or dezz.IsMovementKeysDown( cmd )
+        if dezz.needToMoveBack && pposd < 1024 then //or dezz.IsMovementKeysDown( cmd )
             dezz.needToMoveBack = false
         end
 
@@ -7753,7 +7757,7 @@ function dezz.CreateMove(cmd)
             if dezz.needToMoveBack then
                 dezz.MoveTo( cmd, ppos )
 
-                if dezz.cfg.vars["Auto peak tp"] and dezz.cfg.vars["Tickbase shift"] then
+                if dezz.cfg.vars["Auto peak tp"] && dezz.cfg.vars["Tickbase shift"] then
                     ded.StartShifting( true )
                 end
             end
@@ -7775,12 +7779,12 @@ function dezz.CreateMove(cmd)
     if dezz.cfg.vars["Ghost follower"] then
         local tar = player.GetBySteamID(dezz.cfg.vars["GFID"] or "")
 
-        if IsValid(tar) and IsValid(pLocalPlayer) and cmd then
+        if IsValid(tar) && IsValid(pLocalPlayer) && cmd then
             local eyePos = pLocalPlayer:EyePos()
             local tarPos = tar:GetPos()
             local myPos = pLocalPlayer:GetPos()
             
-            if eyePos and tarPos then
+            if eyePos && tarPos then
                 local tang = (tarPos - eyePos):Angle()
 
                 local oldButtons = cmd:GetButtons()
@@ -7813,7 +7817,7 @@ function dezz.CreateMove(cmd)
                         filter = pLocalPlayer
                     })
                     
-                    if !trace.Hit and dir.weight > maxWeight then
+                    if !trace.Hit && dir.weight > maxWeight then
                         maxWeight = dir.weight
                         bestDirection = dir.vec
                     end
@@ -7825,7 +7829,7 @@ function dezz.CreateMove(cmd)
 
                 if math.abs(moveAng.y - tang.y) > 30 then
                     local diff = math.AngleDifference(moveAng.y, tang.y)
-                    cmd:SetSideMove(diff > 0 and 10000 or -10000)
+                    cmd:SetSideMove(diff > 0 && 10000 or -10000)
                     cmd:SetForwardMove(8000)
                 end
 
@@ -7879,7 +7883,7 @@ function dezz.CreateMove(cmd)
         
 
 
-    if dezz.cfg.vars["Air lag duck"] and dezz.SendPacket and IsValid(pLocalPlayer) then
+    if dezz.cfg.vars["Air lag duck"] && dezz.SendPacket && IsValid(pLocalPlayer) then
         local startPosUnducked = pLocalPlayer:GetPos()
         local isDucking = bit.band(pLocalPlayer:GetFlags(), FL_DUCKING) != 0
         
@@ -7919,7 +7923,7 @@ function dezz.CreateMove(cmd)
                 mask = MASK_PLAYERSOLID
             })
 
-            if pLocalPlayer:IsOnGround() and trace.Hit then
+            if pLocalPlayer:IsOnGround() && trace.Hit then
                 shouldduck = false 
                 break
             end
@@ -7927,7 +7931,7 @@ function dezz.CreateMove(cmd)
 
         ded.FinishSimulation()
 
-        if shouldduck and !pLocalPlayer:IsOnGround() then 
+        if shouldduck && !pLocalPlayer:IsOnGround() then 
             cmd:AddKey(IN_DUCK)   
         end
     end
@@ -7951,7 +7955,7 @@ function dezz.CreateMove(cmd)
 
     ded.SetBSendPacket( dezz.SendPacket )
 
-    if dezz.cfg.vars["Lag mode"] == 3 and dezz.SendPacket then
+    if dezz.cfg.vars["Lag mode"] == 3 && dezz.SendPacket then
         ded.SetOutSequenceNr(ded.GetOutSequenceNr() + 8)
     end
 end
@@ -7967,6 +7971,8 @@ do
     local worldcollerp = string.ToColor(dezz.cfg.colors["Wall color"] or "255 255 255 255")
     local worldmats = Entity(0):GetMaterials()
 
+    local changedSky, changedWall = false, false
+
     local tsides = {"lf", "ft", "rt", "bk", "dn", "up"}
     local skymat = {}
 
@@ -7980,7 +7986,7 @@ do
             local mat = Material(matName)
             if !mat or mat:IsError() then continue end
             local t = mat:GetTexture("$basetexture")
-            if t and skymat[i] and !skymat[i]:IsError() then
+            if t && skymat[i] && !skymat[i]:IsError() then
                 skymat[i]:SetTexture("$basetexture", t)
             end
         end
@@ -7990,7 +7996,7 @@ do
         if !setcolor then
             for i = 1, 6 do
                 local mat = skymat[i]
-                if mat and !mat:IsError() then
+                if mat && !mat:IsError() then
                     mat:SetVector("$color", Vector(1, 1, 1))
                     mat:Recompute()
                 end
@@ -8002,7 +8008,7 @@ do
         local vector = Vector(cfg.r / 255, cfg.g / 255, cfg.b / 255)
         for i = 1, 6 do
             local mat = skymat[i]
-            if mat and !mat:IsError() then
+            if mat && !mat:IsError() then
                 mat:SetVector("$color", vector)
                 mat:Recompute()
             end
@@ -8014,7 +8020,7 @@ do
             local vector = Vector(1, 1, 1)
             for i = 1, #worldmats do
                 local mat = Material(worldmats[i])
-                if mat and !mat:IsError() then
+                if mat && !mat:IsError() then
                     mat:SetVector("$color", vector)
                     mat:SetFloat("$alpha", 1)
                     mat:Recompute()
@@ -8037,7 +8043,7 @@ do
 
         for i = 1, #worldmats do
             local mat = Material(worldmats[i])
-            if mat and !mat:IsError() then
+            if mat && !mat:IsError() then
                 mat:SetVector("$color", vector)
                 mat:SetFloat("$alpha", cfg.a / 255)
                 mat:Recompute()
@@ -8052,8 +8058,6 @@ do
             return false
         end
     end
-
-    local changedSky, changedWall = false, false
 
     function dezz.PostDraw2DSkyBox()
         if dezz.cfg.vars["LGBTS"] then
@@ -8082,18 +8086,18 @@ do
         local newcolor2 = dezz.cfg.vars["Wall color"] or false
         local newwallclr = dezz.cfg.colors["Wall color"] or "255 255 255 255"
 
-        if newname ~= "" and newname ~= oldsky then
+        if newname != "" && newname != oldsky then
             setSkyboxTexture(newname)
             oldsky = newname
         end
 
-        if newskyclr ~= oldskyclr or newcolor ~= oldskycolor then
+        if newskyclr != oldskyclr or newcolor != oldskycolor then
             oldskyclr = newskyclr
             oldskycolor = newcolor
             changedSky = true
         end
 
-        if newcolor2 ~= oldwallcolor then
+        if newcolor2 != oldwallcolor then
             oldwallcolor = newcolor2
             changedWall = true
         end
@@ -8106,7 +8110,7 @@ do
             setWallColor(newcolor2)
         end
 
-        if (!gui.IsConsoleVisible() and !gui.IsGameUIVisible()) or dezz.UnSafeFrame then
+        if (!gui.IsConsoleVisible() && !gui.IsGameUIVisible()) or dezz.UnSafeFrame then
             local view = {
                 x = 0,
                 y = 0,
@@ -8165,7 +8169,6 @@ function dezz.PreScreenGrab()
         w = scrWid,
         h = scrHgh,
         dopostprocess = true,
-        drawhud = true,
         drawmonitors = true,
         drawviewmodel = true
     })
@@ -8241,14 +8244,14 @@ function dezz.getTextX(v,tw,pos)
         return 0
     elseif pos == 4 then 
         local f = tw
-        if dezz.cfg.vars["Health bar"] and v.Health > 0 then
+        if dezz.cfg.vars["Health bar"] && v.Health > 0 then
             if f == 0 then
                 f = f + 8
             else 
                 f = f + 5
             end
         end
-        if dezz.cfg.vars["Armor bar"] and v.Armor > 0 then
+        if dezz.cfg.vars["Armor bar"] && v.Armor > 0 then
             if f == 0 then
                 f = f + 8
             else 
@@ -8569,7 +8572,7 @@ function dezz.vizPlayers3D()
 
         local XLen, YLen = MaxX - MinX, MaxY - MinY
 
-        surface.SetAlphaMultiplier( v.entity:IsDormant() and 0.35 or 1 )
+        surface.SetAlphaMultiplier( v.entity:IsDormant() && 0.35 or 1 )
 
         surface.SetTextColor( dezz.Colors[255] )
 
@@ -8596,7 +8599,7 @@ function dezz.vizPlayers3D()
         local distance = vp:DistToSqr(pos)
 		if distance > d then continue end
 
-        surface.SetAlphaMultiplier( v.entity:IsDormant() and 0.35 or 1 )
+        surface.SetAlphaMultiplier( v.entity:IsDormant() && 0.35 or 1 )
 
         local MaxX, MaxY, MinX, MinY = dezz.GetEntPos( v.entity )
 
@@ -8609,7 +8612,7 @@ function dezz.vizPlayers3D()
         local teamcolor = v.TeamColor
 
         if dezz.cfg.vars["Box esp"] then
-            local boxColor = dezz.cfg.vars["Box team color"] and teamcolor or color_box or color_box_g
+            local boxColor = dezz.cfg.vars["Box team color"] && teamcolor or color_box or color_box_g
             local blackColor = dezz.Colors[0]
             local style = dezz.cfg.vars["Box style"]
 
@@ -8619,7 +8622,7 @@ function dezz.vizPlayers3D()
         end
     end
 
-    if dezz.cfg.vars["Hitbox"] and pLocalPlayer:Alive() then
+    if dezz.cfg.vars["Hitbox"] && pLocalPlayer:Alive() then
         local hitbox_color_enemy = string.ToColor(dezz.cfg.colors["Hitbox"])
         local hitbox_color_local = string.ToColor(dezz.cfg.colors["HitboxLocal"])
         local eye_pos, eye_ang = EyePos(), EyeAngles()
@@ -8628,14 +8631,14 @@ function dezz.vizPlayers3D()
             if !IsValid(ply) or !ply:Alive() then continue end
             
             local isLocal = (ply == pLocalPlayer)
-            local hitbox_color = isLocal and hitbox_color_local or hitbox_color_enemy
+            local hitbox_color = isLocal && hitbox_color_local or hitbox_color_enemy
             
             if !ply.fakeModel then
                 ply.fakeModel = dezz.CS_Model(ply:GetModel())
                 ply.lastModel = ply:GetModel()
             end
             
-            if ply:GetModel() ~= ply.lastModel then
+            if ply:GetModel() != ply.lastModel then
                 if IsValid(ply.fakeModel) then
                     ply.fakeModel:Remove()
                 end
@@ -8646,7 +8649,7 @@ function dezz.vizPlayers3D()
             if !IsValid(ply.fakeModel) then continue end
             
             local tbl = {
-                layers = dezz.fakeAngles and dezz.fakeAngles.layers,
+                layers = dezz.fakeAngles && dezz.fakeAngles.layers,
                 angles = ply:EyeAngles(),
                 sequence = ply:GetSequence(),
                 cycle = ply:GetCycle(),
@@ -8660,10 +8663,10 @@ function dezz.vizPlayers3D()
             end
             
             local groupCount = ply.fakeModel:GetHitBoxGroupCount()
-            if groupCount and groupCount > 0 then
+            if groupCount && groupCount > 0 then
                 for group = 0, groupCount - 1 do
                     local boxCount = ply.fakeModel:GetHitBoxCount(group)
-                    if boxCount and boxCount > 0 then
+                    if boxCount && boxCount > 0 then
                         for hitbox = 0, boxCount - 1 do
                             local bone = ply.fakeModel:GetHitBoxBone(hitbox, group)
                             if !bone then continue end
@@ -8672,7 +8675,7 @@ function dezz.vizPlayers3D()
                             if !pos then continue end
                             
                             local mins, maxs = ply.fakeModel:GetHitBoxBounds(hitbox, group)
-                            if mins and maxs then
+                            if mins && maxs then
                                 render.DrawWireframeBox(pos, ang, mins, maxs, hitbox_color, true)
                             end
                         end
@@ -8707,7 +8710,7 @@ function dezz.DrawESP()
 
         local XLen, YLen = MaxX - MinX, MaxY - MinY
 
-        surface.SetAlphaMultiplier( v.entity:IsDormant() and 0.35 or 1 )
+        surface.SetAlphaMultiplier( v.entity:IsDormant() && 0.35 or 1 )
 
         surface.SetTextColor( dezz.Colors[255] )
 
@@ -8769,7 +8772,7 @@ function dezz.DrawESP()
             end
         end
 
-        if dezz.cfg.vars["lskel"] and dezz.tpenabled then
+        if dezz.cfg.vars["lskel"] && dezz.tpenabled then
             local ply = pLocalPlayer
             if !ply:Alive() then return end
             
@@ -8797,7 +8800,7 @@ function dezz.DrawESP()
                 local screen1 = BonePos:ToScreen()
                 local screen2 = ParentPos:ToScreen()
                 
-                if screen1.visible and screen2.visible then
+                if screen1.visible && screen2.visible then
                     surface.DrawLine(screen1.x, screen1.y, screen2.x, screen2.y)
                 end
 
@@ -8822,7 +8825,7 @@ function dezz.DrawESP()
         local distance = vp:DistToSqr(pos)
 		if distance > d then continue end
 
-        surface.SetAlphaMultiplier( v.entity:IsDormant() and 0.35 or 1 )
+        surface.SetAlphaMultiplier( v.entity:IsDormant() && 0.35 or 1 )
 
         local MaxX, MaxY, MinX, MinY = dezz.GetEntPos( v.entity )
 
@@ -8835,7 +8838,7 @@ function dezz.DrawESP()
         local teamcolor = v.TeamColor
 
         if dezz.cfg.vars["Box esp"] then
-            local boxColor = dezz.cfg.vars["Box team color"] and teamcolor or color_box or color_box_g
+            local boxColor = dezz.cfg.vars["Box team color"] && teamcolor or color_box or color_box_g
             local blackColor = dezz.Colors[0]
             local style = dezz.cfg.vars["Box style"]
             
@@ -8921,7 +8924,7 @@ function dezz.DrawESP()
                     polys[7] = { x = x, y = xh - hlen }
                     polys[8] = { x = x, y = y + hlen }
 
-                    surface.SetDrawColor(i == 2 and boxColor or blackColor) 
+                    surface.SetDrawColor(i == 2 && boxColor or blackColor) 
                     dezz.DrawOutlinedPoly(polys)
 
                     wlen = wlen - i
@@ -8964,11 +8967,11 @@ function dezz.DrawESP()
                 local pos = dezz.cfg.vars["Name pos"]
                 local tw, th = surface.GetTextSize(name)
 
-                if dezz.cfg.priorityList and dezz.cfg.priorityList[v.entity:SteamID()] then
+                if dezz.cfg.priorityList && dezz.cfg.priorityList[v.entity:SteamID()] then
                     surface.SetTextColor(255, 0, 0, 255)
                 elseif dezz.cfg.friends[v.entity:SteamID()] or v.entity:GetFriendStatus() == "friend" then
                     surface.SetTextColor(0, 255, 0, 255)
-                elseif dezz.trackedPlayers and dezz.trackedPlayers[steamId] then
+                elseif dezz.trackedPlayers && dezz.trackedPlayers[steamId] then
                     Color(255,255,255,255)
                 elseif dezz.cfg.admins[v.entity:SteamID()] or v.entity:GetFriendStatus() == "Admin" then
                     surface.SetTextColor(128, 0, 255, 255)
@@ -9142,7 +9145,7 @@ function dezz.DrawESP()
             end
 
             if dezz.cfg.vars["AFK"] then
-                local isAFK = dezz.IsPlayerAFK(v.entity) and "Yes" or "No"
+                local isAFK = dezz.IsPlayerAFK(v.entity) && "Yes" or "No"
                 local name = "AFK: " .. isAFK
                 local pos = dezz.cfg.vars["AFK pos"]
                 local tw, th = surface.GetTextSize(name)
@@ -9154,7 +9157,7 @@ function dezz.DrawESP()
             end
 
             if dezz.cfg.vars["Taunting"] then
-                local status = v.entity:IsPlayingTaunt() and "Yes" or "No"
+                local status = v.entity:IsPlayingTaunt() && "Yes" or "No"
                 local name = "Taunting: " .. status
                 local pos = dezz.cfg.vars["Taunting pos"]
                 local tw, th = surface.GetTextSize(name)
@@ -9186,13 +9189,13 @@ function dezz.DrawESP()
             end
 
             if dezz.cfg.vars["Weapon"] then 
-                local name = dezz.cfg.vars["Show ammo"] and v.WeaponClass .. " (" .. v.WeaponAmmo .. ")" or v.WeaponClass
+                local name = dezz.cfg.vars["Show ammo"] && v.WeaponClass .. " (" .. v.WeaponAmmo .. ")" or v.WeaponClass
                 
-                if dezz.cfg.vars["Show reloading"] and IsValid(v.entity) then
+                if dezz.cfg.vars["Show reloading"] && IsValid(v.entity) then
                     for i = 0, 13 do
                         if v.entity:IsValidLayer(i) then
                             local activityName = v.entity:GetSequenceActivityName(v.entity:GetLayerSequence(i))
-                            if activityName and activityName:find("RELOAD") then
+                            if activityName && activityName:find("RELOAD") then
                                 name = "RELOADING"
                                 break
                         end
@@ -9294,7 +9297,7 @@ function dezz.DrawESP()
             end
         end
 
-        if dezz.cfg.vars["Break LC"] and v.break_lc then
+        if dezz.cfg.vars["Break LC"] && v.break_lc then
             local name = "Breaking LC"
             local pos = dezz.cfg.vars["Break LC pos"]
             local tw, th = surface.GetTextSize(name)
@@ -9317,7 +9320,7 @@ function dezz.DrawESP()
         end
 
         if dezz.cfg.vars["Simtime updated"] then
-            local name = v.simtime_updated and "Updated" or "Same"
+            local name = v.simtime_updated && "Updated" or "Same"
             local pos = dezz.cfg.vars["Simtime updated pos"]
             local tw, th = surface.GetTextSize(name)
 
@@ -9374,7 +9377,7 @@ function dezz.DrawESP()
 		    end
         end
 
-        if dezz.cfg.vars["Backtrack skeleton"] and dezz.canBacktrack(v) then
+        if dezz.cfg.vars["Backtrack skeleton"] && dezz.canBacktrack(v) then
             local len = #dezz.btrecords[ v ]
 
             surface.SetDrawColor( dezz.Colors[255] )
@@ -9407,7 +9410,7 @@ do
 
     function dezz.DrawSomeShit()
         if dezz.cfg.vars["Auto Vape"] then
-            surface.SetTextColor( dezz.tyaga == 0 and blc or lc )
+            surface.SetTextColor( dezz.tyaga == 0 && blc or lc )
             surface.SetTextPos( 38, scrHgh - 220 ) 
             surface.DrawText( "Vape: " ) 
             
@@ -9418,7 +9421,7 @@ do
             surface.DrawRect( 79, scrHgh - 218, dezz.tyaga / dezz.maxvape * 58, 12 )
         end
 
-        if dezz.cfg.vars["hdshot"] and #dezz.headshotindicators > 0 then 
+        if dezz.cfg.vars["hdshot"] && #dezz.headshotindicators > 0 then 
             local col = string.ToColor(dezz.cfg.colors["hdshot"])
             
             surface.SetFont("DebugOverlay")
@@ -9450,7 +9453,7 @@ do
             end
         end
         
-        if dezz.cfg.vars["Tickbase shift"] and dezz.cfg.vars["Tickbase indicator"] then
+        if dezz.cfg.vars["Tickbase shift"] && dezz.cfg.vars["Tickbase indicator"] then
             if ded.GetCurrentCharge() <= dezz.cfg.vars["Shift ticks"] then
                 ccharge = ded.GetCurrentCharge() * 196 / dezz.cfg.vars["Shift ticks"]
             end
@@ -9460,7 +9463,7 @@ do
             if ded.GetCurrentCharge() == 0 then
                 chargestate = "NO CHARGE"
                 chargecolor = unchargedcolor
-            elseif ded.GetCurrentCharge() < dezz.cfg.vars["Shift ticks"] and dezz.IsKeyDown( dezz.cfg.binds["Auto recharge"] ) then
+            elseif ded.GetCurrentCharge() < dezz.cfg.vars["Shift ticks"] && dezz.IsKeyDown( dezz.cfg.binds["Auto recharge"] ) then
                 chargestate = "CHARGING"
                 chargecolor = unchargedcolor
             else
@@ -9611,8 +9614,8 @@ do
         if dezz.cfg.vars["KeyBind List"] then
             if dezz.cfg.vars["bind mode"] == 1 then
                 dezz.keybindListData = dezz.keybindListData or {
-                    x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.x) or 30,
-                    y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb_pos and dezz.cfg.ui.kb_pos.y) or 300,
+                    x = 30,
+                    y = 300,
                     w = 200,
                     dragging = false,
                     dragDX = 0,
@@ -9633,12 +9636,12 @@ do
 
                 local allBinds = {}
                 for name, key in pairs(dezz.cfg.binds or {}) do
-                    if key and key ~= 0 then
+                    if key && key != 0 then
                         local lname = tostring(name):lower()
                         if !string.find(lname, "menu", 1, true) then
-                            local v = dezz.cfg.vars and dezz.cfg.vars[name]
+                            local v = dezz.cfg.vars && dezz.cfg.vars[name]
                             if v == nil or v == true then
-                                local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
+                                local keyName = (input.GetKeyName && input.GetKeyName(key)) or tostring(key)
                                 allBinds[#allBinds + 1] = {
                                     label = tostring(name),
                                     key = tostring(string.upper(keyName or ""))
@@ -9653,15 +9656,15 @@ do
                     if w > maxW then maxW = w end
                 end
 
-                local listH = (#allBinds > 0) and ((titleH + paddingY * 2) + (#allBinds * (titleH + lineGap)) + paddingY) or (titleH + paddingY * 3)
+                local listH = (#allBinds > 0) && ((titleH + paddingY * 2) + (#allBinds * (titleH + lineGap)) + paddingY) or (titleH + paddingY * 3)
                 local listW = maxW + paddingX * 2 + 20
                 local maxAllowedW = math.max(250, scrWid - 80)
                 if listW > maxAllowedW then listW = maxAllowedW end
                 kbd.w = listW
 
                 local mx, my = gui.MousePos()
-                local overHeader = mx >= kbd.x and mx <= kbd.x + listW and my >= kbd.y and my <= kbd.y + (titleH + paddingY * 2)
-                if overHeader and input.IsMouseDown(MOUSE_LEFT) and !kbd.dragging then
+                local overHeader = mx >= kbd.x && mx <= kbd.x + listW && my >= kbd.y && my <= kbd.y + (titleH + paddingY * 2)
+                if overHeader && input.IsMouseDown(MOUSE_LEFT) && !kbd.dragging then
                     kbd.dragging = true
                     kbd.dragDX = mx - kbd.x
                     kbd.dragDY = my - kbd.y
@@ -9713,8 +9716,8 @@ do
                 surface.SetFont("Default")
             elseif dezz.cfg.vars["bind mode"] == 2 then
                 dezz.keybindListData2 = dezz.keybindListData2 or {
-                    x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.x) or 20,
-                    y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.kb2_pos and dezz.cfg.ui.kb2_pos.y) or 20,
+                    x = 20,
+                    y = 20,
                     dragging = false,
                     dragDX = 0,
                     dragDY = 0
@@ -9723,12 +9726,12 @@ do
                 local kbd = dezz.keybindListData2
                 local allBinds = {}
                 for name, key in pairs(dezz.cfg.binds or {}) do
-                    if key and key ~= 0 then
+                    if key && key != 0 then
                         local lname = tostring(name):lower()
                         if !string.find(lname, "menu", 1, true) then
-                            local v = dezz.cfg.vars and dezz.cfg.vars[name]
+                            local v = dezz.cfg.vars && dezz.cfg.vars[name]
                             if v == nil or v == true then
-                                local keyName = (input.GetKeyName and input.GetKeyName(key)) or tostring(key)
+                                local keyName = (input.GetKeyName && input.GetKeyName(key)) or tostring(key)
                                 allBinds[#allBinds + 1] = {
                                     label = tostring(name),
                                     key = tostring(string.upper(keyName or ""))
@@ -9745,8 +9748,8 @@ do
                 local listH = headerH + (#allBinds * bindH) + 10
                 
                 local mx, my = gui.MousePos()
-                local overHeader = mx >= kbd.x and mx <= kbd.x + listW and my >= kbd.y and my <= kbd.y + headerH
-                if overHeader and input.IsMouseDown(MOUSE_LEFT) and !kbd.dragging then
+                local overHeader = mx >= kbd.x && mx <= kbd.x + listW && my >= kbd.y && my <= kbd.y + headerH
+                if overHeader && input.IsMouseDown(MOUSE_LEFT) && !kbd.dragging then
                     kbd.dragging = true
                     kbd.dragDX = mx - kbd.x
                     kbd.dragDY = my - kbd.y
@@ -9788,7 +9791,7 @@ do
             end
         end
         
-        if dezz.cfg.vars["Hitmarker"] and #dezz.hitmarkers > 0 then
+        if dezz.cfg.vars["Hitmarker"] && #dezz.hitmarkers > 0 then
             local hm = string.ToColor(dezz.cfg.colors["Hitmarker"])
             local currentTime = CurTime()
 
@@ -9828,7 +9831,7 @@ do
             end
         end
 
-        if dezz.cfg.vars["Hitnumbers"] and #dezz.hitnums > 0 then 
+        if dezz.cfg.vars["Hitnumbers"] && #dezz.hitnums > 0 then 
             local n, c = string.ToColor(dezz.cfg.colors["Hitnumbers"]), string.ToColor(dezz.cfg.colors["Hitnumbers krit"])
             
             surface.SetFont("veranda_scr")
@@ -9842,7 +9845,7 @@ do
                     continue 
                 end 
 
-                surface.SetTextColor(v.crit and c or n)
+                surface.SetTextColor(v.crit && c or n)
 
                 local angle = v.angle or math.random() * 2 * math.pi
                 local distance = (curTime - v.time) * 150
@@ -9861,7 +9864,7 @@ do
             end
         end
 
-        if dezz.cfg.vars["Fov limit"] and dezz.cfg.vars["Show FOV"] then 
+        if dezz.cfg.vars["Fov limit"] && dezz.cfg.vars["Show FOV"] then 
             local col = string.ToColor( dezz.cfg.colors["Show FOV"] )
             
             local radius = dezz.GetFovRadius()
@@ -9876,7 +9879,7 @@ do
             surface.DrawCircle( ( scrWid * 0.5 ), ( scrHgh * 0.5 ), radius - 1 )
         end
 
-        if dezz.target and dezz.targetVector then
+        if dezz.target && dezz.targetVector then
             if dezz.cfg.vars["Aimbot snapline"] then 
                 local pos = dezz.targetVector:ToScreen()
                 surface.SetDrawColor( string.ToColor( dezz.cfg.colors["Aimbot snapline"] ) )
@@ -9934,7 +9937,7 @@ do
                 
                 table.insert(spectators, {
                     text = text,
-                    textColor = (v.ObserverTarget == pLocalPlayer) and Color(255, 0, 0) or Color(255, 255, 255)
+                    textColor = (v.ObserverTarget == pLocalPlayer) && Color(255, 0, 0) or Color(255, 255, 255)
                 })
             end
             
@@ -9951,8 +9954,8 @@ do
             if input.IsMouseDown(MOUSE_LEFT) then
                 local mouseX, mouseY = gui.MouseX(), gui.MouseY()
 
-                if mouseX >= panelX and mouseX <= panelX + panelWidth and
-                mouseY >= panelY and mouseY <= panelY + 30 then
+                if mouseX >= panelX && mouseX <= panelX + panelWidth and
+                mouseY >= panelY && mouseY <= panelY + 30 then
 
                     dezz.specPanelPos.x = mouseX - panelWidth / 2
                     dezz.specPanelPos.y = mouseY - 15
@@ -9996,8 +9999,8 @@ do
 
         if dezz.cfg.vars["pw"] then
             dezz.pingTextPos = dezz.pingTextPos or {
-                x = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.ping_text_x) or 800,
-                y = (dezz.cfg and dezz.cfg.ui and dezz.cfg.ui.ping_text_y) or (scrHgh / 2.1),
+                x = 800,
+                y = (scrHgh / 2.1),
                 dragging = false,
                 dragOffsetX = 0,
                 dragOffsetY = 0
@@ -10027,13 +10030,13 @@ do
 
             local textW, textH = surface.GetTextSize(text)
 
-            if input.IsMouseDown(MOUSE_LEFT) and !pos.dragging then
-                if mx >= pos.x and mx <= pos.x + textW and my >= pos.y and my <= pos.y + textH then
+            if input.IsMouseDown(MOUSE_LEFT) && !pos.dragging then
+                if mx >= pos.x && mx <= pos.x + textW && my >= pos.y && my <= pos.y + textH then
                     pos.dragging = true
                     pos.dragOffsetX = mx - pos.x
                     pos.dragOffsetY = my - pos.y
                 end
-            elseif !input.IsMouseDown(MOUSE_LEFT) and pos.dragging then
+            elseif !input.IsMouseDown(MOUSE_LEFT) && pos.dragging then
                 pos.dragging = false
                 dezz.cfg = dezz.cfg or {}
                 dezz.cfg.ui = dezz.cfg.ui or {}
@@ -10051,7 +10054,7 @@ do
             surface.DrawText(text)
         end
 
-        if dezz.cfg.vars["On screen logs"] and table.Count(dezz.onScreenLogs) > 0 then
+        if dezz.cfg.vars["On screen logs"] && table.Count(dezz.onScreenLogs) > 0 then
             local tick = engine.TickCount()
             local centerX, centerY = scrWid * 0.5, scrHgh * 0.5 + 45
             
@@ -10086,7 +10089,7 @@ do
 
         if dezz.cfg.vars["WaterMark"] then
             if dezz.cfg.vars["water mode"] == 1 then
-                local pName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
+                local pName = IsValid(pLocalPlayer) && pLocalPlayer:Name() or "DISCONNECTED"
                 local cfgName = dezz.cfgTable[dezz.cfg.vars["Selected config"]] or "Defaults"
                 
                 local width1 = 40
@@ -10125,20 +10128,24 @@ do
 
                 draw.SimpleText(pName, "Default", currentX, y1 + height1/2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             elseif dezz.cfg.vars["water mode"] == 2 then
-                local playerName = IsValid(pLocalPlayer) and pLocalPlayer:Name() or "DISCONNECTED"
-                local txt = "dezzaster ◆  " .. playerName .. "  ◆  v2 ◆  DEV"
+                local playerName = IsValid(pLocalPlayer) && pLocalPlayer:Name() or "DISCONNECTED"
+                local txt = "dezzaster ◆ " .. playerName .. " ◆ v2 ◆ DEV"
 
                 surface.SetFont("Watermark_Bold")
                 local txtWidth, txtHeight = surface.GetTextSize(txt)
 
                 local paddingX = 30
-                local paddingY = 10
+                local paddingY = 15
                 local x, y = 15, 15
 
                 local bgColor = Color(10, 10, 15, 240)
                 local accentColor = Color(0, 180, 255)  
                 local textColor = Color(255, 255, 255)  
                 local shadowColor = Color(0, 0, 0, 150)
+
+                local pulse = math.sin(CurTime() * 3) * 0.2 + 0.8
+
+                local iconSize = 14
 
                 draw.RoundedBox(4, x, y, txtWidth + paddingX, txtHeight + paddingY, bgColor)
 
@@ -10148,21 +10155,19 @@ do
                 surface.SetDrawColor(accentColor.r, accentColor.g, accentColor.b, 40)
                 surface.DrawOutlinedRect(x, y, txtWidth + paddingX, txtHeight + paddingY)
 
-                draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2 + 1, y + paddingY/2 + 1, shadowColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2, y + paddingY/2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2, y + paddingY/2, shadowColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER - 10)
+                draw.SimpleText(txt, "Watermark_Bold", x + paddingX/2, y + paddingY/2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER - 10)
 
-                local pulse = math.sin(CurTime() * 3) * 0.2 + 0.8
                 surface.SetDrawColor(accentColor.r * pulse, accentColor.g * pulse, accentColor.b * pulse, 255)
                 surface.DrawRect(x + 5, y + txtHeight + paddingY - 4, 10, 2)
                 surface.DrawRect(x + txtWidth + paddingX - 15, y + txtHeight + paddingY - 4, 10, 2)
 
-                local iconSize = 14
                 if file.Exists("materials/icon16/shield.vmt", "GAME") then
                     surface.SetMaterial(Material("icon16/shield"))
                     surface.SetDrawColor(textColor)
                     surface.DrawTexturedRect(x + 8, y + (txtHeight + paddingY - iconSize)/2, iconSize, iconSize)
                 else
-                    draw.SimpleText("✦", "Watermark_Symbols", x + 15, y + (txtHeight + paddingY)/2 + 1, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText("✦", "Watermark_Symbols", x + 2, y + (txtHeight + paddingY)/2, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -10241,8 +10246,8 @@ do
                         local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
                         local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
                             
-                        if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-                        radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
+                        if radarX >= centerX - RadarSize && radarX <= centerX + RadarSize and
+                        radarY >= centerY - RadarSize && radarY <= centerY + RadarSize then
                             surface.SetDrawColor(30, 100, 30, 40)
                             surface.DrawRect(radarX - 2, radarY - 2, 4, 4)
                         end
@@ -10261,8 +10266,8 @@ do
                     local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
                     local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
                         
-                        if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-                    radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
+                        if radarX >= centerX - RadarSize && radarX <= centerX + RadarSize and
+                    radarY >= centerY - RadarSize && radarY <= centerY + RadarSize then
                         surface.SetDrawColor(80, 80, 120, 60)
                         surface.DrawLine(radarX - 3, radarY, radarX + 3, radarY)
                         surface.DrawLine(radarX, radarY - 3, radarX, radarY + 3)
@@ -10288,8 +10293,8 @@ do
                 local radarX = centerX + (relativePos.x * math.cos(math.rad(angle)) + relativePos.y * math.sin(math.rad(angle))) / (RadarRange / RadarSize)
                 local radarY = centerY + (relativePos.x * math.sin(math.rad(angle)) - relativePos.y * math.cos(math.rad(angle))) / (RadarRange / RadarSize)
                 
-                if radarX >= centerX - RadarSize and radarX <= centerX + RadarSize and
-                radarY >= centerY - RadarSize and radarY <= centerY + RadarSize then
+                if radarX >= centerX - RadarSize && radarX <= centerX + RadarSize and
+                radarY >= centerY - RadarSize && radarY <= centerY + RadarSize then
                     
                     local playerColor = team.GetColor(target:Team())
                         
@@ -10362,36 +10367,36 @@ do
             
             draw.RoundedBox(6, x+2, y+1, size-4, size+16, bgColor)
             
-            local wColor = input.IsKeyDown(KEY_W) and Color(50, 3, 3) or keyColor
+            local wColor = input.IsKeyDown(KEY_W) && Color(50, 3, 3) or keyColor
             draw.RoundedBox(4, x + size/2 - keySize/2, y + 8, keySize, keySize, wColor)
             draw.SimpleText("W", "DermaDefaultBold", x + size/2, y + 8 + keySize/2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            local aColor = input.IsKeyDown(KEY_A) and Color(50, 3, 3) or keyColor
+            local aColor = input.IsKeyDown(KEY_A) && Color(50, 3, 3) or keyColor
             draw.RoundedBox(4, x + 8, y + 8 + keySize + spacing, keySize, keySize, aColor)
             draw.SimpleText("A", "DermaDefaultBold", x + 8 + keySize/2, y + 8 + keySize + spacing + keySize/2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            local sColor = input.IsKeyDown(KEY_S) and Color(50, 3, 3) or keyColor
+            local sColor = input.IsKeyDown(KEY_S) && Color(50, 3, 3) or keyColor
             draw.RoundedBox(4, x + size/2 - keySize/2, y + 8 + keySize + spacing, keySize, keySize, sColor)
             draw.SimpleText("S", "DermaDefaultBold", x + size/2, y + 8 + keySize + spacing + keySize/2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            local dColor = input.IsKeyDown(KEY_D) and Color(50, 3, 3) or keyColor
+            local dColor = input.IsKeyDown(KEY_D) && Color(50, 3, 3) or keyColor
             draw.RoundedBox(4, x + size - keySize - 8, y + 8 + keySize + spacing, keySize, keySize, dColor)
             draw.SimpleText("D", "DermaDefaultBold", x + size - keySize - 8 + keySize/2, y + 8 + keySize + spacing + keySize/2, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
             local mouseY = y + 8 + (keySize * 2) + (spacing * 2) + 5
-            local spaceCol = input.IsKeyDown(KEY_SPACE) and Color(50,3,3) or keyColor
+            local spaceCol = input.IsKeyDown(KEY_SPACE) && Color(50,3,3) or keyColor
             draw.RoundedBox(4, x + 8, mouseY, size - 16, 20, spaceCol)
             draw.SimpleText("SPACE", "DermaDefaultBold", x + size/2, mouseY + 10, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             
-            local lmbCol = input.IsMouseDown(MOUSE_LEFT) and Color(50,3,3) or keyColor
-            local rmbCol = input.IsMouseDown(MOUSE_RIGHT) and Color(50,3,3) or keyColor
+            local lmbCol = input.IsMouseDown(MOUSE_LEFT) && Color(50,3,3) or keyColor
+            local rmbCol = input.IsMouseDown(MOUSE_RIGHT) && Color(50,3,3) or keyColor
             draw.RoundedBox(4, x + 8, mouseY + 24, (size - 24) / 2, 18, lmbCol)
             draw.RoundedBox(4, x + size/2 + 4, mouseY + 24, (size - 24) / 2, 18, rmbCol)
             draw.SimpleText("LMB", "DermaDefaultBold", x + 8 + ((size - 24) / 4), mouseY + 33, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             draw.SimpleText("RMB", "DermaDefaultBold", x + size/2 + 4 + ((size - 24) / 4), mouseY + 33, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
-        if dezz.cfg.vars["mks"] and IsValid(pLocalPlayer) then
+        if dezz.cfg.vars["mks"] && IsValid(pLocalPlayer) then
             local x, y = dezz.mksPos.x, dezz.mksPos.y
             local size = 130
             local angles = pLocalPlayer:EyeAngles()
@@ -10412,7 +10417,7 @@ do
         local function dragPanel(pos, w, h, dragAreaH)
             local mx, my = input.GetCursorPos()
             if input.IsMouseDown(MOUSE_LEFT) then
-                if !pos.dragging and mx >= pos.x and mx <= pos.x + w and my >= pos.y and my <= pos.y + dragAreaH then
+                if !pos.dragging && mx >= pos.x && mx <= pos.x + w && my >= pos.y && my <= pos.y + dragAreaH then
                     pos.dragging = true
                     pos.dragX, pos.dragY = mx - pos.x, my - pos.y
                 end
@@ -10442,10 +10447,10 @@ do
             local bg_dark = Color(15, 15, 20, 235)    
             local y_pos = scrHgh/2 - 55
             local x_pos = 10   
-            local compColor = pLocalPlayer.break_lc and error_color or success_color  
-            local chokeColor = choked > 1 and warning_color or (choked > 0 and success_color or error_color)
-            local velColor = velocity > 200 and accent_color or (velocity > 100 and success_color or Color(150, 150, 150, 255))
-            local pingColor = latency > 100 and error_color or (latency > 50 and warning_color or success_color)  
+            local compColor = pLocalPlayer.break_lc && error_color or success_color  
+            local chokeColor = choked > 1 && warning_color or (choked > 0 && success_color or error_color)
+            local velColor = velocity > 200 && accent_color or (velocity > 100 && success_color or Color(150, 150, 150, 255))
+            local pingColor = latency > 100 && error_color or (latency > 50 && warning_color or success_color)  
 
             local function DrawShadowText(text, x, y, col)
                 surface.SetTextColor(0, 0, 0, 150)
@@ -10479,8 +10484,8 @@ do
             
             if input.IsMouseDown(MOUSE_LEFT) then
                 if !dezz.wholPos.dragging then
-                    if mouseX >= dezz.wholPos.x and mouseX <= dezz.wholPos.x + 200 and
-                    mouseY >= dezz.wholPos.y and mouseY <= dezz.wholPos.y + 25 then
+                    if mouseX >= dezz.wholPos.x && mouseX <= dezz.wholPos.x + 200 and
+                    mouseY >= dezz.wholPos.y && mouseY <= dezz.wholPos.y + 25 then
                         dezz.wholPos.dragging = true
                         dezz.wholPos.dragX = mouseX - dezz.wholPos.x
                         dezz.wholPos.dragY = mouseY - dezz.wholPos.y
@@ -10499,7 +10504,7 @@ do
             local startY = dezz.wholPos.y
             
             for k, v in pairs(player.GetAll()) do
-                if IsValid(v) and v:Alive() and v:GetEyeTrace().Entity == pLocalPlayer then
+                if IsValid(v) && v:Alive() && v:GetEyeTrace().Entity == pLocalPlayer then
                     local text = v:Nick() .. " смотрит на тебя!"
                     local x = startX
                     local y = startY + (k - 1) * 25
@@ -10509,7 +10514,7 @@ do
             end
         end
 
-        if dezz.tpenabled and dezz.cfg.vars["nametr"] then           
+        if dezz.tpenabled && dezz.cfg.vars["nametr"] then           
             local pos = pLocalPlayer:GetPos() + Vector(0, 0, 80)
             local screenPos = pos:ToScreen()
             
@@ -10538,7 +10543,7 @@ do
             
             local tar = player.GetBySteamID(target_steamid)
 
-            if IsValid(tar) and IsValid(pLocalPlayer) then
+            if IsValid(tar) && IsValid(pLocalPlayer) then
                 local distance = math.Round(pLocalPlayer:GetPos():Distance(tar:GetPos()))
                 local screenPos = (tar:GetPos() + Vector(0, 0, 70)):ToScreen()
 
@@ -10602,7 +10607,7 @@ do
 
         if dezz.cfg.vars["Resolver"] then
             local shots = pEntity.aimshots or 0
-            local data = dezz.player_data and dezz.player_data[pEntity:EntIndex()]
+            local data = dezz.player_data && dezz.player_data[pEntity:EntIndex()]
             local base_yaw = pEntity:EyeAngles().y
             
             if !dezz.player_data then 
@@ -10615,7 +10620,7 @@ do
 
             data = dezz.player_data[pEntity:EntIndex()]
 
-            if data and data.last_angles and #data.last_angles > 0 then
+            if data && data.last_angles && #data.last_angles > 0 then
                 local idx = (data.brute_stage or 0) % #data.last_angles + 1
                 base_yaw = data.last_angles[idx]
             end
@@ -10630,16 +10635,16 @@ do
             
             local mode = dezz.cfg.vars["Resolver type"] or "Absolute"
 
-            if dezz.cfg.vars["Adaptive resolver"] and mode != "Experimental" and mode != "HVH" then
-                local vel = (pEntity.GetVelocity and pEntity:GetVelocity():Length2D()) or 0
-                local crouch = (pEntity.Crouching and pEntity:Crouching()) or false
-                local onground = (pEntity.IsOnGround and pEntity:IsOnGround()) or true
+            if dezz.cfg.vars["Adaptive resolver"] && mode != "Experimental" && mode != "HVH" then
+                local vel = (pEntity.GetVelocity && pEntity:GetVelocity():Length2D()) or 0
+                local crouch = (pEntity.Crouching && pEntity:Crouching()) or false
+                local onground = (pEntity.IsOnGround && pEntity:IsOnGround()) or true
 
                 if !onground then
                     mode = "Delta"
-                elseif vel > 120 and !crouch then
+                elseif vel > 120 && !crouch then
                     mode = "Rage"
-                elseif crouch and vel < 10 then
+                elseif crouch && vel < 10 then
                     mode = "Legit"
                 else
                     mode = "Absolute"
@@ -10694,10 +10699,10 @@ do
             pEntity:SetPoseParameter("move_yaw", angs.y)
         end
 
-        if dezz.cfg.vars["Taunt resolver"] and pEntity:IsValid() and pEntity:GetNWBool("IsTaunting", false) then
+        if dezz.cfg.vars["Taunt resolver"] && pEntity:IsValid() && pEntity:GetNWBool("IsTaunting", false) then
             local tauntYaw = nil
 
-            if pEntity.GetVelocity and pEntity:GetVelocity():Length2D() > 5 then
+            if pEntity.GetVelocity && pEntity:GetVelocity():Length2D() > 5 then
                 local vel = pEntity:GetVelocity()
                 tauntYaw = math.deg(math.atan2(vel.y, vel.x))
             elseif pEntity.EyeAngles then
@@ -10716,7 +10721,7 @@ do
             end
         end
 
-        if dezz.cfg.vars["Pitch resolver"] and pEntity.fakepitch then
+        if dezz.cfg.vars["Pitch resolver"] && pEntity.fakepitch then
             pEntity:SetPoseParameter("aim_pitch", -89)
             pEntity:SetPoseParameter("head_pitch", -89)
         end
@@ -10772,7 +10777,7 @@ do
                 
             for i = 1, #worldmats do
                 local mat = Material(worldmats[i])
-                if mat and !mat:IsError() then
+                if mat && !mat:IsError() then
                     mat:SetVector("$color", Vector(rainbowColor.r/255, rainbowColor.g/255, rainbowColor.b/255))
                     mat:Recompute()
                 end
@@ -10797,7 +10802,7 @@ do
         if currentTime - lastPlayerUpdate > 0.1 then
             cachedPlayers = {}
             for _, v in ipairs(player.GetAll()) do
-                if IsValid(v) and v != pLocalPlayer and v:Alive() and !v:IsDormant() then
+                if IsValid(v) && v != pLocalPlayer && v:Alive() && !v:IsDormant() then
                     table.insert(cachedPlayers, v)
                 end
             end
@@ -10805,7 +10810,7 @@ do
         end
 
         for k, entity in pairs(player.GetAll()) do
-            if IsValid(entity) and entity ~= pLocalPlayer then
+            if IsValid(entity) && entity != pLocalPlayer then
                 if dezz.cfg.vars["Override model render"] then
                     entity:SetLOD(dezz.cfg.vars["Override model LOD"])
                 else
@@ -10848,7 +10853,7 @@ do
             end
 
             for k, entity in pairs(player.GetAll()) do
-                if IsValid(entity) and entity ~= pLocalPlayer then
+                if IsValid(entity) && entity != pLocalPlayer then
                     if supressforall then
                         entity:DrawModel()
                     end
@@ -10968,7 +10973,7 @@ do
                 end
             end
 
-            if dezz.cfg.vars["Self chams"] and IsValid(pLocalPlayer) and pLocalPlayer:Alive() then
+            if dezz.cfg.vars["Self chams"] && IsValid(pLocalPlayer) && pLocalPlayer:Alive() then
                 local suppressSelfLighting = dezz.cfg.vars["Supress self lighting"]
                 
                 if suppressSelfLighting then
@@ -11012,7 +11017,7 @@ do
                 if suppressSelfLighting then
                     render.SuppressEngineLighting(false)
                 end
-            elseif fullbrightOnly and IsValid(pLocalPlayer) and pLocalPlayer:Alive() then
+            elseif fullbrightOnly && IsValid(pLocalPlayer) && pLocalPlayer:Alive() then
                 pLocalPlayer:DrawModel()
             end
 
@@ -11090,7 +11095,26 @@ function dezz.PostDrawTranslucentRenderables()
         end
     end
 
-    if dezz.cfg.vars["fpr"] and dezz.isCanTrace and !pLocalPlayer:IsOnGround() then
+    if dezz.cfg.vars["line"] && dezz.tpenabled then
+        local ply = pLocalPlayer
+        if IsValid(ply) then
+            local myPos = ply:GetPos() + Vector(0, 0, 0)
+            local lineColor = string.ToColor(dezz.cfg.colors["line"])
+            local outlineColor = dezz.Colors[0] or Color(0, 0, 0, 255)
+            
+            for _, target in ipairs(player.GetAll()) do
+                if target == ply or !target:Alive() then continue end
+                
+                local targetPos = target:GetPos() + Vector(0, 0, 45)
+                
+                render.DrawLine(myPos + Vector(0.1, 0.1, 0), targetPos + Vector(0.1, 0.1, 0), outlineColor, false)
+                render.DrawLine(myPos + Vector(-0.1, -0.1, 0), targetPos + Vector(-0.1, -0.1, 0), outlineColor, false)
+                render.DrawLine(myPos, targetPos, lineColor, false)
+            end
+        end
+    end
+
+    if dezz.cfg.vars["fpr"] && dezz.isCanTrace && !pLocalPlayer:IsOnGround() then
         dezz.isCanTrace = false
 
         local ply = pLocalPlayer
@@ -11332,18 +11356,18 @@ function dezz.EntityTakeDamage(hurted, dmginfo)
         local shots = hurted.aimshots or 0
         local rand = math.random(-22, 22)
         
-        if dezz.cfg.vars["Adaptive resolver"] and mode ~= "HVH" then
+        if dezz.cfg.vars["Adaptive resolver"] && mode != "HVH" then
             local vel = hurted:GetVelocity():Length2D()
             local crouch = hurted:Crouching()
             
             if !hurted:IsOnGround() then
-                dezz.resolversuccess[hurted] = base + ((shots % 2 == 0) and 90 or -90)
-            elseif vel > 120 and !crouch then
-                dezz.resolversuccess[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
-            elseif crouch and vel < 10 then
-                dezz.resolversuccess[hurted] = base + ((shots % 2 == 0) and 15 or -15)
+                dezz.resolversuccess[hurted] = base + ((shots % 2 == 0) && 90 or -90)
+            elseif vel > 120 && !crouch then
+                dezz.resolversuccess[hurted] = base + ((shots % 3 == 0) && 45 or -45) + rand
+            elseif crouch && vel < 10 then
+                dezz.resolversuccess[hurted] = base + ((shots % 2 == 0) && 15 or -15)
             else
-                dezz.resolversuccess[hurted] = base + ((shots % 4 == 0) and 180 or 0)
+                dezz.resolversuccess[hurted] = base + ((shots % 4 == 0) && 180 or 0)
             end
         elseif mode == "HVH" then
             local tick = engine.TickCount()
@@ -11352,9 +11376,9 @@ function dezz.EntityTakeDamage(hurted, dmginfo)
             dezz.resolversuccess[hurted] = base + successoffsets[successpattern]
         else
             if mode == "Absolute" then
-                dezz.resolversuccess[hurted] = (shots % 2 == 0) and 0 or 180
+                dezz.resolversuccess[hurted] = (shots % 2 == 0) && 0 or 180
             elseif mode == "Rage" then
-                dezz.resolversuccess[hurted] = base + ((shots % 3 == 0) and 45 or -45) + rand
+                dezz.resolversuccess[hurted] = base + ((shots % 3 == 0) && 45 or -45) + rand
             elseif mode == "Delta" or mode == "Legit" then
                 local vel = hurted:GetVelocity()
                 local moveYaw = vel:Angle().yaw
@@ -11362,7 +11386,7 @@ function dezz.EntityTakeDamage(hurted, dmginfo)
             elseif mode == "Experimental" then
                 dezz.resolversuccess[hurted] = base + math.sin(CurTime() * 4 + shots) * 60
             else
-                dezz.resolversuccess[hurted] = base + ((shots % 2 == 0) and 58 or -58) + math.random(-30, 30)
+                dezz.resolversuccess[hurted] = base + ((shots % 2 == 0) && 58 or -58) + math.random(-30, 30)
             end
         end
     end
@@ -11393,247 +11417,6 @@ for k, v in ipairs(player.GetAll()) do
 	dezz.initPlayerVars( v )
 end
 
-
-dezz.chatmsg = {
-    [1] = { "American boy", "Russian girls", "My baby", "American American booyyyyy", "❤Combination❤", "Суп с котом? ХВАТИ!", "До дома провожал", "А потом. ЧТО ПОТОМ?", "GIVE ME ONLY LOVE❤", "Russian, russian girls, my baby", 
-        "You take my soul.", "You give me love!!", "Американ бой, американ джой!", "Уеду с тобой, Москва прощай!", "Приезжай поскорей за мной, я здесь!",
-        "Бухгалтер, милый мой бухгалтер.", "Зато родной, зато весь мой.", "Мне надоело петь про эту заграницу.", "❤Милый милый мой бухгалтер❤" 
-    },
-    [2] = { "Петля, не отбирайте у меня мою петлю", "Я взгляд, я вижу всё, но бесполезно говорить", "Столбы и перекладины, на них тела висят", "Заря, никто не может перекрасить вновь зарю", "Чины, они любимые подонки у судьбы",
-        "Назад, в небытие, но каждый очень хочет жить", "Нога, ходить я в ногу отказался наотрез", "Гореть, мы будем все гореть в аду, зато тепло", "Жалеть, зачем жалеть всё то, что время унесло?", "Петля, меня раскачивает вверх и вниз петля...",
-        "Сопля, повисла, сволочь, на моём носу сопля", "Цветы, завяли все позавчера мои цветы(", "А ты чего орёшь, дурёха, среди пустоты?", "Ты жди, петля порвётся и к тебе я упаду", "Давно смеялся б я над выражением лица...", "На на на най на на", "Она прорыдала: «Жизнь не удалась»",
-        "Среди голых стен на холодном полу", "Как два партизана во вражьем тылу", "❤Прижавшись друг к другу, хранили тепло❤", "Мы были вдвоём несмотря ни на что❤❤❤", "Она убила эту зиму своей наготой", "Она вдохнула ветер жизни и вернула покой", "Она была со мной, она была моя...",
-        "Не проходило дня, когда о ней не думал я", "Для нас начинался уже новый день", "Что лучше касания губ и руки?", "Из-за моей глупости средь бела дня", "Зима пролетела, не стало её...", "А мы, как и прежде, остались вдвоём…", "Обосранный герой, твой дом из тростника сгорел еще вчера",
-        "Обосранный герой!", "Жизнь вокруг меня — точная копия меня самого...", "...но мне от этого не лучше...", "Всю жизнь мечтал купить я пулемёт", "Когда-нибудь ты не вернёшься в дом", "С песней весело шагать на расстрел", "Я решился взять себе выходной", "А пока что посмотри с высоты",
-        "Плюнь в лицо тому, кто существовал", "Песню жизни напевать надо всем", "На ногах её звенят кандалы", "А глаза её спокойны, чисты", "Но сегодня запевать будешь ты", "Концлагерь кричит «Банзай!»", "Каждой СОБАКЕ собачья смерть!", "На небе солнце светит, никто его не видит(", "А на высокой крыше стоит самоубийца",
-        "Замученный котёнок валялся на асфальте", "Что толку быть живым, пуская нежно слюни"
-    },
-    [3] = {
-        "Твоя мама шлюха которая трахается за пачку ржаных %s",
-        "Твоя мама жалеет что не сделала аборт %s",
-        "Тебя ебали в детстве и теперь ты ебешься в играх %s",
-        "Твой отец сдох бы от стыда если бы увидел тебя %s",
-        "У тебя хуй на плечах вместо головы %s",
-        "Ты ебешься как последнее говно %s",
-        "Иди нахуй со своим кривым аимом %s",
-        "Твои читы ебут тебя в сраку %s",
-        "Ты играешь как еблан с похмелья %s",
-        "У тебя руки из жопы и мозги из говна %s",
-        "Твоя мамка сосет у всего сервера %s",
-        "Тебя в детстве ебал сосед и теперь ты еблан %s",
-        "Твой скрипт ебут твою мамашу %s",
-        "Иди выеби себя сам сука %s",
-        "Твоя жизнь - ебаное дерьмо %s",
-        "Ты еблан который не умеет даже читать %s",
-        "У тебя ебаное рыло которое хочется разбить %s",
-        "Твоя мамка ебется за донат на твои читы %s",
-        "Тебя ебут в очко и ты плачешь %s",
-        "Твой отец ебал козу и родился ты %s",
-        "Иди нахуй со своим ебаным трегером %s",
-        "Твоя мамка шлюха которая сосет за 50 рублей %s",
-        "Тебя ебут в жопу и ты орешь как сука %s",
-        "Твой ник - ебаное говно %s",
-        "У тебя ебаная морда кирпича %s",
-        "Твои читы ебут тебя в сраку каждый день %s",
-        "Иди выеби свою ебаную мамашу %s",
-        "Тебя ебут в очко и ты плачешь как сука %s",
-        "Твой скрипт ебет твою мертвую бабушку %s",
-        "У тебя ебаные руки из жопы %s",
-        "Твоя мамка ебется с собакой %s",
-        "Тебя ебут в жопу и ты любишь это %s",
-        "Иди нахуй со своим ебаным валом %s",
-        "Твой отец ебал свинью и родился ты %s",
-        "Твоя мамка шлюха которая трахается за чипсы %s",
-        "Тебя ебут в очко и ты просишь еще %s",
-        "У тебя ебаная рожа которую хочется разъебать %s",
-        "Твои читы ебут тебя в сраку каждую ночь %s",
-        "Иди выеби свою ебаную сестру %s",
-        "Тебя ебут в жопу и ты кончаешь %s",
-        "Твой скрипт ебет твою мертвую мамашу %s",
-        "У тебя ебаные мозги из говна %s",
-        "Твоя мамка ебется с табуреткой %s",
-        "Тебя ебут в очко и ты плачешь от счастья %s",
-        "Иди нахуй со своим ебаным читерством %s",
-        "Твой отец ебал осла и родился ты %s",
-        "Твоя мамка шлюха которая сосет за сигарету %s",
-        "Тебя ебут в жопу и ты орешь как шакал %s",
-        "У тебя ебаная физиономия урода %s",
-        "Твои читы ебут тебя в сраку без смазки %s"
-    }, 
-    [4] = { "EZZZZZZ", "11111111111", "Ну не плачь(((", "Вытерай слезки щас тебя ебать будем", "ezzzzzzzzzzz", "Легкоооооо", "Чел у тебя читы за 5 копеек?", "Мдэ ну ты и слабак",
-        "(БОЖЕЕЕ КТО ЕМУ ЧИТЫ ДАЛ)", "loooosssssserrrr", "ЛИВАЙ ПОКА Я ТЕБЯ НЕ ОБОССАЛ", "Маме привет передай)", "Кстати твоя мать шлюха)", "ММ как хорошо твоя мать сосет",
-        "Иди попей водички говорят помогает от слез", "1234? NO, 111111? YEAH.", "Говорят у тебя дома кого то обоссали", "))))))))", "❤ez tvoya mat shlyha❤", "Удаляй свою ГПТ пасту", 
-        "Удаляй читы гадские", "1mur1mur1", "Когда выйдешь чтобы написать RQ?"
-    },
-    [5] = {
-        "☆〜（ゝ。∂）ты проиграл мне, няша〜☆",
-        "（◕‿◕✿）kawaii desu ne? а ты мертв（✿◠‿◠）",
-        "＊*♡(◡‿◡✿) твой скилл - нулевой, как моя любовь к тебе ♡✿*＊",
-        "（ﾉ´д｀）ﾉ твоя смерть такая же милая, как ты кринжовый",
-        "（╯°□°）╯︵ ┻━┻ ФЛИП ТЕЙБЛ!!! ты опять умер!",
-        "（。・ω・。）nya~ ты играешь как котенок с мячиком",
-        "（≧◡≦）читеришь? мииило! но бесполезно ♪",
-        "（´• ω •｀）☆ твой аим - мое сердце: промах",
-        "（´∀｀）♡ ты пытаешься! мило смотреть ♡",
-        "（´｡• ω •｡｀）у тебя лапки вместо рук? умииительно!",
-        "（⁀ᗢ⁀）мур-мур~ тебя убили опять! как мило!",
-        "（＾• ω •＾）nya~ хочешь печеньку? а нет, ты мертв",
-        "（◕‿◕）♡ твой геймплей заставляет меня улыбаться! такой смешной!",
-        "（´･ω･｀）твоя тактика: бежать и умирать? оригинально!",
-        "（＾ｖ＾）ты как аниме герой: всегда проигрываешь!",
-        "（⌒▽⌒）☆ твоя смерть - искусство! такое комедийное!",
-        "（●´ω｀●）у тебя есть талант! к проигрышам ♪",
-        "（´｡• ᵕ •｡｀）♡ ты специально так играешь? чтобы меня рассмешить?",
-        "（￣ω￣）твой скрипт плачет от стыда! как мило!",
-        "（＾ｖ＾）ты как котенок: милый но беспомощный!",
-        "（´• ω •）ﾉ☆ твои попытки - моё развлечение!",
-        "（◡ ω ◡）ты проиграл! на тебе бантик! ♡",
-        "（＾• ω •＾）у тебя лапки! такие неуклюжие!",
-        "（´｡• ᵕ •｡｀）твоя смерть сделала мой день лучше!",
-        "（⁀ᗢ⁀）мур-мур~ хочешь молочка? а нет, ты умер",
-        "（◕‿◕✿）ты как цветочек: быстро вянешь!",
-        "（＾ｖ＾）ты пытаешься! это так мило смотреть!",
-        "（⌒‿⌒）☆ твои рефлексы как у сонной панды!",
-        "（●´ω｀●）у тебя есть будущее! в гробу!",
-        "（´･ω･｀）твоя мама бы гордилась! если бы не видела это",
-        "（＾• ω •＾）nya~ ты как бабочка: красиво умираешь!",
-        "（￣ω￣）ты звезда! падающая звезда!",
-        "（◕‿◕）✧ твои движения завораживают! своей беспомощностью!",
-        "（＾ｖ＾）ты как мышка: бегаешь и пищишь!",
-        "（⌒▽⌒）☆ твоя смерть - лучший момент матча!",
-        "（●´ω｀●）у тебя есть стиль! стиль лузера!",
-        "（´∀｀）♡ ты делаешь мир веселее! своими проигрышами!",
-        "（◡ ω ◡）ты как конфетка: сладенький но быстро съедаешься!",
-        "（＾• ω •＾）nya~ твой аимбот уснул от скуки!",
-        "（￣ω￣）ты как открытка: не нужная и бесполезная!"
-    },
-    [6] = { 
-        "EZ CLAP",
-        "GET GOOD",
-        "SKILL ISSUE",
-        "CRY ABOUT IT",
-        "MAD CAUSE BAD",
-        "RATIO + L + BOZO",
-        "COPIUM OVERDOSE",
-        "SEETHING MALDING",
-        "CRINGE + TOUCH GRASS",
-        "YOU DIED",
-        "WASTED",
-        "FATALITY",
-        "FLAWLESS VICTORY",
-        "PERFECT!",
-        "ULTRA COMBO!",
-        "K.O.!",
-        "FIGHTING GOLD",
-        "MISSION FAILED",
-        "GAME OVER",
-        "CONTINUE?",
-        "INSERT COIN",
-        "LEVEL UP!",
-        "NEW HIGH SCORE!",
-        "ACHIEVEMENT UNLOCKED",
-        "PRO GAMER MOVE",
-        "POGGERS",
-        "KEKW",
-        "LULW",
-        "OMEGALUL",
-        "FORSENBAJ",
-        "MONKAW",
-        "PEPELAUGH",
-        "HACKERMAN",
-        "BIG PLAYS",
-        "OUTPLAYED",
-        "READ LIKE A BOOK",
-        "PREDICTABLE",
-        "TOO EASY",
-        "NO CHALLENGE",
-        "BOT GAP",
-        "DIFF GAP",
-        "GAP DIFF",
-        "NICE TRY",
-        "BETTER LUCK NEXT TIME",
-        "ALMOST HAD IT",
-        "SO CLOSE YET SO FAR"
-    },
-    [7] = { "❤mur❤mur❤", "mur mur❤", "mur mur❤❤❤", "❤mur mur❤", "mur❤mur", "mur mur❤❤",
-            "mur mur", "❤mur mur", "murmur", "❤murmur❤", "murmur❤", "murmur❤❤❤"
-    },
-    [8] = {"gtfo", "shut up", "get out", "you talking to me", "what is the point", "this is bad", "!good", "stop looking at me", "and if you see dr. breen tell him i said fuck you",
-           "and if you see dr. breen tell him i said fuck you", "and if you see dr. breen tell him i said fuck you","bullshit", "bullshit", "you never know", "you never know ", "hax",
-           "hax", "haxx",  "hacks", "figures", "he's dead", "he's dead", "he's dead", "it cant be", "it cant be", "take this medkit", "take this medkit", "take this medkit","cut it","get down","come!","heads up", "got one", "take cover", "this is bad", "same here", "you talking to me","fantastic"
-    },
-    [9] = { 
-        "Жди... докс", "Жди... сват", "Жди... деанон", "Жди... ОМОН", "Жди... ФБР", "Жди... ФСБ",
-        "Жди... снайперов", "Жди... вагнеров", "Жди... офицеров", "Жди... редановцев", "Жди... вайперов",
-        "Жди... фурри в памперсах", "Жди... танкистов", "Жди... спецназ", "Жди... ГРУ", "Жди... спортсменов",
-        "Жди... чеченских боевиков", "Жди... СС", "Жди... ФБИ", "Жди... ВСРФ", "Жди... КГБ",
-        "Жди... накаченных таджиков с автоматами", "Жди... милиционеров", "Жди... разведчиков",
-        "Жди... диверсантов", "Жди... кибершпионов", "Жди... пограничников", "Жди... парашютистов",
-        "Жди... морпехов", "Жди... артиллеристов", "Жди... инженеров-саперов", "Жди... контрразведчиков",
-        "Жди... наемников", "Жди... десантников", "Жди... радистов", "Жди... военных врачей",
-        "Жди... пилотов", "Жди... штурманов", "Жди... космонавтов", "Жди... геодезистов",
-        "Жди... инструкторов по выживанию", "Жди... пожарных", "Жди... сантехников", "Жди... электриков",
-        "Жди... водителей бронетехники", "Жди... грузчиков", "Жди... строителей укреплений",
-        "Жди... психологов", "Жди... логистов", "Жди... переводчиков", "Жди... судей", "Жди... следователей",
-        "Жди... прокуроров", "Жди... адвокатов", "Жди... учителей военной подготовки",
-        "Жди... журналистов военной тематики", "Жди... инженеров-строителей", "Жди... ветеринаров",
-        "Жди... физиотерапевтов", "Жди... психотерапевтов", "Жди... историков", "Жди... философов",
-        "Жди... лингвистов", "Жди... педагогов", "Жди... социологов", "Жди... экономистов",
-        "Жди... юристов", "Жди... политологов", "Жди... психологов", "Жди... астрономов",
-        "Жди... генетиков", "Жди... нейробиологов", "Жди... робототехников", "Жди... нанотехнологов",
-        "Жди... энергетиков", "Жди... транспортников", "Жди... связистов", "Жди... геодезистов",
-        "Жди... гидротехников", "Жди... мелиораторов", "Жди... лесоводов", "Жди... охотоведов",
-        "Жди... рыбоводов", "Жди... виноделов", "Жди... пивоваров", "Жди... кондитеров",
-        "Жди... поваров", "Жди... шеф-поваров", "Жdi... барменов", "Жди... официантов",
-        "Жди... гостиничников", "Жди... туристов", "Жди... гидов", "Жди... экскурсоводов",
-        "Жди... спортсменов-профессионалов", "Жди... любителей спорта", "Жди... фитнес-тренеров",
-        "Жди... йогов", "Жди... массажистов", "Жди... астрологов", "Жди... гадалок",
-        "Жди... психологов-консультантов", "Жди... психотерапевтов-психоаналитиков",
-        "Жди... гипнотерапевтов", "Жди... нутрициологов", "Жди... диетологов", "Жди... фитотерапевтов",
-        "Жди... гомеопатов", "Жди... акупунктуристов", "Жди... мануальных терапевтов",
-        "Жди... реабилитологов", "Жди... ортопедов", "Жди... травматологов",
-        "Жди... стоматологов-ортодонтов", "Жди... стоматологов-хирургов",
-        "Жди... стоматологов-педиатров", "Жди... оптометристов"
-    },
-    [10] = {
-        "Smokin Woo Lotti Smokin Woo Lotti Smokin Woo Lotti",
-        "курю Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz",
-        "курю Dubsk Dubsk Dubsk Dubsk Dubsk Dubsk Dubsk",
-        "курю Dell Dell Dell Dell Dell Dell Dell Dell",
-        "Smokin,Blay Smokin,Blay Smokin,Blay",
-        "Smokin Doowop Smokin Doowop Smokin Doowop",
-        "Smokin Jacob Smokin Jacob Smokin Jacob",
-        "Smokin Lenny Smokin Lenny Smokin Lenny",
-        "Smokin Tank Smokin Tank Smokin Tank",
-        "Smokin C-easy Smokin C-easy Smokin C-easy",
-        "Smokin Woo Lott Smokin Woo Lott Smokin Woo Lott",
-        "курю Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz Rah Gz",
-        "Smokin Chiii Smokin Chiii Smokin Chiii",
-        "Smokin Nazzy Smokin Nazzy Smokin Nazzy",
-        "Smokin Jayripk Smokin Jayripk Smokin Jayripk",
-        "Nigga, what? Come here",
-		"Where the fuck is he goin'?",
-		"Notti died and they thought that was funny? Lotti got packed the start of 2020",
-		"Notti died and they thought that was funny? Lotti got packed the start of 2020??",
-		"Notti died and they thought that was funny? Lotti got packed the start of 2020???",
-		"I pray to God that we don't get indicted Free the bros that got caught for the— ah",
-		"Thirteen, I was smokin' on Fries",
-		"Fourteen, I was smokin' on Nazzy",
-		"I spin two deep, me and G, you gon' die))",
-		"I spin two deep, me and G, you gon' die",
-		"Follow BLOODIE, DudeyLo, DD O…)",
-		"Follow BLOODIE, DudeyLo, DD O…",
-        "Smokin,Blay Smokin,Blay Smokin,Blay",
-        "Smokin Doowop Smokin Doowop Smokin Doowop",
-        "Smokin Jacob Smokin Jacob Smokin Jacob",
-        "Smokin JB Smokin JB Smokin JB"
-    }
-}
-
-dezz.chatmsgd = {
-
-}
-
 // Init player vars 
 gameevent.Listen("player_spawn")
 gameevent.Listen("player_activate")
@@ -11647,7 +11430,7 @@ function dezz.player_hurt(data)
     local hurted = Player(data.userid)
     local attackerid = data.attacker
     
-    if attackerid ~= pLocalPlayer:UserID() then return end
+    if attackerid != pLocalPlayer:UserID() then return end
     
     if dezz.cfg.vars["On screen logs"] then
         local hlcolor = string.ToColor(dezz.cfg.colors["On screen logs"])
@@ -11689,7 +11472,7 @@ function dezz.entity_killed(data)
     local attacker = Entity(data.entindex_attacker)
 
     if !IsValid(attacker) or !IsValid(victim) then return end
-    if attacker ~= pLocalPlayer then return end
+    if attacker != pLocalPlayer then return end
     if attacker == victim then return end
     if victim:IsNPC() then return end
     if !(victim:IsPlayer() or victim:IsBot()) then return end
@@ -11780,7 +11563,7 @@ function dezz.entity_killed(data)
         local filePath = "dezzaster/music/" .. fileData.name
         if !file.Exists(filePath, "DATA") then
             http.Fetch("https://drive.usercontent.google.com/u/0/uc?id=" .. fileData.id .. "&export=download", function(body)
-                if body and #body > 0 then
+                if body && #body > 0 then
                     file.Write(filePath, body)
                 end
             end)
@@ -11875,7 +11658,6 @@ function dezz.DrawOverlay()
 
     dezz.DrawMenuHints()
 end
-
 
 // Gamemode UpdateClientsideAnimation
 
@@ -12020,7 +11802,7 @@ do
                 local ply = plys[i]
                 if !IsValid(ply) then continue end
                 
-                local v = dezz.playerCache and dezz.playerCache[ply]
+                local v = dezz.playerCache && dezz.playerCache[ply]
                 if !v then continue end
                 
                 if v.ObserverTarget == pLocalPlayer then
@@ -12029,13 +11811,13 @@ do
             end
         end
 
-        if dezz.IsKeyDown( dezz.cfg.binds["Fullbright"] ) and !dezz.fbkd then
+        if dezz.IsKeyDown( dezz.cfg.binds["Fullbright"] ) && !dezz.fbkd then
             dezz.fbe = !dezz.fbe
         end
 
         dezz.fbkd = dezz.IsKeyDown( dezz.cfg.binds["Fullbright"] )  
 
-        if dezz.cfg.vars["Fullbright"] and dezz.fbe and dezz.IsKeyDown( dezz.cfg.binds["Fullbright"] ) then
+        if dezz.cfg.vars["Fullbright"] && dezz.fbe && dezz.IsKeyDown( dezz.cfg.binds["Fullbright"] ) then
             RunConsoleCommand("mat_fullbright", "1")
         elseif dezz.IsKeyDown( dezz.cfg.binds["Fullbright"] ) then
             RunConsoleCommand("mat_fullbright", "0")
@@ -12043,9 +11825,9 @@ do
 
         local sckycvar = GetConVar("r_3dsky")
 
-        if (dezz.cfg.vars["nsky3d"] and sckycvar:GetBool() == true) then
+        if (dezz.cfg.vars["nsky3d"] && sckycvar:GetBool() == true) then
             RunConsoleCommand("r_3dsky", "0")
-        elseif (!dezz.cfg.vars["nsky3d"] and sckycvar:GetBool() == false) then
+        elseif (!dezz.cfg.vars["nsky3d"] && sckycvar:GetBool() == false) then
             RunConsoleCommand("r_3dsky", "1")
         end
 
@@ -12076,7 +11858,7 @@ do
             local vel = ply:GetVelocity():Length2D()
             local ang = ply:EyeAngles()
             
-            if vel > 10 or (dezz.LastAngles and dezz.LastAngles[ply] and !dezz.LastAngles[ply]:IsEqualTol(ang, 1)) then
+            if vel > 10 or (dezz.LastAngles && dezz.LastAngles[ply] && !dezz.LastAngles[ply]:IsEqualTol(ang, 1)) then
                 ply.LastMovementTime = CurTime()
             end
             
@@ -12089,8 +11871,6 @@ do
         end
 
         if dezz.cfg.vars["RusEliteDetector"] then
-            if !dezz or !dezz.cfg or !dezz.cfg.vars then return end
-
             local ply = pLocalPlayer
             if !IsValid(ply) then return end
 
@@ -12110,25 +11890,10 @@ do
             end
         end 
 
-        if dezz.OldPropModState == nil then
-            dezz.OldPropModState = dezz.cfg.vars["prop color"]
-            dezz.OldPropModColor = dezz.cfg.colors["prop color"]
-        end
-
-        if dezz.OldPropModState != dezz.cfg.vars["prop color"] and dezz.cfg.vars["prop color"] then
+        if dezz.cfg.vars["prop color"] then
             dezz.UpdatePropModulation()
-            dezz.OldPropModState = dezz.cfg.vars["prop color"]
-            dezz.OldPropModColor = dezz.cfg.colors["prop color"]
-        elseif dezz.OldPropModState != dezz.cfg.vars["prop color"] and !dezz.cfg.vars["prop color"] then
+        elseif !dezz.cfg.vars["prop color"] then
             dezz.DisablePropModulation()
-            dezz.OldPropModState = dezz.cfg.vars["prop color"]
-            dezz.OldPropModColor = dezz.cfg.colors["prop color"]
-        end
-        
-        if dezz.OldPropModColor != dezz.cfg.colors["prop color"] and dezz.cfg.vars["prop color"] then
-            dezz.UpdatePropModulation()
-            dezz.OldPropModState = dezz.cfg.vars["prop color"]
-            dezz.OldPropModColor = dezz.cfg.colors["prop color"]
         end
 
         local grad = Material("gui/gradient")
@@ -12152,9 +11917,9 @@ do
         local function CalculateKeypadCursorPos(ply, ent)
             if !IsValid(ply) then return 0, 0 end
             local tr = util.TraceLine({ start = ply:EyePos(), endpos = ply:EyePos() + ply:GetAimVector() * 65, filter = ply })
-            if !tr.Entity or tr.Entity ~= ent then return 0, 0 end
+            if !tr.Entity or tr.Entity != ent then return 0, 0 end
             local scale, pos, ang = ent.Scale, ent:CalculateRenderPos(), ent:CalculateRenderAng()
-            if !(scale and pos and ang) then return 0, 0 end
+            if !(scale && pos && ang) then return 0, 0 end
             local intersection = util.IntersectRayWithPlane(ply:EyePos(), ply:GetAimVector(), pos, ent:GetForward())
             if !intersection then return 0, 0 end
             local diff = pos - intersection
@@ -12166,7 +11931,7 @@ do
             local x, y = CalculateKeypadCursorPos(ply, ent)
             for _, el in ipairs(elements) do
                 local ex, ey, ew, eh = w * el.x, h * el.y, w * el.w, h * el.h
-                if ex < x and ex + ew > x and ey < y and ey + eh > y then return el end
+                if ex < x && ex + ew > x && ey < y && ey + eh > y then return el end
             end
         end
 
@@ -12176,29 +11941,29 @@ do
             
             for _, v in ipairs(player.GetAll()) do
                 local kp = v:GetEyeTrace().Entity
-                if IsValid(kp) and string.find(kp:GetClass(), "Keypad") and v:EyePos():Distance(kp:GetPos()) <= 120 then
+                if IsValid(kp) && string.find(kp:GetClass(), "Keypad") && v:EyePos():Distance(kp:GetPos()) <= 120 then
                     kp.tempCode = kp.tempCode or ""
                     kp.tempText = kp.tempText or ""
                     kp.tempStatus = kp.tempStatus or 0
                     
-                    if kp:GetText() ~= kp.tempText or kp:GetStatus() ~= kp.tempStatus then
+                    if kp:GetText() != kp.tempText or kp:GetStatus() != kp.tempStatus then
                         kp.tempText = kp:GetText()
                         kp.tempStatus = kp:GetStatus()
                         
-                        if kp.tempText and !kp:GetSecure() then
+                        if kp.tempText && !kp:GetSecure() then
                             kp.tempCode = kp.tempText
-                            timer.Simple(0, function() if IsValid(kp) and kp:GetStatus() == 1 and kp.tempCode and kp.tempCode ~= "" then kp.code = kp.tempCode end end)
+                            timer.Simple(0, function() if IsValid(kp) && kp:GetStatus() == 1 && kp.tempCode && kp.tempCode != "" then kp.code = kp.tempCode end end)
                         else
                             local hover = GetHoveredElement(v, kp)
-                            local i = hover and hover.text
+                            local i = hover && hover.text
                             
                             if kp.tempText then
-                                timer.Simple(0, function() if IsValid(kp) and kp:GetStatus() == 1 and kp.tempCode and kp.tempCode ~= "" then kp.code = kp.tempCode end end)
+                                timer.Simple(0, function() if IsValid(kp) && kp:GetStatus() == 1 && kp.tempCode && kp.tempCode != "" then kp.code = kp.tempCode end end)
                             end
                             
                             if kp.tempText == "" or kp:GetStatus() == 2 then kp.tempCode = "" end
                             
-                            timer.Simple(0, function() if IsValid(kp) and tonumber(i) and kp:GetText():len() ~= 0 then kp.tempCode = kp.tempCode .. i end end)
+                            timer.Simple(0, function() if IsValid(kp) && tonumber(i) && kp:GetText():len() != 0 then kp.tempCode = kp.tempCode .. i end end)
                         end
                     end
                 end
@@ -12207,7 +11972,7 @@ do
             for _, v in ipairs(GetKeypads()) do
                 if IsValid(v) then
                     v.hacked = v.hacked or false
-                    if !v.hacked and v:GetStatus() == 1 and v:GetText() ~= "****" then
+                    if !v.hacked && v:GetStatus() == 1 && v:GetText() != "****" then
                         v.hacked = true
                         v.passi = v:GetText()
                     end
@@ -12215,14 +11980,14 @@ do
             end
         end
 
-        if dezz.IsKeyDown( dezz.cfg.binds["keyopc"] ) and !dezz.kd then 
+        if dezz.IsKeyDown( dezz.cfg.binds["keyopc"] ) && !dezz.kd then 
             dezz.togglevisible()
             CloseDermaMenus()
         end
 
         dezz.kd = dezz.IsKeyDown( dezz.cfg.binds["keyopc"] )
 
-        if dezz.IsKeyDown( dezz.cfg.binds["Ent add"] ) and !dezz.ekd then
+        if dezz.IsKeyDown( dezz.cfg.binds["Ent add"] ) && !dezz.ekd then
             local tr = pLocalPlayer:GetEyeTrace().Entity
 
             if IsValid( tr ) then 
@@ -12236,10 +12001,10 @@ do
             end
         end
 
-        if dezz.IsKeyDown(dezz.cfg.binds["Player add"]) and !dezz.ekd2 then
+        if dezz.IsKeyDown(dezz.cfg.binds["Player add"]) && !dezz.ekd2 then
             local tr = pLocalPlayer:GetEyeTrace().Entity
 
-            if IsValid(tr) and tr:GetClass() == "player" then 
+            if IsValid(tr) && tr:GetClass() == "player" then 
                 local steamId = tr:SteamID()
 
                 if !dezz.cfg.friends[steamId] then
@@ -12250,10 +12015,10 @@ do
             end
         end
 
-        if dezz.IsKeyDown(dezz.cfg.binds["Priority add"]) and !dezz.ekd3 then
+        if dezz.IsKeyDown(dezz.cfg.binds["Priority add"]) && !dezz.ekd3 then
             local tr = pLocalPlayer:GetEyeTrace().Entity
 
-            if IsValid(tr) and tr:GetClass() == "player" then 
+            if IsValid(tr) && tr:GetClass() == "player" then 
                 local steamId = tr:SteamID()
 
                 if !dezz.cfg.priorityList[steamId] then
@@ -12264,7 +12029,7 @@ do
             end
         end
 
-        if dezz.cfg.vars["Inverter"] and dezz.IsKeyDown( dezz.cfg.binds["Inverter"] ) and !inverterdown then
+        if dezz.cfg.vars["Inverter"] && dezz.IsKeyDown( dezz.cfg.binds["Inverter"] ) && !inverterdown then
             dezz.inverted = !dezz.inverted 
         end
 
@@ -12274,12 +12039,12 @@ do
         dezz.ekd2 = dezz.IsKeyDown( dezz.cfg.binds["Player add"] )
         dezz.ekd3 = dezz.IsKeyDown( dezz.cfg.binds["Priority add"] )    
 
-        if dezz.cfg.vars["FSpec ClickTP"] and dezz.IsKeyDown( dezz.cfg.binds["FSpec ClickTP"] ) then
+        if dezz.cfg.vars["FSpec ClickTP"] && dezz.IsKeyDown( dezz.cfg.binds["FSpec ClickTP"] ) then
             local pos = pLocalPlayer:GetEyeTrace().HitPos
             RunConsoleCommand( "FTPToPos", string.format("%d, %d, %d", pos.x, pos.y, pos.z), string.format("%d, %d, %d", 0, 0, 0) )
         end
 
-        if dezz.cfg.vars["Chat spammer"] and CurTime() > chatdelay then
+        if dezz.cfg.vars["Chat spammer"] && CurTime() > chatdelay then
             local chatPrefixes = {
                 [2] = "/ooc ",
                 [3] = "/ad "
@@ -12294,7 +12059,7 @@ do
             local players = player.GetAll()
             local random_ply = players[ math.random( 1, #players ) ]
             
-            if random_ply ~= pLocalPlayer then
+            if random_ply != pLocalPlayer then
                 str = string.format( str, dezz.playerCache[ random_ply ].Name )
                 RunConsoleCommand("say", str)
             end
@@ -12349,7 +12114,7 @@ do
                 ded.StartShifting( true )
             end
             
-            local shouldcharge = ded.GetCurrentCharge() < dezz.cfg.vars["Charge ticks"] and dezz.IsKeyDown( dezz.cfg.binds["Auto recharge"] )
+            local shouldcharge = ded.GetCurrentCharge() < dezz.cfg.vars["Charge ticks"] && dezz.IsKeyDown( dezz.cfg.binds["Auto recharge"] )
             
             ded.StartRecharging( shouldcharge )
         
@@ -12358,15 +12123,15 @@ do
             end
         end
     
-        if dezz.cfg.vars["Taunt spam"] and dezz.nextact < CurTime() and pLocalPlayer:Alive() then 
+        if dezz.cfg.vars["Taunt spam"] && dezz.nextact < CurTime() && pLocalPlayer:Alive() then 
             local act = dezz.actCommands[dezz.cfg.vars["Taunt"]]
             local delay = dezz.cfg.vars["Taunt Speed"]
 
-            RunConsoleCommand("act", act)
+            RunConsoleCommand("say", act)
             dezz.nextact = CurTime() + delay
         end
 
-        if dezz.cfg.vars["Taunt 2"] and dezz.nextact2 < CurTime() and pLocalPlayer:Alive() then
+        if dezz.cfg.vars["Taunt 2"] && dezz.nextact2 < CurTime() && pLocalPlayer:Alive() then
             local act2 = dezz.act2Commands[dezz.cfg.vars["Taunt 2.1"]]
             local delay2 = dezz.cfg.vars["Taunt 2 Speed"]
 
@@ -12408,7 +12173,7 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
     if dezz.cfg.vars["spectating"] then
         local followTarget = player.GetBySteamID(dezz.cfg.vars["Specta"] or "")
         
-        if IsValid(followTarget) and followTarget:Alive() then
+        if IsValid(followTarget) && followTarget:Alive() then
             if !followTarget.wasVisible then
                 followTarget.wasVisible = true
                 followTarget:SetRenderMode(RENDERMODE_NONE)
@@ -12442,15 +12207,15 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
         end
     end
 
-    if dezz.cfg.vars["Third person"] and tppressed and !dezz.tptoggled then
+    if dezz.cfg.vars["Third person"] && tppressed && !dezz.tptoggled then
         dezz.tpenabled = !dezz.tpenabled
-        dezz.tpAnimProgress = dezz.tpenabled and 0 or 1
+        dezz.tpAnimProgress = dezz.tpenabled && 0 or 1
     end
 
-    if dezz.cfg.vars["Free camera"] and fcpressed and !dezz.fctoggled then
+    if dezz.cfg.vars["Free camera"] && fcpressed && !dezz.fctoggled then
         dezz.fcenabled = !dezz.fcenabled
         dezz.fcangles = dezz.SilentAngle
-    elseif dezz.fcenabled and !dezz.cfg.vars["Free camera"] then
+    elseif dezz.fcenabled && !dezz.cfg.vars["Free camera"] then
         dezz.fcenabled = false
     end
 
@@ -12463,11 +12228,11 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
         dezz.tpAnimProgress = math.max(dezz.tpAnimProgress - FrameTime() * 4, 0)
     end
 
-    if dezz.cfg.vars["Fake duck"] and dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
+    if dezz.cfg.vars["Fake duck"] && dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
         origin.z = pLocalPlayer:GetPos().z + 64
     end
 
-    local fangs = dezz.cfg.vars["Silent aim"] and dezz.SilentAngle or angles
+    local fangs = dezz.cfg.vars["Silent aim"] && dezz.SilentAngle or angles
 
     if dezz.fcenabled then
         local speed = dezz.cfg.vars["Free camera speed"] or 10
@@ -12549,12 +12314,12 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
         end
     end
 
-    dezz.vieworigin = (dezz.cfg.vars["Ghetto free cam"] and dezz.fcenabled) and dezz.fcvector or origin
+    dezz.vieworigin = (dezz.cfg.vars["Ghetto free cam"] && dezz.fcenabled) && dezz.fcvector or origin
     dezz.viewfov = view.fov
     dezz.znear = znear
 
     if !dezz.cfg.vars["Override view"] then
-        if math.floor(fov) ~= GetConVar("fov_desired"):GetFloat() then
+        if math.floor(fov) != GetConVar("fov_desired"):GetFloat() then
             view.fov = fov 
         end
 
@@ -12564,7 +12329,7 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
         end
 
         local pWeapon = pLocalPlayer:GetActiveWeapon()
-        if IsValid(pWeapon) and pWeapon.CalcView then
+        if IsValid(pWeapon) && pWeapon.CalcView then
             local weaponOrigin, weaponAngles, weaponFov = pWeapon:CalcView(ply, Vector(view.origin), Angle(view.angles), view.fov)
             view.origin, view.angles, view.fov = weaponOrigin or view.origin, weaponAngles or view.angles, weaponFov or view.fov
         end
@@ -12586,7 +12351,7 @@ end
 
 function dezz.CalcViewModelView(weapon_entity, viewmodel, prev_origin, prev_angles, origin, angles)
     origin = dezz.vieworigin 
-	angles = dezz.cfg.vars["Silent aim"] and dezz.SilentAngle or ang
+	angles = dezz.cfg.vars["Silent aim"] && dezz.SilentAngle or ang
     
     if (!IsValid(weapon_entity)) then
         return origin, angles
@@ -12610,9 +12375,9 @@ function dezz.CalcViewModelView(weapon_entity, viewmodel, prev_origin, prev_angl
 end
 
 function dezz.PlayerButtonDown(ply, key)
-    if dezz.cfg.vars["BanPist"] and IsFirstTimePredicted() and key == dezz.cfg.binds["BanPist"] then
+    if dezz.cfg.vars["BanPist"] && IsFirstTimePredicted() && key == dezz.cfg.binds["BanPist"] then
         local ent = pLocalPlayer:GetEyeTrace().Entity
-        if ent and ent:IsPlayer() then
+        if ent && ent:IsPlayer() then
             RunConsoleCommand('ba', 'ban', ent:SteamID(), '20mi', '3.1 + 3.5')
         end
     end
@@ -12626,7 +12391,7 @@ function dezz.CalcViewModelView(wep, vm, oldPos, oldAng, pos, ang)
     if wep.CalcViewModelView then wep.CalcViewModelView = nil end
 
     pos = dezz.vieworigin 
-	ang = dezz.cfg.vars["Silent aim"] and dezz.SilentAngle or ang
+	ang = dezz.cfg.vars["Silent aim"] && dezz.SilentAngle or ang
 
     if dezz.cfg.vars["Viewmodel manip"] then
 		local OverridePos = Vector(dezz.cfg.vars["Viewmodel x"], dezz.cfg.vars["Viewmodel y"], dezz.cfg.vars["Viewmodel z"])
@@ -12656,7 +12421,7 @@ do
         if dezz.UnSafeFrame then return end
         if ply != pLocalPlayer then return end
 
-        if dezz.cfg.vars["Viewmodel chams"] and IsValid(weapon_entity) then
+        if dezz.cfg.vars["Viewmodel chams"] && IsValid(weapon_entity) then
             local col = string.ToColor( dezz.cfg.colors["Viewmodel chams"] )
             if dezz.cfg.vars["Viewmodel chams type"] == 6 then
                 dezz.chamMats.vis[6]:SetVector( "$envmaptint", Vector( col.r / 255, col.g / 255, col.b / 255 ) )
@@ -12666,7 +12431,7 @@ do
             render.SetBlend(col.a/255)
             render.SetColorModulation(col.r/255,col.g/255,col.b/255)
             render.MaterialOverride(mat)
-        elseif dezz.cfg.vars["Viewmodel chams"] and !IsValid(weapon_entity) then
+        elseif dezz.cfg.vars["Viewmodel chams"] && !IsValid(weapon_entity) then
             render.MaterialOverride(nil)
         end
 
@@ -12674,7 +12439,7 @@ do
             render.SuppressEngineLighting( true )
         end
 
-        if dezz.cfg.vars["Viewmodel fov"] != GetConVar("viewmodel_fov"):GetInt() and !drawing then 
+        if dezz.cfg.vars["Viewmodel fov"] != GetConVar("viewmodel_fov"):GetInt() && !drawing then 
             cam.Start3D(nil, nil, dezz.cfg.vars["Viewmodel fov"])
 
                 drawing = true
@@ -12740,7 +12505,7 @@ end
 function dezz.OnImpact( data )
     local startpos = data.m_vStart 
 
-    if dezz.cfg.vars[ "Bullet tracers muzzle" ] and data.m_vStart == pLocalPlayer:EyePos() then
+    if dezz.cfg.vars[ "Bullet tracers muzzle" ] && data.m_vStart == pLocalPlayer:EyePos() then
         local vm = pLocalPlayer:GetViewModel()
 	    local wep = pLocalPlayer:GetActiveWeapon()
 
@@ -12781,6 +12546,7 @@ do
 
         if dezz.cfg.vars["Angle arrows"] then
             local pos = pLocalPlayer:GetPos()
+            local lby = pLocalPlayer:GetPoseParameter("body_yaw")
 
             cam.IgnoreZ(true)
 
@@ -12794,7 +12560,6 @@ do
                 surface.DrawLine(0, 0, 25, 25)
             cam.End3D2D()
 
-            local lby = pLocalPlayer:GetPoseParameter("body_yaw")
             cam.Start3D2D(pos, Angle(0, lby + 45, 0), 1)
                 surface.SetDrawColor(lbycolor)
                 surface.DrawLine(0, 0, 25, 25)
@@ -12803,29 +12568,10 @@ do
             cam.IgnoreZ(false)
         end
 
-        if dezz.cfg.vars["line"] and dezz.tpenabled then
-            local ply = pLocalPlayer
-            if IsValid(ply) then
-                local myPos = ply:GetPos() + Vector(0, 0, 0)
-                local lineColor = string.ToColor(dezz.cfg.colors["line"])
-                local outlineColor = dezz.Colors[0] or Color(0, 0, 0, 255)
-                
-                for _, target in ipairs(player.GetAll()) do
-                    if target == ply or !target:Alive() then continue end
-                    
-                    local targetPos = target:GetPos() + Vector(0, 0, 45)
-                    
-                    render.DrawLine(myPos + Vector(0.1, 0.1, 0), targetPos + Vector(0.1, 0.1, 0), outlineColor, false)
-                    render.DrawLine(myPos + Vector(-0.1, -0.1, 0), targetPos + Vector(-0.1, -0.1, 0), outlineColor, false)
-                    render.DrawLine(myPos, targetPos, lineColor, false)
-                end
-            end
-        end
-
         if dezz.cfg.vars["Bullet tracers"] then
             local trmat = dezz.cfg.vars["Bullet tracers material"]
 
-            if trmat ~= oldtrmat then
+            if trmat != oldtrmat then
                 tracemat = Material(trmat)
                 oldtrmat = trmat
             end
@@ -12853,7 +12599,7 @@ do
             tracercolor.a = oldAlpha
         end
 
-        if dezz.cfg.vars["Auto peak"] and dezz.startedPeeking then
+        if dezz.cfg.vars["Auto peak"] && dezz.startedPeeking then
             dezz.drawAutopeak()
         end
     end
@@ -12867,7 +12613,7 @@ end
 function dezz.GetUserGroup(ply)
     if ply.GetUserGroup then
         return ply:GetUserGroup()
-    elseif ply.GetRankTable and ply:GetRankTable().NiceName then
+    elseif ply.GetRankTable && ply:GetRankTable().NiceName then
         return ply:GetRankTable().NiceName
     else
         return "unknown"
@@ -12877,7 +12623,7 @@ end
 function dezz.GetTeam( ply )
     local iTeam = ply:Team()
 
-    if rp and rp.GetJobWithoutDisguise then
+    if rp && rp.GetJobWithoutDisguise then
         local index = rp.GetJobWithoutDisguise( ply:EntIndex() ) 
         local tbl = rp.jobs.List[ index ]
 
@@ -12921,10 +12667,10 @@ function dezz.playerTableUpdate( ply )
 
     local w = ply:GetActiveWeapon()
 
-    v.WeaponClass = IsValid(w) and ( dezz.cfg.vars["Weapon printname"] and language.GetPhrase( w:GetPrintName() ) or w:GetClass() ) or "Unarmed"
-    v.WeaponAmmo = IsValid(w) and w:Clip1() or "-"
+    v.WeaponClass = IsValid(w) && ( dezz.cfg.vars["Weapon printname"] && language.GetPhrase( w:GetPrintName() ) or w:GetClass() ) or "Unarmed"
+    v.WeaponAmmo = IsValid(w) && w:Clip1() or "-"
  
-    v.MoneyVar = MetaPlayer.getDarkRPVar and DarkRP.formatMoney(ply:getDarkRPVar("money")) or "beggar"
+    v.MoneyVar = MetaPlayer.getDarkRPVar && DarkRP.formatMoney(ply:getDarkRPVar("money")) or "beggar"
 end
 
 function dezz.playerDataUpdate( )
@@ -13056,7 +12802,7 @@ do
                     v.simtime_updated = false
                 end
 
-                if dezz.canBacktrack(v) and v != pLocalPlayer and v.simtime_updated then
+                if dezz.canBacktrack(v) && v != pLocalPlayer && v.simtime_updated then
                     dezz.recordBacktrack(v)
                 end
 
@@ -13064,7 +12810,7 @@ do
                     dezz.btrecords[ v ] = {}
                 end
 
-                if dezz.cfg.vars["Extrapolation"] and v.break_lc then
+                if dezz.cfg.vars["Extrapolation"] && v.break_lc then
                     local predTime = ded.GetLatency(0) + ded.GetLatency(1)
                     ded.StartSimulation(v:EntIndex())
         
@@ -13249,7 +12995,7 @@ do
             
             cam.Start2D()
                 for i = 1, #renderEnts do 
-                    local c = renderEnts[i]:IsPlayer() and string.ToColor( dezz.cfg.colors["Player outline"] ) or string.ToColor( dezz.cfg.colors["Entity outline"] ) 
+                    local c = renderEnts[i]:IsPlayer() && string.ToColor( dezz.cfg.colors["Player outline"] ) or string.ToColor( dezz.cfg.colors["Entity outline"] ) 
 
 				    render.SetStencilReferenceValue( i )
 
@@ -13286,7 +13032,7 @@ do
             
             for x=-1,1 do
                 for y=-1,1 do
-                    if x==0 and x==0 then continue end
+                    if x==0 && x==0 then continue end
                     
                     render.DrawScreenQuadEx(x,y,scrWid,scrHgh)
                 end
@@ -13297,13 +13043,13 @@ end
 
 function dezz.PostDrawEffects()
     if dezz.UnSafeFrame then return end
-    if !dezz.cfg.vars["Player outline"] and !dezz.cfg.vars["Entity outline"] then return end
+    if !dezz.cfg.vars["Player outline"] && !dezz.cfg.vars["Entity outline"] then return end
 
     dezz.RenderOutline()
 end
     
 function dezz.AdjustMouseSensitivity( defaultSensivity )
-    return dezz.cfg.vars["Disable sensivity adjustment"] and 0 or nil
+    return dezz.cfg.vars["Disable sensivity adjustment"] && 0 or nil
 end
 
 function dezz.GetMotionBlurValues()
@@ -13318,7 +13064,7 @@ GAMEMODE["EntityFireBullets"] = function( self, p, data )
     if !dezz.activeWeapon then return end
 
     local tick = engine.TickCount()
-    if dezz.cfg.vars["On screen logs"] and data.Src == pLocalPlayer:EyePos() and dezz.aimingrn and dezz.target and !dezz.onScreenLogs[tick] and IsFirstTimePredicted() then
+    if dezz.cfg.vars["On screen logs"] && data.Src == pLocalPlayer:EyePos() && dezz.aimingrn && dezz.target && !dezz.onScreenLogs[tick] && IsFirstTimePredicted() then
         local reason = 1
         
         local tr = util.TraceLine({
@@ -13332,7 +13078,7 @@ GAMEMODE["EntityFireBullets"] = function( self, p, data )
             reason = 4
         elseif ded.GetLatency(0) > 0.2 then
             reason = 3
-        elseif tr.StartSolid or (tr.Hit and tr.Entity != dezz.target) then
+        elseif tr.StartSolid or (tr.Hit && tr.Entity != dezz.target) then
             reason = 2
         end
         
@@ -13345,7 +13091,7 @@ GAMEMODE["EntityFireBullets"] = function( self, p, data )
     end
 
     local spread = data.Spread * -1
-    if dezz.cones[dezz.activeWeaponClass] != spread and spread != dezz.nullVec then
+    if dezz.cones[dezz.activeWeaponClass] != spread && spread != dezz.nullVec then
         dezz.cones[dezz.activeWeaponClass] = spread
     end
  
@@ -13404,7 +13150,7 @@ end
 function IsPlayerTracked(ply)
     if !IsValid(ply) then return false end
     local sid = ply:SteamID()
-    return sid and dezz.trackedPlayers[sid]
+    return sid && dezz.trackedPlayers[sid]
 end
 
 function dezz.NotifyShouldTransmit(ent, shouldTransmit)
@@ -13428,7 +13174,7 @@ end
 function dezz.InitPostEntity()
     timer.Simple(3, function()
         for _, ply in ipairs(player.GetAll()) do
-            if IsValid(ply) and IsPlayerTracked(ply) then
+            if IsValid(ply) && IsPlayerTracked(ply) then
                 dezz.cfg.priorityList[ply:SteamID()] = true
                 
                 if !dezz.alreadyNotified[ply] then
@@ -13460,7 +13206,7 @@ end
 */
 
 function dezz.AddHook(event, func)
-    if func == nil and dezz[event] == nil then
+    if func == nil && dezz[event] == nil then
         print("Failed to find hook function: " .. event)
         return
     end
@@ -13474,7 +13220,7 @@ end
 function dezz.RemoveAllHooks()
     for i = #dezz.hooks, 1, -1 do
         local hookInfo = dezz.hooks[i]
-        if hookInfo and hookInfo[1] and hookInfo[2] then
+        if hookInfo && hookInfo[1] && hookInfo[2] then
             hook.Remove(hookInfo[1], hookInfo[2])
         end
         table.remove(dezz.hooks, i)
@@ -13537,6 +13283,7 @@ dezz.AddHook("PlayerButtonDown")
 
 -- prerender
 dezz.AddHook("PreFrameStageNotify")
+--dezz.AddHook("PreRender", function() render.Capture(data) end)
 
 -- animation
 dezz.AddHook("CalcMainActivity")
@@ -13556,13 +13303,12 @@ dezz.AddHook("RenderScene")
 dezz.AddHook("PostDrawOpaqueRenderables")
 dezz.AddHook("PreDrawOpaqueRenderables")
 dezz.AddHook("PostDraw2DSkyBox")
-dezz.AddHook("PostDrawEffects")
 dezz.AddHook("RenderScreenspaceEffects")
 dezz.AddHook("DrawOverlay")
 dezz.AddHook("PreDrawSkyBox")
 
 -- hud
-dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() dezz.PostDrawHUD() dezz.HUDPaint() end)
+dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() dezz.PostDrawHUD() dezz.HUDPaint() dezz.PostDrawEffects() end)
 dezz.AddHook("Ungrabbable3D", function() dezz.vizPlayers3D() dezz.LocalPl3D() dezz.PostDrawTranslucentRenderables() end)
 
 -- player
