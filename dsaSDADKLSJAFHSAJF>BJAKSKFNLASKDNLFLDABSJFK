@@ -8365,6 +8365,39 @@ function dezz.IsPlayerAFK(ply)
     return isAFK
 end
 
+function dezz.LocalPl2D()
+    if dezz.tpenabled then
+        if dezz.cfg.vars["lskel"] then
+            if !pLocalPlayer:Alive() then return end
+            
+            surface.SetDrawColor(string.ToColor(dezz.cfg.colors["lskel"]))
+
+            for i = 0, pLocalPlayer:GetBoneCount() - 1 do
+                if !pLocalPlayer:BoneHasFlag(i, BONE_USED_BY_HITBOX) then continue end
+
+                local ParentId = pLocalPlayer:GetBoneParent(i)
+                if !ParentId then continue end
+                if !pLocalPlayer:BoneHasFlag(ParentId, BONE_USED_BY_HITBOX) then continue end
+
+                local BoneMatrix = pLocalPlayer:GetBoneMatrix(i)
+                local ParentMatrix = pLocalPlayer:GetBoneMatrix(ParentId)
+                if !BoneMatrix or !ParentMatrix then continue end
+
+                local BonePos = BoneMatrix:GetTranslation()
+                if BonePos == pLocalPlayer:GetPos() then continue end
+
+                local ParentPos = ParentMatrix:GetTranslation()
+                if !BonePos or !ParentPos then continue end
+
+                local screen1, screen2 = BonePos:ToScreen(), ParentPos:ToScreen()
+                if screen1.visible and screen2.visible then
+                    surface.DrawLine(screen1.x, screen1.y, screen2.x, screen2.y)
+                end
+            end
+        end
+    end
+end
+
 function dezz.LocalPl3D()
     if dezz.tpenabled then
         if dezz.cfg.vars["Player Hat"] then
@@ -8754,41 +8787,6 @@ function dezz.DrawESP()
             end
         end
 
-        if dezz.cfg.vars["lskel"] && dezz.tpenabled then
-            local ply = pLocalPlayer
-            if !ply:Alive() then return end
-            
-            surface.SetDrawColor(string.ToColor(dezz.cfg.colors["lskel"]))
-
-            for i = 0, ply:GetBoneCount() - 1 do
-                if !ply:BoneHasFlag(i, BONE_USED_BY_HITBOX) then continue end
-
-                local ParentId = ply:GetBoneParent(i)
-                if !ParentId then continue end
-
-                if !ply:BoneHasFlag(ParentId, BONE_USED_BY_HITBOX) then continue end
-
-                local BoneMatrix = ply:GetBoneMatrix(i)
-                local ParentMatrix = ply:GetBoneMatrix(ParentId)
-
-                if !BoneMatrix or !ParentMatrix then continue end
-
-                local BonePos = BoneMatrix:GetTranslation()
-                if BonePos == ply:GetPos() then continue end
-                
-                local ParentPos = ParentMatrix:GetTranslation()
-                if !BonePos or !ParentPos then continue end
-
-                local screen1 = BonePos:ToScreen()
-                local screen2 = ParentPos:ToScreen()
-                
-                if screen1.visible && screen2.visible then
-                    surface.DrawLine(screen1.x, screen1.y, screen2.x, screen2.y)
-                end
-
-            end
-            
-        end
     end
 
     local plys = player.GetAll()
@@ -13292,7 +13290,7 @@ dezz.AddHook("DrawOverlay")
 dezz.AddHook("PreDrawSkyBox")
 
 -- hud
-dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() dezz.PostDrawHUD() dezz.HUDPaint() dezz.PostDrawEffects() end)
+dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() dezz.PostDrawHUD() dezz.HUDPaint() dezz.PostDrawEffects() dezz.LocalPl2D() end)
 dezz.AddHook("Ungrabbable3D", function() dezz.LocalPl3D() dezz.vizPlayers3D() dezz.PostDrawTranslucentRenderables() end)
 
 -- player
