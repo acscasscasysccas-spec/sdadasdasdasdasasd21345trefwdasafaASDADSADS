@@ -8558,8 +8558,6 @@ function dezz.vizPlayers3D()
 
         local XLen, YLen = MaxX - MinX, MaxY - MinY
 
-        surface.SetAlphaMultiplier( v.entity:IsDormant() && 0.35 or 1 )
-
         surface.SetTextColor( dezz.colors[255] )
 
         if dezz.cfg.vars["Ent box"] then
