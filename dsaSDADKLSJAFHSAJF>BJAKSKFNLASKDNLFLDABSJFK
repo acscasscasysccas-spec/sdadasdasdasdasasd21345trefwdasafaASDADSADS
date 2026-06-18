@@ -525,6 +525,8 @@ dezz.cfg.vars["Multipoint groups-Generic"]  = false
 dezz.cfg.vars["Trigger bot"]                = false
 dezz.cfg.binds["Trigger bot"]               = 0
 dezz.cfg.vars["Auto reload"]                = false
+dezz.cfg.vars["agun"]                       = false
+dezz.cfg.vars["atgun"]                      = "weapon_357"
 dezz.cfg.vars["Auto fire"]                  = false
 dezz.cfg.vars["Rapid fire"]                 = false
 dezz.cfg.vars["Alt Rapid fire"]             = false
@@ -852,6 +854,7 @@ dezz.cfg.vars["Override pmodel render"]     = false
 
 // World visuals
 dezz.cfg.vars["Custom sky"]                 = GetConVar("sv_skyname"):GetString()
+dezz.cfg.vars["rdscr"]                      = false
 dezz.cfg.vars["Sky color"]                  = false
 dezz.cfg.colors["Sky color"]                = "255 255 255 255"
 dezz.cfg.vars["Wall color"]                 = false
@@ -4000,6 +4003,7 @@ dezz.spfuncs[34] = function(p)
     */
     dezz.ui.CheckBox( p, "Third person name", "nametr", "Visual nick", false, true )
     dezz.ui.CheckBox( p, "Fall predict", "fpr", false, false, true, false, false, function(p) dezz.ui.ColorPicker( "fprl", p ) end )
+    dezz.ui.CheckBox( p, "Remove death screen", "rdscr" )
     dezz.ui.CheckBox( p, "Lines", "line", false, false, true )
     dezz.ui.ComboBox( p, "Hat mode", "hatm", { "Full", "Segment" } )
 end
@@ -4008,13 +4012,15 @@ end
 
 function dezz.tabs.Aimbot()
 
-    local p = dezz.itemPanel("Main",1,145):GetItemPanel()
+    local p = dezz.itemPanel("Main",1,215):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Enable aimbot", "Enable aimbot", false, false, false, false, false, function( p ) dezz.ui.Binder( "Aim on key", p ) end )
     dezz.ui.CheckBox( p, "Silent aim", "Silent aim", "Invisible aim for you." )
     dezz.ui.CheckBox( p, "pSilent", "pSilent", "Make aim completely invisible.(temporarily no work)" )
     dezz.ui.CheckBox( p, "Auto fire", "Auto fire", "Automatically fires when targets can be damaged.", false, false, dezz.spfuncs[1] )
     dezz.ui.CheckBox( p, "Auto reload", "Auto reload", "Automatically reloads weapon when clip is empty." )
+    dezz.ui.CheckBox( p, "Auto gun", "agun", "Gives you a weapon when you respawn (if gun in your inventory)." )
+    dezz.ui.TextEntry( "Gun name", "atgun", p, 500 )
 
     local p = dezz.itemPanel("Legit",1,100):GetItemPanel()                                      
                         
@@ -4867,7 +4873,8 @@ function dezz.tabs.Upd()
         {version = "v4.3.3", text = "Добавлено:\nNo 3d sky.\nNo predraw sky.\n\nИсправления:\nБаги в Fullbright.\nБаги в Wall color.\nБаги в Skybox color.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab."},
         {version = "v4.3.4", text = "Добавлено:\nMenu color в configs.\nButton color && slider color в conffgs.\nTitle в configs\nНовые indicators в rage\nНовый keybind list.\nВозможность копировать steam(в players навестисть на игрока и прокрутить колесеко вниз либо вверх)\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
         {version = "v4.3.5", text = "Добавлено:\nFall predict в local player(visuals).\nTtable color в configs.\nРаздел menu settings в configs.\n2 варианта для player hat в local player(Visuals).\n\nИсправления:\nTextentry ошибки.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
-        {version = "v4.3.6 «last»", text = "Добавлено:\nLocal skeleton.\nВозвращение угла на обычный если была нажата кнопка Panic key.\nOpen key в configs.\nПеренесена вкладка local player в players(visuals).\n\nИсправления:\nОшибки кода.\nПерестановка в visuals.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
+        {version = "v4.3.6", text = "Добавлено:\nLocal skeleton.\nВозвращение угла на обычный если была нажата кнопка Panic key.\nOpen key в configs.\nПеренесена вкладка local player в players(visuals).\n\nИсправления:\nОшибки кода.\nПерестановка в visuals.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
+        {version = "v4.3.7 «last»", text = "Добавлено:\nAuto gun(aim)\nRemove death screen(visuals>local player)\n\nИсправления:\nОбновление до последней версии гмода\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
     }
     
     for i = #updates, 1, -1 do
@@ -7877,8 +7884,6 @@ function dezz.CreateMove(cmd)
             end
         end
     end  
-        
-
 
     if dezz.cfg.vars["Air lag duck"] && dezz.SendPacket && IsValid(pLocalPlayer) then
         local startPosUnducked = pLocalPlayer:GetPos()
@@ -7954,6 +7959,15 @@ function dezz.CreateMove(cmd)
 
     if dezz.cfg.vars["Lag mode"] == 3 && dezz.SendPacket then
         ded.SetOutSequenceNr(ded.GetOutSequenceNr() + 8)
+    end
+
+    function dezz.fastspawn()
+        if FrameNumber() % 4 == 0 then
+            cmd:SetButtons(bit.bor(cmd:GetButtons(), KEY_SPACE, IN_ATTACK))
+        else
+            cmd:RemoveKey(KEY_SPACE)
+            cmd:RemoveKey(IN_ATTACK)
+        end
     end
 end
 
@@ -8390,7 +8404,7 @@ function dezz.LocalPl2D()
                 if !BonePos or !ParentPos then continue end
 
                 local screen1, screen2 = BonePos:ToScreen(), ParentPos:ToScreen()
-                if screen1.visible and screen2.visible then
+                if screen1.visible && screen2.visible then
                     surface.DrawLine(screen1.x, screen1.y, screen2.x, screen2.y)
                 end
             end
@@ -10310,6 +10324,14 @@ do
         end
     end
 
+    function dezz.HUDShouldDraw(name)
+        if dezz.cfg.vars["rdscr"] && name == "CHudDamageIndicator" then
+            return false
+        elseif dezz.cfg.vars["rdscr"] == false or name != "CHudDamageIndicator" then
+            return true
+        end
+    end
+
     function dezz.HUDPaint()
         if dezz.UnSafeFrame then return end
 
@@ -11401,6 +11423,18 @@ gameevent.Listen("player_spawn")
 gameevent.Listen("player_activate")
 gameevent.Listen("entity_killed")
 gameevent.Listen("player_hurt")
+
+function dezz.player_spawn()
+
+    if dezz.cfg.vars["agun"] then
+        local gun = dezz.cfg.vars["atgun"]
+
+        if GetConVar("sv_cheats"):GetFloat() == 1 then
+            RunConsoleCommand("give", gun)
+        end
+        RunConsoleCommand("use", gun)
+    end
+end
 
 function dezz.player_hurt(data)
     if !pLocalPlayer or !pLocalPlayer:IsValid() then return end
@@ -13290,6 +13324,7 @@ dezz.AddHook("DrawOverlay")
 dezz.AddHook("PreDrawSkyBox")
 
 -- hud
+dezz.AddHook("HUDShouldDraw")
 dezz.AddHook("Ungrabbable2D", function() dezz.DrawESP() dezz.DrawSomeShit() dezz.PostDrawHUD() dezz.HUDPaint() dezz.PostDrawEffects() dezz.LocalPl2D() end)
 dezz.AddHook("Ungrabbable3D", function() dezz.LocalPl3D() dezz.vizPlayers3D() dezz.PostDrawTranslucentRenderables() end)
 
@@ -13306,4 +13341,5 @@ dezz.AddHook("Think")
 dezz.AddHook("PostFrameStageNotify")
 dezz.AddHook("EntityTakeDamage")
 dezz.AddHook("player_hurt")
+dezz.AddHook("player_spawn")
 dezz.AddHook("entity_killed")
