@@ -7432,21 +7432,6 @@ end
 
 dezz.maxvape = dezz.TIME_TO_TICKS(5)
 
-function dezz.OnEntityCreated(ent)
-    if ent:GetClass() == "npc_satchel" && ent:GetOwner() == pLocalPlayer then 
-        dezz.slams[ #dezz.slams + 1 ] = ent
-    end
-
-    if dezz.cfg.vars["prop color"] then
-        local class = ent:GetClass()
-        if class == "prop_physics" or class == "prop_dynamic" or class == "prop_static" then
-            local col = string.ToColor(dezz.cfg.colors["prop color"])
-            ent:SetRenderMode(RENDERMODE_TRANSCOLOR)
-            ent:SetColor(col)
-        end
-    end
-end
-
 function dezz.CreateMove(cmd)
     dezz.DoSilentAngleUpdate(cmd)
 
@@ -7960,15 +7945,6 @@ function dezz.CreateMove(cmd)
     if dezz.cfg.vars["Lag mode"] == 3 && dezz.SendPacket then
         ded.SetOutSequenceNr(ded.GetOutSequenceNr() + 8)
     end
-
-    function dezz.fastspawn()
-        if FrameNumber() % 4 == 0 then
-            cmd:SetButtons(bit.bor(cmd:GetButtons(), KEY_SPACE, IN_ATTACK))
-        else
-            cmd:RemoveKey(KEY_SPACE)
-            cmd:RemoveKey(IN_ATTACK)
-        end
-    end
 end
 
 /* 
@@ -8153,18 +8129,33 @@ do
         end
     end
 
-    function dezz.DisablePropModulation()
-        for k, v in pairs(ents.FindByClass("prop_physics") or ents.FindByClass("prop_dynamic") or ents.FindByClass("prop_static")) do
-            v:SetColor(Color(255, 255, 255, 255))
-            v:SetRenderMode(RENDERMODE_NORMAL)
+    function dezz.OnEntityCreated(ent)
+        if ent:GetClass() == "npc_satchel" && ent:GetOwner() == pLocalPlayer then 
+            dezz.slams[ #dezz.slams + 1 ] = ent
+        end
+
+        if dezz.cfg.vars["prop color"] then
+            local class = ent:GetClass()
+            if class == "prop_physics" or class == "prop_dynamic" or class == "prop_static" then
+                local col = string.ToColor(dezz.cfg.colors["prop color"])
+                ent:SetRenderMode(RENDERMODE_TRANSCOLOR)
+                ent:SetColor(col)
+            end
         end
     end
 
-    function dezz.UpdatePropModulation()
+    function UpdatePropModulation()
         local col = string.ToColor(dezz.cfg.colors["prop color"])
         for k, v in pairs(ents.FindByClass("prop_physics") or ents.FindByClass("prop_dynamic") or ents.FindByClass("prop_static")) do
             v:SetRenderMode(RENDERMODE_TRANSCOLOR)
             v:SetColor(col)
+        end
+    end
+
+    function DisablePropModulation()
+        for k, v in pairs(ents.FindByClass("prop_physics") or ents.FindByClass("prop_dynamic") or ents.FindByClass("prop_static")) do
+            v:SetColor(Color(255, 255, 255, 255))
+            v:SetRenderMode(RENDERMODE_NORMAL)
         end
     end
 end
@@ -11425,8 +11416,7 @@ gameevent.Listen("entity_killed")
 gameevent.Listen("player_hurt")
 
 function dezz.player_spawn()
-
-    if dezz.cfg.vars["agun"] then
+    if dezz.cfg.vars["agun"] && !pLocalPlayer:Alive() then
         local gun = dezz.cfg.vars["atgun"]
 
         if GetConVar("sv_cheats"):GetFloat() == 1 then
@@ -11804,7 +11794,7 @@ do
     local inverterdown = false
         
     function dezz.Think()
-        if dezz.IsKeyDown( dezz.cfg.binds["Panic Key"] ) then 
+        if dezz.IsKeyDown( dezz.cfg.binds["Panic Key"] ) then
             dezz.Unload()
         end  
 
@@ -11906,9 +11896,9 @@ do
         end 
 
         if dezz.cfg.vars["prop color"] then
-            dezz.UpdatePropModulation()
+            UpdatePropModulation()
         elseif !dezz.cfg.vars["prop color"] then
-            dezz.DisablePropModulation()
+            DisablePropModulation()
         end
 
         local grad = Material("gui/gradient")
@@ -13244,13 +13234,15 @@ function dezz.RemoveAllHooks()
 end
 
 function dezz.Unload()
+    local view = dezz.SilentAngle
+
     if IsValid(dezz.frame) then
         dezz.frame:Remove()
     end
 
-    local veiw = dezz.SilentAngle
-
-    ded.SetViewAngles(veiw)
+    if IsValid(pLocalPlayer) then
+        pLocalPlayer:SetLOD(-1)
+    end
 
     for k, entity in pairs(player.GetAll()) do
         if IsValid(entity) then
@@ -13258,19 +13250,16 @@ function dezz.Unload()
         end
     end
 
-    if IsValid(pLocalPlayer) then
-        pLocalPlayer:SetLOD(-1)
-    end
-
+    ded.SetViewAngles(view)
     ded.SetBSendPacket(true)
     ded.SetInterpolation(true)
     ded.SetSequenceInterpolation(true)
 
     dezz.RemoveAllHooks()
-    dezz.DisablePropModulation()
 
     setSkyColor()
     setWallColor()
+    DisablePropModulation()
 
     if GetConVar("mat_fullbright"):GetInt() == 1 then
         RunConsoleCommand("mat_fullbright", "0")
