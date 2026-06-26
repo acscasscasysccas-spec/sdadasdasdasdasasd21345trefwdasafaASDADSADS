@@ -4,7 +4,7 @@ ded.Write                               = nil
                                         -- 🤍"Ultimate" for GAYS!🤍
 ded.Read                                = nil
 
-local dezz          /*🤍🤍🤍🤍*/      = {}
+local dezz          /*🤍🤍🤍🤍*/        = {}
 
 local cheaters                          = {}
 
@@ -493,6 +493,7 @@ dezz.cfg.vars["Target-Priority-Only"]       = false
 dezz.cfg.vars["Ignores-Steam friends"]      = false
 dezz.cfg.vars["Ignores-Teammates"]          = false
 dezz.cfg.vars["Ignores-Admins"]             = false
+dezz.cfg.vars["Ignores-CustomAdmin"]        = false
 dezz.cfg.vars["Ignores-Bots"]               = false
 dezz.cfg.vars["Ignores-Frozen"]             = false
 dezz.cfg.vars["Ignores-Nodraw"]             = false
@@ -3379,98 +3380,72 @@ function dezz.ui.dropdownButton( str, v, p, a )
     end
 end
 
-function dezz.ui.MultiCombo(pan, str, choices)
-    local lbl = vgui.Create("DLabel", pan)
+function dezz.ui.MultiCombo(parent, key_group, choices, callback)
+    local lbl = vgui.Create("DLabel",parent)
     lbl:Dock(TOP)
     lbl:DockMargin(4,1,4,0)
-    lbl:SetText(str)
+    lbl:SetText(key_group)
     lbl:SetFont("2121DermaSmall2121")
     lbl:SetColor(dezz.colors[165])
 
-    local d = vgui.Create("DButton", pan)
+    local d = vgui.Create("DButton",parent)
     d:Dock(TOP)
     d:DockMargin(4,1,4,0)
-    d:SetTall(21)
+    d:SetTall(20)
     d:SetText("")
+    
     d.preview = {}
-    d.open_progress = 0
-    d.menu_alpha = 0
-    d.Menu = nil
 
-    function d:Think()
-        d.open_progress = Lerp(FrameTime() * 10, d.open_progress || 0, 1 || 0)
-        if IsValid(d.Menu) then
-            d.menu_alpha = Lerp(FrameTime() * 15, d.menu_alpha || 0, 255)
-            d.Menu:SetAlpha(d.menu_alpha || 0)
+    function d:Paint(w,h)
+        local preview = ""
+
+        for k, v in pairs(choices) do
+            if dezz.cfg.vars[key_group.."-"..v] == true and (d.preview[v] == false or d.preview[v] == nil) and not table.HasValue(d.preview, v) then
+                table.insert(d.preview,v) 
+            elseif dezz.cfg.vars[key_group.."-"..v] == false and (d.preview[v] == true or d.preview[v] == nil) and table.HasValue(d.preview, v) then
+                table.RemoveByValue(d.preview,v)
+            elseif d.preview[v] == false then 
+                table.RemoveByValue(d.preview,v)
+            end
         end
-    end
 
-    function d:Paint(w, h)
-        local preview = table.concat(d.preview, ", ")
+        preview = table.concat(d.preview,", ")
+
         surface.SetDrawColor(dezz.colors[25])
-        surface.DrawRect(0, 0, w, h)
-        if preview != "" then
-            surface.SetTextColor(dezz.colors[165])
-            surface.SetTextPos(8, h/2-7)
-            surface.SetFont("2121DermaSmall2121")
-            surface.DrawText(preview)
-        end
-        surface.SetDrawColor(dezz.colors[32])
-        surface.DrawRect(w-25, 0, 25, 25)
+        surface.DrawRect(0,0,w,h)
+    
         surface.SetTextColor(dezz.colors[165])
-        surface.SetTextPos(w-20, h/2-7)
-        surface.DrawText((d.open_progress || 0) > 0.5 && "▲" || "▼")
+        surface.SetTextPos(8,20/2-15/2)
+        surface.SetFont("2121DermaSmall2121")
+        surface.DrawText(preview)
+    
+        surface.SetDrawColor(dezz.colors[32])
+        surface.DrawRect(w-25,0,25,25)
+    
+        surface.SetTextColor(dezz.colors[165])
+        surface.SetTextPos(w-20,20/2-15/2)
+        surface.SetFont("2121DermaSmall2121")
+        surface.DrawText("▼")
+
         surface.SetDrawColor(dezz.colors[54])
-        surface.DrawOutlinedRect(0, 0, w, h)
+        surface.DrawOutlinedRect(0,0,w,h,1)
     end
 
-    function d:OpenMenu()
-        local x, y = self:LocalToScreen(0, self:GetTall())
-        d.Menu = vgui.Create("ULifeTimeBase")
-        d.Menu:SetPos(x, y-1)
-        d.Menu:SetSize(243, #choices * 24 + 4)
-        d.Menu:SetAlpha(0)
-        d.Menu:MakePopup()
-        d.Menu.Paint = function(s, w, h)
-            surface.SetDrawColor(dezz.colors[24])
-            surface.SetDrawColor(dezz.colors[24].r, dezz.colors[24].g, dezz.colors[24].b, s:GetAlpha())
-            surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(dezz.colors[54])
-            surface.DrawOutlinedRect(0, 0, w, h)
-        end
+    function d:DoClick()
+        local x,y = self:LocalToScreen( 0, self:GetTall() )
 
-        for _, v in ipairs(choices) do
-            local btn = vgui.Create("DButton", d.Menu)
-            btn:Dock(TOP)
-            btn:SetTall(22)
-            btn:SetText("")
-            btn.txt = v
-            btn.selected = dezz.cfg.vars[str.."-"..v] == true
-            if btn.selected then table.insert(d.preview, v) end
+        dezz.ui.RemovePanel( dezz.ui.MultiComboP )
 
-            function btn:Paint(w, h)
-                if self:IsHovered() then
-                    surface.SetDrawColor(dezz.colors[35])
-                    surface.DrawRect(1, 1, w-2, h-2)
-                end
-                surface.SetTextColor(dezz.colors[165])
-                surface.SetTextPos(20, 4)
-                surface.SetFont("2121DermaSmall2121")
-                surface.DrawText(self.txt)
-            end
-
-            function btn:DoClick()
-                self.selected = !self.selected
-                dezz.cfg.vars[str.."-"..v] = self.selected
-                d.preview = {}
-                for _, v2 in ipairs(choices) do
-                    if dezz.cfg.vars[str.."-"..v2] then table.insert(d.preview, v2) end
-                end
-            end
+        local ctoh = #choices
+    
+        dezz.ui.MultiComboP = vgui.Create( "ULifeTimeBase" )
+        dezz.ui.MultiComboP:SetPos( x, y - 1 )
+        dezz.ui.MultiComboP:SetSize( 243, ctoh * 22 + 2 )
+    
+        for k, v in pairs(choices) do
+            dezz.ui.dropdownButton(key_group, v, dezz.ui.MultiComboP, d.preview, callback)
         end
     end
-
-    function d:DoClick() self:OpenMenu() end
 end
 
 function dezz.ui.ComboBox( pan, str, cfg, choices )
@@ -4050,7 +4025,7 @@ function dezz.tabs.Aimbot()
     local p = dezz.itemPanel( "Target selection", 3, 260 ):GetItemPanel()
 
     dezz.ui.ComboBox( p, "Target selection", "Target selection", { "Distance", "FOV", "More chance" } )
-    dezz.ui.MultiCombo( p, "Ignores", { "Friends", "Steam friends", "Teammates", "Driver", "Head unhitable", "God time", "Nocliping", "Nodraw", "Frozen", "Bots", "Admins" } )
+    dezz.ui.MultiCombo( p, "Ignores", { "Friends", "Steam friends", "Teammates", "Driver", "Head unhitable", "God time", "Nocliping", "Nodraw", "Frozen", "Bots", "Admins", "CustomAdmin" } )
     dezz.ui.CheckBox( p, "Wallz", "Wallz" ) 
     dezz.ui.Slider( p, "Max targets", "Max targets", 0, 10, 0 )
     dezz.ui.Slider( p, "Max distance", "Max distance", 0, 50000, 0 )
@@ -5542,7 +5517,8 @@ function dezz.GetSortedPlayers( mode, selfpred, plypred, vischeck )
         if dezz.cfg.vars["Ignores-Bots"] && v:IsBot() then continue end 
         if dezz.cfg.vars["Ignores-Friends"] && dezz.cfg.friends[v:SteamID()] then continue end 
         if dezz.cfg.vars["Ignores-Steam friends"] && v:GetFriendStatus() == "friend" then continue end 
-        if dezz.cfg.vars["Ignores-Admins"] && dezz.cfg.admins[v:SteamID()] || v:IsAdmin() then continue end 
+        if dezz.cfg.vars["Ignores-Admins"] && v:IsAdmin() then continue end 
+        if dezz.cfg.vars["Ignores-CustomAdmin"] && dezz.cfg.admins[v:SteamID()] then continue end 
         if dezz.cfg.vars["Ignores-Frozen"] && v:IsFlagSet( FL_FROZEN ) then continue end 
         if dezz.cfg.vars["Ignores-Nodraw"] && v:IsEffectActive( EF_NODRAW ) then continue end 
         if dezz.cfg.vars["Ignores-God time"] && v:GetColor().a < 255 then continue end 
@@ -7452,11 +7428,11 @@ function dezz.CreateMove(cmd)
         cmd:SetViewAngles(dezz.SilentAngle) 
     end
 
-    if dezz.cfg.vars["Flashlight spam"] && dezz.cfg.binds["fon"] == 0 || dezz.IsKeyDown( dezz.cfg.binds["fon"] ) then
+    if dezz.cfg.vars["Flashlight spam"] && ( dezz.cfg.binds["fon"] == 0 || dezz.IsKeyDown( dezz.cfg.binds["fon"] ) ) then
         cmd:SetImpulse(100)
     end
 
-    if dezz.cfg.vars["Impulse spam"] && dezz.cfg.binds["imp"] == 0 || dezz.IsKeyDown( dezz.cfg.binds["imp"] ) then
+    if dezz.cfg.vars["Impulse spam"] && ( dezz.cfg.binds["imp"] == 0 || dezz.IsKeyDown( dezz.cfg.binds["imp"] ) ) then
         cmd:SetImpulse(50)
     end
 
@@ -9872,7 +9848,7 @@ do
             surface.DrawCircle( ( scrWid * 0.5 ), ( scrHgh * 0.5 ), radius - 1 )
         end
 
-        if dezz.target && dezz.targetVector then
+        if dezz.target && dezz.targetVector && pLocalPlayer:Alive() then
             if dezz.cfg.vars["Aimbot snapline"] then 
                 local pos = dezz.targetVector:ToScreen()
                 surface.SetDrawColor( string.ToColor( dezz.cfg.colors["Aimbot snapline"] ) )
@@ -10515,7 +10491,7 @@ do
             end
         end
 
-        if dezz.tpenabled && dezz.cfg.vars["nametr"] then           
+        if dezz.tpenabled && dezz.cfg.vars["nametr"] && pLocalPlayer:Alive() then           
             local pos = pLocalPlayer:GetPos() + Vector(0, 0, 80)
             local screenPos = pos:ToScreen()
             
@@ -11095,7 +11071,7 @@ function dezz.PostDrawTranslucentRenderables()
         end
     end
 
-    if dezz.cfg.vars["line"] && dezz.tpenabled then
+    if dezz.cfg.vars["line"] && dezz.tpenabled && pLocalPlayer:Alive() then
         local ply = pLocalPlayer
         if IsValid(ply) then
             local myPos = ply:GetPos() + Vector(0, 0, 0)
