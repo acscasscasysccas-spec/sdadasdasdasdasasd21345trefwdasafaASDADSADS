@@ -1,8 +1,6 @@
 require("dezzazmodule")
 
-ded.Write                               = nil
-                                        -- 🤍"Ultimate" for GAYS!🤍
-ded.Read                                = nil
+//                                  🤍"Ultimate" for GAYS!🤍
 
 local dezz          /*🤍🤍🤍🤍*/        = {}
 
@@ -99,6 +97,7 @@ dezzFont( "DFont", { font = "Verdana", size = 25, antialias = false, outline = t
 dezzFont( "DTFont", { font = "Verdana", size = 20, antialias = false, outline = true })
 dezzFont( "newfont", { font = "HudhintTextLarge", size = 30, antialias = false, outline = true })
 dezzFont( "XVIDEOS FONT", { font = "Verdana", size = 45, antialias = false, shadow = true })
+
 dezz.Fonts = {  [1] = "veranda", [2] = "veranda_s", }
 
 --track
@@ -204,11 +203,11 @@ dezz.znear = 0
 
 dezz.UnSafeFrame = false
 dezz.renderTarget = GetRenderTarget( "YaPidoras" .. os.time(), scrWid, scrHgh )
-dezz.prikol = Material("dezzaster/png/prikol.png", "noclamp smooth") //  Material( file.Read( "prikol.png", "DATA" ) )
+dezz.prikol = Material( "a/prikol" ):GetTexture( "$basetexture" ) //  Material( file.Read( "prikol.png", "DATA" ) )
 
 dezz.tpenabled = false
 dezz.tptoggled = false
-dezz.tpAnimProgress = 0
+dezz.tpanimprogress = 0
 dezz.currentDistance = 0
 
 dezz.fcvector = pLocalPlayer:EyePos()
@@ -710,7 +709,6 @@ dezz.cfg.vars["Force seed"]                 = false
 dezz.cfg.vars["Wait for seed"]              = false
 dezz.cfg.vars["Norecoil"]                   = false
 dezz.cfg.vars["Extrapolation"]              = false
-dezz.cfg.vars["last update"]                = false
 dezz.cfg.vars["Invalidate activity"]        = false
 dezz.cfg.vars["Bone fix"]                   = false
 dezz.cfg.vars["Update Client Anim fix"]     = false
@@ -982,6 +980,8 @@ dezz.cfg.vars["RusEliteDetector"]           = false
 dezz.cfg.vars["GPS"]                        = false
 dezz.cfg.vars["GFID"]                       = "SteamID"
 dezz.cfg.vars["KEF"]                        = "ValveBiped.Bip01_Head1"
+dezz.cfg.vars["Auto Vape"]                  = false
+dezz.cfg.vars["Get net address server"]     = false
 dezz.cfg.vars["Ghost follower"]             = false
 dezz.cfg.vars["Modelchanger"]               = false
 dezz.cfg.vars["Modelchanger model"]         = 1
@@ -3104,6 +3104,80 @@ function dezz.ui.Binder( cfg, par )
     return b
 end
 
+function dezz.ui.TextEntry( str, cfg, pan, chars, postCreate )
+    local lbl = vgui.Create("DLabel",pan)
+    lbl:Dock(TOP)
+    lbl:DockMargin(4,2,4,0)
+    lbl:SetText(str)
+    lbl:SetFont("2121DermaSmall2121")
+    lbl:SetColor(dezz.colors[165])
+
+    local p = vgui.Create("DPanel",pan)
+    p:SetTall(25)
+    p:Dock(TOP)
+    p:DockMargin(4,2,4,0)
+
+    p.Paint = function(s,w,h)
+        surface.SetDrawColor(dezz.colors[54])
+        surface.DrawOutlinedRect(0,0,w,h)
+    end
+	
+	local txt = vgui.Create("DTextEntry",p)
+	txt:Dock(FILL)
+	txt:DockMargin(4,4,4,4) 
+	txt:IsMultiline( false )
+	txt:SetMaximumCharCount(chars || 999)
+	txt:SetPlaceholderText(str)
+	txt:SetFont( "2121DermaSmall2121" )
+    txt:SetPaintBackground(false)
+    txt:SetTextColor(dezz.colors[165])
+
+	if dezz.cfg.vars[cfg] != nil && dezz.cfg.vars[cfg] != "" then
+		txt:SetValue(dezz.cfg.vars[cfg])
+	end
+
+	function txt:Think()
+		if self:IsEditing() then return end
+		local val = self:GetValue()
+		if dezz.cfg.vars[cfg] == val then return end
+		dezz.cfg.vars[cfg] = val
+	end 
+
+	function txt:OnValueChange()
+		dezz.cfg.vars[cfg] = self:GetValue()
+	end
+
+    if postCreate then postCreate(p) end
+end
+
+function dezz.ui.OnlyBind(str, cfg, par)    
+    local container = vgui.Create("DPanel", par)
+    container:Dock(TOP)
+    container:DockMargin(4, 2, 4, 2)
+    container:SetSize(container:GetWide(), 24)
+    container.Paint = function() end
+    
+    local lbl = vgui.Create("DLabel", container)
+    lbl:Dock(LEFT)
+    lbl:SetText(str)
+    lbl:SetFont("2121DermaSmall2121")
+    lbl:SetColor(dezz.colors[165])
+    lbl:SizeToContents()
+    
+    local b = vgui.Create("UBinder", container)
+    b:SetValue(dezz.cfg.binds[cfg])
+    b:Dock(RIGHT)
+    b:SetWide(100)
+    b:DockMargin(4, 2, 4, 2)
+    b:IsMultiline(false)
+    
+    function b:OnChange()
+        dezz.cfg.binds[cfg] = b:GetValue()
+    end
+    
+    return b
+end
+
 function dezz.ui.ColorPicker(cfg, par, onChange)
     if !dezz.cfg.colors[cfg] then 
         dezz.cfg.colors[cfg] = "255 255 255 255"
@@ -3569,7 +3643,7 @@ end
 
 do
 
-    function dezz.togglevisible()
+    function togglevisible()
         if dezz.frame:IsVisible() then
             dezz.frame:AlphaTo(0, 0.15, 0, function()
                 dezz.frame:SetVisible(false)
@@ -4026,11 +4100,11 @@ function dezz.tabs.Aimbot()
 
     dezz.ui.ComboBox( p, "Target selection", "Target selection", { "Distance", "FOV", "More chance" } )
     dezz.ui.MultiCombo( p, "Ignores", { "Friends", "Steam friends", "Teammates", "Driver", "Head unhitable", "God time", "Nocliping", "Nodraw", "Frozen", "Bots", "Admins", "CustomAdmin" } )
-    dezz.ui.CheckBox( p, "Wallz", "Wallz" ) 
     dezz.ui.Slider( p, "Max targets", "Max targets", 0, 10, 0 )
     dezz.ui.Slider( p, "Max distance", "Max distance", 0, 50000, 0 )
     dezz.ui.CheckBox( p, "Target-Priority-Only", "Target-Priority-Only" )
-    dezz.ui.CheckBox( p, "auto dist for ruselit", "RusEliteDetector" )
+    dezz.ui.CheckBox( p, "Wallz", "Wallz" )
+    dezz.ui.CheckBox( p, "Auto distation", "RusEliteDetector", "for Ruseliterp" )
 
     local p = dezz.itemPanel( "Hitbox selection", 3, 250 ):GetItemPanel()
 
@@ -4328,12 +4402,13 @@ function dezz.tabs.Misc()
     dezz.itemPanelB( "Net / Cvar",3, 320, func)
 
 
-    local p = dezz.itemPanel("Other",3,330):GetItemPanel()
+    local p = dezz.itemPanel("Other",3,370):GetItemPanel()
 
     dezz.ui.CheckBox( p, "Follow Player", "Ghost follower" )
     dezz.ui.CheckBox( p, "GPS Tracker", "GPS" )
     dezz.ui.TextEntry( "Steam ID", "GFID", p, 500 )
     dezz.ui.CheckBox( p, "Auto Vape", "Auto Vape" )
+    dezz.ui.CheckBox( p, "Server address net", "Get net address server", "net server address" )
     --dezz.ui.CheckBox( p, "Admin tool", "Admin tool", "Aiming at a person with F7 || F8." )
     dezz.ui.CheckBox( p, "Ban pistol", "BanPist", "Ban pistol for Ruseliterp", true, false, false )
     dezz.ui.CheckBox( p, "spectating", "spectating", "Spectator players." )
@@ -4342,22 +4417,20 @@ function dezz.tabs.Misc()
     dezz.ui.CheckBox( p, "Keypad Stealer", "kps" )
     dezz.ui.CheckBox(p, "If spec KeyDown panic", "SpecL")
 
-    local btnReload = vgui.Create("DButton", p)
-    btnReload:Dock(TOP)
-    btnReload:DockMargin(5, 2, 5, 2)
-    btnReload:SetText("Discord")
-    btnReload.Paint = function(s, w, h)
-        surface.SetDrawColor(0,0,0,0)
-        surface.DrawRect(0, 0, w, h)
-    end
-    btnReload.DoClick = function()
-        chat.AddText(Color(155, 45, 48), "https://discord.gg/RzFfz3zRza \n https://discord.gg/RzFfz3zRza \n https://discord.gg/RzFfz3zRza")
-        SetClipboardText("https://discord.gg/RzFfz3zRza")
-    end
+    dezz.ui.Button("Discord", function() chat.AddText(Color(155, 45, 48), "https://discord.gg/RzFfz3zRza \n https://discord.gg/RzFfz3zRza \n https://discord.gg/RzFfz3zRza") SetClipboardText("https://discord.gg/RzFfz3zRza") end, p)
+    dezz.ui.Button("Get and copy server ip", function()
+        if ded.GetNetAddress() == "loopback" then
+            chat.AddText(Color(155, 45, 48), "Local server")
+            SetClipboardText("Local server") 
+        else
+            chat.AddText(Color(155, 45, 48), ded.GetNetAddress())
+            SetClipboardText(ded.GetNetAddress())
+        end
+    end, p)
 end
 
 function dezz.tabs.Config()
-    local p = dezz.itemPanel("Settings",1,260):GetItemPanel()
+    local p = dezz.itemPanel("Settings",1,270):GetItemPanel()
 
     dezz.ui.ComboBox( p, "Choice", "Selected config", dezz.cfgTable)
 
@@ -4368,8 +4441,8 @@ function dezz.tabs.Config()
     dezz.ui.TextEntry( "Name", "Config name", p, 64 )
     dezz.ui.Button( "Create", function() dezz.CreateConfig() end, p )
 
-    dezz.ui.CheckBox( p, "Open Key", "keyopc", false, true)
-    dezz.ui.CheckBox( p, "Panic Key", "Panic Key", false, true)
+    dezz.ui.OnlyBind( "Open key:", "keyopc", p )
+    dezz.ui.OnlyBind( "Panic key:", "Panic Key", p )
 
     local p = dezz.itemPanel("Menu settings",2,170):GetItemPanel()
 
@@ -4849,7 +4922,8 @@ function dezz.tabs.Upd()
         {version = "v4.3.4", text = "Добавлено:\nMenu color в configs.\nButton color && slider color в conffgs.\nTitle в configs\nНовые indicators в rage\nНовый keybind list.\nВозможность копировать steam(в players навестисть на игрока и прокрутить колесеко вниз либо вверх)\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
         {version = "v4.3.5", text = "Добавлено:\nFall predict в local player(visuals).\nTtable color в configs.\nРаздел menu settings в configs.\n2 варианта для player hat в local player(Visuals).\n\nИсправления:\nTextentry ошибки.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
         {version = "v4.3.6", text = "Добавлено:\nLocal skeleton.\nВозвращение угла на обычный если была нажата кнопка Panic key.\nOpen key в configs.\nПеренесена вкладка local player в players(visuals).\n\nИсправления:\nОшибки кода.\nПерестановка в visuals.\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
-        {version = "v4.3.7 «last»", text = "Добавлено:\nAuto gun(aim)\nRemove death screen(visuals>local player)\n\nИсправления:\nОбновление до последней версии гмода\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
+        {version = "v4.3.7", text = "Добавлено:\nAuto gun(aim)\nRemove death screen(visuals>local player)\n\nИсправления:\nОбновление до последней версии гмода\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
+        {version = "v4.3.8 «last»", text = "Добавлено:\nServer address net(misc)\nGet and copy server ip(misc)\n\nИсправления:\nОбновление dezzazmodule\n\nНе работающие функции:\nWait for simulation.\npSilent.\nFaceStab." },
     }
     
     for i = #updates, 1, -1 do
@@ -8339,11 +8413,11 @@ do
         end
     end
 
-    function dezz.IsPlayerAFK(ply)
+    local function IsPlayerAFK(ply)
         if !IsValid(ply) then return false end
         
         local afkTime = CurTime() - (ply.LastMovementTime || 0)
-        local isAFK = afkTime > 30
+        local isAFK = afkTime > 60
         
         return isAFK
     end
@@ -9108,7 +9182,7 @@ do
                 end
 
                 if dezz.cfg.vars["AFK"] then
-                    local isAFK = dezz.IsPlayerAFK(v.entity) && "Yes" || "No"
+                    local isAFK = IsPlayerAFK(v.entity) && "Yes" || "No"
                     local name = "AFK: " .. isAFK
                     local pos = dezz.cfg.vars["AFK pos"]
                     local tw, th = surface.GetTextSize(name)
@@ -9383,6 +9457,16 @@ do
 
             surface.SetDrawColor( lc )
             surface.DrawRect( 79, scrHgh - 218, dezz.tyaga / dezz.maxvape * 58, 12 )
+        end
+
+        if dezz.cfg.vars["Get net address server"] then
+            surface.SetTextColor(dezz.colors[200])
+            surface.SetTextPos(38, scrHgh - 100)
+            if ded.GetNetAddress() == "loopback" then
+                surface.DrawText("Your in local server")
+            else
+                surface.DrawText("Address server: " .. ded.GetNetAddress())
+            end
         end
 
         if dezz.cfg.vars["hdshot"] && #dezz.headshotindicators > 0 then 
@@ -11778,6 +11862,11 @@ do
     local inverterdown = false
         
     function dezz.Think()
+        if dezz.IsKeyDown( dezz.cfg.binds["keyopc"] ) && !dezz.kd then 
+            togglevisible()
+            CloseDermaMenus()
+        end
+
         if dezz.IsKeyDown( dezz.cfg.binds["Panic Key"] ) then
             Unload()
         end  
@@ -11978,11 +12067,6 @@ do
                     end
                 end
             end
-        end
-
-        if dezz.IsKeyDown( dezz.cfg.binds["keyopc"] ) && !dezz.kd then 
-            dezz.togglevisible()
-            CloseDermaMenus()
         end
 
         dezz.kd = dezz.IsKeyDown( dezz.cfg.binds["keyopc"] )
@@ -12209,7 +12293,7 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
 
     if dezz.cfg.vars["Third person"] && tppressed && !dezz.tptoggled then
         dezz.tpenabled = !dezz.tpenabled
-        dezz.tpAnimProgress = dezz.tpenabled && 0 || 1
+        dezz.tpanimprogress = dezz.tpenabled && 0 || 1
     end
 
     if dezz.cfg.vars["Free camera"] && fcpressed && !dezz.fctoggled then
@@ -12223,9 +12307,9 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
     dezz.fctoggled = fcpressed
 
     if dezz.tpenabled then
-        dezz.tpAnimProgress = math.min(dezz.tpAnimProgress + FrameTime() * 4, 1)
+        dezz.tpanimprogress = math.min(dezz.tpanimprogress + FrameTime() * 4, 1)
     else
-        dezz.tpAnimProgress = math.max(dezz.tpAnimProgress - FrameTime() * 4, 0)
+        dezz.tpanimprogress = math.max(dezz.tpanimprogress - FrameTime() * 4, 0)
     end
 
     if dezz.cfg.vars["Fake duck"] && dezz.IsKeyDown(dezz.cfg.binds["Fake duck"]) then
@@ -12270,7 +12354,7 @@ function dezz.CalcView(ply, origin, angles, fov, znear, zfar)
         local thirdR = dezz.cfg.vars["thirdr"] || 0
 
         if dezz.tpenabled then
-            local currentDistance = thirdPersonDistance * dezz.tpAnimProgress
+            local currentDistance = thirdPersonDistance * dezz.tpanimprogress
             
             if dezz.cfg.vars["Third person smoothing"] then
                 local vel = pLocalPlayer:GetVelocity():Length2D()
@@ -12862,7 +12946,6 @@ end
 // AA shit
 dezz.realModel = dezz.CS_Model( pLocalPlayer:GetModel() )
 dezz.fakeModel = dezz.CS_Model( pLocalPlayer:GetModel() )
-
 dezz.newModel = pLocalPlayer:GetModel()
 
 function dezz.drawCSModels_real()
@@ -13048,6 +13131,51 @@ function dezz.PostDrawEffects()
 
     dezz.RenderOutline()
 end
+
+function dezz.SetupWorldFog()
+    /*if dezz.cfg.vars["rastoman"] then
+        
+        local ply = pLocalPlayer
+        if !IsValid(ply) then return end
+
+        local intensity = math.min((CurTime()) / 5, 1)
+        if intensity <= 0 then return end
+
+        render.FogMaxDensity(intensity * 0.5)
+        render.FogStart(0)
+        render.FogEnd(1000)
+        render.FogColor(128, 0, 0)
+        render.FogMode(MATERIAL_FOG_LINEAR)
+        return true
+    end*/
+
+    if !dezz.cfg.vars[ "FogChanger" ] then return end 
+
+    local color = string.ToColor(dezz.cfg.colors["FogChanger"])
+    
+
+    render.FogMode( MATERIAL_FOG_LINEAR )
+    render.FogColor( color.r, color.g, color.b )
+    render.FogStart( dezz.cfg.vars[ "FogStart" ] )
+    render.FogEnd( dezz.cfg.vars[ "FogEnd" ] ) 
+    render.FogMaxDensity( color.a / 255 )
+    
+    return true 
+end
+
+function dezz.SetupSkyboxFog( SkyboxSize )
+    if !dezz.cfg.vars[ "FogChanger" ] then return end 
+
+    local color = string.ToColor(dezz.cfg.colors["FogChanger"])
+
+    render.FogMode( MATERIAL_FOG_LINEAR )
+    render.FogColor( color.r, color.g, color.b )
+    render.FogStart( dezz.cfg.vars[ "FogStart" ] * SkyboxSize )
+    render.FogEnd( dezz.cfg.vars[ "FogEnd" ] * SkyboxSize ) 
+    render.FogMaxDensity( color.a / 255 )
+    
+    return true 
+end
     
 function dezz.AdjustMouseSensitivity( defaultSensivity )
     return dezz.cfg.vars["Disable sensivity adjustment"] && 0 || nil
@@ -13101,51 +13229,6 @@ GAMEMODE["EntityFireBullets"] = function( self, p, data )
 	if dezz.cones[ dezz.activeWeaponClass ] == spread || spread == dezz.nullVec then return end
 
     dezz.cones[ dezz.activeWeaponClass ] = spread;
-end
-
-function dezz.SetupWorldFog()
-    /*if dezz.cfg.vars["rastoman"] then
-        
-        local ply = pLocalPlayer
-        if !IsValid(ply) then return end
-
-        local intensity = math.min((CurTime()) / 5, 1)
-        if intensity <= 0 then return end
-
-        render.FogMaxDensity(intensity * 0.5)
-        render.FogStart(0)
-        render.FogEnd(1000)
-        render.FogColor(128, 0, 0)
-        render.FogMode(MATERIAL_FOG_LINEAR)
-        return true
-    end*/
-
-    if !dezz.cfg.vars[ "FogChanger" ] then return end 
-
-    local color = string.ToColor(dezz.cfg.colors["FogChanger"])
-    
-
-    render.FogMode( MATERIAL_FOG_LINEAR )
-    render.FogColor( color.r, color.g, color.b )
-    render.FogStart( dezz.cfg.vars[ "FogStart" ] )
-    render.FogEnd( dezz.cfg.vars[ "FogEnd" ] ) 
-    render.FogMaxDensity( color.a / 255 )
-    
-    return true 
-end
-
-function dezz.SetupSkyboxFog( SkyboxSize )
-    if !dezz.cfg.vars[ "FogChanger" ] then return end 
-
-    local color = string.ToColor(dezz.cfg.colors["FogChanger"])
-
-    render.FogMode( MATERIAL_FOG_LINEAR )
-    render.FogColor( color.r, color.g, color.b )
-    render.FogStart( dezz.cfg.vars[ "FogStart" ] * SkyboxSize )
-    render.FogEnd( dezz.cfg.vars[ "FogEnd" ] * SkyboxSize ) 
-    render.FogMaxDensity( color.a / 255 )
-    
-    return true 
 end
 
 function IsPlayerTracked(ply)
@@ -13231,6 +13314,10 @@ end
 function Unload()
     local view = dezz.SilentAngle
 
+    if dezz.ui.MultiComboP then dezz.ui.RemovePanel(dezz.ui.MultiComboP) end
+    if dezz.ui.ColorWindow then dezz.ui.RemovePanel(dezz.ui.ColorWindow) end
+    if dezz.ui.SettingsPan then dezz.ui.RemovePanel(dezz.ui.SettingsPan) end
+
     if IsValid(dezz.frame) then
         dezz.frame:Remove()
     end
@@ -13255,11 +13342,11 @@ function Unload()
     DisablePropModulation()
     RemoveAllHooks()
 
+    RunConsoleCommand("r_aspectratio", 0.000)
+
     if GetConVar("mat_fullbright"):GetInt() == 1 then
         RunConsoleCommand("mat_fullbright", "0")
     end
-
-    RunConsoleCommand("r_aspectratio", 0.000)
 
     if GetConVar("r_3dsky"):GetInt() == 0 then
         RunConsoleCommand("r_3dsky", "1")
