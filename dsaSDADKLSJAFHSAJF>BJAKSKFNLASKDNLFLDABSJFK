@@ -3104,52 +3104,6 @@ function dezz.ui.Binder( cfg, par )
     return b
 end
 
-function dezz.ui.TextEntry( str, cfg, pan, chars, postCreate )
-    local lbl = vgui.Create("DLabel",pan)
-    lbl:Dock(TOP)
-    lbl:DockMargin(4,2,4,0)
-    lbl:SetText(str)
-    lbl:SetFont("2121DermaSmall2121")
-    lbl:SetColor(dezz.colors[165])
-
-    local p = vgui.Create("DPanel",pan)
-    p:SetTall(25)
-    p:Dock(TOP)
-    p:DockMargin(4,2,4,0)
-
-    p.Paint = function(s,w,h)
-        surface.SetDrawColor(dezz.colors[54])
-        surface.DrawOutlinedRect(0,0,w,h)
-    end
-	
-	local txt = vgui.Create("DTextEntry",p)
-	txt:Dock(FILL)
-	txt:DockMargin(4,4,4,4) 
-	txt:IsMultiline( false )
-	txt:SetMaximumCharCount(chars || 999)
-	txt:SetPlaceholderText(str)
-	txt:SetFont( "2121DermaSmall2121" )
-    txt:SetPaintBackground(false)
-    txt:SetTextColor(dezz.colors[165])
-
-	if dezz.cfg.vars[cfg] != nil && dezz.cfg.vars[cfg] != "" then
-		txt:SetValue(dezz.cfg.vars[cfg])
-	end
-
-	function txt:Think()
-		if self:IsEditing() then return end
-		local val = self:GetValue()
-		if dezz.cfg.vars[cfg] == val then return end
-		dezz.cfg.vars[cfg] = val
-	end 
-
-	function txt:OnValueChange()
-		dezz.cfg.vars[cfg] = self:GetValue()
-	end
-
-    if postCreate then postCreate(p) end
-end
-
 function dezz.ui.OnlyBind(str, cfg, par)    
     local container = vgui.Create("DPanel", par)
     container:Dock(TOP)
